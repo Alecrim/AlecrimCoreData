@@ -176,11 +176,6 @@
     // do nothing, to be overriden
 }
 
-- (void)handleChangesMadeFromNotification:(NSNotification *)notification context:(NSManagedObjectContext *)context
-{
-    // do nothing, to be overriden
-}
-
 - (void)deDuplicateInsertedObjects:(NSSet *)insertedObjects context:(NSManagedObjectContext *)context
 {
     // do nothing, to be overriden
@@ -489,9 +484,6 @@
     {
         [self mergeChangesFromNotification:notification intoContext:self.mainContext didImportUbiquitousContentChangesNotificationHandler:NO];
     }
-    
-    //
-    [self handleChangesMadeFromNotification:notification context:context];
 }
 
 - (void)persistentStoreCoordinatorStoresWillChangeNotificationHandler:(NSNotification *)notification
@@ -543,14 +535,6 @@
         [self saveWithBlock:^(NSManagedObjectContext *localContext) {
             CreateShadowStrongSelf();
             [self deDuplicateInsertedObjects:insertedObjects context:localContext];
-        }];
-    }
-    else
-    {
-        CreateWeakSelf();
-        [self.backgroundContext performBlock:^{
-            CreateShadowStrongSelf();
-            [self handleChangesMadeFromNotification:notification context:self.backgroundContext];
         }];
     }
 }
