@@ -26,7 +26,7 @@
 
 - (void)createManagedObjectContexts;
 - (void)saveContext:(NSManagedObjectContext *)context synchronously:(BOOL)synchronously completionHandler:(VMCoreDataManagerCompletionHandler)completionHandler;
-- (void)mergeChangesFromNotification:(NSNotification *)notification intoContext:(NSManagedObjectContext *)intoContext;
+- (void)mergeChangesFromNotification:(NSNotification *)notification intoContext:(NSManagedObjectContext *)intoContext didImportUbiquitousContentChangesNotificationHandler:(BOOL)didImportUbiquitousContentChangesNotificationHandler;
 
 - (NSManagedObjectModel *)defaultManagedObjectModel;
 - (NSURL *)urlForStoreFileName:(NSString *)storeFileName;
@@ -377,7 +377,7 @@
     }
 }
 
-- (void)mergeChangesFromNotification:(NSNotification *)notification intoContext:(NSManagedObjectContext *)intoContext
+- (void)mergeChangesFromNotification:(NSNotification *)notification intoContext:(NSManagedObjectContext *)intoContext didImportUbiquitousContentChangesNotificationHandler:(BOOL)didImportUbiquitousContentChangesNotificationHandler
 {
     CreateWeakSelf();
     __typeof(intoContext) __weak weakIntoContext = intoContext;
@@ -391,27 +391,30 @@
         {
             return;
         }
- 
-        //
-        // saving and merging the background context from stack #3 doesn't trigger the update in this case
-        // http://floriankugler.com/blog/2013/4/29/concurrent-core-data-stack-performance-shootout
-        // fix:
-        NSArray *updatedObjects = [notification.userInfo valueForKey:NSUpdatedObjectsKey];
-        for (id updatedObject in updatedObjects)
+        
+        if (!didImportUbiquitousContentChangesNotificationHandler)
         {
-            NSManagedObject *intoContextObject = nil;
-            if ([updatedObject isKindOfClass:[NSManagedObject class]])
+            //
+            // saving and merging the background context from stack #3 doesn't trigger the update in this case
+            // http://floriankugler.com/blog/2013/4/29/concurrent-core-data-stack-performance-shootout
+            // fix:
+            NSArray *updatedObjects = [notification.userInfo valueForKey:NSUpdatedObjectsKey];
+            for (id updatedObject in updatedObjects)
             {
-                intoContextObject = [intoContext objectWithID:[((NSManagedObject *)updatedObject) objectID]];
-            }
-            else if ([updatedObject isKindOfClass:[NSManagedObjectID class]])
-            {
-                intoContextObject = [intoContext objectWithID:(NSManagedObjectID *)updatedObject];
-            }
-            
-            if (intoContextObject != nil)
-            {
-                [intoContextObject willAccessValueForKey:nil];
+                NSManagedObject *intoContextObject = nil;
+                if ([updatedObject isKindOfClass:[NSManagedObject class]])
+                {
+                    intoContextObject = [intoContext objectWithID:[((NSManagedObject *)updatedObject) objectID]];
+                }
+                else if ([updatedObject isKindOfClass:[NSManagedObjectID class]])
+                {
+                    intoContextObject = [intoContext objectWithID:(NSManagedObjectID *)updatedObject];
+                }
+                
+                if (intoContextObject != nil)
+                {
+                    [intoContextObject willAccessValueForKey:nil];
+                }
             }
         }
 
@@ -480,11 +483,11 @@
     
     if (context == self.mainContext)
     {
-        [self mergeChangesFromNotification:notification intoContext:self.backgroundContext];
+        [self mergeChangesFromNotification:notification intoContext:self.backgroundContext didImportUbiquitousContentChangesNotificationHandler:NO];
     }
     else if (context == self.backgroundContext)
     {
-        [self mergeChangesFromNotification:notification intoContext:self.mainContext];
+        [self mergeChangesFromNotification:notification intoContext:self.mainContext didImportUbiquitousContentChangesNotificationHandler:NO];
     }
     
     //
@@ -523,13 +526,13 @@
     
     if (IsMainThread())
     {
-        [self mergeChangesFromNotification:notification intoContext:self.mainContext];
-        [self mergeChangesFromNotification:notification intoContext:self.backgroundContext];
+        [self mergeChangesFromNotification:notification intoContext:self.mainContext didImportUbiquitousContentChangesNotificationHandler:YES];
+        [self mergeChangesFromNotification:notification intoContext:self.backgroundContext didImportUbiquitousContentChangesNotificationHandler:YES];
     }
     else
     {
-        [self mergeChangesFromNotification:notification intoContext:self.backgroundContext];
-        [self mergeChangesFromNotification:notification intoContext:self.mainContext];
+        [self mergeChangesFromNotification:notification intoContext:self.backgroundContext didImportUbiquitousContentChangesNotificationHandler:YES];
+        [self mergeChangesFromNotification:notification intoContext:self.mainContext didImportUbiquitousContentChangesNotificationHandler:YES];
     }
     
     //
