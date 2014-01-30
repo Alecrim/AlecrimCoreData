@@ -508,7 +508,11 @@
     //
     [self saveContext:self.mainContext synchronously:YES completionHandler:nil];
     [self saveContext:self.backgroundContext synchronously:YES completionHandler:nil];
-    
+
+    //
+    [self.mainContext reset];
+    [self.backgroundContext reset];
+
     // TODO: refresh user interface?
 }
 
