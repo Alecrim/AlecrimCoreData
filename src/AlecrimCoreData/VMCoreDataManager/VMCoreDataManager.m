@@ -191,6 +191,11 @@
     // do nothing, to be overriden
 }
 
+- (void)reloadData
+{
+    // do nothing, to be overriden
+}
+
 #pragma mark - private methods - setup
 
 - (void)setup
@@ -451,6 +456,9 @@
     //
     [self.backgroundContext reset];
     [self.mainContext reset];
+    
+    //
+    [self reloadData];
 
     // TODO: refresh user interface?
 }

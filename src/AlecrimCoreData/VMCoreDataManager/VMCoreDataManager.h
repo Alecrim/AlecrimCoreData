@@ -28,5 +28,6 @@ typedef void (^VMCoreDataManagerSaveContextBlock)(NSManagedObjectContext *localC
 
 - (void)handlePreSaveWithContext:(NSManagedObjectContext *)context;
 - (void)deDuplicateInsertedObjects:(NSSet *)insertedObjects context:(NSManagedObjectContext *)context;
+- (void)reloadData;
 
 @end
