@@ -28,7 +28,6 @@
 - (void)saveContext:(NSManagedObjectContext *)context synchronously:(BOOL)synchronously completionHandler:(VMCoreDataManagerCompletionHandler)completionHandler;
 - (void)mergeChangesFromNotification:(NSNotification *)notification intoContext:(NSManagedObjectContext *)intoContext;
 
-- (NSManagedObjectModel *)defaultManagedObjectModel;
 - (NSURL *)urlForStoreFileName:(NSString *)storeFileName;
 - (void)createDirectoryForFileURL:(NSURL *)fileURL;
 - (void)handleErrors:(NSError *)error;
@@ -201,7 +200,7 @@
 - (void)setup
 {
     //
-    self.managedObjectModel = [self defaultManagedObjectModel];
+    self.managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:self.storeName withExtension:@"momd"]];
     self.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
     
     //
@@ -367,11 +366,6 @@
 }
 
 #pragma mark - private auxiliar methods
-
-- (NSManagedObjectModel *)defaultManagedObjectModel
-{
-    return [NSManagedObjectModel mergedModelFromBundles:nil];
-}
 
 - (NSURL *)urlForStoreFileName:(NSString *)storeFileName
 {
