@@ -135,6 +135,8 @@
     return results;
 }
 
+#if TARGET_OS_IPHONE
+
 #pragma mark - fetch
 
 + (NSFetchedResultsController *)fetchAllSortedBy:(NSString *)sortTerm ascending:(BOOL)ascending delegate:(id<NSFetchedResultsControllerDelegate>)delegate inContext:(NSManagedObjectContext *)context
@@ -168,6 +170,8 @@
     
     return fetchedResultsController;
 }
+
+#endif
 
 #pragma mark - count
 
