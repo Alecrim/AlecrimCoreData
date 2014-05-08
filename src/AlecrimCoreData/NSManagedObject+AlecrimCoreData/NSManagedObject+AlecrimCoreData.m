@@ -135,7 +135,7 @@
     return results;
 }
 
-#if TARGET_OS_IPHONE
+#if VM_TARGET_IOS
 
 #pragma mark - fetch
 
