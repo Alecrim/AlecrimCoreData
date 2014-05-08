@@ -121,16 +121,16 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextWillSaveNotificationHandler:) name:NSManagedObjectContextWillSaveNotification object:localContext];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextDidSaveNotificationHandler:) name:NSManagedObjectContextDidSaveNotification object:localContext];
 
-    CreateWeakSelf();
+    @weakify(self);
     [localContext performBlock:^{
-        CreateShadowStrongSelf();
+        @strongify(self);
         
         //
         block(localContext);
         
         //
         [self saveContext:localContext synchronously:NO completionHandler:^(BOOL success, NSError *error) {
-            CreateShadowStrongSelf();
+            @strongify(self);
             
             //
             [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextWillSaveNotification object:localContext];
@@ -157,16 +157,16 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextWillSaveNotificationHandler:) name:NSManagedObjectContextWillSaveNotification object:localContext];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextDidSaveNotificationHandler:) name:NSManagedObjectContextDidSaveNotification object:localContext];
 
-    CreateWeakSelf();
+    @weakify(self);
     [localContext performBlockAndWait:^{
-        CreateShadowStrongSelf();
+        @strongify(self);
         
         //
         block(localContext);
         
         //
         [self saveContext:localContext synchronously:YES completionHandler:^(BOOL success, NSError *error) {
-            CreateShadowStrongSelf();
+            @strongify(self);
             
             //
             [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextWillSaveNotification object:localContext];
@@ -467,9 +467,9 @@
     NSSet *insertedObjects = [notification.userInfo objectForKey:NSInsertedObjectsKey];
     if ([insertedObjects count] > 0)
     {
-        CreateWeakSelf();
+        @weakify(self);
         [self saveWithBlock:^(NSManagedObjectContext *localContext) {
-            CreateShadowStrongSelf();
+            @strongify(self);
             [self deDuplicateInsertedObjects:insertedObjects context:localContext];
         }];
     }
