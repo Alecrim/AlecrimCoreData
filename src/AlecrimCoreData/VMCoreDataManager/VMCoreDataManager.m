@@ -28,7 +28,6 @@
 - (void)saveContext:(NSManagedObjectContext *)context synchronously:(BOOL)synchronously completionHandler:(VMCoreDataManagerCompletionHandler)completionHandler;
 - (void)mergeChangesFromNotification:(NSNotification *)notification intoContext:(NSManagedObjectContext *)intoContext;
 
-- (NSManagedObjectModel *)defaultManagedObjectModel;
 - (NSURL *)urlForStoreFileName:(NSString *)storeFileName;
 - (void)createDirectoryForFileURL:(NSURL *)fileURL;
 - (void)handleErrors:(NSError *)error;
@@ -91,12 +90,8 @@
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSPersistentStoreCoordinatorStoresDidChangeNotification object:self.persistentStoreCoordinator];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:NSPersistentStoreDidImportUbiquitousContentChangesNotification object:self.persistentStoreCoordinator];
     }
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextDidSaveNotification object:self.backgroundContext];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextWillSaveNotification object:self.backgroundContext];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextDidSaveNotification object:self.mainContext];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextWillSaveNotification object:self.mainContext];
 
+    //
     self.backgroundContext = nil;
     self.mainContext = nil;
     
@@ -118,24 +113,31 @@
 
 - (void)saveWithBlock:(VMCoreDataManagerSaveContextBlock)block completionHandler:(VMCoreDataManagerCompletionHandler)completionHandler
 {
-    NSManagedObjectContext *localContext = self.backgroundContext;
+    NSManagedObjectContext *localContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [localContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
+    [localContext setUndoManager:nil];
+    [localContext setParentContext:self.mainContext];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextWillSaveNotificationHandler:) name:NSManagedObjectContextWillSaveNotification object:localContext];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextDidSaveNotificationHandler:) name:NSManagedObjectContextDidSaveNotification object:localContext];
+
     CreateWeakSelf();
-    __typeof(localContext) __weak weakLocalContext = localContext;
     [localContext performBlock:^{
-        
         CreateShadowStrongSelf();
-        __typeof(weakLocalContext) __strong strongLocalContext = weakLocalContext;
-        if (strongLocalContext == nil)
-        {
-            return;
-        }
         
         //
-        block(strongLocalContext);
+        block(localContext);
         
         //
-        [self saveContext:strongLocalContext synchronously:NO completionHandler:completionHandler];
+        [self saveContext:localContext synchronously:NO completionHandler:^(BOOL success, NSError *error) {
+            CreateShadowStrongSelf();
+            
+            //
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextWillSaveNotification object:localContext];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextDidSaveNotification object:localContext];
+            
+            ExecuteBlock(completionHandler, success, error);
+        }];
         
     }];
 }
@@ -147,24 +149,31 @@
 
 - (void)saveWithBlockAndWait:(VMCoreDataManagerSaveContextBlock)block completionHandler:(VMCoreDataManagerCompletionHandler)completionHandler
 {
-    NSManagedObjectContext *localContext = self.backgroundContext;
+    NSManagedObjectContext *localContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+    [localContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
+    [localContext setUndoManager:nil];
+    [localContext setParentContext:self.mainContext];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextWillSaveNotificationHandler:) name:NSManagedObjectContextWillSaveNotification object:localContext];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contextDidSaveNotificationHandler:) name:NSManagedObjectContextDidSaveNotification object:localContext];
 
     CreateWeakSelf();
-    __typeof(localContext) __weak weakLocalContext = localContext;
     [localContext performBlockAndWait:^{
-        
         CreateShadowStrongSelf();
-        __typeof(weakLocalContext) __strong strongLocalContext = weakLocalContext;
-        if (strongLocalContext == nil)
-        {
-            return;
-        }
         
         //
-        block(strongLocalContext);
+        block(localContext);
         
         //
-        [self saveContext:strongLocalContext synchronously:YES completionHandler:completionHandler];
+        [self saveContext:localContext synchronously:YES completionHandler:^(BOOL success, NSError *error) {
+            CreateShadowStrongSelf();
+            
+            //
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextWillSaveNotification object:localContext];
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextDidSaveNotification object:localContext];
+            
+            ExecuteBlock(completionHandler, success, error);
+        }];
         
     }];
 }
@@ -176,12 +185,12 @@
     // do nothing, to be overriden
 }
 
-- (void)handleChangesMadeFromNotification:(NSNotification *)notification context:(NSManagedObjectContext *)context
+- (void)deDuplicateInsertedObjects:(NSSet *)insertedObjects context:(NSManagedObjectContext *)context
 {
     // do nothing, to be overriden
 }
 
-- (void)deDuplicateInsertedObjects:(NSSet *)insertedObjects context:(NSManagedObjectContext *)context
+- (void)reloadData
 {
     // do nothing, to be overriden
 }
@@ -191,7 +200,7 @@
 - (void)setup
 {
     //
-    self.managedObjectModel = [self defaultManagedObjectModel];
+    self.managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:self.storeName withExtension:@"momd"]];
     self.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
     
     //
@@ -261,59 +270,31 @@
 
 - (void)createManagedObjectContexts
 {
-    // main context
-    self.mainContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-    [self.mainContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
-    [self.mainContext setUndoManager:nil];
-    [self.mainContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(contextWillSaveNotificationHandler:)
-                                                 name:NSManagedObjectContextWillSaveNotification
-                                               object:self.mainContext];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(contextDidSaveNotificationHandler:)
-                                                 name:NSManagedObjectContextDidSaveNotification
-                                               object:self.mainContext];
-
     // background context
     self.backgroundContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     [self.backgroundContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
     [self.backgroundContext setUndoManager:nil];
     [self.backgroundContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(contextWillSaveNotificationHandler:)
-                                                 name:NSManagedObjectContextWillSaveNotification
-                                               object:self.backgroundContext];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(contextDidSaveNotificationHandler:)
-                                                 name:NSManagedObjectContextDidSaveNotification
-                                               object:self.backgroundContext];
+    // main context
+    self.mainContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    [self.mainContext setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
+    [self.mainContext setUndoManager:nil];
+    [self.mainContext setParentContext:self.backgroundContext];
 }
 
 - (void)saveContext:(NSManagedObjectContext *)context synchronously:(BOOL)synchronously completionHandler:(VMCoreDataManagerCompletionHandler)completionHandler
 {
     if ([context hasChanges])
     {
-        __typeof(context) __weak weakContext = context;
-
         void (^saveBlock)() = ^{
             
-            __typeof(weakContext) __strong strongContext = weakContext;
-            if (strongContext == nil)
-            {
-                return;
-            }
-
             //
-            [self handlePreSaveWithContext:strongContext];
+            [self handlePreSaveWithContext:context];
 
             //
             NSError *error = nil;
-            BOOL saved = [strongContext save:&error];
+            BOOL saved = [context save:&error];
             
             if (saved)
             {
@@ -379,53 +360,12 @@
 
 - (void)mergeChangesFromNotification:(NSNotification *)notification intoContext:(NSManagedObjectContext *)intoContext
 {
-    CreateWeakSelf();
-    __typeof(intoContext) __weak weakIntoContext = intoContext;
-    [intoContext performBlock:^{
-        
-        CreateShadowStrongSelf();
-        
-        //
-        __typeof(weakIntoContext) __strong strongIntoContext = weakIntoContext;
-        if (strongIntoContext == nil)
-        {
-            return;
-        }
- 
-        //
-        // saving and merging the background context from stack #3 doesn't trigger the update in this case
-        // http://floriankugler.com/blog/2013/4/29/concurrent-core-data-stack-performance-shootout
-        // fix:
-        NSArray *updatedObjects = [notification.userInfo valueForKey:NSUpdatedObjectsKey];
-        for (id updatedObject in updatedObjects)
-        {
-            NSManagedObject *intoContextObject = nil;
-            if ([updatedObject isKindOfClass:[NSManagedObject class]])
-            {
-                intoContextObject = [intoContext objectWithID:[((NSManagedObject *)updatedObject) objectID]];
-            }
-            else if ([updatedObject isKindOfClass:[NSManagedObjectID class]])
-            {
-                intoContextObject = [intoContext objectWithID:(NSManagedObjectID *)updatedObject];
-            }
-            
-            if (intoContextObject != nil)
-            {
-                [intoContextObject willAccessValueForKey:nil];
-            }
-        }
-
-        //
-        [strongIntoContext mergeChangesFromContextDidSaveNotification:notification];
+    [intoContext performBlockAndWait:^{
+        [intoContext mergeChangesFromContextDidSaveNotification:notification];
     }];
 }
 
 #pragma mark - private auxiliar methods
-
-- (NSManagedObjectModel *)defaultManagedObjectModel
-{
-    return [NSManagedObjectModel mergedModelFromBundles:nil];
-}
 
 - (NSURL *)urlForStoreFileName:(NSString *)storeFileName
 {
@@ -477,18 +417,11 @@
 - (void)contextDidSaveNotificationHandler:(NSNotification *)notification
 {
     NSManagedObjectContext *context = [notification object];
-    
-    if (context == self.mainContext)
+    while ([context parentContext] != nil)
     {
-        [self mergeChangesFromNotification:notification intoContext:self.backgroundContext];
+        context = [context parentContext];
+        [self saveContext:context synchronously:YES completionHandler:nil];
     }
-    else if (context == self.backgroundContext)
-    {
-        [self mergeChangesFromNotification:notification intoContext:self.mainContext];
-    }
-    
-    //
-    [self handleChangesMadeFromNotification:notification context:context];
 }
 
 - (void)persistentStoreCoordinatorStoresWillChangeNotificationHandler:(NSNotification *)notification
@@ -496,12 +429,12 @@
     DebugLog(@"%@", notification);
 
     //
-    [self saveContext:self.mainContext synchronously:YES completionHandler:nil];
-    [self saveContext:self.backgroundContext synchronously:YES completionHandler:nil];
+    //[self saveContext:self.mainContext synchronously:YES completionHandler:nil];
+    //[self saveContext:self.backgroundContext synchronously:YES completionHandler:nil];
     
     //
-    [self.mainContext reset];
     [self.backgroundContext reset];
+    [self.mainContext reset];
     
     // TODO: reset user interface?
 }
@@ -511,9 +444,16 @@
     DebugLog(@"%@", notification);
     
     //
-    [self saveContext:self.mainContext synchronously:YES completionHandler:nil];
-    [self saveContext:self.backgroundContext synchronously:YES completionHandler:nil];
+    //[self saveContext:self.mainContext synchronously:YES completionHandler:nil];
+    //[self saveContext:self.backgroundContext synchronously:YES completionHandler:nil];
+
+    //
+    [self.backgroundContext reset];
+    [self.mainContext reset];
     
+    //
+    [self reloadData];
+
     // TODO: refresh user interface?
 }
 
@@ -521,18 +461,9 @@
 {
     DebugLog(@"%@", notification);
     
-    if (IsMainThread())
-    {
-        [self mergeChangesFromNotification:notification intoContext:self.mainContext];
-        [self mergeChangesFromNotification:notification intoContext:self.backgroundContext];
-    }
-    else
-    {
-        [self mergeChangesFromNotification:notification intoContext:self.backgroundContext];
-        [self mergeChangesFromNotification:notification intoContext:self.mainContext];
-    }
-    
-    //
+    [self mergeChangesFromNotification:notification intoContext:self.backgroundContext];
+    [self mergeChangesFromNotification:notification intoContext:self.mainContext];
+
     NSSet *insertedObjects = [notification.userInfo objectForKey:NSInsertedObjectsKey];
     if ([insertedObjects count] > 0)
     {
@@ -540,14 +471,6 @@
         [self saveWithBlock:^(NSManagedObjectContext *localContext) {
             CreateShadowStrongSelf();
             [self deDuplicateInsertedObjects:insertedObjects context:localContext];
-        }];
-    }
-    else
-    {
-        CreateWeakSelf();
-        [self.backgroundContext performBlock:^{
-            CreateShadowStrongSelf();
-            [self handleChangesMadeFromNotification:notification context:self.backgroundContext];
         }];
     }
 }

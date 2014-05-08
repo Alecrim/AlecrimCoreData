@@ -27,8 +27,7 @@ typedef void (^VMCoreDataManagerSaveContextBlock)(NSManagedObjectContext *localC
 - (void)saveWithBlockAndWait:(VMCoreDataManagerSaveContextBlock)block completionHandler:(VMCoreDataManagerCompletionHandler)completionHandler;
 
 - (void)handlePreSaveWithContext:(NSManagedObjectContext *)context;
-- (void)handleChangesMadeFromNotification:(NSNotification *)notification context:(NSManagedObjectContext *)context;
-
 - (void)deDuplicateInsertedObjects:(NSSet *)insertedObjects context:(NSManagedObjectContext *)context;
+- (void)reloadData;
 
 @end
