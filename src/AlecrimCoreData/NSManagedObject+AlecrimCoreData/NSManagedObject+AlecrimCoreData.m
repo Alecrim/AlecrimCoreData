@@ -135,7 +135,7 @@
     return results;
 }
 
-#if TARGET_OS_IPHONE
+#if VM_TARGET_IOS
 
 #pragma mark - fetch
 
@@ -335,10 +335,10 @@
 {
     NSDictionary *sourceAttributes = [[sourceManagedObject entity] attributesByName];
     
-    CreateWeakSelf();
+    @weakify(self);
     [[sourceAttributes allKeys] enumerateObjectsUsingBlock:^(NSString *key, NSUInteger idx, BOOL *stop) {
         
-        CreateShadowStrongSelf();
+        @strongify(self);
         id value = [sourceManagedObject valueForKey:key];
         [self setValue:value forKey:key];
         

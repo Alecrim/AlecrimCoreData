@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-typedef DefaultCompletionHandler VMCoreDataManagerSetupCompletionHandler;
-typedef DefaultCompletionHandler VMCoreDataManagerCompletionHandler;
+typedef void (^VMCoreDataManagerSetupCompletionHandler)(BOOL success, NSError *error);
+typedef void (^VMCoreDataManagerCompletionHandler)(BOOL success, NSError *error);
 
 typedef void (^VMCoreDataManagerSaveContextBlock)(NSManagedObjectContext *localContext);
 
