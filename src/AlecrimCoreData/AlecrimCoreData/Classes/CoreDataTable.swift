@@ -121,11 +121,6 @@ extension CoreDataTable {
         return self.filteredBy(predicate: predicate)
     }
     
-    func filteredBy(metadataQueryString queryString: String) -> Self {
-        let predicate = NSPredicate(fromMetadataQueryString: queryString)
-        return self.filteredBy(predicate: predicate)
-    }
-
     func toArray() -> T[] {
         self._fetchRequest.fetchBatchSize = self._defaultFetchBatchSize
         
