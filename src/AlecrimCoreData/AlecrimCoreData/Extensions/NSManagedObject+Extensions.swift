@@ -13,7 +13,7 @@ import CoreData
 
 extension NSManagedObject {
     
-    // TODO: change to class var
+    // TODO: change to class var when possible?
     class func getEntityName() -> String {
         let className: NSString = ___nameOfClass(self)
         let range = className.rangeOfString("Entity")
@@ -27,6 +27,33 @@ extension NSManagedObject {
     }
 
 }
+
+// TODO:
+/*
+
+extension NSManagedObject {
+    
+    func inDataModel(dataModel: CoreDataModel) -> Self? {
+        return self.inContext(dataModel.context)
+    }
+
+    func inContext(otherContext: NSManagedObjectContext) -> Self? {
+        if self.managedObjectContext == otherContext {
+            return self
+        }
+        
+        if self.objectID.temporaryID {
+            return nil
+        }
+        
+        var error: NSError? = nil
+        var otherManagedObject = otherContext.existingObjectWithID(self.objectID, error: &error)
+        
+        return otherManagedObject
+    }
+}
+
+*/
 
 // from: https://github.com/indieSoftware/INSwift
 

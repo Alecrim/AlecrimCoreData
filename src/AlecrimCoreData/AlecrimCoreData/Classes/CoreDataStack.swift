@@ -16,7 +16,7 @@ class CoreDataStack {
     let store: NSPersistentStore
     
     let savingContext: NSManagedObjectContext
-    let context: NSManagedObjectContext
+    let mainContext: NSManagedObjectContext
     
     init(modelName name: String?) {
         let bundle = NSBundle.mainBundle()
@@ -43,8 +43,71 @@ class CoreDataStack {
         self.savingContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         self.savingContext.persistentStoreCoordinator = self.coordinator
         
-        self.context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        self.context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        self.context.parentContext = self.savingContext
+        self.mainContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        self.mainContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        self.mainContext.parentContext = self.savingContext
     }
+    
+//    deinit {
+//        println("deinit - CoreDataStack")
+//    }
+
+    func createBackgroundContext() -> NSManagedObjectContext {
+        let backgroundContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        backgroundContext.parentContext = self.mainContext
+        
+        return backgroundContext
+    }
+    
 }
+
+extension CoreDataStack {
+
+    func saveContext(context: NSManagedObjectContext) -> (Bool, NSError?) {
+        var currentContext: NSManagedObjectContext? = context
+        var success = false
+        var error: NSError? = nil
+        
+        while let c = currentContext {
+            c.performBlockAndWait {
+                success = c.save(&error)
+            }
+            
+            if (!success) {
+                break
+            }
+            
+            currentContext = currentContext?.parentContext
+        }
+        
+        return (success, error)
+    }
+    
+    func saveContext(context: NSManagedObjectContext, completion: ((Bool, NSError?) -> ())?) {
+        context.performBlock { [unowned self] in
+            var success = false
+            var error: NSError? = nil
+            
+            success = context.save(&error)
+            
+            if success {
+                if let parentContext = context.parentContext {
+                    self.saveContext(parentContext, completion: completion)
+                }
+                else {
+                    if let closure = completion {
+                        closure(success, error)
+                    }
+                }
+            }
+            else {
+                if let closure = completion {
+                    closure(success, error)
+                }
+            }
+        }
+    }
+
+}
+
