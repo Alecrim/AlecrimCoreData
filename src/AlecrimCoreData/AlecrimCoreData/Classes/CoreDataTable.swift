@@ -99,7 +99,7 @@ extension CoreDataTable {
         return self
     }
     
-    func `where`<V: AnyObject>(attribute attributeName: String, isEqualTo value: V?) -> Self {
+    func filteredBy<V: AnyObject>(attribute attributeName: String, value: V?) -> Self {
         var predicate: NSPredicate
         if let v = value {
             predicate = NSPredicate(format: "%K == %@", argumentArray: [ attributeName, v ])
@@ -111,17 +111,17 @@ extension CoreDataTable {
         return self.filteredBy(predicate: predicate)
     }
     
-    func `where`(format predicateFormat: String, argumentArray arguments: AnyObject[]!) -> Self {
+    func filteredBy(#predicateFormat: String, argumentArray arguments: AnyObject[]!) -> Self {
         let predicate = NSPredicate(format: predicateFormat, argumentArray: arguments);
         return self.filteredBy(predicate: predicate)
     }
     
-    func `where`(format predicateFormat: String, arguments argList: CVaListPointer) -> Self {
+    func filteredBy(#predicateFormat: String, arguments argList: CVaListPointer) -> Self {
         let predicate = NSPredicate(format: predicateFormat, arguments: argList)
         return self.filteredBy(predicate: predicate)
     }
     
-    func `where`(metadataQueryString queryString: String) -> Self {
+    func filteredBy(metadataQueryString queryString: String) -> Self {
         let predicate = NSPredicate(fromMetadataQueryString: queryString)
         return self.filteredBy(predicate: predicate)
     }
@@ -206,12 +206,17 @@ extension CoreDataTable {
     }
     
     func first() -> T? {
+        let savedFetchLimit = self._fetchRequest.fetchLimit
         let results = self.take(1).toArray()
+        self._fetchRequest.fetchLimit = savedFetchLimit
         return (results.isEmpty ? nil : results[0])
     }
     
     func first(completion: (T?) -> Void) {
-        self.take(1).toArray { results in
+        // TODO: return to saved fetch limit before block completes?
+        let savedFetchLimit = self._fetchRequest.fetchLimit
+        self.take(1).toArray { [unowned self] results in
+            self._fetchRequest.fetchLimit = savedFetchLimit
             completion(results.isEmpty ? nil : results[0])
         }
     }
@@ -230,11 +235,18 @@ extension CoreDataTable {
     */
     
     func any() -> Bool {
-        return self.take(1).count() > 0
+        let savedFetchLimit = self._fetchRequest.fetchLimit
+        let result = self.take(1).count() > 0
+        self._fetchRequest.fetchLimit = savedFetchLimit
+        
+        return result
     }
     
     func any(completion: (Bool) -> Void) {
-        return self.take(1).count { count in
+        // TODO: return to saved fetch limit before block completes?
+        let savedFetchLimit = self._fetchRequest.fetchLimit
+        return self.take(1).count { [unowned self] count in
+            self._fetchRequest.fetchLimit = savedFetchLimit
             completion(count > 0)
         }
     }
@@ -257,7 +269,18 @@ extension CoreDataTable {
         let managedObject = T(entity: entityDescription, insertIntoManagedObjectContext: self.context)
         
         return managedObject
-
+    }
+    
+    func createOrGetFirstEntity<V: AnyObject>(whereAttribute attributeName: String, isEqualTo value: V?) -> T {
+        if let entity = self.filteredBy(attribute: attributeName, value: value).first() {
+            return entity
+        }
+        else {
+            let entity = self.createEntity()
+            entity.setValue(value, forKey: attributeName)
+            
+            return entity
+        }
     }
     
     func deleteEntity(managedObject: T) -> (Bool, NSError?) {
