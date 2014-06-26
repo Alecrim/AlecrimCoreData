@@ -33,7 +33,7 @@ class CoreDataTable<T: NSManagedObject> {
             var effectiveAscending = defaultAscendingValue
             
             let sortComponents = sortKey.componentsSeparatedByString(":") as String[]
-            if sortComponents.count > 0 {
+            if sortComponents.count > 1 {
                 effectiveSortKey = sortComponents[0]
                 effectiveAscending = Bool(sortComponents[1].toInt())
             }
@@ -126,14 +126,14 @@ extension CoreDataTable {
         return self.filteredBy(predicate: predicate)
     }
 
-    func toArray() -> Array<T> {
+    func toArray() -> T[] {
         self._fetchRequest.fetchBatchSize = self._defaultFetchBatchSize
         
-        var results = Array<T>()
+        var results = T[]()
         
         self.context.performBlockAndWait { [unowned self] in
             var error: NSError? = nil
-            if let objects = self.context.executeFetchRequest(self._fetchRequest, error: &error) as? Array<T> {
+            if let objects = self.context.executeFetchRequest(self._fetchRequest, error: &error) as? T[] {
                 results += objects
             }
         }
@@ -141,14 +141,14 @@ extension CoreDataTable {
         return results
     }
     
-    func toArray(completion: (Array<T>) -> Void) {
-        let context = self.context
+    // TODO: this is not working
+    func toArray(completion: (T[]) -> Void) {
         self._fetchRequest.fetchBatchSize = self._defaultFetchBatchSize
         
         let asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: self._fetchRequest) { result in
-            var results = Array<T>()
+            var results = T[]()
             
-            if let objects = result.finalResult as? Array<T> {
+            if let objects = result.finalResult as? T[] {
                 results += objects
             }
             
@@ -164,7 +164,7 @@ extension CoreDataTable {
         */
         
         var error: NSError?  = nil
-        context.persistentStoreCoordinator.executeRequest(asyncFetchRequest, withContext: context, error: &error)
+        self.context.persistentStoreCoordinator.executeRequest(asyncFetchRequest, withContext: self.context, error: &error)
     }
     
     func count() -> Int {
@@ -179,7 +179,6 @@ extension CoreDataTable {
     }
     
     func count(completion: (Int) -> Void) {
-        let context = self.context
         self._fetchRequest.resultType = .CountResultType
         
         let asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: self._fetchRequest) { result in
@@ -203,7 +202,7 @@ extension CoreDataTable {
         */
         
         var error: NSError?  = nil
-        context.persistentStoreCoordinator.executeRequest(asyncFetchRequest, withContext: context, error: &error)
+        self.context.persistentStoreCoordinator.executeRequest(asyncFetchRequest, withContext: self.context, error: &error)
     }
     
     func first() -> T? {

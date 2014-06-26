@@ -16,13 +16,8 @@ extension NSManagedObject {
     // TODO: change to class var
     class func getEntityName() -> String {
         let className: NSString = ___nameOfClass(self)
-        
-        //if className.hasSuffix(".Entity") {
-        //    return className
-        //}
-        
         let range = className.rangeOfString("Entity")
-            
+        
         if range.location == NSNotFound || range.location == 0 {
             return className;
         }
