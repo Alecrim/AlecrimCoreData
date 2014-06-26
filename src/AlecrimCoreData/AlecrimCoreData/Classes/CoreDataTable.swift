@@ -25,7 +25,7 @@ class CoreDataTable<T: NSManagedObject> {
     
     // #pragma mark - private
     
-    @lazy var _defaultFetchBatchSize = 20
+    let _defaultFetchBatchSize = 20
     @lazy var _underlyingFetchRequest = NSFetchRequest(entityName: T.getEntityName())
     
 }
@@ -203,7 +203,7 @@ extension CoreDataTable {
         return results
     }
 
-    // TODO: verify possibility of using NSAsynchronousFetchRequest (see WWDC 2014 - 225)
+    // TODO: verify if it will be possible to use NSAsynchronousFetchRequest in future versions (of AlecrimCoreData and Swift) [see WWDC 2014 - 225]
     func _toArray(#fetchRequest: NSFetchRequest, completion: (T[]) -> Void) {
         fetchRequest.fetchBatchSize = self._defaultFetchBatchSize
 
@@ -233,7 +233,7 @@ extension CoreDataTable {
         return c
     }
     
-    // TODO: verify possibility of using NSAsynchronousFetchRequest (see WWDC 2014 - 225)
+    // TODO: verify if it will be possible to use NSAsynchronousFetchRequest in future versions (of AlecrimCoreData and Swift) [see WWDC 2014 - 225]
     func _count(#fetchRequest: NSFetchRequest, completion: (Int) -> Void) {
         let context = self.dataModel.context
         context.performBlock {
@@ -281,7 +281,6 @@ extension CoreDataTable {
     
     func deleteEntity(managedObject: T) -> (Bool, NSError?) {
         var retrieveExistingObjectError: NSError? = nil
-        
         if let managedObjectInContext = self.dataModel.context.existingObjectWithID(managedObject.objectID, error: &retrieveExistingObjectError) {
             self.dataModel.context.deleteObject(managedObjectInContext)
             return (managedObject.deleted || managedObject.managedObjectContext == nil, retrieveExistingObjectError)

@@ -18,6 +18,7 @@ class CoreDataStack {
     let savingContext: NSManagedObjectContext
     let mainContext: NSManagedObjectContext
     
+    // TODO: error handling
     init(modelName name: String?) {
         let bundle = NSBundle.mainBundle()
         let modelName = (name == nil ? bundle.infoDictionary[kCFBundleNameKey] as String : name!)
@@ -51,7 +52,11 @@ class CoreDataStack {
 //    deinit {
 //        println("deinit - CoreDataStack")
 //    }
+    
+}
 
+extension CoreDataStack {
+    
     func createBackgroundContext() -> NSManagedObjectContext {
         let backgroundContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
@@ -66,6 +71,7 @@ extension CoreDataStack {
 
     func saveContext(context: NSManagedObjectContext) -> (Bool, NSError?) {
         var currentContext: NSManagedObjectContext? = context
+        
         var success = false
         var error: NSError? = nil
         
