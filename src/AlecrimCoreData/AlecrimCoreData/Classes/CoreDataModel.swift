@@ -38,6 +38,12 @@ extension CoreDataModel {
             success = self.stack.context.save(&error)
         }
         
+        if (success) {
+            self.stack.savingContext.performBlockAndWait { [unowned self] in
+                success = self.stack.savingContext.save(&error)
+            }
+        }
+        
         return (success, error)
     }
     
@@ -53,8 +59,20 @@ extension CoreDataModel {
             var error: NSError? = nil
             let success = self.stack.context.save(&error)
             
-            dispatch_async(callerQueue) {
-                completion(success, error)
+            if success {
+                self.stack.savingContext.performBlock { [unowned self] in
+                    var error: NSError? = nil
+                    let success = self.stack.savingContext.save(&error)
+                    
+                    dispatch_async(callerQueue) {
+                        completion(success, error)
+                    }
+                }
+            }
+            else {
+                dispatch_async(callerQueue) {
+                    completion(success, error)
+                }
             }
         }
     }

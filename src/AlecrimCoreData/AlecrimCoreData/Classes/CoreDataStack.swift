@@ -14,6 +14,8 @@ class CoreDataStack {
     let model: NSManagedObjectModel
     let coordinator: NSPersistentStoreCoordinator
     let store: NSPersistentStore
+    
+    let savingContext: NSManagedObjectContext
     let context: NSManagedObjectContext
     
     init(modelName name: String?) {
@@ -37,8 +39,12 @@ class CoreDataStack {
         self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.model)
         self.store = self.coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: nil, error: nil)
         
+        self.savingContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        self.savingContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        self.savingContext.persistentStoreCoordinator = self.coordinator
+        
         self.context = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        self.context.persistentStoreCoordinator = self.coordinator
         self.context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        self.context.parentContext = self.savingContext
     }
 }

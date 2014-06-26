@@ -19,6 +19,10 @@ class CoreDataTable<T: NSManagedObject> {
         self.context = context
     }
     
+    deinit {
+        println("deinit")
+    }
+    
     // #pragma mark - private
     
     @lazy var _defaultFetchBatchSize = 20
