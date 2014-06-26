@@ -27,6 +27,10 @@ class CoreDataModel {
 extension CoreDataModel {
     
     func save() -> (Bool, NSError?) {
+        if !self.stack.context.hasChanges {
+            return (true, nil)
+        }
+        
         var success = false
         var error: NSError? = nil
         
@@ -38,6 +42,11 @@ extension CoreDataModel {
     }
     
     func save(completion: (Bool, NSError?) -> Void) {
+        if !self.stack.context.hasChanges {
+            completion(true, nil)
+            return
+        }
+        
         let callerQueue = dispatch_get_current_queue()
         
         self.stack.context.performBlock { [unowned self] in
