@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14BD059A195DE52400C3A0E3 /* CoreDataTable+OSX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BD0599195DE52400C3A0E3 /* CoreDataTable+OSX.swift */; };
 		14CB5C9E195A45DF00A10511 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14CB5C9D195A45DF00A10511 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14CB5CA4195A45DF00A10511 /* AlecrimCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14CB5C98195A45DF00A10511 /* AlecrimCoreData.framework */; };
 		14CB5CAB195A45DF00A10511 /* AlecrimCoreDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CB5CAA195A45DF00A10511 /* AlecrimCoreDataTests.swift */; };
@@ -27,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		14BD0599195DE52400C3A0E3 /* CoreDataTable+OSX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+OSX.swift"; sourceTree = "<group>"; };
 		14CB5C98195A45DF00A10511 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		14CB5C9C195A45DF00A10511 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		14CB5C9D195A45DF00A10511 /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				14CB5CF8195B856A00A10511 /* CoreDataModel.swift */,
 				14CB5CB9195A483400A10511 /* CoreDataStack.swift */,
 				14CB5CFA195B85AC00A10511 /* CoreDataTable.swift */,
+				14BD0599195DE52400C3A0E3 /* CoreDataTable+OSX.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -238,6 +241,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14BD059A195DE52400C3A0E3 /* CoreDataTable+OSX.swift in Sources */,
 				14CB5CB8195A46D700A10511 /* NSManagedObject+Extensions.swift in Sources */,
 				14CB5CBA195A483400A10511 /* CoreDataStack.swift in Sources */,
 				14CB5CF9195B856A00A10511 /* CoreDataModel.swift in Sources */,
@@ -437,6 +441,7 @@
 				14CB5CB0195A45DF00A10511 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		14CB5CB1195A45DF00A10511 /* Build configuration list for PBXNativeTarget "AlecrimCoreDataTests" */ = {
 			isa = XCConfigurationList;
@@ -445,6 +450,7 @@
 				14CB5CB3195A45DF00A10511 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
