@@ -169,15 +169,15 @@ extension CoreDataTable {
     func _sortDescriptorsFromString(string: String, defaultAscendingValue: Bool) -> NSSortDescriptor[] {
         var sortDescriptors = NSSortDescriptor[]()
         
-        let sortKeys = string.componentsSeparatedByString(",") as String[]
+        let sortKeys = string.componentsSeparatedByString(",") as NSString[]
         for sortKey in sortKeys {
             var effectiveSortKey = sortKey
             var effectiveAscending = defaultAscendingValue
             
-            let sortComponents = sortKey.componentsSeparatedByString(":") as String[]
+            let sortComponents = sortKey.componentsSeparatedByString(":") as NSString[]
             if sortComponents.count > 1 {
                 effectiveSortKey = sortComponents[0]
-                effectiveAscending = Bool(sortComponents[1].toInt())
+                effectiveAscending = sortComponents[1].boolValue
             }
             
             sortDescriptors += NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending)
