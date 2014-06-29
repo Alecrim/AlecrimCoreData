@@ -173,14 +173,24 @@ extension CoreDataTable {
         for sortKey in sortKeys {
             var effectiveSortKey = sortKey
             var effectiveAscending = defaultAscendingValue
+            var effectiveOptionalParameter: NSString? = nil
             
             let sortComponents = sortKey.componentsSeparatedByString(":") as NSString[]
             if sortComponents.count > 1 {
                 effectiveSortKey = sortComponents[0]
                 effectiveAscending = sortComponents[1].boolValue
+                
+                if (sortComponents.count > 2) {
+                    effectiveOptionalParameter = sortComponents[2]
+                }
             }
             
-            sortDescriptors += NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending)
+            if effectiveOptionalParameter != nil && effectiveOptionalParameter!.rangeOfString("cd").location != NSNotFound {
+                sortDescriptors += NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending, selector: "localizedCaseInsensitiveCompare:")
+            }
+            else {
+                sortDescriptors += NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending)
+            }
         }
         
         return sortDescriptors
@@ -192,9 +202,9 @@ extension CoreDataTable {
         var results = T[]()
         
         self.dataModel.context.performBlockAndWait { [weak self] in
-            if let table = self {
+            if let s = self {
                 var error: NSError? = nil
-                if let objects = table.dataModel.context.executeFetchRequest(fetchRequest, error: &error) as? T[] {
+                if let objects = s.dataModel.context.executeFetchRequest(fetchRequest, error: &error) as? T[] {
                     results += objects
                 }
             }
@@ -224,9 +234,9 @@ extension CoreDataTable {
         var c = 0
         
         self.dataModel.context.performBlockAndWait { [weak self] in
-            if let table = self {
+            if let s = self {
                 var error: NSError? = nil
-                c += table.dataModel.context.countForFetchRequest(fetchRequest, error: &error)
+                c += s.dataModel.context.countForFetchRequest(fetchRequest, error: &error)
             }
         }
         
