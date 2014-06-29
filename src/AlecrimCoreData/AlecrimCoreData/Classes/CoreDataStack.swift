@@ -60,8 +60,24 @@ extension CoreDataStack {
     func createBackgroundContext() -> NSManagedObjectContext {
         let backgroundContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        backgroundContext.parentContext = self.mainContext
+        backgroundContext.parentContext = self.savingContext
         
+        /*
+        var observer: NSObject? = nil
+        observer = NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: backgroundContext, queue: nil) { [weak self] notification in
+            if let s = self {
+                println("AQUI0")
+                s.mainContext.performBlock {
+                    s.mainContext.mergeChangesFromContextDidSaveNotification(notification)
+                    println("AQUI1")
+                }
+            }
+
+            observer = nil
+            
+        } as? NSObject
+        */
+
         return backgroundContext
     }
     
