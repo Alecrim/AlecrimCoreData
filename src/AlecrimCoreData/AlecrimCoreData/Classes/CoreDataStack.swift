@@ -73,6 +73,7 @@ extension CoreDataStack {
                 }
             }
 
+            NSNotificationCenter.defaultCenter().removeObserver(observer)
             observer = nil
             
         } as? NSObject
