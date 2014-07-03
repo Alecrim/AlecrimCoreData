@@ -54,3 +54,9 @@ extension CoreDataModel {
     }
     
 }
+
+func usingBackgroundDataModelFrom<T: CoreDataModel>(dataModel: T, closure: (T) -> Void) {
+    let backgroundDataModel = T(parentDataModel: dataModel)
+    closure(backgroundDataModel)
+}
+
