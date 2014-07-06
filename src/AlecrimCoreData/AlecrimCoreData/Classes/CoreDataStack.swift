@@ -62,7 +62,6 @@ extension CoreDataStack {
         backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         backgroundContext.parentContext = self.savingContext
         
-        /*
         var observer: NSObject? = nil
         observer = NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: backgroundContext, queue: nil) { [weak self] notification in
             if let s = self {
@@ -77,7 +76,6 @@ extension CoreDataStack {
             observer = nil
             
         } as? NSObject
-        */
 
         return backgroundContext
     }

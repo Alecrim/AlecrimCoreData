@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14A299A619695EE400839E0B /* CoreDataArrayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A299A519695EE400839E0B /* CoreDataArrayController.swift */; };
 		14BD059A195DE52400C3A0E3 /* CoreDataTable+OSX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BD0599195DE52400C3A0E3 /* CoreDataTable+OSX.swift */; };
 		14CB5C9E195A45DF00A10511 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14CB5C9D195A45DF00A10511 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14CB5CA4195A45DF00A10511 /* AlecrimCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14CB5C98195A45DF00A10511 /* AlecrimCoreData.framework */; };
@@ -28,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		14A299A519695EE400839E0B /* CoreDataArrayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataArrayController.swift; sourceTree = "<group>"; };
 		14BD0599195DE52400C3A0E3 /* CoreDataTable+OSX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+OSX.swift"; sourceTree = "<group>"; };
 		14CB5C98195A45DF00A10511 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		14CB5C9C195A45DF00A10511 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				14CB5CB9195A483400A10511 /* CoreDataStack.swift */,
 				14CB5CFA195B85AC00A10511 /* CoreDataTable.swift */,
 				14BD0599195DE52400C3A0E3 /* CoreDataTable+OSX.swift */,
+				14A299A519695EE400839E0B /* CoreDataArrayController.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -241,6 +244,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				14A299A619695EE400839E0B /* CoreDataArrayController.swift in Sources */,
 				14BD059A195DE52400C3A0E3 /* CoreDataTable+OSX.swift in Sources */,
 				14CB5CB8195A46D700A10511 /* NSManagedObject+Extensions.swift in Sources */,
 				14CB5CBA195A483400A10511 /* CoreDataStack.swift in Sources */,
