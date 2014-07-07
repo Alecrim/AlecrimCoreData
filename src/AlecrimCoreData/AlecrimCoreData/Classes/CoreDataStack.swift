@@ -43,7 +43,7 @@ class CoreDataStack {
         self.savingContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         self.savingContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         self.savingContext.persistentStoreCoordinator = self.coordinator
-        self.savingContext.undoManager = nil
+        //self.savingContext.undoManager = nil
         
         self.mainContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         self.mainContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
@@ -62,7 +62,7 @@ extension CoreDataStack {
         let backgroundContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         backgroundContext.parentContext = self.savingContext
-        backgroundContext.undoManager = nil
+        //backgroundContext.undoManager = nil
         
         var observer: NSObject? = nil
         observer = NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: backgroundContext, queue: nil) { [weak self] notification in
