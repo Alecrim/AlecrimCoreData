@@ -18,10 +18,9 @@ class CoreDataStack {
     let savingContext: NSManagedObjectContext
     let mainContext: NSManagedObjectContext
     
-    // TODO: error handling
     init(modelName name: String?) {
         let bundle = NSBundle.mainBundle()
-        let modelName = (name == nil ? bundle.infoDictionary[kCFBundleNameKey] as String : name!)
+        let modelName = (name == nil ? (bundle.infoDictionary as NSDictionary).valueForKey(kCFBundleNameKey) as String : name!)
         let modelURL = bundle.URLForResource(modelName, withExtension: "momd")
         
         let fileManager = NSFileManager.defaultManager()

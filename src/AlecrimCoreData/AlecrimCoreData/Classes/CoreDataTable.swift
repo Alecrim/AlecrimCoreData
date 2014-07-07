@@ -25,31 +25,31 @@ class CoreDataTable<T: NSManagedObject> {
     
     // #pragma mark - private
     
-    let _defaultFetchBatchSize = 20
-    @lazy var _underlyingFetchRequest = NSFetchRequest(entityName: T.getEntityName())
+    let defaultFetchBatchSize = 20
+    @lazy var underlyingFetchRequest = NSFetchRequest(entityName: T.getEntityName())
     
 }
 
 extension CoreDataTable {
 
     func skip(count: Int) -> Self {
-        self._underlyingFetchRequest.fetchOffset = count
+        self.underlyingFetchRequest.fetchOffset = count
         return self
     }
     
     func take(count: Int) -> Self {
-        self._underlyingFetchRequest.fetchLimit = count
+        self.underlyingFetchRequest.fetchLimit = count
         return self
     }
 
-    func sortedBy(sortTerm: String, ascending: Bool = true) -> Self {
-        if self._underlyingFetchRequest.sortDescriptors == nil {
-            self._underlyingFetchRequest.sortDescriptors = self._sortDescriptorsFromString(sortTerm, defaultAscendingValue: ascending)
+    func sortBy(sortTerm: String, ascending: Bool = true) -> Self {
+        let addedSortDescriptors = self.sortDescriptorsFromString(sortTerm, defaultAscendingValue: ascending)
+        
+        if var sortDescriptors = self.underlyingFetchRequest.sortDescriptors {
+            sortDescriptors += addedSortDescriptors
         }
         else {
-            var sortDescriptors = self._underlyingFetchRequest.sortDescriptors.copy()
-            sortDescriptors += self._sortDescriptorsFromString(sortTerm, defaultAscendingValue: ascending)
-            self._underlyingFetchRequest.sortDescriptors = sortDescriptors
+            self.underlyingFetchRequest.sortDescriptors = addedSortDescriptors
         }
         
         return self
@@ -60,31 +60,31 @@ extension CoreDataTable {
     }
 
     func orderByAscending(attributeName: String) -> Self {
-        return self.sortedBy(attributeName, ascending: true)
+        return self.sortBy(attributeName, ascending: true)
     }
 
     func orderByDescending(attributeName: String) -> Self {
-        return self.sortedBy(attributeName, ascending: false)
+        return self.sortBy(attributeName, ascending: false)
     }
 
-    func filteredBy(#predicate: NSPredicate) -> Self {
-        if self._underlyingFetchRequest.predicate == nil {
-            self._underlyingFetchRequest.predicate = predicate
+    func filterBy(#predicate: NSPredicate) -> Self {
+        if self.underlyingFetchRequest.predicate == nil {
+            self.underlyingFetchRequest.predicate = predicate
         }
-        else if let compoundPredicate = self._underlyingFetchRequest.predicate as? NSCompoundPredicate {
-            var subpredicates = compoundPredicate.subpredicates.copy()
+        else if let compoundPredicate = self.underlyingFetchRequest.predicate as? NSCompoundPredicate {
+            var subpredicates = compoundPredicate.subpredicates as Array<NSPredicate>
             subpredicates += predicate
-            self._underlyingFetchRequest.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
+            self.underlyingFetchRequest.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
         }
         else {
-            let subpredicates = [ self._underlyingFetchRequest.predicate!, predicate ]
-            self._underlyingFetchRequest.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
+            let subpredicates = [ self.underlyingFetchRequest.predicate!, predicate ]
+            self.underlyingFetchRequest.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
         }
     
         return self
     }
     
-    func filteredBy<V: AnyObject>(attribute attributeName: String, value: V?) -> Self {
+    func filterBy<V: AnyObject>(attribute attributeName: String, value: V?) -> Self {
         var predicate: NSPredicate
         if let v = value {
             predicate = NSPredicate(format: "%K == %@", argumentArray: [ attributeName, v ])
@@ -93,41 +93,41 @@ extension CoreDataTable {
             predicate = NSPredicate(format: "%K == nil")
         }
         
-        return self.filteredBy(predicate: predicate)
+        return self.filterBy(predicate: predicate)
     }
     
-    func filteredBy(#predicateFormat: String, argumentArray arguments: AnyObject[]!) -> Self {
+    func filterBy(#predicateFormat: String, argumentArray arguments: [AnyObject]!) -> Self {
         let predicate = NSPredicate(format: predicateFormat, argumentArray: arguments);
-        return self.filteredBy(predicate: predicate)
+        return self.filterBy(predicate: predicate)
     }
     
-    func filteredBy(#predicateFormat: String, arguments argList: CVaListPointer) -> Self {
+    func filterBy(#predicateFormat: String, arguments argList: CVaListPointer) -> Self {
         let predicate = NSPredicate(format: predicateFormat, arguments: argList)
-        return self.filteredBy(predicate: predicate)
+        return self.filterBy(predicate: predicate)
     }
     
 }
 
 extension CoreDataTable {
 
-    func toArray() -> T[] {
-        return self._toArray(fetchRequest: self._underlyingFetchRequest.copy() as NSFetchRequest)
+    func toArray() -> [T] {
+        return self._toArray(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest)
     }
     
-    func toArray(completion: (T[]) -> Void) {
-        self._toArray(fetchRequest: self._underlyingFetchRequest.copy() as NSFetchRequest, completion: completion)
+    func toArray(completion: ([T]) -> Void) {
+        self._toArray(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest, completion: completion)
     }
 
     func count() -> Int {
-        return self._count(fetchRequest: self._underlyingFetchRequest.copy() as NSFetchRequest)
+        return self._count(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest)
     }
 
     func count(completion: (Int) -> Void) {
-        self._count(fetchRequest: self._underlyingFetchRequest.copy() as NSFetchRequest)
+        self._count(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest)
     }
 
     func first() -> T? {
-        let fetchRequest = self._underlyingFetchRequest.copy() as NSFetchRequest
+        let fetchRequest = self.underlyingFetchRequest.copy() as NSFetchRequest
         fetchRequest.fetchLimit = 1
         
         let results = self._toArray(fetchRequest: fetchRequest)
@@ -136,7 +136,7 @@ extension CoreDataTable {
     }
     
     func first(completion: (T?) -> Void) {
-        let fetchRequest = self._underlyingFetchRequest.copy() as NSFetchRequest
+        let fetchRequest = self.underlyingFetchRequest.copy() as NSFetchRequest
         fetchRequest.fetchLimit = 1
         
         self._toArray(fetchRequest: fetchRequest) { results in
@@ -145,7 +145,7 @@ extension CoreDataTable {
     }
     
     func any() -> Bool {
-        let fetchRequest = self._underlyingFetchRequest.copy() as NSFetchRequest
+        let fetchRequest = self.underlyingFetchRequest.copy() as NSFetchRequest
         fetchRequest.fetchLimit = 1
         
         let result = self._count(fetchRequest: fetchRequest) > 0
@@ -154,7 +154,7 @@ extension CoreDataTable {
     }
     
     func any(completion: (Bool) -> Void) {
-        let fetchRequest = self._underlyingFetchRequest.copy() as NSFetchRequest
+        let fetchRequest = self.underlyingFetchRequest.copy() as NSFetchRequest
         fetchRequest.fetchLimit = 1
 
         return self._count(fetchRequest: fetchRequest) { count in
@@ -166,16 +166,16 @@ extension CoreDataTable {
 
 extension CoreDataTable {
     
-    func _sortDescriptorsFromString(string: String, defaultAscendingValue: Bool) -> NSSortDescriptor[] {
-        var sortDescriptors = NSSortDescriptor[]()
+    func sortDescriptorsFromString(string: String, defaultAscendingValue: Bool) -> [NSSortDescriptor] {
+        var sortDescriptors = [NSSortDescriptor]()
         
-        let sortKeys = string.componentsSeparatedByString(",") as NSString[]
+        let sortKeys = string.componentsSeparatedByString(",") as [NSString]
         for sortKey in sortKeys {
             var effectiveSortKey = sortKey
             var effectiveAscending = defaultAscendingValue
             var effectiveOptionalParameter: NSString? = nil
             
-            let sortComponents = sortKey.componentsSeparatedByString(":") as NSString[]
+            let sortComponents = sortKey.componentsSeparatedByString(":") as [NSString]
             if sortComponents.count > 1 {
                 effectiveSortKey = sortComponents[0]
                 effectiveAscending = sortComponents[1].boolValue
@@ -196,15 +196,15 @@ extension CoreDataTable {
         return sortDescriptors
     }
     
-    func _toArray(#fetchRequest: NSFetchRequest) -> T[] {
-        fetchRequest.fetchBatchSize = self._defaultFetchBatchSize
+    func _toArray(#fetchRequest: NSFetchRequest) -> [T] {
+        fetchRequest.fetchBatchSize = self.defaultFetchBatchSize
         
-        var results = T[]()
+        var results = [T]()
         
         self.dataModel.context.performBlockAndWait { [weak self] in
             if let s = self {
                 var error: NSError? = nil
-                if let objects = s.dataModel.context.executeFetchRequest(fetchRequest, error: &error) as? T[] {
+                if let objects = s.dataModel.context.executeFetchRequest(fetchRequest, error: &error) as? [T] {
                     results += objects
                 }
             }
@@ -214,15 +214,15 @@ extension CoreDataTable {
     }
 
     // TODO: verify if it will be possible to use NSAsynchronousFetchRequest in future versions (of AlecrimCoreData and Swift) [see WWDC 2014 - 225]
-    func _toArray(#fetchRequest: NSFetchRequest, completion: (T[]) -> Void) {
-        fetchRequest.fetchBatchSize = self._defaultFetchBatchSize
+    func _toArray(#fetchRequest: NSFetchRequest, completion: ([T]) -> Void) {
+        fetchRequest.fetchBatchSize = self.defaultFetchBatchSize
 
         let context = self.dataModel.context
         context.performBlock {
-            var results = T[]()
+            var results = [T]()
 
             var error: NSError? = nil
-            if let objects = context.executeFetchRequest(fetchRequest, error: &error) as? T[] {
+            if let objects = context.executeFetchRequest(fetchRequest, error: &error) as? [T] {
                 results += objects
             }
         
@@ -260,7 +260,7 @@ extension CoreDataTable {
 
 extension CoreDataTable: Sequence {
 
-    typealias GeneratorType = IndexingGenerator<T[]>
+    typealias GeneratorType = IndexingGenerator<[T]>
     
     func generate() -> GeneratorType {
         return self.toArray().generate()
@@ -278,7 +278,7 @@ extension CoreDataTable {
     }
     
     func createOrGetFirstEntity<V: AnyObject>(whereAttribute attributeName: String, isEqualTo value: V?) -> T {
-        if let entity = self.filteredBy(attribute: attributeName, value: value).first() {
+        if let entity = self.filterBy(attribute: attributeName, value: value).first() {
             return entity
         }
         else {

@@ -16,13 +16,13 @@ extension CoreDataTable {
         
         let arrayController = NSArrayController()
         arrayController.managedObjectContext = self.dataModel.context
-        arrayController.entityName = self._underlyingFetchRequest.entityName
+        arrayController.entityName = self.underlyingFetchRequest.entityName
         
-        if let sortDescriptors = self._underlyingFetchRequest.sortDescriptors {
-            arrayController.sortDescriptors = sortDescriptors.copy()
+        if let sortDescriptors = self.underlyingFetchRequest.sortDescriptors {
+            arrayController.sortDescriptors = sortDescriptors // TODO: copy?
         }
         
-        if let predicate = self._underlyingFetchRequest.predicate {
+        if let predicate = self.underlyingFetchRequest.predicate {
             arrayController.fetchPredicate = predicate.copy() as NSPredicate
         }
         
@@ -30,9 +30,9 @@ extension CoreDataTable {
         arrayController.automaticallyRearrangesObjects = true
         
         let defaultFetchRequest = arrayController.defaultFetchRequest()
-        defaultFetchRequest.fetchOffset = self._underlyingFetchRequest.fetchOffset
-        defaultFetchRequest.fetchLimit = self._underlyingFetchRequest.fetchLimit
-        defaultFetchRequest.fetchBatchSize = self._defaultFetchBatchSize
+        defaultFetchRequest.fetchOffset = self.underlyingFetchRequest.fetchOffset
+        defaultFetchRequest.fetchLimit = self.underlyingFetchRequest.fetchLimit
+        defaultFetchRequest.fetchBatchSize = self.defaultFetchBatchSize
 
         var error: NSError? = nil
         arrayController.fetchWithRequest(nil, merge: true, error: &error)
