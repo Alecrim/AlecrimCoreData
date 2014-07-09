@@ -64,10 +64,10 @@ extension CoreDataModel {
 //    
 //}
 
-func usingBackgroundDataModelFrom<T: CoreDataModel>(dataModel: T, closure: (T) -> Void) {
-    let backgroundDataModel = T(parentDataModel: dataModel)
-    backgroundDataModel.context.performBlock {
-        closure(backgroundDataModel)
+extension CoreDataModel {
+    
+    func perform(closure: () -> Void) {
+        self.context.performBlock(closure)
     }
+    
 }
-
