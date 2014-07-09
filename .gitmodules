@@ -1,0 +1,4 @@
+[submodule "vendor/BBFetchedResultsController"]
+	path = vendor/BBFetchedResultsController
+	url = https://github.com/benrblakely/BBFetchedResultsController.git
+	branch = master

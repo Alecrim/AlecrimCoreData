@@ -13,7 +13,6 @@ import Foundation
 extension CoreDataTable {
 
     func toArrayController() -> NSArrayController {
-        
         let arrayController = NSArrayController()
         arrayController.managedObjectContext = self.dataModel.context
         arrayController.entityName = self.underlyingFetchRequest.entityName
@@ -42,4 +41,13 @@ extension CoreDataTable {
     
 }
 
+extension CoreDataTable {
+
+    func toFetchedResultsController() -> BBFetchedResultsController {
+        let fetchedResultsController = BBFetchedResultsController(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest, managedObjectContext: self.dataModel.context, sectionNameKeyPath: nil)
+        return fetchedResultsController
+    }
+    
+}
+    
 #endif
