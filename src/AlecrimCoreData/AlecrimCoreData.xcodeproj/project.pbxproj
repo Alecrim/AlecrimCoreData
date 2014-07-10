@@ -7,14 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1450C43B196D302B00A0A765 /* BBFetchedResultsController.h in Headers */ = {isa = PBXBuildFile; fileRef = 1450C433196D302B00A0A765 /* BBFetchedResultsController.h */; };
-		1450C43C196D302B00A0A765 /* BBFetchedResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1450C434196D302B00A0A765 /* BBFetchedResultsController.m */; };
-		1450C43D196D302B00A0A765 /* BBFetchedResultsIndexPath.h in Headers */ = {isa = PBXBuildFile; fileRef = 1450C435196D302B00A0A765 /* BBFetchedResultsIndexPath.h */; };
-		1450C43E196D302B00A0A765 /* BBFetchedResultsIndexPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 1450C436196D302B00A0A765 /* BBFetchedResultsIndexPath.m */; };
-		1450C43F196D302B00A0A765 /* BBFetchedResultsObjectChange.h in Headers */ = {isa = PBXBuildFile; fileRef = 1450C437196D302B00A0A765 /* BBFetchedResultsObjectChange.h */; };
-		1450C440196D302B00A0A765 /* BBFetchedResultsObjectChange.m in Sources */ = {isa = PBXBuildFile; fileRef = 1450C438196D302B00A0A765 /* BBFetchedResultsObjectChange.m */; };
-		1450C441196D302B00A0A765 /* BBFetchedResultsSection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1450C439196D302B00A0A765 /* BBFetchedResultsSection.h */; };
-		1450C442196D302B00A0A765 /* BBFetchedResultsSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1450C43A196D302B00A0A765 /* BBFetchedResultsSection.m */; };
 		14A299A619695EE400839E0B /* CoreDataArrayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A299A519695EE400839E0B /* CoreDataArrayController.swift */; };
 		14BD059A195DE52400C3A0E3 /* CoreDataTable+OSX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BD0599195DE52400C3A0E3 /* CoreDataTable+OSX.swift */; };
 		14CB5C9E195A45DF00A10511 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14CB5C9D195A45DF00A10511 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -38,14 +30,6 @@
 
 /* Begin PBXFileReference section */
 		1450C430196D300D00A0A765 /* AlecrimCoreData-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AlecrimCoreData-Bridging-Header.h"; sourceTree = "<group>"; };
-		1450C433196D302B00A0A765 /* BBFetchedResultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBFetchedResultsController.h; sourceTree = "<group>"; };
-		1450C434196D302B00A0A765 /* BBFetchedResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBFetchedResultsController.m; sourceTree = "<group>"; };
-		1450C435196D302B00A0A765 /* BBFetchedResultsIndexPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBFetchedResultsIndexPath.h; sourceTree = "<group>"; };
-		1450C436196D302B00A0A765 /* BBFetchedResultsIndexPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBFetchedResultsIndexPath.m; sourceTree = "<group>"; };
-		1450C437196D302B00A0A765 /* BBFetchedResultsObjectChange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBFetchedResultsObjectChange.h; sourceTree = "<group>"; };
-		1450C438196D302B00A0A765 /* BBFetchedResultsObjectChange.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBFetchedResultsObjectChange.m; sourceTree = "<group>"; };
-		1450C439196D302B00A0A765 /* BBFetchedResultsSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBFetchedResultsSection.h; sourceTree = "<group>"; };
-		1450C43A196D302B00A0A765 /* BBFetchedResultsSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBFetchedResultsSection.m; sourceTree = "<group>"; };
 		14A299A519695EE400839E0B /* CoreDataArrayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataArrayController.swift; sourceTree = "<group>"; };
 		14BD0599195DE52400C3A0E3 /* CoreDataTable+OSX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+OSX.swift"; sourceTree = "<group>"; };
 		14CB5C98195A45DF00A10511 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,36 +63,11 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1450C431196D301100A0A765 /* Vendor */ = {
-			isa = PBXGroup;
-			children = (
-				1450C432196D302B00A0A765 /* BBFetchedResultsController */,
-			);
-			name = Vendor;
-			sourceTree = "<group>";
-		};
-		1450C432196D302B00A0A765 /* BBFetchedResultsController */ = {
-			isa = PBXGroup;
-			children = (
-				1450C433196D302B00A0A765 /* BBFetchedResultsController.h */,
-				1450C434196D302B00A0A765 /* BBFetchedResultsController.m */,
-				1450C435196D302B00A0A765 /* BBFetchedResultsIndexPath.h */,
-				1450C436196D302B00A0A765 /* BBFetchedResultsIndexPath.m */,
-				1450C437196D302B00A0A765 /* BBFetchedResultsObjectChange.h */,
-				1450C438196D302B00A0A765 /* BBFetchedResultsObjectChange.m */,
-				1450C439196D302B00A0A765 /* BBFetchedResultsSection.h */,
-				1450C43A196D302B00A0A765 /* BBFetchedResultsSection.m */,
-			);
-			name = BBFetchedResultsController;
-			path = ../../vendor/BBFetchedResultsController/BBFetchedResultsController;
-			sourceTree = "<group>";
-		};
 		14CB5C8E195A45DF00A10511 = {
 			isa = PBXGroup;
 			children = (
 				14CB5C9A195A45DF00A10511 /* AlecrimCoreData */,
 				14CB5CA7195A45DF00A10511 /* AlecrimCoreDataTests */,
-				1450C431196D301100A0A765 /* Vendor */,
 				14CB5C99195A45DF00A10511 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -186,11 +145,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1450C441196D302B00A0A765 /* BBFetchedResultsSection.h in Headers */,
-				1450C43D196D302B00A0A765 /* BBFetchedResultsIndexPath.h in Headers */,
 				14CB5C9E195A45DF00A10511 /* AlecrimCoreData.h in Headers */,
-				1450C43F196D302B00A0A765 /* BBFetchedResultsObjectChange.h in Headers */,
-				1450C43B196D302B00A0A765 /* BBFetchedResultsController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,13 +246,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1450C442196D302B00A0A765 /* BBFetchedResultsSection.m in Sources */,
-				1450C440196D302B00A0A765 /* BBFetchedResultsObjectChange.m in Sources */,
 				14A299A619695EE400839E0B /* CoreDataArrayController.swift in Sources */,
 				14BD059A195DE52400C3A0E3 /* CoreDataTable+OSX.swift in Sources */,
-				1450C43C196D302B00A0A765 /* BBFetchedResultsController.m in Sources */,
 				14CB5CB8195A46D700A10511 /* NSManagedObject+Extensions.swift in Sources */,
-				1450C43E196D302B00A0A765 /* BBFetchedResultsIndexPath.m in Sources */,
 				14CB5CBA195A483400A10511 /* CoreDataStack.swift in Sources */,
 				14CB5CF9195B856A00A10511 /* CoreDataModel.swift in Sources */,
 				14CB5CFB195B85AC00A10511 /* CoreDataTable.swift in Sources */,
