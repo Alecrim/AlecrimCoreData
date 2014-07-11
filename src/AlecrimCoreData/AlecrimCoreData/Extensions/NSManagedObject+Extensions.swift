@@ -26,6 +26,24 @@ extension NSManagedObject {
         }
     }
 
+    func inContext<T: NSManagedObject>(otherContext: NSManagedObjectContext) -> T? {
+        if self.managedObjectContext == otherContext {
+            return self as? T
+        }
+        
+        var error: NSError? = nil
+        if self.objectID.temporaryID {
+            let success = self.managedObjectContext.obtainPermanentIDsForObjects([ self ], error: &error)
+            if !success {
+                return nil
+            }
+        }
+        
+        let inContext = otherContext.existingObjectWithID(self.objectID, error: &error) as? T
+        
+        return inContext
+    }
+    
 }
 
 // from: https://github.com/indieSoftware/INSwift
