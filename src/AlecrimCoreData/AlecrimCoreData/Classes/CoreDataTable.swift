@@ -216,6 +216,21 @@ extension CoreDataTable {
     // TODO: verify if it will be possible to use NSAsynchronousFetchRequest in future versions (of AlecrimCoreData and Swift) [see WWDC 2014 - 225]
     func _toArray(#fetchRequest: NSFetchRequest, completion: ([T]) -> Void) {
         fetchRequest.fetchBatchSize = self.defaultFetchBatchSize
+        
+//        let asyncRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { asyncResult in
+//            var results = [T]()
+//            if let finalResult = asyncResult.finalResult as? [T] {
+//                results += finalResult
+//            }
+//            
+//            completion(results)
+//        }
+//        
+//        var error: NSError? = nil
+//        self.dataModel.context.persistentStoreCoordinator.executeRequest(asyncRequest, withContext: self.dataModel.context, error: &error)
+//        if error != nil {
+//            completion([T]())
+//        }
 
         let context = self.dataModel.context
         context.performBlock {

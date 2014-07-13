@@ -59,7 +59,9 @@ extension CoreDataModel {
 //    
 //    func performInBackground<T: CoreDataModel>(closure: (T) -> Void) {
 //        let backgroundDataModel = T(parentDataModel: self)
-//        closure(backgroundDataModel)
+//        backgroundDataModel.context.performBlock {
+//            closure(backgroundDataModel)
+//        }
 //    }
 //    
 //}
