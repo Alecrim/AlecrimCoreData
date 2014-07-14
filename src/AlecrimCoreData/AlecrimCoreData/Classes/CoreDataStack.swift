@@ -18,6 +18,9 @@ class CoreDataStack {
     let savingContext: NSManagedObjectContext
     let mainContext: NSManagedObjectContext
     
+    //@lazy var backgroundContexts = [NSManagedObjectContext]()
+    @lazy var contextObservers = [NSObjectProtocol]()
+    
     init(modelName name: String?) {
         let bundle = NSBundle.mainBundle()
         let modelName = (name == nil ? (bundle.infoDictionary as NSDictionary).valueForKey(kCFBundleNameKey) as String : name!)
@@ -42,16 +45,20 @@ class CoreDataStack {
         self.savingContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         self.savingContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         self.savingContext.persistentStoreCoordinator = self.coordinator
-        //self.savingContext.undoManager = nil
+        self.savingContext.undoManager = nil
         
         self.mainContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         self.mainContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         self.mainContext.parentContext = self.savingContext
     }
     
-//    deinit {
-//        println("deinit - CoreDataStack")
-//    }
+    deinit {
+        println("deinit - CoreDataStack")
+        
+        for observer in self.contextObservers {
+            NSNotificationCenter.defaultCenter().removeObserver(observer)
+        }
+    }
     
 }
 
@@ -61,22 +68,18 @@ extension CoreDataStack {
         let backgroundContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         backgroundContext.parentContext = self.savingContext
-        //backgroundContext.undoManager = nil
+        backgroundContext.undoManager = nil
         
-        var observer: NSObject? = nil
-        observer = NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: backgroundContext, queue: nil) { [weak self] notification in
+        let observer = NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: backgroundContext, queue: nil) { [weak self] notification in
             if let s = self {
-                println("AQUI0")
                 s.mainContext.performBlock {
                     s.mainContext.mergeChangesFromContextDidSaveNotification(notification)
-                    println("AQUI1")
                 }
             }
-
-            NSNotificationCenter.defaultCenter().removeObserver(observer)
-            observer = nil
-            
-        } as? NSObject
+        }
+        
+        //self.backgroundContexts.append(backgroundContext)
+        self.contextObservers.append(observer)
 
         return backgroundContext
     }

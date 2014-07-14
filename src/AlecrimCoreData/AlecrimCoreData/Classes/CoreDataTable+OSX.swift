@@ -9,6 +9,7 @@
 #if os(OSX)
 
 import Foundation
+import AppKit
     
 extension CoreDataTable {
 
