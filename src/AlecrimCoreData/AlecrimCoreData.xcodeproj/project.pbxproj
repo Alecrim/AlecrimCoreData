@@ -7,44 +7,46 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		14A299A619695EE400839E0B /* CoreDataArrayController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A299A519695EE400839E0B /* CoreDataArrayController.swift */; };
-		14BD059A195DE52400C3A0E3 /* CoreDataTable+OSX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BD0599195DE52400C3A0E3 /* CoreDataTable+OSX.swift */; };
-		14CB5C9E195A45DF00A10511 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14CB5C9D195A45DF00A10511 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		14CB5CA4195A45DF00A10511 /* AlecrimCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14CB5C98195A45DF00A10511 /* AlecrimCoreData.framework */; };
-		14CB5CAB195A45DF00A10511 /* AlecrimCoreDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CB5CAA195A45DF00A10511 /* AlecrimCoreDataTests.swift */; };
-		14CB5CB8195A46D700A10511 /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CB5CB7195A46D700A10511 /* NSManagedObject+Extensions.swift */; };
-		14CB5CBA195A483400A10511 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CB5CB9195A483400A10511 /* CoreDataStack.swift */; };
-		14CB5CF9195B856A00A10511 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CB5CF8195B856A00A10511 /* CoreDataModel.swift */; };
-		14CB5CFB195B85AC00A10511 /* CoreDataTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CB5CFA195B85AC00A10511 /* CoreDataTable.swift */; };
+		14AB0AB6197965230082BD7C /* AlecrimCoreData-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 14AB0AAC197965230082BD7C /* AlecrimCoreData-Bridging-Header.h */; };
+		14AB0AB7197965230082BD7C /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14AB0AAD197965230082BD7C /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		14AB0AB9197965230082BD7C /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB0197965230082BD7C /* CoreDataModel.swift */; };
+		14AB0ABA197965230082BD7C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB1197965230082BD7C /* CoreDataStack.swift */; };
+		14AB0ABB197965230082BD7C /* CoreDataTable+OSX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB2197965230082BD7C /* CoreDataTable+OSX.swift */; };
+		14AB0ABC197965230082BD7C /* CoreDataTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB3197965230082BD7C /* CoreDataTable.swift */; };
+		14AB0ABD197965230082BD7C /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB5197965230082BD7C /* NSManagedObject+Extensions.swift */; };
+		14AB0ADD197965D90082BD7C /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14AB0AAD197965230082BD7C /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		14AB0ADE197966080082BD7C /* AlecrimCoreData-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 14AB0AAC197965230082BD7C /* AlecrimCoreData-Bridging-Header.h */; };
+		14AB0AE0197966490082BD7C /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB0197965230082BD7C /* CoreDataModel.swift */; };
+		14AB0AE1197966490082BD7C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB1197965230082BD7C /* CoreDataStack.swift */; };
+		14AB0AE2197966490082BD7C /* CoreDataTable+OSX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB2197965230082BD7C /* CoreDataTable+OSX.swift */; };
+		14AB0AE3197966490082BD7C /* CoreDataTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB3197965230082BD7C /* CoreDataTable.swift */; };
+		14AB0AE4197966500082BD7C /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB5197965230082BD7C /* NSManagedObject+Extensions.swift */; };
+		14AB0AE6197966C10082BD7C /* CoreDataTable+iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AE5197966C10082BD7C /* CoreDataTable+iOS.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		14CB5CA5195A45DF00A10511 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 14CB5C8F195A45DF00A10511 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 14CB5C97195A45DF00A10511;
-			remoteInfo = AlecrimCoreData;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		1450C430196D300D00A0A765 /* AlecrimCoreData-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AlecrimCoreData-Bridging-Header.h"; sourceTree = "<group>"; };
-		14A299A519695EE400839E0B /* CoreDataArrayController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataArrayController.swift; sourceTree = "<group>"; };
-		14BD0599195DE52400C3A0E3 /* CoreDataTable+OSX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+OSX.swift"; sourceTree = "<group>"; };
+		14AB0AAC197965230082BD7C /* AlecrimCoreData-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AlecrimCoreData-Bridging-Header.h"; sourceTree = "<group>"; };
+		14AB0AAD197965230082BD7C /* AlecrimCoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
+		14AB0AB0197965230082BD7C /* CoreDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
+		14AB0AB1197965230082BD7C /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		14AB0AB2197965230082BD7C /* CoreDataTable+OSX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+OSX.swift"; sourceTree = "<group>"; };
+		14AB0AB3197965230082BD7C /* CoreDataTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataTable.swift; sourceTree = "<group>"; };
+		14AB0AB5197965230082BD7C /* NSManagedObject+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extensions.swift"; sourceTree = "<group>"; };
+		14AB0AC41979657C0082BD7C /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		14AB0AC71979657D0082BD7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		14AB0AE5197966C10082BD7C /* CoreDataTable+iOS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+iOS.swift"; sourceTree = "<group>"; };
 		14CB5C98195A45DF00A10511 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		14CB5C9C195A45DF00A10511 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		14CB5C9D195A45DF00A10511 /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
-		14CB5CA3195A45DF00A10511 /* AlecrimCoreDataTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlecrimCoreDataTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		14CB5CA9195A45DF00A10511 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		14CB5CAA195A45DF00A10511 /* AlecrimCoreDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlecrimCoreDataTests.swift; sourceTree = "<group>"; };
-		14CB5CB7195A46D700A10511 /* NSManagedObject+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extensions.swift"; sourceTree = "<group>"; };
-		14CB5CB9195A483400A10511 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
-		14CB5CF8195B856A00A10511 /* CoreDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
-		14CB5CFA195B85AC00A10511 /* CoreDataTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataTable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		14AB0AC01979657C0082BD7C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		14CB5C94195A45DF00A10511 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -52,22 +54,70 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		14CB5CA0195A45DF00A10511 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				14CB5CA4195A45DF00A10511 /* AlecrimCoreData.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		14AB0AAB197965230082BD7C /* AlecrimCoreData-Shared */ = {
+			isa = PBXGroup;
+			children = (
+				14AB0AAD197965230082BD7C /* AlecrimCoreData.h */,
+				14AB0AAE197965230082BD7C /* Classes */,
+				14AB0AB4197965230082BD7C /* Extensions */,
+				14AB0ABE197965320082BD7C /* Supporting Files */,
+			);
+			path = "AlecrimCoreData-Shared";
+			sourceTree = "<group>";
+		};
+		14AB0AAE197965230082BD7C /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				14AB0AB0197965230082BD7C /* CoreDataModel.swift */,
+				14AB0AB1197965230082BD7C /* CoreDataStack.swift */,
+				14AB0AB3197965230082BD7C /* CoreDataTable.swift */,
+				14AB0AE5197966C10082BD7C /* CoreDataTable+iOS.swift */,
+				14AB0AB2197965230082BD7C /* CoreDataTable+OSX.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		14AB0AB4197965230082BD7C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				14AB0AB5197965230082BD7C /* NSManagedObject+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		14AB0ABE197965320082BD7C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				14AB0AAC197965230082BD7C /* AlecrimCoreData-Bridging-Header.h */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		14AB0AC51979657D0082BD7C /* AlecrimCoreData-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				14AB0AC61979657D0082BD7C /* Supporting Files */,
+			);
+			path = "AlecrimCoreData-iOS";
+			sourceTree = "<group>";
+		};
+		14AB0AC61979657D0082BD7C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				14AB0AC71979657D0082BD7C /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		14CB5C8E195A45DF00A10511 = {
 			isa = PBXGroup;
 			children = (
-				14CB5C9A195A45DF00A10511 /* AlecrimCoreData */,
-				14CB5CA7195A45DF00A10511 /* AlecrimCoreDataTests */,
+				14AB0AC51979657D0082BD7C /* AlecrimCoreData-iOS */,
+				14CB5C9A195A45DF00A10511 /* AlecrimCoreData-OSX */,
+				14AB0AAB197965230082BD7C /* AlecrimCoreData-Shared */,
 				14CB5C99195A45DF00A10511 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -76,85 +126,72 @@
 			isa = PBXGroup;
 			children = (
 				14CB5C98195A45DF00A10511 /* AlecrimCoreData.framework */,
-				14CB5CA3195A45DF00A10511 /* AlecrimCoreDataTests.xctest */,
+				14AB0AC41979657C0082BD7C /* AlecrimCoreData.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		14CB5C9A195A45DF00A10511 /* AlecrimCoreData */ = {
+		14CB5C9A195A45DF00A10511 /* AlecrimCoreData-OSX */ = {
 			isa = PBXGroup;
 			children = (
-				14CB5C9D195A45DF00A10511 /* AlecrimCoreData.h */,
-				14CB5CB4195A461300A10511 /* Classes */,
-				14CB5CB5195A461300A10511 /* Extensions */,
 				14CB5C9B195A45DF00A10511 /* Supporting Files */,
 			);
-			path = AlecrimCoreData;
+			path = "AlecrimCoreData-OSX";
 			sourceTree = "<group>";
 		};
 		14CB5C9B195A45DF00A10511 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
 				14CB5C9C195A45DF00A10511 /* Info.plist */,
-				1450C430196D300D00A0A765 /* AlecrimCoreData-Bridging-Header.h */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		14CB5CA7195A45DF00A10511 /* AlecrimCoreDataTests */ = {
-			isa = PBXGroup;
-			children = (
-				14CB5CAA195A45DF00A10511 /* AlecrimCoreDataTests.swift */,
-				14CB5CA8195A45DF00A10511 /* Supporting Files */,
-			);
-			path = AlecrimCoreDataTests;
-			sourceTree = "<group>";
-		};
-		14CB5CA8195A45DF00A10511 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				14CB5CA9195A45DF00A10511 /* Info.plist */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		14CB5CB4195A461300A10511 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				14CB5CF8195B856A00A10511 /* CoreDataModel.swift */,
-				14CB5CB9195A483400A10511 /* CoreDataStack.swift */,
-				14CB5CFA195B85AC00A10511 /* CoreDataTable.swift */,
-				14BD0599195DE52400C3A0E3 /* CoreDataTable+OSX.swift */,
-				14A299A519695EE400839E0B /* CoreDataArrayController.swift */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
-		14CB5CB5195A461300A10511 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				14CB5CB7195A46D700A10511 /* NSManagedObject+Extensions.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		14AB0AC11979657C0082BD7C /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14AB0ADE197966080082BD7C /* AlecrimCoreData-Bridging-Header.h in Headers */,
+				14AB0ADD197965D90082BD7C /* AlecrimCoreData.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		14CB5C95195A45DF00A10511 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14CB5C9E195A45DF00A10511 /* AlecrimCoreData.h in Headers */,
+				14AB0AB6197965230082BD7C /* AlecrimCoreData-Bridging-Header.h in Headers */,
+				14AB0AB7197965230082BD7C /* AlecrimCoreData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		14CB5C97195A45DF00A10511 /* AlecrimCoreData */ = {
+		14AB0AC31979657C0082BD7C /* AlecrimCoreData-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 14CB5CAE195A45DF00A10511 /* Build configuration list for PBXNativeTarget "AlecrimCoreData" */;
+			buildConfigurationList = 14AB0AD71979657D0082BD7C /* Build configuration list for PBXNativeTarget "AlecrimCoreData-iOS" */;
+			buildPhases = (
+				14AB0ABF1979657C0082BD7C /* Sources */,
+				14AB0AC01979657C0082BD7C /* Frameworks */,
+				14AB0AC11979657C0082BD7C /* Headers */,
+				14AB0AC21979657C0082BD7C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "AlecrimCoreData-iOS";
+			productName = AlecrimCoreData;
+			productReference = 14AB0AC41979657C0082BD7C /* AlecrimCoreData.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		14CB5C97195A45DF00A10511 /* AlecrimCoreData-OSX */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 14CB5CAE195A45DF00A10511 /* Build configuration list for PBXNativeTarget "AlecrimCoreData-OSX" */;
 			buildPhases = (
 				14CB5C93195A45DF00A10511 /* Sources */,
 				14CB5C94195A45DF00A10511 /* Frameworks */,
@@ -165,28 +202,10 @@
 			);
 			dependencies = (
 			);
-			name = AlecrimCoreData;
+			name = "AlecrimCoreData-OSX";
 			productName = AlecrimCoreData;
 			productReference = 14CB5C98195A45DF00A10511 /* AlecrimCoreData.framework */;
 			productType = "com.apple.product-type.framework";
-		};
-		14CB5CA2195A45DF00A10511 /* AlecrimCoreDataTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 14CB5CB1195A45DF00A10511 /* Build configuration list for PBXNativeTarget "AlecrimCoreDataTests" */;
-			buildPhases = (
-				14CB5C9F195A45DF00A10511 /* Sources */,
-				14CB5CA0195A45DF00A10511 /* Frameworks */,
-				14CB5CA1195A45DF00A10511 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				14CB5CA6195A45DF00A10511 /* PBXTargetDependency */,
-			);
-			name = AlecrimCoreDataTests;
-			productName = AlecrimCoreDataTests;
-			productReference = 14CB5CA3195A45DF00A10511 /* AlecrimCoreDataTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -197,12 +216,11 @@
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = Alecrim;
 				TargetAttributes = {
-					14CB5C97195A45DF00A10511 = {
+					14AB0AC31979657C0082BD7C = {
 						CreatedOnToolsVersion = 6.0;
 					};
-					14CB5CA2195A45DF00A10511 = {
+					14CB5C97195A45DF00A10511 = {
 						CreatedOnToolsVersion = 6.0;
-						TestTargetID = 14CB5C97195A45DF00A10511;
 					};
 				};
 			};
@@ -218,21 +236,21 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				14CB5C97195A45DF00A10511 /* AlecrimCoreData */,
-				14CB5CA2195A45DF00A10511 /* AlecrimCoreDataTests */,
+				14AB0AC31979657C0082BD7C /* AlecrimCoreData-iOS */,
+				14CB5C97195A45DF00A10511 /* AlecrimCoreData-OSX */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		14CB5C96195A45DF00A10511 /* Resources */ = {
+		14AB0AC21979657C0082BD7C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		14CB5CA1195A45DF00A10511 /* Resources */ = {
+		14CB5C96195A45DF00A10511 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -242,38 +260,83 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		14AB0ABF1979657C0082BD7C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14AB0AE1197966490082BD7C /* CoreDataStack.swift in Sources */,
+				14AB0AE0197966490082BD7C /* CoreDataModel.swift in Sources */,
+				14AB0AE6197966C10082BD7C /* CoreDataTable+iOS.swift in Sources */,
+				14AB0AE2197966490082BD7C /* CoreDataTable+OSX.swift in Sources */,
+				14AB0AE4197966500082BD7C /* NSManagedObject+Extensions.swift in Sources */,
+				14AB0AE3197966490082BD7C /* CoreDataTable.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		14CB5C93195A45DF00A10511 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14A299A619695EE400839E0B /* CoreDataArrayController.swift in Sources */,
-				14BD059A195DE52400C3A0E3 /* CoreDataTable+OSX.swift in Sources */,
-				14CB5CB8195A46D700A10511 /* NSManagedObject+Extensions.swift in Sources */,
-				14CB5CBA195A483400A10511 /* CoreDataStack.swift in Sources */,
-				14CB5CF9195B856A00A10511 /* CoreDataModel.swift in Sources */,
-				14CB5CFB195B85AC00A10511 /* CoreDataTable.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		14CB5C9F195A45DF00A10511 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				14CB5CAB195A45DF00A10511 /* AlecrimCoreDataTests.swift in Sources */,
+				14AB0ABA197965230082BD7C /* CoreDataStack.swift in Sources */,
+				14AB0AB9197965230082BD7C /* CoreDataModel.swift in Sources */,
+				14AB0ABB197965230082BD7C /* CoreDataTable+OSX.swift in Sources */,
+				14AB0ABD197965230082BD7C /* NSManagedObject+Extensions.swift in Sources */,
+				14AB0ABC197965230082BD7C /* CoreDataTable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		14CB5CA6195A45DF00A10511 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 14CB5C97195A45DF00A10511 /* AlecrimCoreData */;
-			targetProxy = 14CB5CA5195A45DF00A10511 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
+		14AB0AD81979657D0082BD7C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "AlecrimCoreData-iOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = AlecrimCoreData;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "AlecrimCoreData-Shared/AlecrimCoreData-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		14AB0AD91979657D0082BD7C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "AlecrimCoreData-iOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = AlecrimCoreData;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "AlecrimCoreData-Shared/AlecrimCoreData-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		14CB5CAC195A45DF00A10511 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -308,6 +371,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				METAL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -347,6 +411,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -365,13 +430,13 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = AlecrimCoreData/Info.plist;
+				INFOPLIST_FILE = "AlecrimCoreData-OSX/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = AlecrimCoreData;
 				SKIP_INSTALL = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "AlecrimCoreData/AlecrimCoreData-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "AlecrimCoreData-Shared/AlecrimCoreData-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -386,53 +451,27 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = AlecrimCoreData/Info.plist;
+				INFOPLIST_FILE = "AlecrimCoreData-OSX/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = AlecrimCoreData;
 				SKIP_INSTALL = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "AlecrimCoreData/AlecrimCoreData-Bridging-Header.h";
-			};
-			name = Release;
-		};
-		14CB5CB2195A45DF00A10511 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = AlecrimCoreDataTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				METAL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		14CB5CB3195A45DF00A10511 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = AlecrimCoreDataTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				METAL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "AlecrimCoreData-Shared/AlecrimCoreData-Bridging-Header.h";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		14AB0AD71979657D0082BD7C /* Build configuration list for PBXNativeTarget "AlecrimCoreData-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14AB0AD81979657D0082BD7C /* Debug */,
+				14AB0AD91979657D0082BD7C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		14CB5C92195A45DF00A10511 /* Build configuration list for PBXProject "AlecrimCoreData" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -442,20 +481,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		14CB5CAE195A45DF00A10511 /* Build configuration list for PBXNativeTarget "AlecrimCoreData" */ = {
+		14CB5CAE195A45DF00A10511 /* Build configuration list for PBXNativeTarget "AlecrimCoreData-OSX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				14CB5CAF195A45DF00A10511 /* Debug */,
 				14CB5CB0195A45DF00A10511 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		14CB5CB1195A45DF00A10511 /* Build configuration list for PBXNativeTarget "AlecrimCoreDataTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				14CB5CB2195A45DF00A10511 /* Debug */,
-				14CB5CB3195A45DF00A10511 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

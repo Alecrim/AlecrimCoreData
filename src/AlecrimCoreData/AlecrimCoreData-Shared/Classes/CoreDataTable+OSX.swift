@@ -41,14 +41,5 @@ extension CoreDataTable {
     }
     
 }
-
-//extension CoreDataTable {
-//
-//    func toFetchedResultsController() -> BBFetchedResultsController {
-//        let fetchedResultsController = BBFetchedResultsController(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest, managedObjectContext: self.dataModel.context, sectionNameKeyPath: nil)
-//        return fetchedResultsController
-//    }
-//    
-//}
     
 #endif
