@@ -123,7 +123,7 @@ extension CoreDataTable {
     }
 
     func count(completion: (Int) -> Void) {
-        self._count(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest)
+        self._count(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest, completion: completion)
     }
 
     func first() -> T? {
