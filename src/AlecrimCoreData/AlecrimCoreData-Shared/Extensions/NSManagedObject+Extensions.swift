@@ -11,10 +11,10 @@ import CoreData
 
 // #pragma mark - Entity Information
 
-extension NSManagedObject {
+public extension NSManagedObject {
     
     // TODO: change to class var when possible?
-    class func getEntityName() -> String {
+    internal class func getEntityName() -> String {
         let className: NSString = ___nameOfClass(self)
         let range = className.rangeOfString("Entity")
         
@@ -26,7 +26,7 @@ extension NSManagedObject {
         }
     }
 
-    func inContext(otherContext: NSManagedObjectContext) -> Self? {
+    public func inContext(otherContext: NSManagedObjectContext) -> Self? {
         if self.managedObjectContext == otherContext {
             return self
         }
@@ -69,7 +69,7 @@ extension NSManagedObject {
 }
 
 // from: https://github.com/indieSoftware/INSwift
-func ___nameOfClass(classType: AnyClass) -> String {
+private func ___nameOfClass(classType: AnyClass) -> String {
     let stringOfClassType: String = NSStringFromClass(classType)
     
     // parse the returned string

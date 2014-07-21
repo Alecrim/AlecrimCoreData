@@ -9,21 +9,24 @@
 import Foundation
 import CoreData
 
-class CoreDataStack {
+internal class CoreDataStack {
     
-    let model: NSManagedObjectModel
-    let coordinator: NSPersistentStoreCoordinator
-    let store: NSPersistentStore
+    // MARK: private
     
-    let savingContext: NSManagedObjectContext
-    let mainContext: NSManagedObjectContext
+    private let model: NSManagedObjectModel
+    private let coordinator: NSPersistentStoreCoordinator
+    private let store: NSPersistentStore
     
-    //@lazy var backgroundContexts = [NSManagedObjectContext]()
-    @lazy var contextObservers = [NSObjectProtocol]()
+    private let savingContext: NSManagedObjectContext
+    internal let mainContext: NSManagedObjectContext
     
-    init(modelName name: String?) {
+    private lazy var contextObservers = [NSObjectProtocol]()
+    
+    // MARK: init and deinit
+    
+    internal init(modelName name: NSString?) {
         let bundle = NSBundle.mainBundle()
-        let modelName = (name == nil ? (bundle.infoDictionary as NSDictionary).valueForKey(kCFBundleNameKey) as String : name!)
+        let modelName: NSString = (name == nil ? (bundle.infoDictionary[kCFBundleNameKey] as? NSString)! : name!)
         let modelURL = bundle.URLForResource(modelName, withExtension: "momd")
         
         let fileManager = NSFileManager.defaultManager()
@@ -53,8 +56,6 @@ class CoreDataStack {
     }
     
     deinit {
-        println("deinit - CoreDataStack")
-        
         for observer in self.contextObservers {
             NSNotificationCenter.defaultCenter().removeObserver(observer)
         }
@@ -62,9 +63,9 @@ class CoreDataStack {
     
 }
 
-extension CoreDataStack {
+internal extension CoreDataStack {
     
-    func createBackgroundContext() -> NSManagedObjectContext {
+    internal func createBackgroundContext() -> NSManagedObjectContext {
         let backgroundContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         backgroundContext.parentContext = self.savingContext
@@ -78,7 +79,6 @@ extension CoreDataStack {
             }
         }
         
-        //self.backgroundContexts.append(backgroundContext)
         self.contextObservers.append(observer)
 
         return backgroundContext
@@ -86,9 +86,9 @@ extension CoreDataStack {
     
 }
 
-extension CoreDataStack {
+internal extension CoreDataStack {
 
-    func saveContext(context: NSManagedObjectContext) -> (Bool, NSError?) {
+    internal func saveContext(context: NSManagedObjectContext) -> (Bool, NSError?) {
         var currentContext: NSManagedObjectContext? = context
         
         var success = false
@@ -109,7 +109,7 @@ extension CoreDataStack {
         return (success, error)
     }
     
-    func saveContext(context: NSManagedObjectContext, completion: ((Bool, NSError?) -> ())?) {
+    internal func saveContext(context: NSManagedObjectContext, completion: ((Bool, NSError?) -> ())?) {
         context.performBlock {
             var success = false
             var error: NSError? = nil

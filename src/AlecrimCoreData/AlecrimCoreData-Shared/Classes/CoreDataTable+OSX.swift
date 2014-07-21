@@ -11,9 +11,9 @@
 import Foundation
 import AppKit
     
-extension CoreDataTable {
+public extension CoreDataTable {
 
-    func toArrayController() -> NSArrayController {
+    public func toArrayController() -> NSArrayController {
         let arrayController = NSArrayController()
         arrayController.managedObjectContext = self.dataModel.context
         arrayController.entityName = self.underlyingFetchRequest.entityName

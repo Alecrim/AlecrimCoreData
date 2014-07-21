@@ -11,9 +11,9 @@ import CoreData
 
 #if os(iOS)
 
-extension CoreDataTable {
+public extension CoreDataTable {
 
-    func toFetchedResultsController() -> NSFetchedResultsController {
+    public func toFetchedResultsController() -> NSFetchedResultsController {
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest, managedObjectContext: self.dataModel.context, sectionNameKeyPath: nil, cacheName: nil)
         return fetchedResultsController
     }

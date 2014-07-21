@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		14AB0AB6197965230082BD7C /* AlecrimCoreData-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 14AB0AAC197965230082BD7C /* AlecrimCoreData-Bridging-Header.h */; };
 		14AB0AB7197965230082BD7C /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14AB0AAD197965230082BD7C /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14AB0AB9197965230082BD7C /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB0197965230082BD7C /* CoreDataModel.swift */; };
 		14AB0ABA197965230082BD7C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB1197965230082BD7C /* CoreDataStack.swift */; };
@@ -15,7 +14,6 @@
 		14AB0ABC197965230082BD7C /* CoreDataTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB3197965230082BD7C /* CoreDataTable.swift */; };
 		14AB0ABD197965230082BD7C /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB5197965230082BD7C /* NSManagedObject+Extensions.swift */; };
 		14AB0ADD197965D90082BD7C /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14AB0AAD197965230082BD7C /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		14AB0ADE197966080082BD7C /* AlecrimCoreData-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 14AB0AAC197965230082BD7C /* AlecrimCoreData-Bridging-Header.h */; };
 		14AB0AE0197966490082BD7C /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB0197965230082BD7C /* CoreDataModel.swift */; };
 		14AB0AE1197966490082BD7C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB1197965230082BD7C /* CoreDataStack.swift */; };
 		14AB0AE2197966490082BD7C /* CoreDataTable+OSX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB2197965230082BD7C /* CoreDataTable+OSX.swift */; };
@@ -25,7 +23,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		14AB0AAC197965230082BD7C /* AlecrimCoreData-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AlecrimCoreData-Bridging-Header.h"; sourceTree = "<group>"; };
 		14AB0AAD197965230082BD7C /* AlecrimCoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
 		14AB0AB0197965230082BD7C /* CoreDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
 		14AB0AB1197965230082BD7C /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
@@ -63,7 +60,6 @@
 				14AB0AAD197965230082BD7C /* AlecrimCoreData.h */,
 				14AB0AAE197965230082BD7C /* Classes */,
 				14AB0AB4197965230082BD7C /* Extensions */,
-				14AB0ABE197965320082BD7C /* Supporting Files */,
 			);
 			path = "AlecrimCoreData-Shared";
 			sourceTree = "<group>";
@@ -86,14 +82,6 @@
 				14AB0AB5197965230082BD7C /* NSManagedObject+Extensions.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		14AB0ABE197965320082BD7C /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				14AB0AAC197965230082BD7C /* AlecrimCoreData-Bridging-Header.h */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		14AB0AC51979657D0082BD7C /* AlecrimCoreData-iOS */ = {
@@ -154,7 +142,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14AB0ADE197966080082BD7C /* AlecrimCoreData-Bridging-Header.h in Headers */,
 				14AB0ADD197965D90082BD7C /* AlecrimCoreData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -163,7 +150,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14AB0AB6197965230082BD7C /* AlecrimCoreData-Bridging-Header.h in Headers */,
 				14AB0AB7197965230082BD7C /* AlecrimCoreData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -309,7 +295,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "AlecrimCoreData-Shared/AlecrimCoreData-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -331,7 +317,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "AlecrimCoreData-Shared/AlecrimCoreData-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -436,7 +422,7 @@
 				PRODUCT_NAME = AlecrimCoreData;
 				SKIP_INSTALL = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "AlecrimCoreData-Shared/AlecrimCoreData-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -457,7 +443,7 @@
 				PRODUCT_NAME = AlecrimCoreData;
 				SKIP_INSTALL = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OBJC_BRIDGING_HEADER = "AlecrimCoreData-Shared/AlecrimCoreData-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 			};
 			name = Release;
 		};
@@ -471,6 +457,7 @@
 				14AB0AD91979657D0082BD7C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		14CB5C92195A45DF00A10511 /* Build configuration list for PBXProject "AlecrimCoreData" */ = {
 			isa = XCConfigurationList;

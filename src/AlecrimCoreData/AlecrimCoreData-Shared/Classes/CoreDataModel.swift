@@ -9,67 +9,61 @@
 import Foundation
 import CoreData
 
-class CoreDataModel {
+public class CoreDataModel {
     
-    let stack: CoreDataStack
-    let context: NSManagedObjectContext
+    // MARK: private
+    private let stack: CoreDataStack
+
+    // MARK: internal
+    internal let context: NSManagedObjectContext
     
-    init() {
+    // MARK: init and dealloc
+    public init() {
         self.stack = CoreDataStack(modelName: nil)
         self.context = self.stack.mainContext
     }
     
-    init(modelName: String)
+    public init(modelName: String)
     {
         self.stack = CoreDataStack(modelName: modelName)
         self.context = self.stack.mainContext
     }
     
-    init(parentDataModel: CoreDataModel) {
-        self.stack = parentDataModel.stack
-        self.context = self.stack.createBackgroundContext()
-    }
-    
-//    deinit {
-//        println("deinit - CoreDataModel")
-//    }
 }
 
-extension CoreDataModel {
+public extension CoreDataModel {
     
-    func save() -> (Bool, NSError?) {
+    public func save() -> (Bool, NSError?) {
         return self.stack.saveContext(self.context)
     }
     
-    func save(completion: (Bool, NSError?) -> Void) {
+    public func save(completion: (Bool, NSError?) -> Void) {
         self.stack.saveContext(self.context, completion: completion)
     }
     
-    func saveEventually() {
+    public func saveEventually() {
         self.stack.saveContext(self.context, completion: nil)
     }
     
-    func rollback() {
+    public func rollback() {
         self.context.rollback()
     }
     
 }
 
-//extension CoreDataModel {
-//    
-//    func performInBackground<T: CoreDataModel>(closure: (T) -> Void) {
-//        let backgroundDataModel = T(parentDataModel: self)
-//        backgroundDataModel.context.performBlock {
-//            closure(backgroundDataModel)
-//        }
-//    }
-//    
-//}
+public extension CoreDataModel {
 
-extension CoreDataModel {
-    
-    func perform(closure: () -> Void) {
-        self.context.performBlock(closure)
+    public func perform(closure: (NSManagedObjectContext) -> Void) {
+        self.context.performBlock { [unowned self] in
+            closure(self.context)
+        }
+    }
+
+    public func performInBackground(closure: (NSManagedObjectContext) -> Void) {
+        let backgroundContext = self.stack.createBackgroundContext()
+        backgroundContext.performBlock {
+            closure(backgroundContext)
+        }
     }
     
 }
