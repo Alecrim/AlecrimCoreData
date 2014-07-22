@@ -33,19 +33,19 @@ public class CoreDataModel {
 
 public extension CoreDataModel {
     
-    public func save() -> (Bool, NSError?) {
+    func save() -> (Bool, NSError?) {
         return self.stack.saveContext(self.context)
     }
     
-    public func save(completion: (Bool, NSError?) -> Void) {
+    func save(completion: (Bool, NSError?) -> Void) {
         self.stack.saveContext(self.context, completion: completion)
     }
     
-    public func saveEventually() {
+    func saveEventually() {
         self.stack.saveContext(self.context, completion: nil)
     }
     
-    public func rollback() {
+    func rollback() {
         self.context.rollback()
     }
     
@@ -53,16 +53,17 @@ public extension CoreDataModel {
 
 public extension CoreDataModel {
 
-    public func perform(closure: (NSManagedObjectContext) -> Void) {
-        self.context.performBlock { [unowned self] in
-            closure(self.context)
+    func perform(closure: (NSManagedObjectContext) -> Void) {
+        let localContext = self.context
+        localContext.performBlock {
+            closure(localContext)
         }
     }
 
-    public func performInBackground(closure: (NSManagedObjectContext) -> Void) {
-        let backgroundContext = self.stack.createBackgroundContext()
-        backgroundContext.performBlock {
-            closure(backgroundContext)
+    func performInBackground(closure: (NSManagedObjectContext) -> Void) {
+        let localContext = self.stack.createBackgroundContext()
+        localContext.performBlock {
+            closure(localContext)
         }
     }
     

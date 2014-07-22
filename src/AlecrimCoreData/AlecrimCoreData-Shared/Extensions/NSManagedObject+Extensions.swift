@@ -13,20 +13,7 @@ import CoreData
 
 public extension NSManagedObject {
     
-    // TODO: change to class var when possible?
-    internal class func getEntityName() -> String {
-        let className: NSString = ___nameOfClass(self)
-        let range = className.rangeOfString("Entity")
-        
-        if range.location == NSNotFound || range.location == 0 {
-            return className;
-        }
-        else {
-            return className.substringToIndex(range.location)
-        }
-    }
-
-    public func inContext(otherContext: NSManagedObjectContext) -> Self? {
+    func inContext(otherContext: NSManagedObjectContext) -> Self? {
         if self.managedObjectContext == otherContext {
             return self
         }
@@ -44,28 +31,43 @@ public extension NSManagedObject {
         return reinterpretCast(inContext)
     }
     
+}
+
+internal extension NSManagedObject {
     
+    class func getEntityName() -> String {
+        let className: NSString = ___nameOfClass(self)
+        let range = className.rangeOfString("Entity")
+        
+        if range.location == NSNotFound || range.location == 0 {
+            return className;
+        }
+        else {
+            return className.substringToIndex(range.location)
+        }
+    }
+
     // https://devforums.apple.com/message/1003791#1003791
-//    class func createEntity(managedObjectContext: NSManagedObjectContext) -> Self {
-//        let entity = self.entity(managedObjectContext.persistentStoreCoordinator.managedObjectModel)
-//        return reinterpretCast(NSManagedObject(entity: entity, insertIntoManagedObjectContext: managedObjectContext))
-//    }
-//    
-//    class func entity(model: NSManagedObjectModel) -> NSEntityDescription {
-//        let className = self.description()
-//        
-//        let entities = (model.entities as [NSEntityDescription]).filter { entity in
-//            // Note: I wasn't able to test this with Module.ClassName syntax, so
-//            // you might have to round-trip managedObjectClassName through
-//            // NSClassFromString()?.description() to get a class name you can compare.
-//            return entity.managedObjectClassName == className
-//        }
-//        
-//        assert(entities.count == 1, "Class cannot be unambiguously matched to a single entity")
-//        
-//        return entities[0]
-//    }
-    
+    //    class func createEntity(managedObjectContext: NSManagedObjectContext) -> Self {
+    //        let entity = self.entity(managedObjectContext.persistentStoreCoordinator.managedObjectModel)
+    //        return reinterpretCast(NSManagedObject(entity: entity, insertIntoManagedObjectContext: managedObjectContext))
+    //    }
+    //
+    //    class func entity(model: NSManagedObjectModel) -> NSEntityDescription {
+    //        let className = self.description()
+    //
+    //        let entities = (model.entities as [NSEntityDescription]).filter { entity in
+    //            // Note: I wasn't able to test this with Module.ClassName syntax, so
+    //            // you might have to round-trip managedObjectClassName through
+    //            // NSClassFromString()?.description() to get a class name you can compare.
+    //            return entity.managedObjectClassName == className
+    //        }
+    //
+    //        assert(entities.count == 1, "Class cannot be unambiguously matched to a single entity")
+    //        
+    //        return entities[0]
+    //    }
+
 }
 
 // from: https://github.com/indieSoftware/INSwift

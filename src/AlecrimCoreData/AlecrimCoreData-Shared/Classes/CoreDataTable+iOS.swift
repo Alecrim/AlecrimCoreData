@@ -13,7 +13,7 @@ import CoreData
 
 public extension CoreDataTable {
 
-    public func toFetchedResultsController() -> NSFetchedResultsController {
+    func toFetchedResultsController() -> NSFetchedResultsController {
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest, managedObjectContext: self.dataModel.context, sectionNameKeyPath: nil, cacheName: nil)
         return fetchedResultsController
     }

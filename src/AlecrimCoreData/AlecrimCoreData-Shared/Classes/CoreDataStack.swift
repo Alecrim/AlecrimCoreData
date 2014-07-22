@@ -65,7 +65,7 @@ internal class CoreDataStack {
 
 internal extension CoreDataStack {
     
-    internal func createBackgroundContext() -> NSManagedObjectContext {
+    func createBackgroundContext() -> NSManagedObjectContext {
         let backgroundContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         backgroundContext.parentContext = self.savingContext
@@ -88,7 +88,7 @@ internal extension CoreDataStack {
 
 internal extension CoreDataStack {
 
-    internal func saveContext(context: NSManagedObjectContext) -> (Bool, NSError?) {
+    func saveContext(context: NSManagedObjectContext) -> (Bool, NSError?) {
         var currentContext: NSManagedObjectContext? = context
         
         var success = false
@@ -109,7 +109,7 @@ internal extension CoreDataStack {
         return (success, error)
     }
     
-    internal func saveContext(context: NSManagedObjectContext, completion: ((Bool, NSError?) -> ())?) {
+    func saveContext(context: NSManagedObjectContext, completion: ((Bool, NSError?) -> ())?) {
         context.performBlock {
             var success = false
             var error: NSError? = nil
