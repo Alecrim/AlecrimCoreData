@@ -11,8 +11,6 @@ import CoreData
 
 internal class CoreDataStack {
     
-    // MARK: private
-    
     private let model: NSManagedObjectModel
     private let coordinator: NSPersistentStoreCoordinator
     private let store: NSPersistentStore
@@ -20,9 +18,7 @@ internal class CoreDataStack {
     private let savingContext: NSManagedObjectContext
     internal let mainContext: NSManagedObjectContext
     
-    private lazy var contextObservers = [NSObjectProtocol]()
-    
-    // MARK: init and deinit
+    private var observingBackgroundContexts = false
     
     internal init(modelName name: NSString?) {
         let bundle = NSBundle.mainBundle()
@@ -56,39 +52,38 @@ internal class CoreDataStack {
     }
     
     deinit {
-        for observer in self.contextObservers {
-            NSNotificationCenter.defaultCenter().removeObserver(observer)
+        if self.observingBackgroundContexts {
+            NSNotificationCenter.defaultCenter().removeObserver(self)
         }
     }
     
 }
 
-internal extension CoreDataStack {
+extension CoreDataStack {
     
-    func createBackgroundContext() -> NSManagedObjectContext {
+    internal func createBackgroundContext() -> NSManagedObjectContext {
         let backgroundContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         backgroundContext.parentContext = self.savingContext
         backgroundContext.undoManager = nil
         
-        let observer = NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextDidSaveNotification, object: backgroundContext, queue: nil) { [weak self] notification in
-            if let s = self {
-                s.mainContext.performBlock {
-                    s.mainContext.mergeChangesFromContextDidSaveNotification(notification)
-                }
-            }
-        }
-        
-        self.contextObservers.append(observer)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("backgroundManagedObjectContextDidSave:"), name: NSManagedObjectContextDidSaveNotification, object: backgroundContext)
+        self.observingBackgroundContexts = true
 
         return backgroundContext
     }
     
+    @objc private func backgroundManagedObjectContextDidSave(notification: NSNotification) {
+        self.mainContext.performBlock {
+            self.mainContext.mergeChangesFromContextDidSaveNotification(notification)
+        }
+    }
+    
 }
 
-internal extension CoreDataStack {
+extension CoreDataStack {
 
-    func saveContext(context: NSManagedObjectContext) -> (Bool, NSError?) {
+    internal func saveContext(context: NSManagedObjectContext) -> (Bool, NSError?) {
         var currentContext: NSManagedObjectContext? = context
         
         var success = false
@@ -109,7 +104,7 @@ internal extension CoreDataStack {
         return (success, error)
     }
     
-    func saveContext(context: NSManagedObjectContext, completion: ((Bool, NSError?) -> ())?) {
+    internal func saveContext(context: NSManagedObjectContext, completion: ((Bool, NSError?) -> ())?) {
         context.performBlock {
             var success = false
             var error: NSError? = nil
@@ -121,15 +116,11 @@ internal extension CoreDataStack {
                     self.saveContext(parentContext, completion: completion)
                 }
                 else {
-                    if let closure = completion {
-                        closure(success, error)
-                    }
+                    completion?(true, nil)
                 }
             }
             else {
-                if let closure = completion {
-                    closure(success, error)
-                }
+                completion?(false, error)
             }
         }
     }

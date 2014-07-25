@@ -9,33 +9,35 @@
 import Foundation
 import CoreData
 
-// #pragma mark - Entity Information
-
-public extension NSManagedObject {
+extension NSManagedObject {
     
-    func inContext(otherContext: NSManagedObjectContext) -> Self? {
+    public func inDataModel(dataModel: CoreDataModel) -> Self? {
+        return self.inContext(dataModel.context)
+    }
+    
+    private func inContext(otherContext: NSManagedObjectContext) -> Self? {
         if self.managedObjectContext == otherContext {
             return self
         }
         
         var error: NSError? = nil
         if self.objectID.temporaryID {
-            let success = self.managedObjectContext.obtainPermanentIDsForObjects([ self ], error: &error)
+            let success = self.managedObjectContext.obtainPermanentIDsForObjects([self], error: &error)
             if !success {
                 return nil
             }
         }
         
-        let inContext = otherContext.existingObjectWithID(self.objectID, error: &error)
+        let objectInContext = otherContext.existingObjectWithID(self.objectID, error: &error)
         
-        return reinterpretCast(inContext)
+        return reinterpretCast(objectInContext)
     }
     
 }
 
-internal extension NSManagedObject {
+extension NSManagedObject {
     
-    class func getEntityName() -> String {
+    internal class func getEntityName() -> String {
         let className: NSString = ___nameOfClass(self)
         let range = className.rangeOfString("Entity")
         

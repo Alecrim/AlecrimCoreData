@@ -11,13 +11,10 @@ import CoreData
 
 public class CoreDataTable<T: NSManagedObject> {
     
-    // MARK: internal
     internal let dataModel: CoreDataModel
-    
     internal let defaultFetchBatchSize = 20
     internal lazy var underlyingFetchRequest = NSFetchRequest(entityName: T.getEntityName())
 
-    // MARK: init and deinit
     public init(dataModel: CoreDataModel) {
         self.dataModel = dataModel
     }
@@ -78,13 +75,13 @@ public extension CoreDataTable {
         return self
     }
     
-    func filterBy<V: AnyObject>(attribute attributeName: String, value: V?) -> Self {
+    func filterBy(attribute attributeName: String, value: AnyObject?) -> Self {
         var predicate: NSPredicate
-        if let v = value {
-            predicate = NSPredicate(format: "%K == %@", argumentArray: [ attributeName, v ])
+        if let v: AnyObject = value {
+            predicate = NSPredicate(format: "%K == %@", argumentArray: [attributeName, v])
         }
         else {
-            predicate = NSPredicate(format: "%K == nil")
+            predicate = NSPredicate(format: "%K == nil", argumentArray: [attributeName])
         }
         
         return self.filterBy(predicate: predicate)
@@ -98,6 +95,14 @@ public extension CoreDataTable {
     func filterBy(#predicateFormat: String, arguments argList: CVaListPointer) -> Self {
         let predicate = NSPredicate(format: predicateFormat, arguments: argList)
         return self.filterBy(predicate: predicate)
+    }
+    
+}
+
+public extension CoreDataTable {
+    
+    func toFetchRequest() -> NSFetchRequest {
+        return self.underlyingFetchRequest.copy() as NSFetchRequest
     }
     
 }
@@ -171,7 +176,7 @@ public extension CoreDataTable {
         return managedObject
     }
     
-    func createOrGetFirstEntity<V: AnyObject>(whereAttribute attributeName: String, isEqualTo value: V?) -> T {
+    func createOrGetFirstEntity(whereAttribute attributeName: String, isEqualTo value: AnyObject?) -> T {
         if let entity = self.filterBy(attribute: attributeName, value: value).first() {
             return entity
         }
@@ -187,7 +192,7 @@ public extension CoreDataTable {
         var retrieveExistingObjectError: NSError? = nil
         if let managedObjectInContext = self.dataModel.context.existingObjectWithID(managedObject.objectID, error: &retrieveExistingObjectError) {
             self.dataModel.context.deleteObject(managedObjectInContext)
-            return (managedObject.deleted || managedObject.managedObjectContext == nil, retrieveExistingObjectError)
+            return (managedObject.deleted || managedObject.managedObjectContext == nil, nil)
         }
         else {
             return (false, retrieveExistingObjectError)
@@ -202,7 +207,7 @@ public extension CoreDataTable {
 
 extension CoreDataTable: Sequence {
     
-    typealias GeneratorType = IndexingGenerator<[T]>
+    public typealias GeneratorType = IndexingGenerator<[T]>
     
     public func generate() -> GeneratorType {
         return self.toArray().generate()

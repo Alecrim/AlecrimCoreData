@@ -11,60 +11,67 @@ import CoreData
 
 public class CoreDataModel {
     
-    // MARK: private
     private let stack: CoreDataStack
-
-    // MARK: internal
     internal let context: NSManagedObjectContext
     
-    // MARK: init and dealloc
-    public init() {
-        self.stack = CoreDataStack(modelName: nil)
-        self.context = self.stack.mainContext
-    }
-    
-    public init(modelName: String)
+    public init(modelName: String?)
     {
         self.stack = CoreDataStack(modelName: modelName)
         self.context = self.stack.mainContext
     }
     
+    private init(parentDataModel: CoreDataModel) {
+        self.stack = parentDataModel.stack
+        self.context = self.stack.createBackgroundContext()
+    }
+    
+    public class func performInBackground<T: CoreDataModel>(dataModel: T, closure: (T) -> Void) {
+        let backgroundDataModel = T(parentDataModel: dataModel)
+        backgroundDataModel.perform {
+            closure(backgroundDataModel)
+        }
+    }
+    
 }
 
-public extension CoreDataModel {
+extension CoreDataModel {
     
-    func save() -> (Bool, NSError?) {
+    public func save() -> (Bool, NSError?) {
         return self.stack.saveContext(self.context)
     }
     
-    func save(completion: (Bool, NSError?) -> Void) {
+    public func save(completion: (Bool, NSError?) -> Void) {
         self.stack.saveContext(self.context, completion: completion)
     }
     
-    func saveEventually() {
+    public func saveEventually() {
         self.stack.saveContext(self.context, completion: nil)
     }
     
-    func rollback() {
+    public func rollback() {
         self.context.rollback()
     }
     
 }
 
-public extension CoreDataModel {
+extension CoreDataModel {
 
-    func perform(closure: (NSManagedObjectContext) -> Void) {
-        let localContext = self.context
-        localContext.performBlock {
-            closure(localContext)
-        }
+    public func perform(closure: () -> Void) {
+        self.context.performBlock(closure)
+    }
+    
+    public func performAndWait(closure: () -> Void) {
+        self.context.performBlockAndWait(closure)
     }
 
-    func performInBackground(closure: (NSManagedObjectContext) -> Void) {
-        let localContext = self.stack.createBackgroundContext()
-        localContext.performBlock {
-            closure(localContext)
-        }
+}
+
+extension CoreDataModel {
+    
+    /// Treats the property as its current context when needed in expressions.
+    public func __conversion() -> NSManagedObjectContext {
+        return self.context
     }
     
 }
+
