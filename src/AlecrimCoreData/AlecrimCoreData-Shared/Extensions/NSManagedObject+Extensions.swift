@@ -12,7 +12,7 @@ import CoreData
 extension NSManagedObject {
     
     public func inDataModel(dataModel: CoreDataModel) -> Self? {
-        return self.inContext(dataModel.context)
+        return self.inContext(dataModel as NSManagedObjectContext)
     }
     
     private func inContext(otherContext: NSManagedObjectContext) -> Self? {

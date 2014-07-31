@@ -11,12 +11,12 @@ import CoreData
 
 public class CoreDataTable<T: NSManagedObject> {
     
-    internal let dataModel: CoreDataModel
+    internal let context: NSManagedObjectContext
     internal let defaultFetchBatchSize = 20
     internal lazy var underlyingFetchRequest = NSFetchRequest(entityName: T.getEntityName())
 
     public init(dataModel: CoreDataModel) {
-        self.dataModel = dataModel
+        self.context = dataModel as NSManagedObjectContext
     }
     
 }
@@ -110,15 +110,15 @@ extension CoreDataTable {
 extension CoreDataTable {
 
     public func toArray() -> [T] {
-        return self.toArray(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest)
+        return self.toArray(fetchRequest: self.toFetchRequest())
     }
     
     public func count() -> Int {
-        return self.count(fetchRequest: self.underlyingFetchRequest.copy() as NSFetchRequest)
+        return self.count(fetchRequest: self.toFetchRequest())
     }
 
     public func first() -> T? {
-        let fetchRequest = self.underlyingFetchRequest.copy() as NSFetchRequest
+        let fetchRequest = self.toFetchRequest()
         fetchRequest.fetchLimit = 1
         
         let results = self.toArray(fetchRequest: fetchRequest)
@@ -127,7 +127,7 @@ extension CoreDataTable {
     }
     
     public func any() -> Bool {
-        let fetchRequest = self.underlyingFetchRequest.copy() as NSFetchRequest
+        let fetchRequest = self.toFetchRequest()
         fetchRequest.fetchLimit = 1
         
         let result = self.count(fetchRequest: fetchRequest) > 0
@@ -140,8 +140,8 @@ extension CoreDataTable {
 extension CoreDataTable {
     
     public func createEntity() -> T {
-        let entityDescription = NSEntityDescription.entityForName(T.getEntityName(), inManagedObjectContext: self.dataModel.context)
-        let managedObject = T(entity: entityDescription, insertIntoManagedObjectContext: self.dataModel.context)
+        let entityDescription = NSEntityDescription.entityForName(T.getEntityName(), inManagedObjectContext: self.context)
+        let managedObject = T(entity: entityDescription, insertIntoManagedObjectContext: self.context)
         
         return managedObject
     }
@@ -160,8 +160,8 @@ extension CoreDataTable {
     
     public func deleteEntity(managedObject: T) -> (Bool, NSError?) {
         var retrieveExistingObjectError: NSError? = nil
-        if let managedObjectInContext = self.dataModel.context.existingObjectWithID(managedObject.objectID, error: &retrieveExistingObjectError) {
-            self.dataModel.context.deleteObject(managedObjectInContext)
+        if let managedObjectInContext = self.context.existingObjectWithID(managedObject.objectID, error: &retrieveExistingObjectError) {
+            self.context.deleteObject(managedObjectInContext)
             return (managedObject.deleted || managedObject.managedObjectContext == nil, nil)
         }
         else {
@@ -226,10 +226,10 @@ extension CoreDataTable {
         
         var results = [T]()
         
-        self.dataModel.context.performBlockAndWait { [weak self] in
+        self.context.performBlockAndWait { [weak self] in
             if let s = self {
                 var error: NSError? = nil
-                if let objects = s.dataModel.context.executeFetchRequest(fetchRequest, error: &error) as? [T] {
+                if let objects = s.context.executeFetchRequest(fetchRequest, error: &error) as? [T] {
                     results += objects
                 }
             }
@@ -241,10 +241,10 @@ extension CoreDataTable {
     private func count(#fetchRequest: NSFetchRequest) -> Int {
         var c = 0
         
-        self.dataModel.context.performBlockAndWait { [weak self] in
+        self.context.performBlockAndWait { [weak self] in
             if let s = self {
                 var error: NSError? = nil
-                c += s.dataModel.context.countForFetchRequest(fetchRequest, error: &error)
+                c += s.context.countForFetchRequest(fetchRequest, error: &error)
             }
         }
         

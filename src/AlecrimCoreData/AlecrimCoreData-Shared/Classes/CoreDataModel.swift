@@ -12,7 +12,7 @@ import CoreData
 public class CoreDataModel {
     
     private let stack: CoreDataStack
-    internal let context: NSManagedObjectContext
+    private let context: NSManagedObjectContext
     
     public init(modelName: String?)
     {
@@ -23,13 +23,6 @@ public class CoreDataModel {
     private init(parentDataModel: CoreDataModel) {
         self.stack = parentDataModel.stack
         self.context = self.stack.createBackgroundContext()
-    }
-    
-    public class func performInBackground<T: CoreDataModel>(dataModel: T, closure: (T) -> Void) {
-        let backgroundDataModel = T(parentDataModel: dataModel)
-        backgroundDataModel.perform {
-            closure(backgroundDataModel)
-        }
     }
     
 }
@@ -64,6 +57,17 @@ extension CoreDataModel {
         self.context.performBlockAndWait(closure)
     }
 
+}
+
+extension CoreDataModel {
+    
+    public class func performInBackground<T: CoreDataModel>(dataModel: T, closure: (T) -> Void) {
+        let backgroundDataModel = T(parentDataModel: dataModel)
+        backgroundDataModel.perform {
+            closure(backgroundDataModel)
+        }
+    }
+    
 }
 
 extension CoreDataModel {

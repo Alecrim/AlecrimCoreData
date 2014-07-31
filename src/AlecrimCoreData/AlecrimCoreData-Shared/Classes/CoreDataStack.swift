@@ -18,8 +18,6 @@ internal class CoreDataStack {
     private let savingContext: NSManagedObjectContext
     internal let mainContext: NSManagedObjectContext
     
-    private var observingBackgroundContexts = false
-    
     internal init(modelName name: NSString?) {
         let bundle = NSBundle.mainBundle()
         let modelName: NSString = (name == nil ? (bundle.infoDictionary[kCFBundleNameKey] as? NSString)! : name!)
@@ -49,34 +47,6 @@ internal class CoreDataStack {
         self.mainContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         self.mainContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         self.mainContext.parentContext = self.savingContext
-    }
-    
-    deinit {
-        if self.observingBackgroundContexts {
-            NSNotificationCenter.defaultCenter().removeObserver(self)
-        }
-    }
-    
-}
-
-extension CoreDataStack {
-    
-    internal func createBackgroundContext() -> NSManagedObjectContext {
-        let backgroundContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        backgroundContext.parentContext = self.savingContext
-        backgroundContext.undoManager = nil
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("backgroundManagedObjectContextDidSave:"), name: NSManagedObjectContextDidSaveNotification, object: backgroundContext)
-        self.observingBackgroundContexts = true
-
-        return backgroundContext
-    }
-    
-    @objc private func backgroundManagedObjectContextDidSave(notification: NSNotification) {
-        self.mainContext.performBlock {
-            self.mainContext.mergeChangesFromContextDidSaveNotification(notification)
-        }
     }
     
 }
@@ -127,3 +97,38 @@ extension CoreDataStack {
 
 }
 
+extension CoreDataStack {
+    
+    internal func createBackgroundContext() -> NSManagedObjectContext {
+        return CoreDataStackBackgroundManagedObjectContext(savingContext: self.savingContext, mainContext: self.mainContext)
+    }
+    
+}
+
+private class CoreDataStackBackgroundManagedObjectContext: NSManagedObjectContext {
+    
+    private let mainContext: NSManagedObjectContext
+    
+    private init(savingContext: NSManagedObjectContext, mainContext: NSManagedObjectContext) {
+        self.mainContext = mainContext
+        
+        super.init(concurrencyType: .PrivateQueueConcurrencyType)
+        
+        self.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        self.parentContext = savingContext
+        self.undoManager = nil
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("backgroundManagedObjectContextDidSave:"), name: NSManagedObjectContextDidSaveNotification, object: self)
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NSManagedObjectContextDidSaveNotification, object: self)
+    }
+    
+    @objc private func backgroundManagedObjectContextDidSave(notification: NSNotification) {
+        self.mainContext.performBlock {
+            self.mainContext.mergeChangesFromContextDidSaveNotification(notification)
+        }
+    }
+    
+}
