@@ -15,7 +15,7 @@
         
         public func toArrayController() -> NSArrayController {
             let arrayController = NSArrayController()
-            arrayController.managedObjectContext = self.dataModel.context
+            arrayController.managedObjectContext = self.context
             arrayController.entityName = self.underlyingFetchRequest.entityName
             
             if let sortDescriptors = self.underlyingFetchRequest.sortDescriptors {
