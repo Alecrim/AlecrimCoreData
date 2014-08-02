@@ -16,7 +16,7 @@
         public func toFetchedResultsController() -> NSFetchedResultsController {
             let fetchedResultsController = NSFetchedResultsController(
                 fetchRequest: self.toFetchRequest(),
-                managedObjectContext: self.dataModel.context,
+                managedObjectContext: self.context,
                 sectionNameKeyPath: nil,
                 cacheName: nil
             )
