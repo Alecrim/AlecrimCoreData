@@ -9,6 +9,11 @@
 import Foundation
 import CoreData
 
+public enum CoreDataStackType {
+    case SQLite
+    case InMemory
+}
+
 internal class CoreDataStack {
     
     private let model: NSManagedObjectModel
@@ -18,32 +23,45 @@ internal class CoreDataStack {
     private let savingContext: NSManagedObjectContext
     internal let mainContext: NSManagedObjectContext
     
-    internal init(modelName name: NSString?) {
+    internal init(modelName name: NSString?, stackType: CoreDataStackType) {
+        // model
         let bundle = NSBundle.mainBundle()
         let modelName: NSString = (name == nil ? (bundle.infoDictionary[kCFBundleNameKey] as? NSString)! : name!)
         let modelURL = bundle.URLForResource(modelName, withExtension: "momd")
         
-        let fileManager = NSFileManager.defaultManager()
-        let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
-        let applicationSupportDirectoryURL = urls[urls.endIndex - 1] as NSURL
-
-        let localStoreDirectoryURL = applicationSupportDirectoryURL.URLByAppendingPathComponent(bundle.bundleIdentifier, isDirectory: true)
-        if !fileManager.fileExistsAtPath(localStoreDirectoryURL.absoluteString) {
-            fileManager.createDirectoryAtURL(localStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
-        }
-
-        let storeFilename = modelName.stringByAppendingPathExtension("sqlite")
-        let localStoreFileURL = localStoreDirectoryURL.URLByAppendingPathComponent(storeFilename, isDirectory: false)
-        
         self.model = NSManagedObjectModel(contentsOfURL: modelURL)
-        self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.model)
-        self.store = self.coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: nil, error: nil)
         
+        // coordinator
+        self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.model)
+        
+        // store
+        switch stackType {
+            case .SQLite:
+                let fileManager = NSFileManager.defaultManager()
+                let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+                let applicationSupportDirectoryURL = urls[urls.endIndex - 1] as NSURL
+                
+                let localStoreDirectoryURL = applicationSupportDirectoryURL.URLByAppendingPathComponent(bundle.bundleIdentifier, isDirectory: true)
+                if !fileManager.fileExistsAtPath(localStoreDirectoryURL.absoluteString) {
+                    fileManager.createDirectoryAtURL(localStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
+                }
+                
+                let storeFilename = modelName.stringByAppendingPathExtension("sqlite")
+                let localStoreFileURL = localStoreDirectoryURL.URLByAppendingPathComponent(storeFilename, isDirectory: false)
+            
+                self.store = self.coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: nil, error: nil)
+            
+            case .InMemory:
+                self.store = self.coordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil, error: nil)
+        }
+        
+        // saving context
         self.savingContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
         self.savingContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         self.savingContext.persistentStoreCoordinator = self.coordinator
         self.savingContext.undoManager = nil
         
+        // main thread context
         self.mainContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         self.mainContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         self.mainContext.parentContext = self.savingContext

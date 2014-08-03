@@ -14,9 +14,9 @@ public class CoreDataModel {
     private let stack: CoreDataStack
     private let context: NSManagedObjectContext
     
-    public init(modelName: String?)
+    public init(modelName: String?, stackType: CoreDataStackType = CoreDataStackType.SQLite)
     {
-        self.stack = CoreDataStack(modelName: modelName)
+        self.stack = CoreDataStack(modelName: modelName, stackType: stackType)
         self.context = self.stack.mainContext
     }
     
