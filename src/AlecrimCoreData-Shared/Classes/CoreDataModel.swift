@@ -14,9 +14,9 @@ public class CoreDataModel {
     private let stack: CoreDataStack
     private let context: NSManagedObjectContext
     
-    public init(modelName: String?)
+    public init(modelName: String?, stackType: CoreDataStackType = CoreDataStackType.SQLite)
     {
-        self.stack = CoreDataStack(modelName: modelName)
+        self.stack = CoreDataStack(modelName: modelName, stackType: stackType)
         self.context = self.stack.mainContext
     }
     
@@ -39,6 +39,22 @@ extension CoreDataModel {
     
     public func saveEventually() {
         self.stack.saveContext(self.context, completion: nil)
+    }
+    
+}
+
+extension CoreDataModel {
+    
+    public func undo() {
+        self.context.undo()
+    }
+    
+    public func redo() {
+        self.context.redo()
+    }
+    
+    public func reset() {
+        self.context.reset()
     }
     
     public func rollback() {

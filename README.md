@@ -73,21 +73,18 @@ Say you have an Entity called Person, related to a Department (as seen in variou
 for person in db.people {
 	println(person.firstName)
 }
-
 ```
 
 You can also skip some results:
 
 ```swift
 let people = db.people.skip(3)
-
 ```
 
 Or take only some results:
 
 ```swift
 let people = db.people.skip(3).take(7)
-
 ```
 
 Or, to return the results sorted by a property:
@@ -104,7 +101,6 @@ let peopleSorted = db.people.orderBy("lastName").orderBy("firstName")
 // OR
 
 let peopleSorted = db.people.sortBy("lastName,firstName")
-
 ```
 
 Or, to return the results sorted by multiple properties with different attributes:
@@ -119,7 +115,6 @@ let peopleSorted = db.people.sortBy("lastName:0,firstName:1")
 // OR
 
 let peopleSorted = db.people.sortBy("lastName:0:[cd],firstName:1:[cd]")
-
 ```
 
 If you have a unique way of retrieving a single object from your data store (such as via an identifier), you can use the following code:
@@ -204,6 +199,7 @@ let peopleFetchRequest = db.people.toFetchRequest()
 let peopleArrayController = db.people.toArrayController() // OS X only
 let peopleFetchedResultsController = db.people.toFetchedResultsController() // iOS only
 ```
+
 #### Find the number of entities
 
 You can also perform a count of the entities in your Persistent Store:
@@ -306,4 +302,3 @@ If you want to contribute, please feel free to fork the repository and send pull
 ## License
 
 AlecrimCoreData is released under an MIT license. See LICENSE for more information.
-
