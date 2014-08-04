@@ -36,7 +36,7 @@ extension CoreDataTable {
     public func sortBy(sortTerm: String, ascending: Bool = true) -> Self {
         let addedSortDescriptors = self.sortDescriptorsFromString(sortTerm, defaultAscendingValue: ascending)
         
-        if var sortDescriptors = self.underlyingFetchRequest.sortDescriptors {
+        if var sortDescriptors = self.underlyingFetchRequest.sortDescriptors as? [NSSortDescriptor] {
             sortDescriptors += addedSortDescriptors
         }
         else {
@@ -63,8 +63,8 @@ extension CoreDataTable {
             self.underlyingFetchRequest.predicate = predicate
         }
         else if let compoundPredicate = self.underlyingFetchRequest.predicate as? NSCompoundPredicate {
-            var subpredicates = compoundPredicate.subpredicates as Array<NSPredicate>
-            subpredicates += predicate
+            var subpredicates = compoundPredicate.subpredicates as [NSPredicate]
+            subpredicates.append(predicate)
             self.underlyingFetchRequest.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
         }
         else {
@@ -175,7 +175,7 @@ extension CoreDataTable {
     
 }
 
-extension CoreDataTable: Sequence {
+extension CoreDataTable: SequenceType {
     
     public typealias GeneratorType = IndexingGenerator<[T]>
     
@@ -207,10 +207,10 @@ extension CoreDataTable {
             }
             
             if effectiveOptionalParameter != nil && effectiveOptionalParameter!.rangeOfString("cd").location != NSNotFound {
-                sortDescriptors += NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending, selector: "localizedCaseInsensitiveCompare:")
+                sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending, selector: Selector("localizedCaseInsensitiveCompare:")))
             }
             else {
-                sortDescriptors += NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending)
+                sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending))
             }
         }
         
