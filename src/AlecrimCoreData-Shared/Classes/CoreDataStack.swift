@@ -118,29 +118,33 @@ extension CoreDataStack {
 extension CoreDataStack {
     
     internal func createBackgroundContext() -> NSManagedObjectContext {
-        return CoreDataStackBackgroundManagedObjectContext(savingContext: self.savingContext, mainContext: self.mainContext)
+        let backgroundContext = CoreDataStackBackgroundManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        backgroundContext.undoManager = nil
+        
+        backgroundContext.parentContext = self.savingContext
+        backgroundContext.mainContext = self.mainContext
+        
+        return backgroundContext
     }
     
 }
 
 private class CoreDataStackBackgroundManagedObjectContext: NSManagedObjectContext {
     
-    private let mainContext: NSManagedObjectContext
-    
-    private init(savingContext: NSManagedObjectContext, mainContext: NSManagedObjectContext) {
-        self.mainContext = mainContext
-        
-        super.init(concurrencyType: .PrivateQueueConcurrencyType)
-        
-        self.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        self.parentContext = savingContext
-        self.undoManager = nil
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("backgroundManagedObjectContextDidSave:"), name: NSManagedObjectContextDidSaveNotification, object: self)
+    private var mainContext: NSManagedObjectContext! {
+        didSet {
+            if self.mainContext != nil {
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("backgroundManagedObjectContextDidSave:"), name: NSManagedObjectContextDidSaveNotification, object: self)
+            }
+            else {
+                NSNotificationCenter.defaultCenter().removeObserver(self, name: NSManagedObjectContextDidSaveNotification, object: self)
+            }
+        }
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: NSManagedObjectContextDidSaveNotification, object: self)
+        self.mainContext = nil
     }
     
     @objc private func backgroundManagedObjectContextDidSave(notification: NSNotification) {

@@ -30,7 +30,7 @@ extension NSManagedObject {
         
         let objectInContext = otherContext.existingObjectWithID(self.objectID, error: &error)
         
-        return reinterpretCast(objectInContext)
+        return unsafeBitCast(objectInContext, self.dynamicType)
     }
     
 }
@@ -65,7 +65,7 @@ private func ___nameOfClass(classType: AnyClass) -> String {
         var index = countElements(swiftClassPrefix)
         while index < characters.count {
             let character = characters[index++]
-            if String(character).toInt() {
+            if String(character).toInt() != nil {
                 // character is a cipher
                 ciphersForModule += character
             } else {
@@ -80,7 +80,7 @@ private func ___nameOfClass(classType: AnyClass) -> String {
             var ciphersForClass = String()
             while index < characters.count {
                 let character = characters[index++]
-                if String(character).toInt() {
+                if (String(character).toInt() != nil) {
                     // character is a cipher
                     ciphersForClass += character
                 } else {

@@ -41,6 +41,22 @@ extension CoreDataModel {
         self.stack.saveContext(self.context, completion: nil)
     }
     
+}
+
+extension CoreDataModel {
+    
+    public func undo() {
+        self.context.undo()
+    }
+    
+    public func redo() {
+        self.context.redo()
+    }
+    
+    public func reset() {
+        self.context.reset()
+    }
+    
     public func rollback() {
         self.context.rollback()
     }
