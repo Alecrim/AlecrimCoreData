@@ -7,21 +7,22 @@ AlecrimCoreData is a Core Data wrapper library written in Swift, "inspired" by [
 
 - Simpler classes and methods to access and save Core Data managed objects
 - Main and background contexts support
-- Core Data SQLite store type support with automatic creation of the store file
+- Core Data SQLite store type support with automatic creation of store file
+- In memory store type support
 
 ### TODO:
 
-- Add iCloud support to the SQLite store type
-- Add in memory store type support
+- Add iCloud support to SQLite store type
 - Add aggregation methods
 - Add migration methods
-- Document the source code
+- Document source code
 - Create unit tests
+- Create example project
 
 ## Requirements
 
-- Xcode 6 beta 4
-- Swift beta 4
+- Xcode 6 beta 5
+- Swift beta 5
 - iOS 8.0+ / OS X 10.10+
 
 ## Installation
@@ -51,13 +52,13 @@ public class DataModel: CoreDataModel {
 }
 ```
 
-It's important that the properties (or methods) always return a _new_ instance of a `CoreDataTable` class.
+It's important that properties (or methods) always return a _new_ instance of a `CoreDataTable` class.
 
 _* I think the class could be called "Data Context" instead of "Data Model", but the term "context" was already taken by Apple in "NSManagedObjectContext" and the two are not the same thing. Actually the "CoreDataModel" class has a Core Data stack which create two or more NSManagedObjectContext instances. The term "model" can be ambiguous too and "database" is yet another concept. So, if you have a suggestion with something better than "Data Model", please let me know. :-)_
 
 ### Entities
 
-It's assumed that all entity classes was already created and added to your project.
+It's assumed that all entity classes was already created and added to the project.
 
 In the above section example, there are two entities: `Person` and `Department` (with `Entity` suffix added to their class names). You can name the entity classes as you like, of course.
 

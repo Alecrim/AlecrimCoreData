@@ -13,7 +13,7 @@ public class CoreDataTable<T: NSManagedObject> {
     
     internal let context: NSManagedObjectContext
     internal let defaultFetchBatchSize = 20
-    internal lazy var underlyingFetchRequest = NSFetchRequest(entityName: T.getEntityName())
+    internal lazy var underlyingFetchRequest = NSFetchRequest(entityName: T.entityName)
 
     public init(dataModel: CoreDataModel) {
         self.context = dataModel as NSManagedObjectContext
@@ -140,7 +140,7 @@ extension CoreDataTable {
 extension CoreDataTable {
     
     public func createEntity() -> T {
-        let entityDescription = NSEntityDescription.entityForName(T.getEntityName(), inManagedObjectContext: self.context)
+        let entityDescription = NSEntityDescription.entityForName(T.entityName, inManagedObjectContext: self.context)
         let managedObject = T(entity: entityDescription, insertIntoManagedObjectContext: self.context)
         
         return managedObject
