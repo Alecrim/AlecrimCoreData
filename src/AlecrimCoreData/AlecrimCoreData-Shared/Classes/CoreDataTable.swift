@@ -175,6 +175,21 @@ extension CoreDataTable {
     
 }
 
+extension CoreDataTable {
+    
+    public func delete() {
+        let fetchRequest = self.toFetchRequest()
+        fetchRequest.returnsObjectsAsFaults = true
+        fetchRequest.includesPropertyValues = false
+        
+        let entities = self.toArray(fetchRequest: fetchRequest)
+        for entity in entities {
+            self.deleteEntity(entity)
+        }
+    }
+    
+}
+
 extension CoreDataTable: SequenceType {
     
     public typealias GeneratorType = IndexingGenerator<[T]>
