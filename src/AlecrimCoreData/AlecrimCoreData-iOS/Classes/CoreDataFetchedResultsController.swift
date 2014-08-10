@@ -8,9 +8,8 @@
 
 import Foundation
 import CoreData
-import UIKit
 
-public final class CoreDataFetchedResultsController<T: NSManagedObject> {
+public final class CoreDataFetchedResultsController<T: NSManagedObject>: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: -
     
@@ -111,6 +110,53 @@ public final class CoreDataFetchedResultsController<T: NSManagedObject> {
         self.sectionIndexTitleClosure = closure
         return self
     }
+
+    // MARK: - NSFetchedResultsControllerDelegate
+    // TODO: move to an extension when Swift fixes the bug (Swift beta 5)
+
+    public func controller(controller: NSFetchedResultsController!, didChangeObject anObject: AnyObject!, atIndexPath indexPath: NSIndexPath!, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath!) {
+        switch type {
+        case .Insert:
+            self.didInsertEntityClosure?(anObject as T, newIndexPath)
+            
+        case .Delete:
+            self.didDeleteEntityClosure?(anObject as T, indexPath)
+
+        case .Update:
+            self.didUpdateEntityClosure?(anObject as T, indexPath)
+            
+        case .Move:
+            self.didMoveEntityClosure?(anObject as T, indexPath, newIndexPath)
+
+        default:
+            break
+        }
+    }
+    
+    public func controller(controller: NSFetchedResultsController!, didChangeSection sectionInfo: NSFetchedResultsSectionInfo!, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        switch type {
+        case .Insert:
+            self.didInsertSectionClosure?(CoreDataFetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            
+        case .Delete:
+            self.didDeleteSectionClosure?(CoreDataFetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            
+        default:
+            break
+        }
+    }
+    
+    public func controllerWillChangeContent(controller: NSFetchedResultsController!) {
+        self.willChangeContentClosure?()
+    }
+    
+    public func controllerDidChangeContent(controller: NSFetchedResultsController!) {
+        self.didChangeContentClosure?()
+    }
+    
+    public func controller(controller: NSFetchedResultsController!, sectionIndexTitleForSectionName sectionName: String!) -> String! {
+        return self.sectionIndexTitleClosure?(sectionName)
+    }
 }
 
 extension CoreDataFetchedResultsController {
@@ -173,87 +219,3 @@ extension CoreDataFetchedResultsController {
     
 }
 
-// TODO: this must be private (Swift bug?)
-
-extension CoreDataFetchedResultsController: NSFetchedResultsControllerDelegate {
-
-    public func controller(controller: NSFetchedResultsController!, didChangeObject anObject: AnyObject!, atIndexPath indexPath: NSIndexPath!, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath!) {
-        switch type {
-        case .Insert:
-            self.didInsertEntityClosure?(anObject as T, newIndexPath)
-            
-        case .Delete:
-            self.didDeleteEntityClosure?(anObject as T, indexPath)
-
-        case .Update:
-            self.didUpdateEntityClosure?(anObject as T, indexPath)
-            
-        case .Move:
-            self.didMoveEntityClosure?(anObject as T, indexPath, newIndexPath)
-
-        default:
-            break
-        }
-    }
-    
-    public func controller(controller: NSFetchedResultsController!, didChangeSection sectionInfo: NSFetchedResultsSectionInfo!, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-        switch type {
-        case .Insert:
-            self.didInsertSectionClosure?(CoreDataFetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
-            
-        case .Delete:
-            self.didDeleteSectionClosure?(CoreDataFetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
-            
-        default:
-            break
-        }
-    }
-    
-    public func controllerWillChangeContent(controller: NSFetchedResultsController!) {
-        self.willChangeContentClosure?()
-    }
-    
-    public func controllerDidChangeContent(controller: NSFetchedResultsController!) {
-        self.didChangeContentClosure?()
-    }
-    
-    public func controller(controller: NSFetchedResultsController!, sectionIndexTitleForSectionName sectionName: String!) -> String! {
-        return self.sectionIndexTitleClosure?(sectionName)
-    }
-}
-
-extension CoreDataFetchedResultsController {
-
-    public func bindTo(#tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade) -> Self {
-        self
-            .willChangeContent { [unowned tableView] in
-                tableView.beginUpdates()
-            }
-            .didInsertSection { [unowned tableView] sectionInfo, sectionIndex in
-                tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
-            }
-            .didDeleteSection { [unowned tableView] sectionInfo, sectionIndex in
-                tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
-            }
-            .didInsertEntity { [unowned tableView] entity, newIndexPath in
-                tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: rowAnimation)
-            }
-            .didDeleteEntity { [unowned tableView] entity, indexPath in
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
-            }
-            .didUpdateEntity { [unowned tableView] entity, indexPath in
-                tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
-            }
-            .didMoveEntity { [unowned tableView] entity, indexPath, newIndexPath in
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
-                tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: rowAnimation)
-            }
-            .didChangeContent { [unowned tableView] in
-                tableView.endUpdates()
-            }
-
-        return self
-    }
-
-
-}

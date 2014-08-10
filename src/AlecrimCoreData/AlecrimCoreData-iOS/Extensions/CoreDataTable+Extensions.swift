@@ -8,7 +8,6 @@
 
 import Foundation
 import CoreData
-import UIKit
 
 extension CoreDataTable {
     
@@ -18,10 +17,3 @@ extension CoreDataTable {
 
 }
 
-extension CoreDataTable {
-
-    public func bindTo(#tableView: UITableView) -> CoreDataFetchedResultsController<T> {
-        return self.toFetchedResultsController().bindTo(tableView: tableView)
-    }
-
-}
