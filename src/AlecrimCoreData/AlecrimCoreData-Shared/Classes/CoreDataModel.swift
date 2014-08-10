@@ -88,7 +88,6 @@ extension CoreDataModel {
 
 extension CoreDataModel {
     
-    /// Treats the property as its current context when needed in expressions.
     public func __conversion() -> NSManagedObjectContext {
         return self.context
     }

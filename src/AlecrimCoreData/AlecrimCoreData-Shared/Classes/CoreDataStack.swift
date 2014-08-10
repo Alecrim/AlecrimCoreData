@@ -14,7 +14,7 @@ public enum CoreDataStackType {
     case InMemory
 }
 
-internal class CoreDataStack {
+internal final class CoreDataStack {
     
     private let model: NSManagedObjectModel
     private let coordinator: NSPersistentStoreCoordinator
