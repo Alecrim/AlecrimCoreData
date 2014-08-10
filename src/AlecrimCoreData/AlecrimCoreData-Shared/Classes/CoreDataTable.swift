@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public class CoreDataTable<T: NSManagedObject> {
+public final class CoreDataTable<T: NSManagedObject> {
     
     internal let context: NSManagedObjectContext
     internal let defaultFetchBatchSize = 20
