@@ -11,15 +11,9 @@ import CoreData
 
 extension CoreDataTable {
     
-    public func toFetchedResultsController() -> NSFetchedResultsController {
-        let fetchedResultsController = NSFetchedResultsController(
-            fetchRequest: self.toFetchRequest(),
-            managedObjectContext: self.context,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        
-        return fetchedResultsController
+    public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> CoreDataFetchedResultsController<T> {
+        return CoreDataFetchedResultsController<T>(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
-    
+
 }
+
