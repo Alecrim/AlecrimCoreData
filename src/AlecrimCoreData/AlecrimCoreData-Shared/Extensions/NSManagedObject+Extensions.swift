@@ -14,7 +14,7 @@ private var entityNames = Dictionary<String, String>()
 extension NSManagedObject {
     
     public func inDataModel(dataModel: CoreDataModel) -> Self? {
-        return self.inContext(dataModel as NSManagedObjectContext)
+        return self.inContext(dataModel.context)
     }
     
     private func inContext(otherContext: NSManagedObjectContext) -> Self? {

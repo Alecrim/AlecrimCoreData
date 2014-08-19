@@ -12,7 +12,7 @@ import CoreData
 public class CoreDataModel {
     
     private let stack: CoreDataStack
-    private let context: NSManagedObjectContext
+    internal let context: NSManagedObjectContext
     
     public init(modelName: String?, stackType: CoreDataStackType = CoreDataStackType.SQLite)
     {
@@ -85,12 +85,3 @@ extension CoreDataModel {
     }
     
 }
-
-extension CoreDataModel {
-    
-    public func __conversion() -> NSManagedObjectContext {
-        return self.context
-    }
-    
-}
-

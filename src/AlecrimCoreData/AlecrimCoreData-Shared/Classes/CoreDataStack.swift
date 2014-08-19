@@ -41,12 +41,12 @@ internal final class CoreDataStack {
                 let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
                 let applicationSupportDirectoryURL = urls[urls.endIndex - 1] as NSURL
                 
-                let localStoreDirectoryURL = applicationSupportDirectoryURL.URLByAppendingPathComponent(bundle.bundleIdentifier, isDirectory: true)
-                if !fileManager.fileExistsAtPath(localStoreDirectoryURL.absoluteString) {
+                let localStoreDirectoryURL = applicationSupportDirectoryURL.URLByAppendingPathComponent(bundle.bundleIdentifier!, isDirectory: true)
+                if !fileManager.fileExistsAtPath(localStoreDirectoryURL.absoluteString!) {
                     fileManager.createDirectoryAtURL(localStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
                 }
                 
-                let storeFilename = modelName.stringByAppendingPathExtension("sqlite")
+                let storeFilename = modelName.stringByAppendingPathExtension("sqlite")!
                 let localStoreFileURL = localStoreDirectoryURL.URLByAppendingPathComponent(storeFilename, isDirectory: false)
             
                 self.store = self.coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: nil, error: nil)

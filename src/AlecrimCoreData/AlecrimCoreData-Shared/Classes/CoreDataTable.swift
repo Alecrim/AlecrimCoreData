@@ -16,7 +16,7 @@ public final class CoreDataTable<T: NSManagedObject> {
     internal lazy var underlyingFetchRequest = NSFetchRequest(entityName: T.entityName)
 
     public init(dataModel: CoreDataModel) {
-        self.context = dataModel as NSManagedObjectContext
+        self.context = dataModel.context
     }
     
 }

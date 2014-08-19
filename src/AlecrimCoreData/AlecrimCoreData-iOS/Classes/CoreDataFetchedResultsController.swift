@@ -211,11 +211,3 @@ extension CoreDataFetchedResultsController {
 
 }
 
-extension CoreDataFetchedResultsController {
-    
-    public func __conversion() -> NSFetchedResultsController {
-        return self.underlyingFetchedResultsController
-    }
-    
-}
-
