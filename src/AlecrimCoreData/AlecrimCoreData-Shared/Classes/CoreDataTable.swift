@@ -9,14 +9,14 @@
 import Foundation
 import CoreData
 
-public class CoreDataTable<T: NSManagedObject> {
+public final class CoreDataTable<T: NSManagedObject> {
     
     internal let context: NSManagedObjectContext
     internal let defaultFetchBatchSize = 20
     internal lazy var underlyingFetchRequest = NSFetchRequest(entityName: T.entityName)
 
     public init(dataModel: CoreDataModel) {
-        self.context = dataModel as NSManagedObjectContext
+        self.context = dataModel.context
     }
     
 }
@@ -171,6 +171,21 @@ extension CoreDataTable {
     
     public func refreshEntity(managedObject: T) {
         managedObject.managedObjectContext.refreshObject(managedObject, mergeChanges: true)
+    }
+    
+}
+
+extension CoreDataTable {
+    
+    public func delete() {
+        let fetchRequest = self.toFetchRequest()
+        fetchRequest.returnsObjectsAsFaults = true
+        fetchRequest.includesPropertyValues = false
+        
+        let entities = self.toArray(fetchRequest: fetchRequest)
+        for entity in entities {
+            self.deleteEntity(entity)
+        }
     }
     
 }

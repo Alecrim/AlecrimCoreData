@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		140649B21997F7DF001A2080 /* CoreDataFetchedResultsController+UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140649B11997F7DF001A2080 /* CoreDataFetchedResultsController+UIKit.swift */; };
+		140649B41997F896001A2080 /* CoreDataTable+UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140649B31997F896001A2080 /* CoreDataTable+UIKit.swift */; };
+		141898751996E258000B4E35 /* CoreDataFetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141898741996E258000B4E35 /* CoreDataFetchedResultsSectionInfo.swift */; };
 		141C1D3B198EE7D300E1421F /* CoreDataTable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141C1D3A198EE7D300E1421F /* CoreDataTable+Extensions.swift */; };
 		141C1D3E198EE7E000E1421F /* CoreDataTable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141C1D3D198EE7E000E1421F /* CoreDataTable+Extensions.swift */; };
 		14AB0AB7197965230082BD7C /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14AB0AAD197965230082BD7C /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -19,9 +22,13 @@
 		14AB0AE1197966490082BD7C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB1197965230082BD7C /* CoreDataStack.swift */; };
 		14AB0AE3197966490082BD7C /* CoreDataTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB3197965230082BD7C /* CoreDataTable.swift */; };
 		14AB0AE4197966500082BD7C /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AB0AB5197965230082BD7C /* NSManagedObject+Extensions.swift */; };
+		14D28B431996DBA500B18AB9 /* CoreDataFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D28B421996DBA500B18AB9 /* CoreDataFetchedResultsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		140649B11997F7DF001A2080 /* CoreDataFetchedResultsController+UIKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataFetchedResultsController+UIKit.swift"; sourceTree = "<group>"; };
+		140649B31997F896001A2080 /* CoreDataTable+UIKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+UIKit.swift"; sourceTree = "<group>"; };
+		141898741996E258000B4E35 /* CoreDataFetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataFetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
 		141C1D3A198EE7D300E1421F /* CoreDataTable+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+Extensions.swift"; sourceTree = "<group>"; };
 		141C1D3D198EE7E000E1421F /* CoreDataTable+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+Extensions.swift"; sourceTree = "<group>"; };
 		14AB0AAD197965230082BD7C /* AlecrimCoreData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
@@ -33,6 +40,7 @@
 		14AB0AC71979657D0082BD7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		14CB5C98195A45DF00A10511 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		14CB5C9C195A45DF00A10511 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		14D28B421996DBA500B18AB9 /* CoreDataFetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataFetchedResultsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +64,9 @@
 		141C1D39198EE7D300E1421F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				140649B11997F7DF001A2080 /* CoreDataFetchedResultsController+UIKit.swift */,
 				141C1D3A198EE7D300E1421F /* CoreDataTable+Extensions.swift */,
+				140649B31997F896001A2080 /* CoreDataTable+UIKit.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -100,6 +110,7 @@
 		14AB0AC51979657D0082BD7C /* AlecrimCoreData-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				14D28B411996DB8F00B18AB9 /* Classes */,
 				141C1D39198EE7D300E1421F /* Extensions */,
 				14AB0AC61979657D0082BD7C /* Supporting Files */,
 			);
@@ -148,6 +159,15 @@
 				14CB5C9C195A45DF00A10511 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		14D28B411996DB8F00B18AB9 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				14D28B421996DBA500B18AB9 /* CoreDataFetchedResultsController.swift */,
+				141898741996E258000B4E35 /* CoreDataFetchedResultsSectionInfo.swift */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,7 +289,11 @@
 				14AB0AE0197966490082BD7C /* CoreDataModel.swift in Sources */,
 				14AB0AE4197966500082BD7C /* NSManagedObject+Extensions.swift in Sources */,
 				141C1D3B198EE7D300E1421F /* CoreDataTable+Extensions.swift in Sources */,
+				140649B21997F7DF001A2080 /* CoreDataFetchedResultsController+UIKit.swift in Sources */,
+				141898751996E258000B4E35 /* CoreDataFetchedResultsSectionInfo.swift in Sources */,
+				140649B41997F896001A2080 /* CoreDataTable+UIKit.swift in Sources */,
 				14AB0AE3197966490082BD7C /* CoreDataTable.swift in Sources */,
+				14D28B431996DBA500B18AB9 /* CoreDataFetchedResultsController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
