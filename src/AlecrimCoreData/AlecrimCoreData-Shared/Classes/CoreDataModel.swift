@@ -75,13 +75,12 @@ extension CoreDataModel {
 
 }
 
-extension CoreDataModel {
+// MARK: - public functions
     
-    public class func performInBackground<T: CoreDataModel>(dataModel: T, closure: (T) -> Void) {
-        let backgroundDataModel = T(parentDataModel: dataModel)
-        backgroundDataModel.perform {
-            closure(backgroundDataModel)
-        }
+public func performInBackground<T: CoreDataModel>(dataModel: T, closure: (T) -> Void) {
+    let backgroundDataModel = T(parentDataModel: dataModel)
+    backgroundDataModel.perform {
+        closure(backgroundDataModel)
     }
-    
 }
+    
