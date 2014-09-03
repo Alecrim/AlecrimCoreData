@@ -263,7 +263,7 @@ This only works if the data model context was not saved yet.
 
 ### Threading
 
-You can fetch and save entities in background using a specific class method that creates a special data model instance for this:
+You can fetch and save entities in background calling a global function that creates a new data model instance for this:
 
 ```swift
 // assuming that this department is saved and exists...
