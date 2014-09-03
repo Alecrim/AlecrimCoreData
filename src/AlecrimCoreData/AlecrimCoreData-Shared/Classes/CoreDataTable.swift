@@ -140,7 +140,7 @@ extension CoreDataTable {
 extension CoreDataTable {
     
     public func createEntity() -> T {
-        let entityDescription = NSEntityDescription.entityForName(T.entityName, inManagedObjectContext: self.context)
+        let entityDescription = NSEntityDescription.entityForName(T.entityName, inManagedObjectContext: self.context)!
         let managedObject = T(entity: entityDescription, insertIntoManagedObjectContext: self.context)
         
         return managedObject

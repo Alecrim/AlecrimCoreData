@@ -112,7 +112,6 @@ public final class CoreDataFetchedResultsController<T: NSManagedObject>: NSObjec
     }
 
     // MARK: - NSFetchedResultsControllerDelegate
-    // TODO: move to an extension when Swift fixes the bug (Swift beta 5 and beta 6)
 
     public func controller(controller: NSFetchedResultsController!, didChangeObject anObject: AnyObject!, atIndexPath indexPath: NSIndexPath!, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath!) {
         switch type {
