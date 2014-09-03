@@ -17,7 +17,7 @@ extension CoreDataTable {
         arrayController.entityName = self.underlyingFetchRequest.entityName
         
         if let sortDescriptors = self.underlyingFetchRequest.sortDescriptors {
-            arrayController.sortDescriptors = sortDescriptors // TODO: copy?
+            arrayController.sortDescriptors = sortDescriptors
         }
         
         if let predicate = self.underlyingFetchRequest.predicate {

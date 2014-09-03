@@ -19,19 +19,18 @@ AlecrimCoreData is a Core Data wrapper library written in Swift, "inspired" by [
 - Create unit tests
 - Create example project
 
-## Requirements
+## Minimum Requirements
 
-- Xcode 6 beta 5
-- Swift beta 5
-- iOS 8.0+ / OS X 10.10+
+- Xcode 6
+- iOS 8 / OS X 10.10
 
 ## Installation
 
-You can add AlecrimCoreData as a git submodule and drag the `AlecrimCoreData.xcodeproj` file into your Xcode project.
+You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as a dependency for your application target.
 
 ## Getting Started
 
-### Data Model*
+### Data Model
 
 You can create a inherited class from `CoreDataModel` and declare a property or method for each entity in your data model like the example below:
 
@@ -53,8 +52,6 @@ public class DataModel: CoreDataModel {
 ```
 
 It's important that properties (or methods) always return a _new_ instance of a `CoreDataTable` class.
-
-_* I think the class could be called "Data Context" instead of "Data Model", but the term "context" was already taken by Apple in "NSManagedObjectContext" and the two are not the same thing. Actually the "CoreDataModel" class has a Core Data stack which create two or more NSManagedObjectContext instances. The term "model" can be ambiguous too and "database" is yet another concept. So, if you have a suggestion with something better than "Data Model", please let me know. :-)_
 
 ### Entities
 
@@ -273,15 +270,15 @@ You can fetch and save entities in background using a specific class method that
 let department = db.departments.filterBy(attribute: "identifier", value: "100").first()!
 
 // the closure below will run in a background context queue
-DataModel.performInBackground(db) { bgdb in
-    if let person = bgdb.people.filterBy(attribute: "identifier", value: "321").first() {
+performInBackground(db) { backgroundDB in
+    if let person = backgroundDB.people.filterBy(attribute: "identifier", value: "321").first() {
         // bringing the department entity to the background data model context before the assignment...
-        person.department = department.inDataModel(bgdb)!
+        person.department = department.inDataModel(backgroundDB)!
         person.otherData = "Other Data"
     }
     
     // we are already in background here, so we can call save directly    
-    let (success, error) = bgdb.save()
+    let (success, error) = backgroundDB.save()
     if success {
         // ...
     }
@@ -289,8 +286,6 @@ DataModel.performInBackground(db) { bgdb in
 ```
 
 ## Contribute
-
-This library is to be considered alpha state. A lot more can and have to be done.
 
 If you want to contribute, please feel free to fork the repository and send pull requests with your suggestions and additions. :-)
 

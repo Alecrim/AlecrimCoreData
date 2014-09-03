@@ -27,7 +27,7 @@ internal final class CoreDataStack {
         // model
         let bundle = NSBundle.mainBundle()
         let modelName: NSString = (name == nil ? (bundle.infoDictionary[kCFBundleNameKey] as? NSString)! : name!)
-        let modelURL = bundle.URLForResource(modelName, withExtension: "momd")
+        let modelURL = bundle.URLForResource(modelName, withExtension: "momd")!
         
         self.model = NSManagedObjectModel(contentsOfURL: modelURL)
         
@@ -49,10 +49,10 @@ internal final class CoreDataStack {
                 let storeFilename = modelName.stringByAppendingPathExtension("sqlite")!
                 let localStoreFileURL = localStoreDirectoryURL.URLByAppendingPathComponent(storeFilename, isDirectory: false)
             
-                self.store = self.coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: nil, error: nil)
+                self.store = self.coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: nil, error: nil)!
             
             case .InMemory:
-                self.store = self.coordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil, error: nil)
+                self.store = self.coordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil, error: nil)!
         }
         
         // saving context
