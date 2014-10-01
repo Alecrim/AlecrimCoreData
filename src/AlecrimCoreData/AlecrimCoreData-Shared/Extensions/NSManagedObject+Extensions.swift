@@ -24,8 +24,13 @@ extension NSManagedObject {
         
         var error: NSError? = nil
         if self.objectID.temporaryID {
-            let success = self.managedObjectContext.obtainPermanentIDsForObjects([self], error: &error)
-            if !success {
+            if let moc = self.managedObjectContext {
+                let success = moc.obtainPermanentIDsForObjects([self as NSManagedObject], error: &error)
+                if !success {
+                    return nil
+                }
+            }
+            else {
                 return nil
             }
         }

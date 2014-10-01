@@ -39,6 +39,8 @@ extension CoreDataFetchedResultsController {
                 tableView.endUpdates()
         }
         
+        tableView.reloadData()
+        
         return self
     }
     

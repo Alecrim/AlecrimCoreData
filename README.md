@@ -1,7 +1,9 @@
 AlecrimCoreData
 ===============
 
-AlecrimCoreData is a Core Data wrapper library written in Swift, "inspired" by [MagicalRecord](https://github.com/magicalpanda/MagicalRecord) and [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query).
+![AlecrimCoreData](images/AlecrimCoreData.png?raw=true)
+
+AlecrimCoreData is a framework to access Core Data objects more easily in Swift.
 
 ## Features
 
@@ -13,15 +15,12 @@ AlecrimCoreData is a Core Data wrapper library written in Swift, "inspired" by [
 ### TODO:
 
 - Add iCloud support to SQLite store type
-- Add aggregation methods
 - Add migration methods
-- Document source code
-- Create unit tests
-- Create example project
+- Create example projects
 
 ## Minimum Requirements
 
-- Xcode 6
+- Xcode 6.1
 - iOS 8 / OS X 10.10
 
 ## Installation
@@ -263,7 +262,7 @@ This only works if the data model context was not saved yet.
 
 ### Threading
 
-You can fetch and save entities in background using a specific class method that creates a special data model instance for this:
+You can fetch and save entities in background calling a global function that creates a new data model instance for this:
 
 ```swift
 // assuming that this department is saved and exists...

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		140649B21997F7DF001A2080 /* CoreDataFetchedResultsController+UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140649B11997F7DF001A2080 /* CoreDataFetchedResultsController+UIKit.swift */; };
-		140649B41997F896001A2080 /* CoreDataTable+UIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140649B31997F896001A2080 /* CoreDataTable+UIKit.swift */; };
 		141898751996E258000B4E35 /* CoreDataFetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141898741996E258000B4E35 /* CoreDataFetchedResultsSectionInfo.swift */; };
 		141C1D3B198EE7D300E1421F /* CoreDataTable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141C1D3A198EE7D300E1421F /* CoreDataTable+Extensions.swift */; };
 		141C1D3E198EE7E000E1421F /* CoreDataTable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141C1D3D198EE7E000E1421F /* CoreDataTable+Extensions.swift */; };
@@ -27,7 +26,6 @@
 
 /* Begin PBXFileReference section */
 		140649B11997F7DF001A2080 /* CoreDataFetchedResultsController+UIKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataFetchedResultsController+UIKit.swift"; sourceTree = "<group>"; };
-		140649B31997F896001A2080 /* CoreDataTable+UIKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+UIKit.swift"; sourceTree = "<group>"; };
 		141898741996E258000B4E35 /* CoreDataFetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataFetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
 		141C1D3A198EE7D300E1421F /* CoreDataTable+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+Extensions.swift"; sourceTree = "<group>"; };
 		141C1D3D198EE7E000E1421F /* CoreDataTable+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CoreDataTable+Extensions.swift"; sourceTree = "<group>"; };
@@ -66,7 +64,6 @@
 			children = (
 				140649B11997F7DF001A2080 /* CoreDataFetchedResultsController+UIKit.swift */,
 				141C1D3A198EE7D300E1421F /* CoreDataTable+Extensions.swift */,
-				140649B31997F896001A2080 /* CoreDataTable+UIKit.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -291,7 +288,6 @@
 				141C1D3B198EE7D300E1421F /* CoreDataTable+Extensions.swift in Sources */,
 				140649B21997F7DF001A2080 /* CoreDataFetchedResultsController+UIKit.swift in Sources */,
 				141898751996E258000B4E35 /* CoreDataFetchedResultsSectionInfo.swift in Sources */,
-				140649B41997F896001A2080 /* CoreDataTable+UIKit.swift in Sources */,
 				14AB0AE3197966490082BD7C /* CoreDataTable.swift in Sources */,
 				14D28B431996DBA500B18AB9 /* CoreDataFetchedResultsController.swift in Sources */,
 			);

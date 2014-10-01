@@ -68,7 +68,7 @@ extension CoreDataTable {
             self.underlyingFetchRequest.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
         }
         else {
-            let subpredicates = [ self.underlyingFetchRequest.predicate!, predicate ]
+            let subpredicates = [self.underlyingFetchRequest.predicate!, predicate]
             self.underlyingFetchRequest.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
         }
     
@@ -88,7 +88,7 @@ extension CoreDataTable {
     }
     
     public func filterBy(#predicateFormat: String, argumentArray arguments: [AnyObject]!) -> Self {
-        let predicate = NSPredicate(format: predicateFormat, argumentArray: arguments);
+        let predicate = NSPredicate(format: predicateFormat, argumentArray: arguments)
         return self.filterBy(predicate: predicate)
     }
     
@@ -170,7 +170,9 @@ extension CoreDataTable {
     }
     
     public func refreshEntity(managedObject: T) {
-        managedObject.managedObjectContext.refreshObject(managedObject, mergeChanges: true)
+        if let moc = managedObject.managedObjectContext {
+            moc.refreshObject(managedObject, mergeChanges: true)
+        }
     }
     
 }
