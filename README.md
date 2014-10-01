@@ -1,6 +1,3 @@
-AlecrimCoreData
-===============
-
 ![AlecrimCoreData](images/AlecrimCoreData.png?raw=true)
 
 AlecrimCoreData is a framework to access Core Data objects more easily in Swift.
