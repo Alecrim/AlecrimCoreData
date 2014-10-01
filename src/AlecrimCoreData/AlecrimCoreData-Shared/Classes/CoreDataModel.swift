@@ -12,7 +12,7 @@ import CoreData
 public class CoreDataModel {
     
     private let stack: CoreDataStack
-    internal let context: NSManagedObjectContext
+    public let context: NSManagedObjectContext
     
     public init(modelName: String?, stackType: CoreDataStackType = CoreDataStackType.SQLite)
     {

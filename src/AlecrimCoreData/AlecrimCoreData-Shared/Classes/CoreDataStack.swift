@@ -26,10 +26,10 @@ internal final class CoreDataStack {
     internal init(modelName name: NSString?, stackType: CoreDataStackType) {
         // model
         let bundle = NSBundle.mainBundle()
-        let modelName: NSString = (name == nil ? (bundle.infoDictionary[kCFBundleNameKey] as? NSString)! : name!)
+        let modelName: NSString = (name == nil ? (bundle.infoDictionary![kCFBundleNameKey] as NSString) : name!)
         let modelURL = bundle.URLForResource(modelName, withExtension: "momd")!
         
-        self.model = NSManagedObjectModel(contentsOfURL: modelURL)
+        self.model = NSManagedObjectModel(contentsOfURL: modelURL)!
         
         // coordinator
         self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.model)

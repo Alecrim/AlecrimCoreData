@@ -21,7 +21,7 @@ extension CoreDataTable {
         }
         
         if let predicate = self.underlyingFetchRequest.predicate {
-            arrayController.fetchPredicate = predicate.copy() as NSPredicate
+            arrayController.fetchPredicate = (predicate.copy() as NSPredicate)
         }
         
         arrayController.automaticallyPreparesContent = true
