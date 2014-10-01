@@ -3,7 +3,7 @@ AlecrimCoreData
 
 ![AlecrimCoreData](images/AlecrimCoreData.png?raw=true)
 
-AlecrimCoreData is a Core Data wrapper library written in Swift.
+AlecrimCoreData is a framework to access Core Data objects more easily in Swift.
 
 ## Features
 
