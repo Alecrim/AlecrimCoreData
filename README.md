@@ -1,7 +1,9 @@
 AlecrimCoreData
 ===============
 
-AlecrimCoreData is a Core Data wrapper library written in Swift, "inspired" by [MagicalRecord](https://github.com/magicalpanda/MagicalRecord) and [LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query).
+![AlecrimCoreData](images/AlecrimCoreData.png?raw=true)
+
+AlecrimCoreData is a Core Data wrapper library written in Swift.
 
 ## Features
 
@@ -13,15 +15,12 @@ AlecrimCoreData is a Core Data wrapper library written in Swift, "inspired" by [
 ### TODO:
 
 - Add iCloud support to SQLite store type
-- Add aggregation methods
 - Add migration methods
-- Document source code
-- Create unit tests
-- Create example project
+- Create example projects
 
 ## Minimum Requirements
 
-- Xcode 6
+- Xcode 6.1
 - iOS 8 / OS X 10.10
 
 ## Installation
