@@ -78,22 +78,22 @@ extension CoreDataTable {
     public func filterBy(attribute attributeName: String, value: AnyObject?) -> Self {
         var predicate: NSPredicate
         if let v: AnyObject = value {
-            predicate = NSPredicate(format: "%K == %@", argumentArray: [attributeName, v])!
+            predicate = NSPredicate(format: "%K == %@", argumentArray: [attributeName, v])
         }
         else {
-            predicate = NSPredicate(format: "%K == nil", argumentArray: [attributeName])!
+            predicate = NSPredicate(format: "%K == nil", argumentArray: [attributeName])
         }
         
         return self.filterBy(predicate: predicate)
     }
     
     public func filterBy(#predicateFormat: String, argumentArray arguments: [AnyObject]!) -> Self {
-        let predicate = NSPredicate(format: predicateFormat, argumentArray: arguments)!
+        let predicate = NSPredicate(format: predicateFormat, argumentArray: arguments)
         return self.filterBy(predicate: predicate)
     }
     
     public func filterBy(#predicateFormat: String, arguments argList: CVaListPointer) -> Self {
-        let predicate = NSPredicate(format: predicateFormat, arguments: argList)!
+        let predicate = NSPredicate(format: predicateFormat, arguments: argList)
         return self.filterBy(predicate: predicate)
     }
     
@@ -170,7 +170,9 @@ extension CoreDataTable {
     }
     
     public func refreshEntity(managedObject: T) {
-        managedObject.managedObjectContext.refreshObject(managedObject, mergeChanges: true)
+        if let moc = managedObject.managedObjectContext {
+            moc.refreshObject(managedObject, mergeChanges: true)
+        }
     }
     
 }
