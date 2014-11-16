@@ -104,11 +104,15 @@ extension CoreDataStack {
                     self.saveContext(parentContext, completion: completion)
                 }
                 else {
-                    completion?(true, nil)
+                    dispatch_async(dispatch_get_main_queue(), {
+                        completion!(true, nil)
+                    })
                 }
             }
             else {
-                completion?(false, error)
+                dispatch_async(dispatch_get_main_queue(), {
+                    completion!(false, error)
+                })
             }
         }
     }
