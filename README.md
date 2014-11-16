@@ -18,7 +18,7 @@ AlecrimCoreData is a framework to access Core Data objects more easily in Swift.
 ## Minimum Requirements
 
 - Xcode 6.1
-- iOS 8 / OS X 10.10
+- iOS 7 / OS X 10.10
 
 ## Installation
 
