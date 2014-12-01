@@ -1,24 +1,21 @@
-![AlecrimCoreData](images/AlecrimCoreData.png?raw=true)
+![AlecrimCoreData](AlecrimCoreData.png?raw=true)
 
-AlecrimCoreData is a framework to access Core Data objects more easily in Swift.
+AlecrimCoreData is a framework to access CoreData objects more easily in Swift.
 
 ## Features
 
-- Simpler classes and methods to access and save Core Data managed objects
+- Simpler classes and methods to access and save CoreData managed objects
 - Main and background contexts support
-- Core Data SQLite store type support with automatic creation of store file
-- In memory store type support
-
-### TODO:
-
-- Add iCloud support to SQLite store type
-- Add migration methods
-- Create example projects
+- SQLite store type support with automatic creation of store file
+- InMemory store type support
+- iOS: FetchedResultsController class and UITableView helper methods
 
 ## Minimum Requirements
 
 - Xcode 6.1
-- iOS 7 / OS X 10.10
+- iOS 8.x (*) / OS X 10.10.x
+
+(*) Not tested on iOS 7.x
 
 ## Installation
 
@@ -26,28 +23,24 @@ You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodep
 
 ## Getting Started
 
-### Data Model
+### Data Context (*)
 
-You can create a inherited class from `CoreDataModel` and declare a property or method for each entity in your data model like the example below:
+You can create a inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
 
 ```swift
-import AlecrimCoreData
+let dataContext = DataContext()!
 
-public let db = DataModel()
-
-public class DataModel: CoreDataModel {
+final class DataContext: AlecrimCoreData.Context {
 	
-	public var people:      CoreDataTable<PersonEntity>     { return CoreDataTable<PersonEntity>(dataModel: self) }
-	public var departments: CoreDataTable<DepartmentEntity> { return CoreDataTable<DepartmentEntity>(dataModel: self) }
-
-	private convenience init() {
-		self.init(modelName: nil)
-	}
+	var people:      AlecrimCoreData.Table<PersonEntity>     { return AlecrimCoreData.Table<PersonEntity>(context: self) }
+	var departments: AlecrimCoreData.Table<DepartmentEntity> { return AlecrimCoreData.Table<DepartmentEntity>(context: self) }
 	
 }
 ```
 
-It's important that properties (or methods) always return a _new_ instance of a `CoreDataTable` class.
+It's important that properties (or methods) always return a _new_ instance of a `AlecrimCoreData.Table` class.
+
+(*) "Data Context" is not the same as the CoreData Managed Object Context.
 
 ### Entities
 
@@ -61,10 +54,10 @@ In the above section example, there are two entities: `Person` and `Department` 
 
 #### Basic Fetching
 
-Say you have an Entity called Person, related to a Department (as seen in various Apple Core Data documentation [and MagicalRecord documentation too]). To get all of the Person entities as an array, use the following methods:
+Say you have an Entity called Person, related to a Department (as seen in various Apple CoreData documentation [and MagicalRecord documentation too]). To get all of the Person entities as an array, use the following methods:
 
 ```swift
-for person in db.people {
+for person in dataContext.people {
 	println(person.firstName)
 }
 ```
@@ -72,49 +65,49 @@ for person in db.people {
 You can also skip some results:
 
 ```swift
-let people = db.people.skip(3)
+let people = dataContext.people.skip(3)
 ```
 
 Or take only some results:
 
 ```swift
-let people = db.people.skip(3).take(7)
+let people = dataContext.people.skip(3).take(7)
 ```
 
 Or, to return the results sorted by a property:
 
 ```swift
-let peopleSorted = db.people.orderBy("lastName")
+let peopleSorted = dataContext.people.orderBy("lastName")
 ```
 
 Or, to return the results sorted by multiple properties:
 
 ```swift
-let peopleSorted = db.people.orderBy("lastName").orderBy("firstName")
+let peopleSorted = dataContext.people.orderBy("lastName").orderBy("firstName")
 
 // OR
 
-let peopleSorted = db.people.sortBy("lastName,firstName")
+let peopleSorted = dataContext.people.sortBy("lastName,firstName")
 ```
 
 Or, to return the results sorted by multiple properties with different attributes:
 
 ```swift
-let peopleSorted = db.people.orderByDescending("lastName").orderBy("firstName")
+let peopleSorted = dataContext.people.orderByDescending("lastName").orderBy("firstName")
 
 // OR
 
-let peopleSorted = db.people.sortBy("lastName:0,firstName:1")
+let peopleSorted = dataContext.people.sortBy("lastName:0,firstName:1")
 
 // OR
 
-let peopleSorted = db.people.sortBy("lastName:0:[cd],firstName:1:[cd]")
+let peopleSorted = dataContext.people.sortBy("lastName:0:[cd],firstName:1:[cd]")
 ```
 
 If you have a unique way of retrieving a single object from your data store (such as via an identifier), you can use the following code:
 
 ```swift
-if let person = db.people.filterBy(attribute: "identifier", value: "123").first() {
+if let person = dataContext.people.filterBy(attribute: "identifier", value: "123").first() {
 	println(person.name)
 }
 ```
@@ -129,7 +122,7 @@ let itemsPerPage = 10
 for pageNumber in 0..<5 {
 	println("Page: \(pageNumber)")
 
-	let peopleInCurrentPage = db.people
+	let peopleInCurrentPage = dataContext.people
 		.filterBy(predicateFormat: "department IN %@", argumentArray: [[dept1, dept2]])
 		.skip(pageNumber * itemsPerPage)
 		.take(itemsPerPage)
@@ -148,7 +141,7 @@ let predicate = NSPredicate(format: "department IN %@", argumentArray: [[dept1, 
 for pageNumber in 0..<5 {
 	println("Page: \(pageNumber)")
 
-	let peopleInCurrentPage = db.people
+	let peopleInCurrentPage = dataContext.people
 		.filterBy(predicate: predicate)
 		.skip(pageNumber * itemsPerPage)
 		.take(itemsPerPage)
@@ -165,21 +158,21 @@ for pageNumber in 0..<5 {
 The data is actually fetched from Persistent Store only when `toArray()` is explicitly or implicitly called. So you can combine and chain other methods before this.
 
 ```swift
-let peopleArray = db.people.toArray()
+let peopleArray = dataContext.people.toArray()
 
 // OR
 
-let peopleArray = db.people.sortBy("firstName,lastName").toArray()
+let peopleArray = dataContext.people.sortBy("firstName,lastName").toArray()
 
 // OR
 
-let theSmiths = db.people.filterBy(attribute: "lastName", value: "Smith").orderBy("firstName")
+let theSmiths = dataContext.people.filterBy(attribute: "lastName", value: "Smith").orderBy("firstName")
 let count = theSmiths.count()
 let array = theSmiths.toArray()
 
 // OR
 
-for person in db.people.sortBy("firstName,lastName") {
+for person in dataContext.people.sortBy("firstName,lastName") {
     // .toArray() is called implicitly when enumerating
 }
 ```
@@ -189,9 +182,9 @@ for person in db.people.sortBy("firstName,lastName") {
 Call the `to...` method in the end of chain.
 
 ```swift
-let peopleFetchRequest = db.people.toFetchRequest()
-let peopleArrayController = db.people.toArrayController() // OS X only
-let peopleFetchedResultsController = db.people.toFetchedResultsController() // iOS only
+let peopleFetchRequest = dataContext.people.toFetchRequest()
+let peopleArrayController = dataContext.people.toArrayController() // OS X only
+let peopleFetchedResultsController = dataContext.people.toFetchedResultsController() // iOS only
 ```
 
 #### Find the number of entities
@@ -199,7 +192,7 @@ let peopleFetchedResultsController = db.people.toFetchedResultsController() // i
 You can also perform a count of the entities in your Persistent Store:
 
 ```swift
-let count = db.people.filterBy(attribute: "lastName", value: "Smith").count()
+let count = dataContext.people.filterBy(attribute: "lastName", value: "Smith").count()
 ```
 
 ### Creating new Entities
@@ -207,13 +200,13 @@ let count = db.people.filterBy(attribute: "lastName", value: "Smith").count()
 When you need to create a new instance of an Entity, use:
 
 ```swift
-let person = db.people.createEntity()
+let person = dataContext.people.createEntity()
 ```
 
 You can also create or get first existing entity matching the criteria. If the entity does not exist, a new one is created and the specified attribute is assigned from the searched value automatically.
 
 ```swift
-let person = db.people.createOrGetFirstEntity(whereAttribute: "identifier", isEqualTo: "123")
+let person = dataContext.people.createOrGetFirstEntity(whereAttribute: "identifier", isEqualTo: "123")
 ```
 
 ### Deleting Entities
@@ -221,63 +214,65 @@ let person = db.people.createOrGetFirstEntity(whereAttribute: "identifier", isEq
 To delete a single entity:
 
 ```swift
-if let person = db.people.filterBy(attribute: "identifier", value: "123").first() {
-    db.people.deleteEntity(person)
+if let person = dataContext.people.filterBy(attribute: "identifier", value: "123").first() {
+    dataContext.people.deleteEntity(person)
 }
 ```
 
 ## Saving
 
-You can save the data model context in the end, after all changes were made.
+You can save the data context in the end, after all changes were made.
 
 ```swift
-let person = db.people.createOrGetFirstEntity(whereAttribute: "identifier", isEqualTo: "9")
+let person = dataContext.people.createOrGetFirstEntity(whereAttribute: "identifier", isEqualTo: "9")
 person.firstName = "Christopher"
 person.lastName = "Eccleston"
 person.additionalInfo = "The best Doctor ever!"
 
-// synchronous
-let (success, error) = db.save()
+// get success and error
+let (success, error) = dataContext.save()
+
+if success {
+    // ...
+}
+else {
+    println(error)
+}
 
 // OR
 
-// asynchronous
-db.save { success, error in
-    //
+// check for success only
+if dataContext.save() {
+    // ...
 }
 ```
 
 #### Rolling back
 
-To rollback the data model context:
+To rollback the data context:
 
 ```swift
-db.rollback()
+dataContext.rollback()
 ```
 
-This only works if the data model context was not saved yet.
+This only works if the data context was not saved yet.
 
 ### Threading
 
-You can fetch and save entities in background calling a global function that creates a new data model instance for this:
+You can fetch and save entities in background calling a global function that creates a new data context instance for this:
 
 ```swift
 // assuming that this department is saved and exists...
-let department = db.departments.filterBy(attribute: "identifier", value: "100").first()!
+let department = dataContext.departments.filterBy(attribute: "identifier", value: "100").first()!
 
 // the closure below will run in a background context queue
-performInBackground(db) { backgroundDB in
-    if let person = backgroundDB.people.filterBy(attribute: "identifier", value: "321").first() {
-        // bringing the department entity to the background data model context before the assignment...
-        person.department = department.inDataModel(backgroundDB)!
+performInBackground(dataContext) { backgroundDataContextContext in
+    if let person = backgroundDataContextContext(attribute: "identifier", value: "321").first() {
+        person.department = department.inContext(backgroundDataContextContext)! // must be in backgroundDataContextContext
         person.otherData = "Other Data"
     }
     
-    // we are already in background here, so we can call save directly    
-    let (success, error) = backgroundDB.save()
-    if success {
-        // ...
-    }
+    backgrounddataContext.save()
 }
 ```
 
