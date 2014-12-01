@@ -266,13 +266,13 @@ You can fetch and save entities in background calling a global function that cre
 let department = dataContext.departments.filterBy(attribute: "identifier", value: "100").first()!
 
 // the closure below will run in a background context queue
-performInBackground(dataContext) { backgroundDataContextContext in
-    if let person = backgroundDataContextContext(attribute: "identifier", value: "321").first() {
-        person.department = department.inContext(backgroundDataContextContext)! // must be in backgroundDataContextContext
+performInBackground(dataContext) { backgroundDataContext in
+    if let person = backgroundDataContext.people.filterBy(attribute: "identifier", value: "321").first() {
+        person.department = department.inContext(backgroundDataContext)! // must be in backgroundDataContextContext
         person.otherData = "Other Data"
     }
-    
-    backgrounddataContext.save()
+
+    backgroundDataContext.save()
 }
 ```
 
