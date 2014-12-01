@@ -292,7 +292,7 @@ extension Table {
     
     public func toArrayController() -> NSArrayController {
         let arrayController = NSArrayController()
-        arrayController.managedObjectContext = self.context
+        arrayController.managedObjectContext = self.context.managedObjectContext
         arrayController.entityName = self.underlyingFetchRequest.entityName
         
         if let sortDescriptors = self.underlyingFetchRequest.sortDescriptors {

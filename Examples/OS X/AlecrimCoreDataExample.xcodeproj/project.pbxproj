@@ -1,0 +1,362 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		14CF9DCF1A2C932200B64A45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9DCE1A2C932200B64A45 /* AppDelegate.swift */; };
+		14CF9DD11A2C932200B64A45 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9DD01A2C932200B64A45 /* ViewController.swift */; };
+		14CF9DD41A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9DD21A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodeld */; };
+		14CF9DD61A2C932300B64A45 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14CF9DD51A2C932300B64A45 /* Images.xcassets */; };
+		14CF9DD91A2C932300B64A45 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 14CF9DD71A2C932300B64A45 /* Main.storyboard */; };
+		14D7BB9F1A2C97F50045897C /* AlecrimCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14D7BB9E1A2C97E60045897C /* AlecrimCoreData.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		14D7BB9D1A2C97E60045897C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 14CF9DF81A2C941000B64A45;
+			remoteInfo = AlecrimCoreData;
+		};
+		14D7BBA01A2C98030045897C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 14CF9DF71A2C941000B64A45;
+			remoteInfo = AlecrimCoreData;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		14CF9DC91A2C932200B64A45 /* AlecrimCoreDataExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlecrimCoreDataExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		14CF9DCD1A2C932200B64A45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		14CF9DCE1A2C932200B64A45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		14CF9DD01A2C932200B64A45 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		14CF9DD31A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlecrimCoreDataExample.xcdatamodel; sourceTree = "<group>"; };
+		14CF9DD51A2C932300B64A45 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		14CF9DD81A2C932300B64A45 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AlecrimCoreData.xcodeproj; path = "../../Source/OS X/AlecrimCoreData.xcodeproj"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		14CF9DC61A2C932200B64A45 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14D7BB9F1A2C97F50045897C /* AlecrimCoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		14CF9DC01A2C932200B64A45 = {
+			isa = PBXGroup;
+			children = (
+				14CF9DCB1A2C932200B64A45 /* AlecrimCoreDataExample */,
+				14D7BB981A2C97C80045897C /* Dependencies */,
+				14CF9DCA1A2C932200B64A45 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		14CF9DCA1A2C932200B64A45 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				14CF9DC91A2C932200B64A45 /* AlecrimCoreDataExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		14CF9DCB1A2C932200B64A45 /* AlecrimCoreDataExample */ = {
+			isa = PBXGroup;
+			children = (
+				14CF9DCE1A2C932200B64A45 /* AppDelegate.swift */,
+				14CF9DD01A2C932200B64A45 /* ViewController.swift */,
+				14CF9DD51A2C932300B64A45 /* Images.xcassets */,
+				14CF9DD71A2C932300B64A45 /* Main.storyboard */,
+				14CF9DD21A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodeld */,
+				14CF9DCC1A2C932200B64A45 /* Supporting Files */,
+			);
+			path = AlecrimCoreDataExample;
+			sourceTree = "<group>";
+		};
+		14CF9DCC1A2C932200B64A45 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				14CF9DCD1A2C932200B64A45 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		14D7BB981A2C97C80045897C /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */,
+			);
+			name = Dependencies;
+			sourceTree = "<group>";
+		};
+		14D7BB9A1A2C97E60045897C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				14D7BB9E1A2C97E60045897C /* AlecrimCoreData.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		14CF9DC81A2C932200B64A45 /* AlecrimCoreDataExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 14CF9DE81A2C932300B64A45 /* Build configuration list for PBXNativeTarget "AlecrimCoreDataExample" */;
+			buildPhases = (
+				14CF9DC51A2C932200B64A45 /* Sources */,
+				14CF9DC61A2C932200B64A45 /* Frameworks */,
+				14CF9DC71A2C932200B64A45 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				14D7BBA11A2C98030045897C /* PBXTargetDependency */,
+			);
+			name = AlecrimCoreDataExample;
+			productName = AlecrimCoreDataExample;
+			productReference = 14CF9DC91A2C932200B64A45 /* AlecrimCoreDataExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		14CF9DC11A2C932200B64A45 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0610;
+				ORGANIZATIONNAME = Alecrim;
+				TargetAttributes = {
+					14CF9DC81A2C932200B64A45 = {
+						CreatedOnToolsVersion = 6.1;
+					};
+				};
+			};
+			buildConfigurationList = 14CF9DC41A2C932200B64A45 /* Build configuration list for PBXProject "AlecrimCoreDataExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 14CF9DC01A2C932200B64A45;
+			productRefGroup = 14CF9DCA1A2C932200B64A45 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 14D7BB9A1A2C97E60045897C /* Products */;
+					ProjectRef = 14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				14CF9DC81A2C932200B64A45 /* AlecrimCoreDataExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		14D7BB9E1A2C97E60045897C /* AlecrimCoreData.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AlecrimCoreData.framework;
+			remoteRef = 14D7BB9D1A2C97E60045897C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		14CF9DC71A2C932200B64A45 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14CF9DD61A2C932300B64A45 /* Images.xcassets in Resources */,
+				14CF9DD91A2C932300B64A45 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		14CF9DC51A2C932200B64A45 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14CF9DD11A2C932200B64A45 /* ViewController.swift in Sources */,
+				14CF9DD41A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodeld in Sources */,
+				14CF9DCF1A2C932200B64A45 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		14D7BBA11A2C98030045897C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AlecrimCoreData;
+			targetProxy = 14D7BBA01A2C98030045897C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		14CF9DD71A2C932300B64A45 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				14CF9DD81A2C932300B64A45 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		14CF9DE61A2C932300B64A45 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		14CF9DE71A2C932300B64A45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		14CF9DE91A2C932300B64A45 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = AlecrimCoreDataExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		14CF9DEA1A2C932300B64A45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = AlecrimCoreDataExample/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		14CF9DC41A2C932200B64A45 /* Build configuration list for PBXProject "AlecrimCoreDataExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14CF9DE61A2C932300B64A45 /* Debug */,
+				14CF9DE71A2C932300B64A45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		14CF9DE81A2C932300B64A45 /* Build configuration list for PBXNativeTarget "AlecrimCoreDataExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14CF9DE91A2C932300B64A45 /* Debug */,
+				14CF9DEA1A2C932300B64A45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		14CF9DD21A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				14CF9DD31A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodel */,
+			);
+			currentVersion = 14CF9DD31A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodel */;
+			path = AlecrimCoreDataExample.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 14CF9DC11A2C932200B64A45 /* Project object */;
+}
