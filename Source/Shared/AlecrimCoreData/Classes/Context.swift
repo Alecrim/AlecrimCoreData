@@ -77,6 +77,17 @@ extension Context {
     
 }
 
+extension Context {
+
+    public var hasChanges: Bool { return self.managedObjectContext.hasChanges }
+    public var undoManager: NSUndoManager? { return self.managedObjectContext.undoManager }
+    
+    public func commitEditing() -> Bool {
+        return self.managedObjectContext.commitEditing()
+    }
+    
+}
+
 // MARK: - public global functions
 
 public func performInBackground<T: Context>(parentContext: T, closure: (T) -> Void) {
