@@ -82,9 +82,13 @@ extension Context {
     public var hasChanges: Bool { return self.managedObjectContext.hasChanges }
     public var undoManager: NSUndoManager? { return self.managedObjectContext.undoManager }
     
+    #if os(OSX)
+
     public func commitEditing() -> Bool {
         return self.managedObjectContext.commitEditing()
     }
+    
+    #endif
     
 }
 
