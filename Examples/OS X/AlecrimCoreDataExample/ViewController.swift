@@ -77,17 +77,17 @@ class ViewController: NSViewController {
             }
         }
 
-//            // OR delete entity using main thread data context.
-//            if let entity = self.arrayController.selectedObjects.first as? EventEntity {
-//                dataContext.events.deleteEntity(entity)
-//
-//                if !dataContext.save() {
-//                    // Replace this implementation with code to handle the error appropriately.
-//                    // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//                    abort()
-//                }
+//        // OR delete entity using main thread data context.
+//        if let entity = self.arrayController.selectedObjects.first as? EventEntity {
+//            dataContext.events.deleteEntity(entity)
+//            
+//            if !dataContext.save() {
+//                // Replace this implementation with code to handle the error appropriately.
+//                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                abort()
 //            }
-}
+//        }
+    }
     
 }
 
