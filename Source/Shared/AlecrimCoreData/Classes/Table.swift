@@ -296,11 +296,11 @@ extension Table {
         arrayController.entityName = self.underlyingFetchRequest.entityName
         
         if let sortDescriptors = self.underlyingFetchRequest.sortDescriptors {
-        arrayController.sortDescriptors = sortDescriptors
+            arrayController.sortDescriptors = sortDescriptors
         }
         
         if let predicate = self.underlyingFetchRequest.predicate {
-        arrayController.fetchPredicate = (predicate.copy() as NSPredicate)
+            arrayController.fetchPredicate = (predicate.copy() as NSPredicate)
         }
         
         arrayController.automaticallyPreparesContent = true
@@ -310,6 +310,13 @@ extension Table {
         defaultFetchRequest.fetchOffset = self.underlyingFetchRequest.fetchOffset
         defaultFetchRequest.fetchLimit = self.underlyingFetchRequest.fetchLimit
         defaultFetchRequest.fetchBatchSize = self.defaultFetchBatchSize
+        
+        var error: NSError? = nil
+        let success = arrayController.fetchWithRequest(nil, merge: false, error: &error)
+        
+        if !success {
+            println(error)
+        }
         
         return arrayController
     }
