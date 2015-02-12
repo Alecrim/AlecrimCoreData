@@ -124,14 +124,9 @@ internal final class Stack {
     
     private class func persistentStoreForSQLiteStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, managedObjectModelName: String?, bundle: NSBundle) -> NSPersistentStore? {
         if let momn = managedObjectModelName {
-            let fileManager = NSFileManager.defaultManager()
-            let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
-            let applicationSupportDirectoryURL = urls[urls.endIndex - 1] as NSURL
-            
-            if let bundleIdentifier = bundle.bundleIdentifier {
-                let localStoreURL = applicationSupportDirectoryURL.URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
-                
-                if let localStorePath = localStoreURL.absoluteString {
+            if let localStoreURL = localSQLiteStoreURLForBundle(bundle) {
+                if let localStorePath = localStoreURL.path {
+                    let fileManager = NSFileManager.defaultManager()
                     var error: NSError? = nil
                     
                     if !fileManager.fileExistsAtPath(localStorePath) {
@@ -140,15 +135,14 @@ internal final class Stack {
                             return nil
                         }
                     }
-                    
-                    let storeFilename = momn.stringByAppendingPathExtension("sqlite")!
-                    let localStoreFileURL = localStoreURL.URLByAppendingPathComponent(storeFilename, isDirectory: false)
-                    
-                    return coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: nil, error: nil)!
                 }
+                
+                let storeFilename = momn.stringByAppendingPathExtension("sqlite")!
+                let localStoreFileURL = localStoreURL.URLByAppendingPathComponent(storeFilename, isDirectory: false)
+                
+                return coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: nil, error: nil)!
             }
         }
-        
         return nil
     }
     
@@ -189,4 +183,16 @@ private class StackBackgroundManagedObjectContext: NSManagedObjectContext {
         }
     }
     
+}
+
+public func localSQLiteStoreURLForBundle(bundle: NSBundle) -> NSURL? {
+    let fileManager = NSFileManager.defaultManager()
+    let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+    let applicationSupportDirectoryURL = urls.last as NSURL
+    
+    if let bundleIdentifier = bundle.bundleIdentifier {
+        return applicationSupportDirectoryURL.URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
+    }
+    
+    return nil
 }
