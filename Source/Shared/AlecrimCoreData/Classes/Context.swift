@@ -12,7 +12,7 @@ import CoreData
 public class Context {
     
     private let stack: Stack!
-    internal let managedObjectContext: NSManagedObjectContext!
+    public let managedObjectContext: NSManagedObjectContext!
     
     public init?(managedObjectModelName: String? = nil, stackType: StackType = StackType.SQLite) {
         if let stack = Stack(managedObjectModelName: managedObjectModelName, stackType: stackType) {

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Alecrim. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 // MARK: - UITableView helper methods
 

@@ -148,7 +148,7 @@ class MasterViewController: UITableViewController {
 
     func configureCell(cell: UITableViewCell, atIndexPath indexPath: NSIndexPath) {
         let entity = self.fetchedResultsController.entityAtIndexPath(indexPath)
-        cell.textLabel.text = entity.timeStamp.description
+        cell.textLabel?.text = entity.timeStamp.description
     }
 
 }
