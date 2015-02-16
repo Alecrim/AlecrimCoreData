@@ -11,8 +11,8 @@ import CoreData
 
 public class Context {
     
+    public let managedObjectContext: NSManagedObjectContext! // The underlying managed object context
     private let stack: Stack!
-    public let managedObjectContext: NSManagedObjectContext!
     
     public init?(managedObjectModelName: String? = nil, stackType: StackType = StackType.SQLite) {
         if let stack = Stack(managedObjectModelName: managedObjectModelName, stackType: stackType) {
