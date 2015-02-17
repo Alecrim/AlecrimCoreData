@@ -11,9 +11,8 @@ import CoreData
 
 public final class Table<T: NSManagedObject> {
     
-    private let defaultFetchBatchSize = 20
-    private lazy var underlyingFetchRequest = NSFetchRequest(entityName: T.entityName)
-
+    internal let defaultFetchBatchSize = 20
+    internal lazy var underlyingFetchRequest = NSFetchRequest(entityName: T.entityName)
     internal let context: Context
     
     public init(context: Context) {
@@ -34,18 +33,9 @@ extension Table {
         return self
     }
     
-    public func sortBy(sortTerm: String, ascending: Bool = true) -> Self {
-        let addedSortDescriptors = self.sortDescriptorsFromString(sortTerm, defaultAscendingValue: ascending)
-        
-        if var sortDescriptors = self.underlyingFetchRequest.sortDescriptors as? [NSSortDescriptor] {
-            sortDescriptors += addedSortDescriptors
-        }
-        else {
-            self.underlyingFetchRequest.sortDescriptors = addedSortDescriptors
-        }
-        
-        return self
-    }
+}
+
+extension Table {
     
     public func orderBy(attributeName: String) -> Self {
         return self.orderByAscending(attributeName)
@@ -59,12 +49,41 @@ extension Table {
         return self.sortBy(attributeName, ascending: false)
     }
     
+    public func thenBy(attributeName: String) -> Self {
+        return self.orderBy(attributeName)
+    }
+
+    public func thenByAscending(attributeName: String) -> Self {
+        return self.orderByAscending(attributeName)
+    }
+    
+    public func thenByDescending(attributeName: String) -> Self {
+        return self.orderByDescending(attributeName)
+    }
+    
+    private func sortBy(sortTerm: String, ascending: Bool = true) -> Self {
+        let addedSortDescriptors = self.sortDescriptorsFromString(sortTerm, defaultAscendingValue: ascending)
+        
+        if var sortDescriptors = self.underlyingFetchRequest.sortDescriptors as? [NSSortDescriptor] {
+            sortDescriptors += addedSortDescriptors
+        }
+        else {
+            self.underlyingFetchRequest.sortDescriptors = addedSortDescriptors
+        }
+        
+        return self
+    }
+
+}
+
+extension Table {
+
     public func filterBy(#predicate: NSPredicate) -> Self {
         if self.underlyingFetchRequest.predicate == nil {
             self.underlyingFetchRequest.predicate = predicate
         }
         else if let compoundPredicate = self.underlyingFetchRequest.predicate as? NSCompoundPredicate {
-            var subpredicates = compoundPredicate.subpredicates as [NSPredicate]
+            var subpredicates = compoundPredicate.subpredicates as! [NSPredicate]
             subpredicates.append(predicate)
             self.underlyingFetchRequest.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
         }
@@ -103,7 +122,7 @@ extension Table {
 extension Table {
     
     public func toFetchRequest() -> NSFetchRequest {
-        return self.underlyingFetchRequest.copy() as NSFetchRequest
+        return self.underlyingFetchRequest.copy() as! NSFetchRequest
     }
     
 }
@@ -113,6 +132,10 @@ extension Table {
     public func toArray() -> [T] {
         return self.toArray(fetchRequest: self.toFetchRequest())
     }
+    
+}
+
+extension Table {
     
     public func count() -> Int {
         return self.count(fetchRequest: self.toFetchRequest())
@@ -215,7 +238,7 @@ extension Table {
             var effectiveAscending = defaultAscendingValue
             var effectiveOptionalParameter: NSString? = nil
             
-            let sortComponents = sortKey.componentsSeparatedByString(":") as [NSString]
+            let sortComponents = sortKey.componentsSeparatedByString(":") as! [NSString]
             if sortComponents.count > 1 {
                 effectiveSortKey = sortComponents[0]
                 effectiveAscending = sortComponents[1].boolValue
@@ -226,10 +249,10 @@ extension Table {
             }
             
             if effectiveOptionalParameter != nil && effectiveOptionalParameter!.rangeOfString("cd").location != NSNotFound {
-                sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending, selector: Selector("localizedCaseInsensitiveCompare:")))
+                sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey as! String, ascending: effectiveAscending, selector: Selector("localizedCaseInsensitiveCompare:")))
             }
             else {
-                sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending))
+                sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey as! String, ascending: effectiveAscending))
             }
         }
         
@@ -271,57 +294,3 @@ extension Table {
     }
     
 }
-
-// SWIFT_BUG: Error -> Linker error if this extensions are outside this source file. Workaround -> Put the extensions here.
-
-#if os(iOS)
-
-extension Table {
-    
-    public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchedResultsController<T> {
-        return FetchedResultsController<T>(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context.managedObjectContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
-    }
-    
-}
-    
-#endif
-
-#if os(OSX)
-
-extension Table {
-    
-    public func toArrayController() -> NSArrayController {
-        let arrayController = NSArrayController()
-        arrayController.managedObjectContext = self.context.managedObjectContext
-        arrayController.entityName = self.underlyingFetchRequest.entityName
-        
-        if let sortDescriptors = self.underlyingFetchRequest.sortDescriptors {
-            arrayController.sortDescriptors = sortDescriptors
-        }
-        
-        if let predicate = self.underlyingFetchRequest.predicate {
-            arrayController.fetchPredicate = (predicate.copy() as NSPredicate)
-        }
-        
-        arrayController.automaticallyPreparesContent = true
-        arrayController.automaticallyRearrangesObjects = true
-        
-        let defaultFetchRequest = arrayController.defaultFetchRequest()
-        defaultFetchRequest.fetchOffset = self.underlyingFetchRequest.fetchOffset
-        defaultFetchRequest.fetchLimit = self.underlyingFetchRequest.fetchLimit
-        defaultFetchRequest.fetchBatchSize = self.defaultFetchBatchSize
-        
-        var error: NSError? = nil
-        let success = arrayController.fetchWithRequest(nil, merge: false, error: &error)
-        
-        if !success {
-            println(error)
-        }
-        
-        return arrayController
-    }
-    
-}
-
-    
-#endif

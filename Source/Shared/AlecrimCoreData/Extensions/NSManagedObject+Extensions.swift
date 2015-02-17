@@ -66,14 +66,14 @@ extension NSManagedObject {
             }
             
             if let suffix = entityNameSuffix {
-                if !name.isEqualToString(suffix) && name.hasSuffix(suffix) {
+                if !name.isEqualToString(suffix as! String) && name.hasSuffix(suffix as! String) {
                     name = name.substringToIndex(name.length - suffix.length)
                 }
             }
             
-            entityNames[className] = name
+            entityNames[className] = (name as! String)
             
-            return name
+            return name as! String
         }
     }
     

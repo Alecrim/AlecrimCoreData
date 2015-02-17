@@ -36,6 +36,14 @@ internal final class Stack {
         }
         
         if managedObjectModelName == nil {
+            // Swift 1.2 things
+            self.model = nil
+            self.coordinator = nil
+            self.store = nil
+            self.rootManagedObjectContext = nil
+            self.mainManagedObjectContext = nil
+
+            //
             return nil
         }
         
@@ -43,6 +51,13 @@ internal final class Stack {
         self.model = Stack.managedObjectModelWithName(managedObjectModelName, bundle: bundle)
         
         if self.model == nil {
+            // Swift 1.2 things
+            self.coordinator = nil
+            self.store = nil
+            self.rootManagedObjectContext = nil
+            self.mainManagedObjectContext = nil
+            
+            //
             return nil
         }
         
@@ -59,19 +74,28 @@ internal final class Stack {
         }
         
         if self.store == nil {
+            // Swift 1.2 things
+            self.rootManagedObjectContext = nil
+            self.mainManagedObjectContext = nil
+            
+            //
             return nil
         }
         
         // root (saving) managed object context
-        self.rootManagedObjectContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        self.rootManagedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        self.rootManagedObjectContext.persistentStoreCoordinator = self.coordinator
-        self.rootManagedObjectContext.undoManager = nil
+        let rmoc = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        rmoc.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        rmoc.persistentStoreCoordinator = self.coordinator
+        rmoc.undoManager = nil
+
+        self.rootManagedObjectContext = rmoc
         
         // main thread managed object context
-        self.mainManagedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        self.mainManagedObjectContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        self.mainManagedObjectContext.parentContext = self.rootManagedObjectContext
+        let mmoc = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
+        mmoc.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        mmoc.parentContext = self.rootManagedObjectContext
+        
+        self.mainManagedObjectContext = mmoc
     }
     
     // MARK: - internal methods
@@ -169,7 +193,7 @@ internal final class Stack {
     private class func localSQLiteStoreURLForBundle(bundle: NSBundle) -> NSURL? {
         let fileManager = NSFileManager.defaultManager()
         let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
-        let applicationSupportDirectoryURL = urls.last as NSURL
+        let applicationSupportDirectoryURL = urls.last as! NSURL
         
         if let bundleIdentifier = bundle.bundleIdentifier {
             return applicationSupportDirectoryURL.URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
