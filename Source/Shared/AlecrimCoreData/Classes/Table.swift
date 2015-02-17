@@ -294,3 +294,17 @@ extension Table {
     }
     
 }
+
+// SWIFT_BUG: Error -> Linker error if these extensions are outside this source file. Workaround -> Put the extensions here.
+
+#if os(iOS)
+
+extension Table {
+    
+    public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchedResultsController<T> {
+        return FetchedResultsController<T>(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context.managedObjectContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+    }
+    
+}
+
+#endif
