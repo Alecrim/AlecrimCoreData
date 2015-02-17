@@ -16,7 +16,7 @@ public final class FetchedResultsController<T: NSManagedObject> {
     private let fetchRequest: NSFetchRequest
     private let managedObjectContext: NSManagedObjectContext
     private let sectionNameKeyPath: String?
-    private let cacheName: String? = nil
+    private let cacheName: String?
     
     private var hasUnderlyingFetchedResultsController = false
     private var underlyingFecthedResultsControllerDelegate: FecthedResultsControllerDelegate! = nil
@@ -123,7 +123,7 @@ extension FetchedResultsController {
 extension FetchedResultsController {
     
     public var entities: [T] {
-        return self.underlyingFetchedResultsController.fetchedObjects as [T]
+        return self.underlyingFetchedResultsController.fetchedObjects as! [T]
     }
     
     public func entityAtIndexPath(indexPath: NSIndexPath) -> T! {
@@ -180,16 +180,16 @@ extension FetchedResultsController {
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch type {
         case .Insert:
-            self.fetchedResultsController.didInsertEntityClosure?(anObject as NSManagedObject, newIndexPath!)
+            self.fetchedResultsController.didInsertEntityClosure?(anObject as! NSManagedObject, newIndexPath!)
             
         case .Delete:
-            self.fetchedResultsController.didDeleteEntityClosure?(anObject as NSManagedObject, indexPath!)
+            self.fetchedResultsController.didDeleteEntityClosure?(anObject as! NSManagedObject, indexPath!)
             
         case .Update:
-            self.fetchedResultsController.didUpdateEntityClosure?(anObject as NSManagedObject, indexPath!)
+            self.fetchedResultsController.didUpdateEntityClosure?(anObject as! NSManagedObject, indexPath!)
             
         case .Move:
-            self.fetchedResultsController.didMoveEntityClosure?(anObject as NSManagedObject, indexPath!, newIndexPath!)
+            self.fetchedResultsController.didMoveEntityClosure?(anObject as! NSManagedObject, indexPath!, newIndexPath!)
             
         default:
             break
