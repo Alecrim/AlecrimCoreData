@@ -204,7 +204,7 @@ internal final class Stack {
 
 }
 
-private class StackBackgroundManagedObjectContext: NSManagedObjectContext {
+private final class StackBackgroundManagedObjectContext: NSManagedObjectContext {
     
     private var mainContext: NSManagedObjectContext! {
         didSet {

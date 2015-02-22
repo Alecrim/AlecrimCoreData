@@ -21,6 +21,8 @@ public final class Table<T: NSManagedObject> {
     
 }
 
+// MARK: - partitioning
+
 extension Table {
     
     public func skip(count: Int) -> Self {
@@ -35,10 +37,12 @@ extension Table {
     
 }
 
+// MARK - ordering
+
 extension Table {
     
     public func orderBy(attributeName: String) -> Self {
-        return self.orderByAscending(attributeName)
+        return self.sortBy(attributeName, ascending: true)
     }
     
     public func orderByAscending(attributeName: String) -> Self {
@@ -50,18 +54,18 @@ extension Table {
     }
     
     public func thenBy(attributeName: String) -> Self {
-        return self.orderBy(attributeName)
+        return self.sortBy(attributeName, ascending: true)
     }
 
     public func thenByAscending(attributeName: String) -> Self {
-        return self.orderByAscending(attributeName)
+        return self.sortBy(attributeName, ascending: true)
     }
     
     public func thenByDescending(attributeName: String) -> Self {
-        return self.orderByDescending(attributeName)
+        return self.sortBy(attributeName, ascending: false)
     }
     
-    private func sortBy(sortTerm: String, ascending: Bool = true) -> Self {
+    public func sortBy(sortTerm: String, ascending: Bool = true) -> Self {
         let addedSortDescriptors = self.sortDescriptorsFromString(sortTerm, defaultAscendingValue: ascending)
         
         if var sortDescriptors = self.underlyingFetchRequest.sortDescriptors as? [NSSortDescriptor] {
@@ -75,6 +79,8 @@ extension Table {
     }
 
 }
+
+// MARK - restriction
 
 extension Table {
 
@@ -119,6 +125,8 @@ extension Table {
     
 }
 
+// MARK: - conversion
+
 extension Table {
     
     public func toFetchRequest() -> NSFetchRequest {
@@ -135,21 +143,20 @@ extension Table {
     
 }
 
+// MARK: - aggregate
+
 extension Table {
     
     public func count() -> Int {
         return self.count(fetchRequest: self.toFetchRequest())
     }
-    
-    public func first() -> T? {
-        let fetchRequest = self.toFetchRequest()
-        fetchRequest.fetchLimit = 1
-        
-        let results = self.toArray(fetchRequest: fetchRequest)
-        
-        return (results.isEmpty ? nil : results[0])
-    }
-    
+
+}
+
+// MARK: - quantifiers
+
+extension Table {
+
     public func any() -> Bool {
         let fetchRequest = self.toFetchRequest()
         fetchRequest.fetchLimit = 1
@@ -160,6 +167,23 @@ extension Table {
     }
     
 }
+
+// MARK: - element
+
+extension Table {
+    
+    public func first() -> T? {
+        let fetchRequest = self.toFetchRequest()
+        fetchRequest.fetchLimit = 1
+        
+        let results = self.toArray(fetchRequest: fetchRequest)
+        
+        return (results.isEmpty ? nil : results[0])
+    }
+    
+}
+
+// MARK: create, delete and refresh entities
 
 extension Table {
     
@@ -217,6 +241,8 @@ extension Table {
     
 }
 
+// MARK: - sequence
+
 extension Table: SequenceType {
     
     public typealias GeneratorType = IndexingGenerator<[T]>
@@ -226,6 +252,8 @@ extension Table: SequenceType {
     }
     
 }
+
+// MARK: - private methods
 
 extension Table {
     

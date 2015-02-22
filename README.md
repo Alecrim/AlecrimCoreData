@@ -81,7 +81,7 @@ let peopleSorted = dataContext.people.orderBy("lastName")
 Or, to return the results sorted by multiple properties:
 
 ```swift
-let peopleSorted = dataContext.people.orderBy("lastName").orderBy("firstName")
+let peopleSorted = dataContext.people.orderBy("lastName").thenBy("firstName")
 
 // OR
 
@@ -91,7 +91,7 @@ let peopleSorted = dataContext.people.sortBy("lastName,firstName")
 Or, to return the results sorted by multiple properties with different attributes:
 
 ```swift
-let peopleSorted = dataContext.people.orderByDescending("lastName").orderBy("firstName")
+let peopleSorted = dataContext.people.orderByDescending("lastName").thenByAscending("firstName")
 
 // OR
 
