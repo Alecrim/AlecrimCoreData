@@ -113,13 +113,18 @@ extension Table {
         return self.filterBy(predicate: predicate)
     }
     
-    public func filterBy(#predicateFormat: String, argumentArray arguments: [AnyObject]!) -> Self {
+    public func filterBy(#predicateFormat: String, argumentArray arguments: [AnyObject]?) -> Self {
         let predicate = NSPredicate(format: predicateFormat, argumentArray: arguments)
         return self.filterBy(predicate: predicate)
     }
     
-    public func filterBy(#predicateFormat: String, arguments argList: CVaListPointer) -> Self {
-        let predicate = NSPredicate(format: predicateFormat, arguments: argList)
+    public func filterBy(#predicateFormat: String, arguments: AnyObject...) -> Self {
+        let predicate = NSPredicate(format: predicateFormat, argumentArray: arguments)
+        return self.filterBy(predicate: predicate)
+    }
+    
+    public func filterBy(#predicateFormat: String, arguments: CVaListPointer) -> Self {
+        let predicate = NSPredicate(format: predicateFormat, arguments: arguments)
         return self.filterBy(predicate: predicate)
     }
     

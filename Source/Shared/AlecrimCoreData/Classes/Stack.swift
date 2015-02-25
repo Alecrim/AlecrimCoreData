@@ -191,12 +191,13 @@ internal final class Stack {
     }
 
     private class func localSQLiteStoreURLForBundle(bundle: NSBundle) -> NSURL? {
-        let fileManager = NSFileManager.defaultManager()
-        let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
-        let applicationSupportDirectoryURL = urls.last as! NSURL
-        
         if let bundleIdentifier = bundle.bundleIdentifier {
-            return applicationSupportDirectoryURL.URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
+            let fileManager = NSFileManager.defaultManager()
+            let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+
+            if let applicationSupportDirectoryURL = urls.last as? NSURL {
+                return applicationSupportDirectoryURL.URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
+            }
         }
         
         return nil
