@@ -44,13 +44,7 @@ public final class Attribute<T> {
         self.name = name
     }
     
-}
-
-extension Attribute {
-    
-    public var expression: NSExpression {
-        return NSExpression(forKeyPath: name)
-    }
+    public lazy var expression: NSExpression = { return NSExpression(forKeyPath: self.name) }()
     
     private func expressionForValue(value: T) -> NSExpression {
         // TODO: Find a cleaner implementation
@@ -92,24 +86,48 @@ public func ==<T>(left: Attribute<T>, right: T) -> NSPredicate {
     return left.expression == left.expressionForValue(right)
 }
 
+public func ==<T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+    return left.expression == right.expression
+}
+
 public func !=<T>(left: Attribute<T>, right: T) -> NSPredicate {
     return left.expression != left.expressionForValue(right)
+}
+
+public func !=<T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+    return left.expression != right.expression
 }
 
 public func ><T>(left: Attribute<T>, right: T) -> NSPredicate {
     return left.expression > left.expressionForValue(right)
 }
 
+public func ><T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+    return left.expression > right.expression
+}
+
 public func >=<T>(left: Attribute<T>, right: T) -> NSPredicate {
     return left.expression >= left.expressionForValue(right)
+}
+
+public func >=<T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+    return left.expression >= right.expression
 }
 
 public func <<T>(left: Attribute<T>, right: T) -> NSPredicate {
     return left.expression < left.expressionForValue(right)
 }
 
+public func <<T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+    return left.expression < right.expression
+}
+
 public func <=<T>(left: Attribute<T>, right: T) -> NSPredicate {
     return left.expression <= left.expressionForValue(right)
+}
+
+public func <=<T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+    return left.expression <= right.expression
 }
 
 public func ~=<T>(left: Attribute<T>, right: T) -> NSPredicate {
