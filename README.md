@@ -163,7 +163,7 @@ let peopleArray = dataContext.people.sortBy("firstName,lastName").toArray()
 
 // OR
 
-let theSmiths = dataContext.people.filterBy(attribute: "lastName", value: "Smith").orderBy("firstName")
+let theSmiths = dataContext.people.filter({ $0.lastName == "Smith" }).orderBy({ $0.firstName })
 let count = theSmiths.count()
 let array = theSmiths.toArray()
 
