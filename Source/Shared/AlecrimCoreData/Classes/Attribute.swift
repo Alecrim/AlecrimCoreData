@@ -116,11 +116,11 @@ public func ~=<T>(left: Attribute<T>, right: T) -> NSPredicate {
     return left.expression ~= left.expressionForValue(right)
 }
 
-public func << <T>(left: Attribute<T>, right: [T]) -> NSPredicate {
+public func <<<T>(left: Attribute<T>, right: [T]) -> NSPredicate {
     return left.expression << NSExpression(forConstantValue: right as! AnyObject)
 }
 
-public func << <T>(left: Attribute<T>, right: Range<T>) -> NSPredicate {
+public func <<<T>(left: Attribute<T>, right: Range<T>) -> NSPredicate {
     let rightExpression = NSExpression(forConstantValue: [right.startIndex, right.endIndex] as! AnyObject)
     
     return NSComparisonPredicate(leftExpression: left.expression, rightExpression: rightExpression, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.BetweenPredicateOperatorType, options: NSComparisonPredicateOptions(0))
