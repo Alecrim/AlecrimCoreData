@@ -12,7 +12,7 @@ AlecrimCoreData is a framework to access CoreData objects more easily in Swift.
 
 ## Minimum Requirements
 
-- Xcode 6.1.1
+- Xcode 6.3
 - iOS 8.1.3 / OS X 10.10.2
 
 ## Installation
@@ -274,6 +274,11 @@ performInBackground(dataContext) { backgroundDataContext in
 }
 ```
 
+## Inspired and based on
+
+- [MagicalRecord](https://github.com/magicalpanda/MagicalRecord)
+- [QueryKit](https://github.com/QueryKit/QueryKit)
+
 ## Contribute
 
 If you want to contribute, please feel free to fork the repository and send pull requests with your suggestions and additions. :-)
@@ -282,7 +287,7 @@ If you want to contribute, please feel free to fork the repository and send pull
 
 ## Contact
 
-- [Vanderlei Martinelli](http://github.com/vmartinelli)
+- [Vanderlei Martinelli](https://github.com/vmartinelli)
 
 ## License
 

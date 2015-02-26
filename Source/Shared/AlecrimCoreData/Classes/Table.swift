@@ -258,6 +258,28 @@ extension Table: SequenceType {
     
 }
 
+// MARK: Attribute support
+
+extension Table {
+
+    public func any(predicateClosure: (T.Type) -> NSPredicate) -> Bool {
+        return self.filterBy(predicate: predicateClosure(T.self)).any()
+    }
+
+    public func count(predicateClosure: (T.Type) -> NSPredicate) -> Int {
+        return self.filterBy(predicate: predicateClosure(T.self)).count()
+    }
+    
+    public func filter(predicateClosure: (T.Type) -> NSPredicate) -> Self {
+        return self.filterBy(predicate: predicateClosure(T.self))
+    }
+    
+    public func first(predicateClosure: (T.Type) -> NSPredicate) -> T? {
+        return self.filterBy(predicate: predicateClosure(T.self)).first()
+    }
+    
+}
+
 // MARK: - private methods
 
 extension Table {

@@ -10,6 +10,7 @@
 		140E4EB61A924EF300FA276F /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140E4EB31A924EF300FA276F /* Context.swift */; };
 		140E4EB71A924EF300FA276F /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140E4EB41A924EF300FA276F /* Stack.swift */; };
 		140E4EB81A924EF300FA276F /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140E4EB51A924EF300FA276F /* Table.swift */; };
+		146D61C01A9EA7830087D2A3 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146D61BF1A9EA7830087D2A3 /* Attribute.swift */; };
 		14CF9DFE1A2C941000B64A45 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14CF9DFD1A2C941000B64A45 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14D7BB941A2C96CD0045897C /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D7BB931A2C96CD0045897C /* NSManagedObject+Extensions.swift */; };
 		14D7BB961A2C972D0045897C /* Table+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D7BB951A2C972D0045897C /* Table+Extensions.swift */; };
@@ -19,6 +20,7 @@
 		140E4EB31A924EF300FA276F /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		140E4EB41A924EF300FA276F /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		140E4EB51A924EF300FA276F /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
+		146D61BF1A9EA7830087D2A3 /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		14CF9DF81A2C941000B64A45 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		14CF9DFC1A2C941000B64A45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		14CF9DFD1A2C941000B64A45 /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
@@ -43,6 +45,7 @@
 				140E4EB31A924EF300FA276F /* Context.swift */,
 				140E4EB41A924EF300FA276F /* Stack.swift */,
 				140E4EB51A924EF300FA276F /* Table.swift */,
+				146D61BF1A9EA7830087D2A3 /* Attribute.swift */,
 			);
 			name = Classes;
 			path = ../../Shared/AlecrimCoreData/Classes;
@@ -170,6 +173,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				146D61C01A9EA7830087D2A3 /* Attribute.swift in Sources */,
 				140E4EB71A924EF300FA276F /* Stack.swift in Sources */,
 				140E4EB81A924EF300FA276F /* Table.swift in Sources */,
 				140E4EB61A924EF300FA276F /* Context.swift in Sources */,
