@@ -29,10 +29,8 @@ You can create a inherited class from `AlecrimCoreData.Context` and declare a pr
 let dataContext = DataContext()!
 
 final class DataContext: AlecrimCoreData.Context {
-	
 	var people:      AlecrimCoreData.Table<PersonEntity>     { return AlecrimCoreData.Table<PersonEntity>(context: self) }
 	var departments: AlecrimCoreData.Table<DepartmentEntity> { return AlecrimCoreData.Table<DepartmentEntity>(context: self) }
-	
 }
 ```
 
@@ -75,13 +73,13 @@ let people = dataContext.people.skip(3).take(7)
 Or, to return the results sorted by a property:
 
 ```swift
-let peopleSorted = dataContext.people.orderBy("lastName")
+let peopleSorted = dataContext.people.orderBy({ $0.lastName })
 ```
 
 Or, to return the results sorted by multiple properties:
 
 ```swift
-let peopleSorted = dataContext.people.orderBy("lastName").thenBy("firstName")
+let peopleSorted = dataContext.people.orderBy({ $0.lastName }).thenBy({ $0.firstName })
 
 // OR
 
@@ -91,7 +89,7 @@ let peopleSorted = dataContext.people.sortBy("lastName,firstName")
 Or, to return the results sorted by multiple properties with different attributes:
 
 ```swift
-let peopleSorted = dataContext.people.orderByDescending("lastName").thenByAscending("firstName")
+let peopleSorted = dataContext.people.orderByDescending({ $0.lastName }).thenByAscending({ $0.firstName })
 
 // OR
 
@@ -105,7 +103,7 @@ let peopleSorted = dataContext.people.sortBy("lastName:0:[cd],firstName:1:[cd]")
 If you have a unique way of retrieving a single object from your data store (such as via an identifier), you can use the following code:
 
 ```swift
-if let person = dataContext.people.filterBy(attribute: "identifier", value: "123").first() {
+if let person = dataContext.people.first({ $0.identifier == 123 }) {
 	println(person.name)
 }
 ```
@@ -121,10 +119,11 @@ for pageNumber in 0..<5 {
 	println("Page: \(pageNumber)")
 
 	let peopleInCurrentPage = dataContext.people
-		.filterBy(predicateFormat: "department IN %@", argumentArray: [[dept1, dept2]])
+		.filter({ $0.department << [dept1, dept2] })
 		.skip(pageNumber * itemsPerPage)
 		.take(itemsPerPage)
-		.sortBy("firstName,lastName")
+		.orderBy({ $0.firstName })
+		.thenBy({ $0.lastName })
 
 	for person in peopleInCurrentPage {
 		println("\(person.firstName) \(person.lastName) - \(person.department.name)")
@@ -212,7 +211,7 @@ let person = dataContext.people.createOrGetFirstEntity(whereAttribute: "identifi
 To delete a single entity:
 
 ```swift
-if let person = dataContext.people.filterBy(attribute: "identifier", value: "123").first() {
+if let person = dataContext.people.first({ $0.identifier == 123 }) {
     dataContext.people.deleteEntity(person)
 }
 ```
@@ -261,18 +260,26 @@ You can fetch and save entities in background calling a global function that cre
 
 ```swift
 // assuming that this department is saved and exists...
-let department = dataContext.departments.filterBy(attribute: "identifier", value: "100").first()!
+let department = dataContext.departments.first({ $0.identifier == 100 })!
 
 // the closure below will run in a background context queue
 performInBackground(dataContext) { backgroundDataContext in
-    if let person = backgroundDataContext.people.filterBy(attribute: "identifier", value: "321").first() {
-        person.department = department.inContext(backgroundDataContext)! // must be in backgroundDataContextContext
+    if let person = backgroundDataContext.people.first({ $0.identifier == 321 }) {
+        person.department = department.inContext(backgroundDataContext)! // must bring to backgroundDataContextContext
         person.otherData = "Other Data"
     }
 
     backgroundDataContext.save()
 }
 ```
+
+## Using attributes and closure parameters
+
+Implementation, docs and tests are in progress at this moment (develop branch). A code generator utility is planned too.
+
+The master branch (without attributes and closure parameters) contains the last stable release.
+
+---
 
 ## Inspired and based on
 
