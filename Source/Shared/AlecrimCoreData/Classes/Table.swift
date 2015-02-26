@@ -258,7 +258,7 @@ extension Table: SequenceType {
     
 }
 
-// MARK: Attribute support
+// MARK: Attribute predicate support
 
 extension Table {
 
@@ -278,6 +278,42 @@ extension Table {
         return self.filterBy(predicate: predicateClosure(T.self)).first()
     }
     
+}
+
+// MARK: Attribute ordering support
+
+extension Table {
+
+    public func orderBy<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        let attributeName = orderingClosure(T.self).name
+        return self.sortBy(attributeName, ascending: true)
+    }
+
+    public func orderByAscending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        let attributeName = orderingClosure(T.self).name
+        return self.sortBy(attributeName, ascending: true)
+    }
+
+    public func orderByDescending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        let attributeName = orderingClosure(T.self).name
+        return self.sortBy(attributeName, ascending: false)
+    }
+
+    public func thenBy<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        let attributeName = orderingClosure(T.self).name
+        return self.sortBy(attributeName, ascending: true)
+    }
+    
+    public func thenByAscending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        let attributeName = orderingClosure(T.self).name
+        return self.sortBy(attributeName, ascending: true)
+    }
+    
+    public func thenByDescending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        let attributeName = orderingClosure(T.self).name
+        return self.sortBy(attributeName, ascending: false)
+    }
+
 }
 
 // MARK: - private methods
