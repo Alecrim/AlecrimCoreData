@@ -94,6 +94,20 @@ extension Context {
     
 }
 
+extension Context {
+    
+    internal func executeFetchRequest(request: NSFetchRequest!, error: NSErrorPointer) -> [AnyObject]? {
+        var objects: [AnyObject]?
+        
+        self.performAndWait {
+            objects = self.managedObjectContext.executeFetchRequest(request, error: error)
+        }
+        
+        return objects
+    }
+    
+}
+
 // MARK: - public global functions
 
 public func performInBackground<T: Context>(parentContext: T, closure: (T) -> Void) {

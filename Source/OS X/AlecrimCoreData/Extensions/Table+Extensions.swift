@@ -12,24 +12,20 @@ extension Table {
     
     public func toArrayController() -> NSArrayController {
         let arrayController = NSArrayController()
+        
         arrayController.managedObjectContext = self.context.managedObjectContext
-        arrayController.entityName = self.underlyingFetchRequest.entityName
+        arrayController.entityName = self.entityName
         
-        if let sortDescriptors = self.underlyingFetchRequest.sortDescriptors {
-            arrayController.sortDescriptors = sortDescriptors
-        }
-        
-        if let predicate = self.underlyingFetchRequest.predicate {
-            arrayController.fetchPredicate = (predicate.copy() as! NSPredicate)
-        }
+        arrayController.fetchPredicate = self.predicate?.copy() as? NSPredicate
+        arrayController.sortDescriptors = sortDescriptors
         
         arrayController.automaticallyPreparesContent = true
         arrayController.automaticallyRearrangesObjects = true
         
         let defaultFetchRequest = arrayController.defaultFetchRequest()
-        defaultFetchRequest.fetchOffset = self.underlyingFetchRequest.fetchOffset
-        defaultFetchRequest.fetchLimit = self.underlyingFetchRequest.fetchLimit
-        defaultFetchRequest.fetchBatchSize = self.defaultFetchBatchSize
+        defaultFetchRequest.fetchBatchSize = self.batchSize
+        defaultFetchRequest.fetchOffset = self.offset
+        defaultFetchRequest.fetchLimit = self.limit
         
         var error: NSError? = nil
         let success = arrayController.fetchWithRequest(nil, merge: false, error: &error)

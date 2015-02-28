@@ -9,181 +9,14 @@
 import Foundation
 import CoreData
 
-public final class Table<T: NSManagedObject> {
+public final class Table<T: NSManagedObject>: Query {
     
-    internal let defaultFetchBatchSize = 20
-    internal lazy var underlyingFetchRequest = NSFetchRequest(entityName: T.entityName)
-    internal let context: Context
-    
-    public init(context: Context) {
-        self.context = context
+    public convenience init(context: Context) {
+        self.init(context: context, entityName: T.entityName)
     }
     
-}
-
-// MARK: - partitioning
-
-extension Table {
-    
-    public func skip(count: Int) -> Self {
-        self.underlyingFetchRequest.fetchOffset = count
-        return self
-    }
-    
-    public func take(count: Int) -> Self {
-        self.underlyingFetchRequest.fetchLimit = count
-        return self
-    }
-    
-}
-
-// MARK - ordering
-
-extension Table {
-    
-    public func orderBy(attributeName: String) -> Self {
-        return self.sortBy(attributeName, ascending: true)
-    }
-    
-    public func orderByAscending(attributeName: String) -> Self {
-        return self.sortBy(attributeName, ascending: true)
-    }
-    
-    public func orderByDescending(attributeName: String) -> Self {
-        return self.sortBy(attributeName, ascending: false)
-    }
-    
-    public func thenBy(attributeName: String) -> Self {
-        return self.sortBy(attributeName, ascending: true)
-    }
-
-    public func thenByAscending(attributeName: String) -> Self {
-        return self.sortBy(attributeName, ascending: true)
-    }
-    
-    public func thenByDescending(attributeName: String) -> Self {
-        return self.sortBy(attributeName, ascending: false)
-    }
-    
-    public func sortBy(sortTerm: String, ascending: Bool = true) -> Self {
-        let addedSortDescriptors = self.sortDescriptorsFromString(sortTerm, defaultAscendingValue: ascending)
-        
-        if var sortDescriptors = self.underlyingFetchRequest.sortDescriptors as? [NSSortDescriptor] {
-            sortDescriptors += addedSortDescriptors
-        }
-        else {
-            self.underlyingFetchRequest.sortDescriptors = addedSortDescriptors
-        }
-        
-        return self
-    }
-
-}
-
-// MARK - restriction
-
-extension Table {
-
-    public func filterBy(#predicate: NSPredicate) -> Self {
-        if self.underlyingFetchRequest.predicate == nil {
-            self.underlyingFetchRequest.predicate = predicate
-        }
-        else if let compoundPredicate = self.underlyingFetchRequest.predicate as? NSCompoundPredicate {
-            var subpredicates = compoundPredicate.subpredicates as! [NSPredicate]
-            subpredicates.append(predicate)
-            self.underlyingFetchRequest.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
-        }
-        else {
-            let subpredicates = [self.underlyingFetchRequest.predicate!, predicate]
-            self.underlyingFetchRequest.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
-        }
-        
-        return self
-    }
-    
-    public func filterBy(attribute attributeName: String, value: AnyObject?) -> Self {
-        var predicate: NSPredicate
-        if let v: AnyObject = value {
-            predicate = NSPredicate(format: "%K == %@", argumentArray: [attributeName, v])
-        }
-        else {
-            predicate = NSPredicate(format: "%K == nil", argumentArray: [attributeName])
-        }
-        
-        return self.filterBy(predicate: predicate)
-    }
-    
-    public func filterBy(#predicateFormat: String, argumentArray arguments: [AnyObject]?) -> Self {
-        let predicate = NSPredicate(format: predicateFormat, argumentArray: arguments)
-        return self.filterBy(predicate: predicate)
-    }
-    
-    public func filterBy(#predicateFormat: String, arguments: AnyObject...) -> Self {
-        let predicate = NSPredicate(format: predicateFormat, argumentArray: arguments)
-        return self.filterBy(predicate: predicate)
-    }
-    
-    public func filterBy(#predicateFormat: String, arguments: CVaListPointer) -> Self {
-        let predicate = NSPredicate(format: predicateFormat, arguments: arguments)
-        return self.filterBy(predicate: predicate)
-    }
-    
-}
-
-// MARK: - conversion
-
-extension Table {
-    
-    public func toFetchRequest() -> NSFetchRequest {
-        return self.underlyingFetchRequest.copy() as! NSFetchRequest
-    }
-    
-}
-
-extension Table {
-    
-    public func toArray() -> [T] {
-        return self.toArray(fetchRequest: self.toFetchRequest())
-    }
-    
-}
-
-// MARK: - aggregate
-
-extension Table {
-    
-    public func count() -> Int {
-        return self.count(fetchRequest: self.toFetchRequest())
-    }
-
-}
-
-// MARK: - quantifiers
-
-extension Table {
-
-    public func any() -> Bool {
-        let fetchRequest = self.toFetchRequest()
-        fetchRequest.fetchLimit = 1
-        
-        let result = self.count(fetchRequest: fetchRequest) > 0
-        
-        return result
-    }
-    
-}
-
-// MARK: - element
-
-extension Table {
-    
-    public func first() -> T? {
-        let fetchRequest = self.toFetchRequest()
-        fetchRequest.fetchLimit = 1
-        
-        let results = self.toArray(fetchRequest: fetchRequest)
-        
-        return (results.isEmpty ? nil : results[0])
+    public required init(context: Context, entityName: String) {
+        super.init(context: context, entityName: entityName)
     }
     
 }
@@ -193,8 +26,7 @@ extension Table {
 extension Table {
     
     public func createEntity() -> T {
-        let entityDescription = NSEntityDescription.entityForName(T.entityName, inManagedObjectContext: self.context.managedObjectContext)!
-        let managedObject = T(entity: entityDescription, insertIntoManagedObjectContext: self.context.managedObjectContext)
+        let managedObject = T(entity: self.entityDescription, insertIntoManagedObjectContext: self.context.managedObjectContext)
         
         return managedObject
     }
@@ -237,9 +69,14 @@ extension Table {
         let fetchRequest = self.toFetchRequest()
         fetchRequest.returnsObjectsAsFaults = true
         fetchRequest.includesPropertyValues = false
+
+        var results = [T]()
         
-        let entities = self.toArray(fetchRequest: fetchRequest)
-        for entity in entities {
+        if let objects = self.executeFetchRequest(fetchRequest) as? [T] {
+            results += objects
+        }
+
+        for entity in results {
             self.deleteEntity(entity)
         }
     }
@@ -258,14 +95,51 @@ extension Table: SequenceType {
     
 }
 
+
+// MARK: - conversion
+
+extension Table {
+    
+    public func toArray() -> [T] {
+        let fetchRequest = self.toFetchRequest()
+        var results = [T]()
+        
+        if let objects = self.executeFetchRequest(fetchRequest) as? [T] {
+            results += objects
+        }
+        
+        return results
+    }
+    
+}
+
+// MARK: - element
+
+extension Table {
+    
+    public func first() -> T? {
+        let fetchRequest = self.toFetchRequest()
+        fetchRequest.fetchLimit = 1
+        
+        var results = [T]()
+        
+        if let objects = self.executeFetchRequest(fetchRequest) as? [T] {
+            results += objects
+        }
+        
+        return (results.isEmpty ? nil : results[0])
+    }
+    
+}
+
 // MARK: Attribute predicate support
 
 extension Table {
-
+    
     public func any(predicateClosure: (T.Type) -> NSPredicate) -> Bool {
         return self.filterBy(predicate: predicateClosure(T.self)).any()
     }
-
+    
     public func count(predicateClosure: (T.Type) -> NSPredicate) -> Int {
         return self.filterBy(predicate: predicateClosure(T.self)).count()
     }
@@ -283,22 +157,22 @@ extension Table {
 // MARK: Attribute ordering support
 
 extension Table {
-
+    
     public func orderBy<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
         let attributeName = orderingClosure(T.self).name
         return self.sortBy(attributeName, ascending: true)
     }
-
+    
     public func orderByAscending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
         let attributeName = orderingClosure(T.self).name
         return self.sortBy(attributeName, ascending: true)
     }
-
+    
     public func orderByDescending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
         let attributeName = orderingClosure(T.self).name
         return self.sortBy(attributeName, ascending: false)
     }
-
+    
     public func thenBy<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
         let attributeName = orderingClosure(T.self).name
         return self.sortBy(attributeName, ascending: true)
@@ -312,76 +186,6 @@ extension Table {
     public func thenByDescending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
         let attributeName = orderingClosure(T.self).name
         return self.sortBy(attributeName, ascending: false)
-    }
-
-}
-
-// MARK: - private methods
-
-extension Table {
-    
-    private func sortDescriptorsFromString(string: String, defaultAscendingValue: Bool) -> [NSSortDescriptor] {
-        var sortDescriptors = [NSSortDescriptor]()
-        
-        let sortKeys = string.componentsSeparatedByString(",") as [NSString]
-        for sortKey in sortKeys {
-            var effectiveSortKey = sortKey
-            var effectiveAscending = defaultAscendingValue
-            var effectiveOptionalParameter: NSString? = nil
-            
-            let sortComponents = sortKey.componentsSeparatedByString(":") as! [NSString]
-            if sortComponents.count > 1 {
-                effectiveSortKey = sortComponents[0]
-                effectiveAscending = sortComponents[1].boolValue
-                
-                if (sortComponents.count > 2) {
-                    effectiveOptionalParameter = sortComponents[2]
-                }
-            }
-            
-            if effectiveOptionalParameter != nil && effectiveOptionalParameter!.rangeOfString("cd").location != NSNotFound {
-                sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey as! String, ascending: effectiveAscending, selector: Selector("localizedCaseInsensitiveCompare:")))
-            }
-            else {
-                sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey as! String, ascending: effectiveAscending))
-            }
-        }
-        
-        return sortDescriptors
-    }
-    
-}
-
-extension Table {
-    
-    private func toArray(#fetchRequest: NSFetchRequest) -> [T] {
-        fetchRequest.fetchBatchSize = self.defaultFetchBatchSize
-        
-        var results = [T]()
-        
-        self.context.managedObjectContext.performBlockAndWait { [weak self] in
-            if let s = self {
-                var error: NSError? = nil
-                if let objects = s.context.managedObjectContext.executeFetchRequest(fetchRequest, error: &error) as? [T] {
-                    results += objects
-                }
-            }
-        }
-        
-        return results
-    }
-    
-    private func count(#fetchRequest: NSFetchRequest) -> Int {
-        var c = 0
-        
-        self.context.managedObjectContext.performBlockAndWait { [weak self] in
-            if let s = self {
-                var error: NSError? = nil
-                c += s.context.managedObjectContext.countForFetchRequest(fetchRequest, error: &error)
-            }
-        }
-        
-        return c
     }
     
 }

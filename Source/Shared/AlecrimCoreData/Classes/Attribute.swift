@@ -44,7 +44,7 @@ public final class Attribute<T> {
         self.name = name
     }
     
-    public lazy var expression: NSExpression = { return NSExpression(forKeyPath: self.name) }()
+    private lazy var expression: NSExpression = { return NSExpression(forKeyPath: self.name) }()
     
     private func expressionForValue(value: T) -> NSExpression {
         // TODO: Find a cleaner implementation

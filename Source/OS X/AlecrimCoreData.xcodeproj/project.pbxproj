@@ -14,6 +14,7 @@
 		14CF9DFE1A2C941000B64A45 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14CF9DFD1A2C941000B64A45 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14D7BB941A2C96CD0045897C /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D7BB931A2C96CD0045897C /* NSManagedObject+Extensions.swift */; };
 		14D7BB961A2C972D0045897C /* Table+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D7BB951A2C972D0045897C /* Table+Extensions.swift */; };
+		14FCEBA31AA020A400274BB7 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FCEBA21AA020A400274BB7 /* Query.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		14CF9DFD1A2C941000B64A45 /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
 		14D7BB931A2C96CD0045897C /* NSManagedObject+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSManagedObject+Extensions.swift"; path = "../../../Shared/AlecrimCoreData/Extensions/NSManagedObject+Extensions.swift"; sourceTree = "<group>"; };
 		14D7BB951A2C972D0045897C /* Table+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Table+Extensions.swift"; sourceTree = "<group>"; };
+		14FCEBA21AA020A400274BB7 /* Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +46,7 @@
 			children = (
 				140E4EB31A924EF300FA276F /* Context.swift */,
 				140E4EB41A924EF300FA276F /* Stack.swift */,
+				14FCEBA21AA020A400274BB7 /* Query.swift */,
 				140E4EB51A924EF300FA276F /* Table.swift */,
 				146D61BF1A9EA7830087D2A3 /* Attribute.swift */,
 			);
@@ -174,6 +177,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				146D61C01A9EA7830087D2A3 /* Attribute.swift in Sources */,
+				14FCEBA31AA020A400274BB7 /* Query.swift in Sources */,
 				140E4EB71A924EF300FA276F /* Stack.swift in Sources */,
 				140E4EB81A924EF300FA276F /* Table.swift in Sources */,
 				140E4EB61A924EF300FA276F /* Context.swift in Sources */,
