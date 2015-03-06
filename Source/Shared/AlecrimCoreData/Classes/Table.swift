@@ -26,12 +26,11 @@ public final class Table<T: NSManagedObject>: Query {
 extension Table {
     
     public func createEntity() -> T {
-        let managedObject = T(entity: self.entityDescription, insertIntoManagedObjectContext: self.context.managedObjectContext)
-        
-        return managedObject
+        let entity = T(entity: self.entityDescription, insertIntoManagedObjectContext: self.context.managedObjectContext)
+        return entity
     }
-    
-    public func createOrGetFirstEntity(whereAttribute attributeName: String, isEqualTo value: AnyObject?) -> T {
+
+    public func firstOrCreated(whereAttribute attributeName: String, isEqualTo value: AnyObject?) -> T {
         if let entity = self.filterBy(attribute: attributeName, value: value).first() {
             return entity
         }
@@ -42,22 +41,27 @@ extension Table {
             return entity
         }
     }
+
+    // deprecated in version 2.1
+    public func createOrGetFirstEntity(whereAttribute attributeName: String, isEqualTo value: AnyObject?) -> T {
+        return self.firstOrCreated(whereAttribute: attributeName, isEqualTo: value)
+    }
     
-    public func deleteEntity(managedObject: T) -> (Bool, NSError?) {
+    public func deleteEntity(entity: T) -> (Bool, NSError?) {
         var retrieveExistingObjectError: NSError? = nil
         
-        if let managedObjectInContext = self.context.managedObjectContext.existingObjectWithID(managedObject.objectID, error: &retrieveExistingObjectError) {
+        if let managedObjectInContext = self.context.managedObjectContext.existingObjectWithID(entity.objectID, error: &retrieveExistingObjectError) {
             self.context.managedObjectContext.deleteObject(managedObjectInContext)
-            return (managedObject.deleted || managedObject.managedObjectContext == nil, nil)
+            return (entity.deleted || entity.managedObjectContext == nil, nil)
         }
         else {
             return (false, retrieveExistingObjectError)
         }
     }
     
-    public func refreshEntity(managedObject: T) {
-        if let moc = managedObject.managedObjectContext {
-            moc.refreshObject(managedObject, mergeChanges: true)
+    public func refreshEntity(entity: T) {
+        if let moc = entity.managedObjectContext {
+            moc.refreshObject(entity, mergeChanges: true)
         }
     }
     
@@ -132,7 +136,36 @@ extension Table {
     
 }
 
-// MARK: Attribute predicate support
+// MARK: - Attribure - create, delete and refresh entities
+
+extension Table {
+
+    /// Try to find the first entity matching the comparison. If the entity does not exist a new one will be created.
+    ///
+    /// :param: predicateClosure A closure with a simple equality comparison between an attribute and a value.
+    ///
+    /// :returns: The found entity or a new entity from the same type (with the attribute filled with the specified value).
+    public func firstOrCreated(predicateClosure: (T.Type) -> NSComparisonPredicate) -> T {
+        let predicate = predicateClosure(T.self)
+        if let entity = self.filterBy(predicate: predicate).first() {
+            return entity
+        }
+        else {
+            let entity = self.createEntity()
+
+            let attributeName = predicate.leftExpression.keyPath
+            let value: AnyObject = predicate.rightExpression.constantValue
+            
+            entity.setValue(value, forKey: attributeName)
+            
+            return entity
+        }
+    }
+    
+}
+
+
+// MARK: - Attribute - predicate support
 
 extension Table {
     
@@ -154,7 +187,7 @@ extension Table {
     
 }
 
-// MARK: Attribute ordering support
+// MARK: - Attribute - ordering support
 
 extension Table {
     
