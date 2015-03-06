@@ -82,116 +82,116 @@ public func ==<T>(left: Attribute<T>, right: Attribute<T>) -> Bool {
 
 // MARK: - Attribute operators
 
-public func ==<T>(left: Attribute<T>, right: T) -> NSPredicate {
+public func ==<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return left.expression == left.expressionForValue(right)
 }
 
-public func ==<T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+public func ==<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
     return left.expression == right.expression
 }
 
-public func !=<T>(left: Attribute<T>, right: T) -> NSPredicate {
+public func !=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return left.expression != left.expressionForValue(right)
 }
 
-public func !=<T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+public func !=<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
     return left.expression != right.expression
 }
 
-public func ><T>(left: Attribute<T>, right: T) -> NSPredicate {
+public func ><T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return left.expression > left.expressionForValue(right)
 }
 
-public func ><T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+public func ><T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
     return left.expression > right.expression
 }
 
-public func >=<T>(left: Attribute<T>, right: T) -> NSPredicate {
+public func >=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return left.expression >= left.expressionForValue(right)
 }
 
-public func >=<T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+public func >=<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
     return left.expression >= right.expression
 }
 
-public func <<T>(left: Attribute<T>, right: T) -> NSPredicate {
+public func <<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return left.expression < left.expressionForValue(right)
 }
 
-public func <<T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+public func <<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
     return left.expression < right.expression
 }
 
-public func <=<T>(left: Attribute<T>, right: T) -> NSPredicate {
+public func <=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return left.expression <= left.expressionForValue(right)
 }
 
-public func <=<T>(left: Attribute<T>, right: Attribute<T>) -> NSPredicate {
+public func <=<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
     return left.expression <= right.expression
 }
 
-public func ~=<T>(left: Attribute<T>, right: T) -> NSPredicate {
+public func ~=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return left.expression ~= left.expressionForValue(right)
 }
 
-public func <<<T>(left: Attribute<T>, right: [T]) -> NSPredicate {
+public func <<<T>(left: Attribute<T>, right: [T]) -> NSComparisonPredicate {
     return left.expression << NSExpression(forConstantValue: right as! AnyObject)
 }
 
-public func <<<T>(left: Attribute<T>, right: Range<T>) -> NSPredicate {
+public func <<<T>(left: Attribute<T>, right: Range<T>) -> NSComparisonPredicate {
     let rightExpression = NSExpression(forConstantValue: [right.startIndex, right.endIndex] as! AnyObject)
     
     return NSComparisonPredicate(leftExpression: left.expression, rightExpression: rightExpression, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.BetweenPredicateOperatorType, options: NSComparisonPredicateOptions(0))
 }
 
-prefix public func !(left: Attribute<Bool>) -> NSPredicate {
+prefix public func !(left: Attribute<Bool>) -> NSComparisonPredicate {
     return left == false
 }
 
 // MARK: - NSPredicate - public extensions
 
-public func &&(left: NSPredicate, right: NSPredicate) -> NSPredicate {
+public func &&(left: NSPredicate, right: NSPredicate) -> NSCompoundPredicate {
     return NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [left, right])
 }
 
-public func ||(left: NSPredicate, right: NSPredicate) -> NSPredicate {
+public func ||(left: NSPredicate, right: NSPredicate) -> NSCompoundPredicate {
     return NSCompoundPredicate(type: NSCompoundPredicateType.OrPredicateType, subpredicates: [left, right])
 }
 
-prefix public func !(left: NSPredicate) -> NSPredicate {
+prefix public func !(left: NSPredicate) -> NSCompoundPredicate {
     return NSCompoundPredicate(type: NSCompoundPredicateType.NotPredicateType, subpredicates: [left])
 }
 
 // MARK: - NSExpression - private extensions
 
-private func ==(left: NSExpression, right: NSExpression) -> NSPredicate {
+private func ==(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
     return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.EqualToPredicateOperatorType, options: NSComparisonPredicateOptions(0))
 }
 
-private func !=(left: NSExpression, right: NSExpression) -> NSPredicate {
+private func !=(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
     return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.NotEqualToPredicateOperatorType, options: NSComparisonPredicateOptions(0))
 }
 
-private func >(left: NSExpression, right: NSExpression) -> NSPredicate {
+private func >(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
     return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.GreaterThanPredicateOperatorType, options: NSComparisonPredicateOptions(0))
 }
 
-private func >=(left: NSExpression, right: NSExpression) -> NSPredicate {
+private func >=(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
     return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.GreaterThanOrEqualToPredicateOperatorType, options: NSComparisonPredicateOptions(0))
 }
 
-private func <(left: NSExpression, right: NSExpression) -> NSPredicate {
+private func <(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
     return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.LessThanPredicateOperatorType, options: NSComparisonPredicateOptions(0))
 }
 
-private func <=(left: NSExpression, right: NSExpression) -> NSPredicate {
+private func <=(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
     return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.LessThanOrEqualToPredicateOperatorType, options: NSComparisonPredicateOptions(0))
 }
 
-private func ~=(left: NSExpression, right: NSExpression) -> NSPredicate {
+private func ~=(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
     return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.LikePredicateOperatorType, options: NSComparisonPredicateOptions(0))
 }
 
-private func <<(left: NSExpression, right: NSExpression) -> NSPredicate {
+private func <<(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
     return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.InPredicateOperatorType, options: NSComparisonPredicateOptions(0))
 }
