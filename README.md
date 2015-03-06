@@ -203,7 +203,7 @@ let person = dataContext.people.createEntity()
 You can also create or get first existing entity matching the criteria. If the entity does not exist, a new one is created and the specified attribute is assigned from the searched value automatically.
 
 ```swift
-let person = dataContext.people.createOrGetFirstEntity(whereAttribute: "identifier", isEqualTo: "123")
+let person = dataContext.people.firstOrCreated(whereAttribute: "identifier", isEqualTo: "123")
 ```
 
 ### Deleting Entities
@@ -221,7 +221,7 @@ if let person = dataContext.people.first({ $0.identifier == 123 }) {
 You can save the data context in the end, after all changes were made.
 
 ```swift
-let person = dataContext.people.createOrGetFirstEntity(whereAttribute: "identifier", isEqualTo: "9")
+let person = dataContext.people.firstOrCreated({ $0.identifier == 9 })
 person.firstName = "Christopher"
 person.lastName = "Eccleston"
 person.additionalInfo = "The best Doctor ever!"
