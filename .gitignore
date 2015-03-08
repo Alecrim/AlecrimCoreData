@@ -12,7 +12,8 @@ Icon
 .Trashes
 
 # Xcode
-*/build/*
+#
+build/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -22,9 +23,9 @@ Icon
 *.perspectivev3
 !default.perspectivev3
 xcuserdata
-profile
+*.xccheckout
 *.moved-aside
 DerivedData
-.idea/
 *.hmap
-*.xccheckout
+*.ipa
+*.xcuserstate
