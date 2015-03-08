@@ -189,7 +189,7 @@ let peopleFetchedResultsController = dataContext.people.toFetchedResultsControll
 You can also perform a count of the entities in your Persistent Store:
 
 ```swift
-let count = dataContext.people.filterBy(attribute: "lastName", value: "Smith").count()
+let count = dataContext.people.filter({ $0.lastName == "Smith" }).count()
 ```
 
 ### Creating new Entities
@@ -203,7 +203,7 @@ let person = dataContext.people.createEntity()
 You can also create or get first existing entity matching the criteria. If the entity does not exist, a new one is created and the specified attribute is assigned from the searched value automatically.
 
 ```swift
-let person = dataContext.people.firstOrCreated(whereAttribute: "identifier", isEqualTo: "123")
+let person = dataContext.people.firstOrCreated({ $ 0.identifier == 123 })
 ```
 
 ### Deleting Entities
@@ -275,20 +275,19 @@ performInBackground(dataContext) { backgroundDataContext in
 
 ## Using attributes and closure parameters
 
-Implementation, docs and tests are in progress at this moment (develop branch). A code generator utility is planned too.
+Implementation, docs and tests are in progress at this moment. A code generator utility is in internal beta and will be available soon.
 
-The master branch (without attributes and closure parameters) contains the last stable release.
+## Branches and contribution
 
----
+- master - The production branch. Clone or fork this repository for the latest copy.
+- develop - The active development branch. [Pull requests](https://help.github.com/articles/creating-a-pull-request) should be directed to this branch.
+
+If you want to contribute, please feel free to fork the repository and send pull requests with your fixes, suggestions and additions. :-)
 
 ## Inspired and based on
 
 - [MagicalRecord](https://github.com/magicalpanda/MagicalRecord)
 - [QueryKit](https://github.com/QueryKit/QueryKit)
-
-## Contribute
-
-If you want to contribute, please feel free to fork the repository and send pull requests with your suggestions and additions. :-)
 
 ---
 
