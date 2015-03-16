@@ -9,28 +9,28 @@
 /* Begin PBXBuildFile section */
 		14403DC41A2CBA1E0021935A /* DataContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14403DC21A2CBA1E0021935A /* DataContext.swift */; };
 		14403DC51A2CBA1E0021935A /* EventEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14403DC31A2CBA1E0021935A /* EventEntity.swift */; };
-		14CA05541A93F73500890D49 /* AlecrimCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14D7BB9E1A2C97E60045897C /* AlecrimCoreData.framework */; };
 		14CF9DCF1A2C932200B64A45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9DCE1A2C932200B64A45 /* AppDelegate.swift */; };
 		14CF9DD11A2C932200B64A45 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9DD01A2C932200B64A45 /* ViewController.swift */; };
 		14CF9DD41A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9DD21A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodeld */; };
 		14CF9DD61A2C932300B64A45 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14CF9DD51A2C932300B64A45 /* Images.xcassets */; };
 		14F1D3251A2D3401002437C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 14F1D3231A2D3401002437C0 /* Main.storyboard */; };
+		4840DF3F1AB78C8600A2FFAA /* AlecrimCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4840DF3E1AB78C8600A2FFAA /* AlecrimCoreData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		14CA05551A93F73E00890D49 /* PBXContainerItemProxy */ = {
+		4840DF481AB78D5E00A2FFAA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 14CF9DF71A2C941000B64A45;
-			remoteInfo = AlecrimCoreData;
-		};
-		14D7BB9D1A2C97E60045897C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */;
+			containerPortal = 4840DF431AB78D5E00A2FFAA /* AlecrimCoreData.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 14CF9DF81A2C941000B64A45;
-			remoteInfo = AlecrimCoreData;
+			remoteGlobalIDString = 48ADA23C1AB76E6700AA3126;
+			remoteInfo = "AlecrimCoreData iOS";
+		};
+		4840DF4A1AB78D5E00A2FFAA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4840DF431AB78D5E00A2FFAA /* AlecrimCoreData.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 48ADA2631AB76F2E00AA3126;
+			remoteInfo = "AlecrimCoreData OSX";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -43,8 +43,9 @@
 		14CF9DD01A2C932200B64A45 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		14CF9DD31A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlecrimCoreDataExample.xcdatamodel; sourceTree = "<group>"; };
 		14CF9DD51A2C932300B64A45 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AlecrimCoreData.xcodeproj; path = "../../Source/OS X/AlecrimCoreData.xcodeproj"; sourceTree = "<group>"; };
 		14F1D3241A2D3401002437C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		4840DF3E1AB78C8600A2FFAA /* AlecrimCoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlecrimCoreData.framework; path = "../../../../Library/Developer/Xcode/DerivedData/AlecrimCoreData-frjavykicxzzfkcixhlicnjdvbxg/Build/Products/Debug/AlecrimCoreData.framework"; sourceTree = "<group>"; };
+		4840DF431AB78D5E00A2FFAA /* AlecrimCoreData.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AlecrimCoreData.xcodeproj; path = ../../AlecrimCoreData.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14CA05541A93F73500890D49 /* AlecrimCoreData.framework in Frameworks */,
+				4840DF3F1AB78C8600A2FFAA /* AlecrimCoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +63,7 @@
 		14CF9DC01A2C932200B64A45 = {
 			isa = PBXGroup;
 			children = (
+				4840DF3E1AB78C8600A2FFAA /* AlecrimCoreData.framework */,
 				14CF9DCB1A2C932200B64A45 /* AlecrimCoreDataExample */,
 				14D7BB981A2C97C80045897C /* Dependencies */,
 				14CF9DCA1A2C932200B64A45 /* Products */,
@@ -102,15 +104,16 @@
 		14D7BB981A2C97C80045897C /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
-				14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */,
+				4840DF431AB78D5E00A2FFAA /* AlecrimCoreData.xcodeproj */,
 			);
 			name = Dependencies;
 			sourceTree = "<group>";
 		};
-		14D7BB9A1A2C97E60045897C /* Products */ = {
+		4840DF441AB78D5E00A2FFAA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				14D7BB9E1A2C97E60045897C /* AlecrimCoreData.framework */,
+				4840DF491AB78D5E00A2FFAA /* AlecrimCoreData.framework */,
+				4840DF4B1AB78D5E00A2FFAA /* AlecrimCoreData.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -129,7 +132,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				14CA05561A93F73E00890D49 /* PBXTargetDependency */,
 			);
 			name = AlecrimCoreDataExample;
 			productName = AlecrimCoreDataExample;
@@ -163,8 +165,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 14D7BB9A1A2C97E60045897C /* Products */;
-					ProjectRef = 14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */;
+					ProductGroup = 4840DF441AB78D5E00A2FFAA /* Products */;
+					ProjectRef = 4840DF431AB78D5E00A2FFAA /* AlecrimCoreData.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -175,11 +177,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		14D7BB9E1A2C97E60045897C /* AlecrimCoreData.framework */ = {
+		4840DF491AB78D5E00A2FFAA /* AlecrimCoreData.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AlecrimCoreData.framework;
-			remoteRef = 14D7BB9D1A2C97E60045897C /* PBXContainerItemProxy */;
+			remoteRef = 4840DF481AB78D5E00A2FFAA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4840DF4B1AB78D5E00A2FFAA /* AlecrimCoreData.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AlecrimCoreData.framework;
+			remoteRef = 4840DF4A1AB78D5E00A2FFAA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -210,14 +219,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		14CA05561A93F73E00890D49 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AlecrimCoreData;
-			targetProxy = 14CA05551A93F73E00890D49 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		14F1D3231A2D3401002437C0 /* Main.storyboard */ = {
@@ -313,6 +314,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/AlecrimCoreData-frjavykicxzzfkcixhlicnjdvbxg/Build/Products/Debug",
+				);
 				INFOPLIST_FILE = AlecrimCoreDataExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -324,6 +329,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/AlecrimCoreData-frjavykicxzzfkcixhlicnjdvbxg/Build/Products/Debug",
+				);
 				INFOPLIST_FILE = AlecrimCoreDataExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
