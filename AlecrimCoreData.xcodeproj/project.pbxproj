@@ -24,6 +24,7 @@
 		48ADA2821AB770A700AA3126 /* Table+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48ADA2291AB76C0900AA3126 /* Table+Extensions.swift */; };
 		48ADA2861AB7765000AA3126 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48ADA2301AB76C2800AA3126 /* Table.swift */; };
 		48ADA2871AB7784300AA3126 /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48ADA2281AB76C0900AA3126 /* NSManagedObject+Extensions.swift */; };
+		48EB57B11AB7946A0074793C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 48EB57B01AB7946A0074793C /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,9 +39,9 @@
 		48ADA22E1AB76C2800AA3126 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Query.swift; path = Source/Classes/Query.swift; sourceTree = "<group>"; };
 		48ADA22F1AB76C2800AA3126 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Stack.swift; path = Source/Classes/Stack.swift; sourceTree = "<group>"; };
 		48ADA2301AB76C2800AA3126 /* Table.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Table.swift; path = Source/Classes/Table.swift; sourceTree = "<group>"; };
-		48ADA2351AB76CAE00AA3126 /* Source */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Source; sourceTree = "<group>"; };
 		48ADA23C1AB76E6700AA3126 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48ADA2631AB76F2E00AA3126 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		48EB57B01AB7946A0074793C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,7 +108,7 @@
 		48ADA2321AB76C6E00AA3126 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				48ADA2351AB76CAE00AA3126 /* Source */,
+				48EB57B01AB7946A0074793C /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -217,6 +218,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48EB57B11AB7946A0074793C /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
