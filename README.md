@@ -1,5 +1,7 @@
 ![AlecrimCoreData](AlecrimCoreData.png?raw=true)
 
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+
 AlecrimCoreData is a framework to access CoreData objects more easily in Swift.
 
 ## Features
