@@ -83,7 +83,6 @@
 				48EB57C61AB7AF420074793C /* Table.swift */,
 			);
 			name = Classes;
-			path = ../..;
 			sourceTree = "<group>";
 		};
 		48ADA2261AB768C900AA3126 /* Extensions */ = {
