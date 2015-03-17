@@ -35,13 +35,13 @@
 		48ADA23C1AB76E6700AA3126 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48ADA2631AB76F2E00AA3126 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		48EB57B01AB7946A0074793C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = "<group>"; };
-		48EB57C01AB7AF420074793C /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Attribute.swift; path = Projects/AlecrimCoreData/Source/Classes/Attribute.swift; sourceTree = "<group>"; };
-		48EB57C11AB7AF420074793C /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Context.swift; path = Projects/AlecrimCoreData/Source/Classes/Context.swift; sourceTree = "<group>"; };
-		48EB57C21AB7AF420074793C /* FetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FetchedResultsController.swift; path = Projects/AlecrimCoreData/Source/Classes/FetchedResultsController.swift; sourceTree = "<group>"; };
-		48EB57C31AB7AF420074793C /* FetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FetchedResultsSectionInfo.swift; path = Projects/AlecrimCoreData/Source/Classes/FetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
-		48EB57C41AB7AF420074793C /* Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Query.swift; path = Projects/AlecrimCoreData/Source/Classes/Query.swift; sourceTree = "<group>"; };
-		48EB57C51AB7AF420074793C /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Stack.swift; path = Projects/AlecrimCoreData/Source/Classes/Stack.swift; sourceTree = "<group>"; };
-		48EB57C61AB7AF420074793C /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Table.swift; path = Projects/AlecrimCoreData/Source/Classes/Table.swift; sourceTree = "<group>"; };
+		48EB57C01AB7AF420074793C /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Attribute.swift; path = Source/Classes/Attribute.swift; sourceTree = "<group>"; };
+		48EB57C11AB7AF420074793C /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Context.swift; path = Source/Classes/Context.swift; sourceTree = "<group>"; };
+		48EB57C21AB7AF420074793C /* FetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FetchedResultsController.swift; path = Source/Classes/FetchedResultsController.swift; sourceTree = "<group>"; };
+		48EB57C31AB7AF420074793C /* FetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FetchedResultsSectionInfo.swift; path = Source/Classes/FetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
+		48EB57C41AB7AF420074793C /* Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Query.swift; path = Source/Classes/Query.swift; sourceTree = "<group>"; };
+		48EB57C51AB7AF420074793C /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Stack.swift; path = Source/Classes/Stack.swift; sourceTree = "<group>"; };
+		48EB57C61AB7AF420074793C /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Table.swift; path = Source/Classes/Table.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
