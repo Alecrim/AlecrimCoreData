@@ -24,8 +24,7 @@ internal final class Stack {
     internal let mainManagedObjectContext: NSManagedObjectContext!
 
     // MARK: - constructors
-    
-    internal init?(var managedObjectModelName: String?, stackType: StackType) {
+    internal init?(var managedObjectModelName: String?, stackType: StackType, storeOptions: [NSObject : AnyObject]?) {
         // if managed object model name is nil, try to get default name from main bundle
         let bundle = NSBundle.mainBundle()
         
@@ -67,10 +66,10 @@ internal final class Stack {
         // store
         switch stackType {
         case .SQLite:
-            self.store = Stack.persistentStoreForSQLiteStoreTypeWithCoordinator(self.coordinator, managedObjectModelName: managedObjectModelName, bundle: bundle)
+            self.store = Stack.persistentStoreForSQLiteStoreTypeWithCoordinator(self.coordinator, managedObjectModelName: managedObjectModelName, bundle: bundle, storeOptions: storeOptions)
             
         case .InMemory:
-            self.store = Stack.persistentStoreForInMemoryStoreTypeWithCoordinator(self.coordinator)
+            self.store = Stack.persistentStoreForInMemoryStoreTypeWithCoordinator(self.coordinator, storeOptions: storeOptions)
         }
         
         if self.store == nil {
@@ -146,7 +145,7 @@ internal final class Stack {
         return nil
     }
     
-    private class func persistentStoreForSQLiteStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, managedObjectModelName: String?, bundle: NSBundle) -> NSPersistentStore? {
+    private class func persistentStoreForSQLiteStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, managedObjectModelName: String?, bundle: NSBundle, storeOptions: [NSObject : AnyObject]?) -> NSPersistentStore? {
         if let momn = managedObjectModelName {
             if let localStoreURL = Stack.localSQLiteStoreURLForBundle(bundle) {
                 if let localStorePath = localStoreURL.path {
@@ -165,7 +164,7 @@ internal final class Stack {
                 let localStoreFileURL = localStoreURL.URLByAppendingPathComponent(storeFilename, isDirectory: false)
                 
                 var error: NSError? = nil
-                if let store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: nil, error: &error) {
+                if let store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: storeOptions, error: &error) {
                     return store
                 }
                 else {
@@ -178,10 +177,10 @@ internal final class Stack {
         return nil
     }
     
-    private class func persistentStoreForInMemoryStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator) -> NSPersistentStore? {
+    private class func persistentStoreForInMemoryStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, storeOptions: [NSObject : AnyObject]?) -> NSPersistentStore? {
         var error: NSError? = nil
         
-        if let store = coordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: nil, error: &error) {
+        if let store = coordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: storeOptions, error: &error) {
             return store
         }
         else {
