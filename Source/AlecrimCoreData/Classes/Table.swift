@@ -223,10 +223,10 @@ extension Table {
     
 }
 
-// SWIFT_BUG: Error -> Linker error if these extensions are outside this source file. Workaround -> Put the extensions here.
+// MARK: - Helper Extensions
 
 #if os(iOS)
-
+    
 extension Table {
     
     public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchedResultsController<T> {
@@ -234,5 +234,40 @@ extension Table {
     }
     
 }
+    
+#endif
 
+#if os(OSX)
+    
+extension Table {
+        
+    public func toArrayController() -> NSArrayController {
+        let arrayController = NSArrayController()
+        
+        arrayController.managedObjectContext = self.context.managedObjectContext
+        arrayController.entityName = self.entityName
+        
+        arrayController.fetchPredicate = self.predicate?.copy() as? NSPredicate
+        arrayController.sortDescriptors = sortDescriptors
+        
+        arrayController.automaticallyPreparesContent = true
+        arrayController.automaticallyRearrangesObjects = true
+        
+        let defaultFetchRequest = arrayController.defaultFetchRequest()
+        defaultFetchRequest.fetchBatchSize = self.batchSize
+        defaultFetchRequest.fetchOffset = self.offset
+        defaultFetchRequest.fetchLimit = self.limit
+        
+        var error: NSError? = nil
+        let success = arrayController.fetchWithRequest(nil, merge: false, error: &error)
+        
+        if !success {
+            println(error)
+        }
+        
+        return arrayController
+    }
+    
+}
+    
 #endif

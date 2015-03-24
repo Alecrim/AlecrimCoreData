@@ -8,6 +8,6 @@
       location = "group:Examples/OS X/AlecrimCoreDataExample.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:AlecrimCoreData.xcodeproj">
+      location = "group:Source/AlecrimCoreData.xcodeproj">
    </FileRef>
 </Workspace>

@@ -24,6 +24,7 @@ internal final class Stack {
     internal let mainManagedObjectContext: NSManagedObjectContext!
 
     // MARK: - constructors
+    
     internal init?(var managedObjectModelName: String?, stackType: StackType, storeOptions: [NSObject : AnyObject]?) {
         // if managed object model name is nil, try to get default name from main bundle
         let bundle = NSBundle.mainBundle()

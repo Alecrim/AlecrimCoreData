@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "48ADA23B1AB76E6700AA3126"
+               BlueprintIdentifier = "14CCE8A01AC10E5500AE47F1"
                BuildableName = "AlecrimCoreData.framework"
                BlueprintName = "AlecrimCoreData iOS"
                ReferencedContainer = "container:AlecrimCoreData.xcodeproj">
@@ -42,7 +42,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "48ADA23B1AB76E6700AA3126"
+            BlueprintIdentifier = "14CCE8A01AC10E5500AE47F1"
             BuildableName = "AlecrimCoreData.framework"
             BlueprintName = "AlecrimCoreData iOS"
             ReferencedContainer = "container:AlecrimCoreData.xcodeproj">
@@ -60,7 +60,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "48ADA23B1AB76E6700AA3126"
+            BlueprintIdentifier = "14CCE8A01AC10E5500AE47F1"
             BuildableName = "AlecrimCoreData.framework"
             BlueprintName = "AlecrimCoreData iOS"
             ReferencedContainer = "container:AlecrimCoreData.xcodeproj">

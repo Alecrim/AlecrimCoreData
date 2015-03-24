@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Alecrim. All rights reserved.
 //
 
+#if os(iOS)
+    
 import Foundation
 import CoreData
 
@@ -23,3 +25,5 @@ public final class FetchedResultsSectionInfo<T: NSManagedObject> {
     }
     
 }
+
+#endif

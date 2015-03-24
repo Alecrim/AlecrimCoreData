@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "48ADA2621AB76F2E00AA3126"
+               BlueprintIdentifier = "14CCE8C11AC10F4600AE47F1"
                BuildableName = "AlecrimCoreData.framework"
-               BlueprintName = "AlecrimCoreData OSX"
+               BlueprintName = "AlecrimCoreData OS X"
                ReferencedContainer = "container:AlecrimCoreData.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,9 +42,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "48ADA2621AB76F2E00AA3126"
+            BlueprintIdentifier = "14CCE8C11AC10F4600AE47F1"
             BuildableName = "AlecrimCoreData.framework"
-            BlueprintName = "AlecrimCoreData OSX"
+            BlueprintName = "AlecrimCoreData OS X"
             ReferencedContainer = "container:AlecrimCoreData.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -60,9 +60,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "48ADA2621AB76F2E00AA3126"
+            BlueprintIdentifier = "14CCE8C11AC10F4600AE47F1"
             BuildableName = "AlecrimCoreData.framework"
-            BlueprintName = "AlecrimCoreData OSX"
+            BlueprintName = "AlecrimCoreData OS X"
             ReferencedContainer = "container:AlecrimCoreData.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
