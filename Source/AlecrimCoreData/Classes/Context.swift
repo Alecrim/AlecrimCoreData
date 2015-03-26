@@ -14,8 +14,8 @@ public class Context {
     private let stack: Stack!
     public let managedObjectContext: NSManagedObjectContext! // The underlying managed object context
     
-    public init?(managedObjectModelName: String? = nil, stackType: StackType = StackType.SQLite, storeOptions: [NSObject : AnyObject]? = nil) {
-        if let stack = Stack(managedObjectModelName: managedObjectModelName, stackType: stackType, storeOptions: storeOptions) {
+    public init?(stackType: StackType = StackType.SQLite, managedObjectModelName: String? = nil, storeOptions: [NSObject : AnyObject]? = nil) {
+        if let stack = Stack(stackType: stackType, managedObjectModelName: managedObjectModelName, storeOptions: storeOptions) {
             self.stack = stack
             self.managedObjectContext = stack.mainManagedObjectContext
         }

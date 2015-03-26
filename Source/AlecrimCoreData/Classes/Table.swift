@@ -11,6 +11,8 @@ import CoreData
 
 public final class Table<T: NSManagedObject>: Query {
     
+    private lazy var entityDescription: NSEntityDescription = { return NSEntityDescription.entityForName(self.entityName, inManagedObjectContext: self.context.managedObjectContext)! }()
+    
     public convenience init(context: Context) {
         self.init(context: context, entityName: T.entityName)
     }
@@ -42,11 +44,6 @@ extension Table {
         }
     }
 
-    // deprecated in version 2.1
-    public func createOrGetFirstEntity(whereAttribute attributeName: String, isEqualTo value: AnyObject?) -> T {
-        return self.firstOrCreated(whereAttribute: attributeName, isEqualTo: value)
-    }
-    
     public func deleteEntity(entity: T) -> (Bool, NSError?) {
         var retrieveExistingObjectError: NSError? = nil
         
@@ -254,7 +251,7 @@ extension Table {
         arrayController.automaticallyRearrangesObjects = true
         
         let defaultFetchRequest = arrayController.defaultFetchRequest()
-        defaultFetchRequest.fetchBatchSize = self.batchSize
+        defaultFetchRequest.fetchBatchSize = Config.fetchBatchSize
         defaultFetchRequest.fetchOffset = self.offset
         defaultFetchRequest.fetchLimit = self.limit
         

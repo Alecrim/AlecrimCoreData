@@ -14,15 +14,12 @@ public class Query {
     internal let context: Context
     internal let entityName: String
 
-    internal var batchSize: Int = 20
     internal var offset: Int = 0
     internal var limit: Int = 0
 
     internal var predicate: NSPredicate?
     internal var sortDescriptors: [NSSortDescriptor]?
     
-    internal lazy var entityDescription: NSEntityDescription = { return NSEntityDescription.entityForName(self.entityName, inManagedObjectContext: self.context.managedObjectContext)! }()
-
     public required init(context: Context, entityName: String) {
         self.context = context
         self.entityName = entityName
@@ -31,7 +28,7 @@ public class Query {
     public func toFetchRequest() -> NSFetchRequest {
         let fetchRequest = NSFetchRequest(entityName: self.entityName)
         
-        fetchRequest.fetchBatchSize = self.batchSize
+        fetchRequest.fetchBatchSize = Config.fetchBatchSize
         fetchRequest.fetchOffset = self.offset
         fetchRequest.fetchLimit = self.limit
         
@@ -44,7 +41,6 @@ public class Query {
     internal func clone() -> Self {
         var other = self.dynamicType(context: self.context, entityName: self.entityName)
         
-        other.batchSize = self.batchSize
         other.offset = self.offset
         other.limit = self.limit
 
@@ -166,7 +162,8 @@ extension Query {
 extension Query {
     
     public func filterBy(attribute attributeName: String, value: AnyObject?) -> Self {
-        var predicate: NSPredicate
+        let predicate: NSPredicate
+
         if let v: AnyObject = value {
             predicate = NSPredicate(format: "%K == %@", argumentArray: [attributeName, v])
         }
