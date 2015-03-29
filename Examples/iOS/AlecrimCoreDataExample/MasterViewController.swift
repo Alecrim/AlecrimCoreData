@@ -15,7 +15,7 @@ class MasterViewController: UITableViewController {
     var detailViewController: DetailViewController? = nil
     
     lazy var fetchedResultsController: FetchedResultsController<EventEntity> = {
-        let frc = dataContext.events.orderByDescending("timeStamp").toFetchedResultsController()
+        let frc = dataContext.events.orderByDescending({ $0.timeStamp }).toFetchedResultsController()
         frc.bindToTableView(self.tableView)
         
         return frc
@@ -23,6 +23,7 @@ class MasterViewController: UITableViewController {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
             self.clearsSelectionOnViewWillAppear = false
             self.preferredContentSize = CGSize(width: 320.0, height: 600.0)
@@ -100,9 +101,7 @@ class MasterViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = self.fetchedResultsController.sections![section]
-        
-        return sectionInfo.numberOfObjects
+        return self.fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
