@@ -10,6 +10,9 @@ import Foundation
 
 public final class Config {
     
+    internal static let mainBundle: NSBundle = NSBundle.mainBundle()
+    public static var modelBundle: NSBundle = Config.mainBundle
+    
     public static var fetchBatchSize = 20
     
     public static var stringComparisonPredicateOptions = (NSComparisonPredicateOptions.CaseInsensitivePredicateOption | NSComparisonPredicateOptions.DiacriticInsensitivePredicateOption)

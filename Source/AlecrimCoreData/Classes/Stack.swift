@@ -66,10 +66,11 @@ internal final class Stack {
         self.stackType = stackType
 
         // if managed object model name is nil, try to get default name from main bundle
-        let bundle = NSBundle.mainBundle()
+        let mainBundle = Config.mainBundle
+        let modelBundle = Config.modelBundle
         
         if managedObjectModelName == nil {
-            if let infoDictionary = bundle.infoDictionary {
+            if let infoDictionary = mainBundle.infoDictionary {
                 managedObjectModelName = infoDictionary[kCFBundleNameKey] as? String
             }
         }
@@ -87,7 +88,7 @@ internal final class Stack {
         }
         
         // model
-        self.model = Stack.managedObjectModelWithName(managedObjectModelName, bundle: bundle)
+        self.model = Stack.managedObjectModelWithName(managedObjectModelName, bundle: modelBundle)
         
         if self.model == nil {
             // Swift 1.2 things
@@ -106,7 +107,7 @@ internal final class Stack {
         // store
         switch self.stackType {
         case .SQLite:
-            self.store = Stack.persistentStoreForSQLiteStoreTypeWithCoordinator(self.coordinator, managedObjectModelName: managedObjectModelName, bundle: bundle, storeOptions: storeOptions)
+            self.store = Stack.persistentStoreForSQLiteStoreTypeWithCoordinator(self.coordinator, managedObjectModelName: managedObjectModelName, mainBundle: mainBundle, storeOptions: storeOptions)
             
         case .InMemory:
             self.store = Stack.persistentStoreForInMemoryStoreTypeWithCoordinator(self.coordinator, storeOptions: storeOptions)
@@ -267,9 +268,9 @@ extension Stack {
         return nil
     }
     
-    private class func persistentStoreForSQLiteStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, managedObjectModelName: String?, bundle: NSBundle, var storeOptions: [NSObject : AnyObject]?) -> NSPersistentStore? {
+    private class func persistentStoreForSQLiteStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, managedObjectModelName: String?, mainBundle: NSBundle, var storeOptions: [NSObject : AnyObject]?) -> NSPersistentStore? {
         if let momn = managedObjectModelName {
-            if let localStoreURL = Stack.localSQLiteStoreURLForBundle(bundle) {
+            if let localStoreURL = Stack.localSQLiteStoreURLForBundle(mainBundle) {
                 if let localStorePath = localStoreURL.path {
                     let fileManager = NSFileManager.defaultManager()
                     var error: NSError? = nil
