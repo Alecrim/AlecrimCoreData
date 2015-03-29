@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		14363FAB1AC87AAD00FB9DA0 /* AlecrimCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14363FA61AC8686A00FB9DA0 /* AlecrimCoreData.framework */; };
+		14363FAC1AC87AAD00FB9DA0 /* AlecrimCoreData.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 14363FA61AC8686A00FB9DA0 /* AlecrimCoreData.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		144827001A2BE7B000DA53F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144826FF1A2BE7B000DA53F5 /* AppDelegate.swift */; };
 		144827031A2BE7B000DA53F5 /* AlecrimCoreDataExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 144827011A2BE7B000DA53F5 /* AlecrimCoreDataExample.xcdatamodeld */; };
 		144827051A2BE7B000DA53F5 /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144827041A2BE7B000DA53F5 /* MasterViewController.swift */; };
@@ -16,10 +18,24 @@
 		1448270F1A2BE7B000DA53F5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1448270D1A2BE7B000DA53F5 /* LaunchScreen.xib */; };
 		1448272F1A2BE98A00DA53F5 /* EventEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1448272E1A2BE98A00DA53F5 /* EventEntity.swift */; };
 		144827311A2BE9A400DA53F5 /* DataContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144827301A2BE9A400DA53F5 /* DataContext.swift */; };
-		14CCE92E1AC11B3300AE47F1 /* AlecrimCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14CCE92D1AC11B3300AE47F1 /* AlecrimCoreData.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		14363FAD1AC87AAD00FB9DA0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				14363FAC1AC87AAD00FB9DA0 /* AlecrimCoreData.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		14363FA61AC8686A00FB9DA0 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		144826FA1A2BE7B000DA53F5 /* AlecrimCoreDataExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlecrimCoreDataExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		144826FE1A2BE7B000DA53F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		144826FF1A2BE7B000DA53F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -31,7 +47,6 @@
 		1448270E1A2BE7B000DA53F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		1448272E1A2BE98A00DA53F5 /* EventEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventEntity.swift; sourceTree = "<group>"; };
 		144827301A2BE9A400DA53F5 /* DataContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataContext.swift; sourceTree = "<group>"; };
-		14CCE92D1AC11B3300AE47F1 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlecrimCoreData.framework; path = "../../../../Library/Developer/Xcode/DerivedData/AlecrimCoreData-fzfdlcclhegypvfuyslqkoexnmcy/Build/Products/Debug-iphoneos/AlecrimCoreData.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,7 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14CCE92E1AC11B3300AE47F1 /* AlecrimCoreData.framework in Frameworks */,
+				14363FAB1AC87AAD00FB9DA0 /* AlecrimCoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,7 +106,7 @@
 		14CCE92F1AC11B4C00AE47F1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				14CCE92D1AC11B3300AE47F1 /* AlecrimCoreData.framework */,
+				14363FA61AC8686A00FB9DA0 /* AlecrimCoreData.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -106,6 +121,7 @@
 				144826F61A2BE7B000DA53F5 /* Sources */,
 				144826F71A2BE7B000DA53F5 /* Frameworks */,
 				144826F81A2BE7B000DA53F5 /* Resources */,
+				14363FAD1AC87AAD00FB9DA0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
