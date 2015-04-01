@@ -97,11 +97,11 @@ class MasterViewController: UITableViewController {
     // MARK: - Table View
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.fetchedResultsController.sections?.count ?? 0
+        return self.fetchedResultsController.sections.count
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.fetchedResultsController.sections?[section].numberOfObjects ?? 0
+        return self.fetchedResultsController.sections[section].numberOfEntities
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -120,28 +120,26 @@ class MasterViewController: UITableViewController {
         if editingStyle == .Delete {
             
             // Delete entity using a background data context.
-            if let entity = self.fetchedResultsController.entityAtIndexPath(indexPath) {
-                performInBackground(dataContext) { backgroundDataContext in
-                    let backgroundEntity = entity.inContext(backgroundDataContext)
-                    backgroundDataContext.events.deleteEntity(backgroundEntity!)
-                    
-                    if !backgroundDataContext.save() {
-                        // Replace this implementation with code to handle the error appropriately.
-                        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                        abort()
-                    }
+            let entity = self.fetchedResultsController.entityAtIndexPath(indexPath)
+            performInBackground(dataContext) { backgroundDataContext in
+                let backgroundEntity = entity.inContext(backgroundDataContext)
+                backgroundDataContext.events.deleteEntity(backgroundEntity!)
+                
+                if !backgroundDataContext.save() {
+                    // Replace this implementation with code to handle the error appropriately.
+                    // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                    abort()
                 }
             }
             
 //            // OR delete entity using main thread data context.
-//            if let entity = self.fetchedResultsController.entityAtIndexPath(indexPath) {
-//                dataContext.events.deleteEntity(entity)
-//                
-//                if !dataContext.save() {
-//                    // Replace this implementation with code to handle the error appropriately.
-//                    // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//                    abort()
-//                }
+//            let entity = self.fetchedResultsController.entityAtIndexPath(indexPath)
+//            dataContext.events.deleteEntity(entity)
+//            
+//            if !dataContext.save() {
+//                // Replace this implementation with code to handle the error appropriately.
+//                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                abort()
 //            }
             
         }
