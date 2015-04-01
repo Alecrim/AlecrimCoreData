@@ -17,7 +17,7 @@ public final class FetchedResultsSectionInfo<T: NSManagedObject> {
     
     public var name: String? { return self.underlyingSectionInfo.name }
     public var indexTitle: String { return self.underlyingSectionInfo.indexTitle }
-    public var numberOfObjects: Int { return self.underlyingSectionInfo.numberOfObjects }
+    public var numberOfEntities: Int { return self.underlyingSectionInfo.numberOfObjects }
     public var entities: [T] { return self.underlyingSectionInfo.objects as! [T] }
     
     internal init(underlyingSectionInfo: NSFetchedResultsSectionInfo) {

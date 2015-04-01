@@ -124,15 +124,15 @@ extension FetchedResultsController {
 
 extension FetchedResultsController {
     
-    public var entities: [T] {
-        return self.underlyingFetchedResultsController.fetchedObjects as! [T]
+    public var entities: [T]! {
+        return self.underlyingFetchedResultsController.fetchedObjects as? [T]
     }
     
-    public func entityAtIndexPath(indexPath: NSIndexPath) -> T! {
-        return self.underlyingFetchedResultsController.objectAtIndexPath(indexPath) as? T
+    public func entityAtIndexPath(indexPath: NSIndexPath) -> T {
+        return self.underlyingFetchedResultsController.objectAtIndexPath(indexPath) as! T
     }
     
-    public func indexPathForEntity(entity: T) -> NSIndexPath! {
+    public func indexPathForEntity(entity: T) -> NSIndexPath? {
         return self.underlyingFetchedResultsController.indexPathForObject(entity)
     }
     
@@ -157,11 +157,11 @@ extension FetchedResultsController {
 
 extension FetchedResultsController {
     
-    public var sectionIndexTitles: [String]! {
-        return self.underlyingFetchedResultsController.sectionIndexTitles as? [String]
+    public var sectionIndexTitles: [String] {
+        return self.underlyingFetchedResultsController.sectionIndexTitles as! [String]
     }
     
-    public func sectionIndexTitleForSectionName(sectionName: String) -> String! {
+    public func sectionIndexTitleForSectionName(sectionName: String) -> String? {
         return self.underlyingFetchedResultsController.sectionIndexTitleForSectionName(sectionName)
     }
     
