@@ -101,9 +101,9 @@ extension Context {
         return objects
     }
     
-    internal func executeAsynchronousFetchRequestWithFetchRequest(fetchRequest: NSFetchRequest, completionHandler: ([AnyObject]?, NSError?) -> Void) -> NSProgress {
+    internal func executeAsynchronousFetchRequestWithFetchRequest(fetchRequest: NSFetchRequest, completionClosure: ([AnyObject]?, NSError?) -> Void) -> NSProgress {
         let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { asynchronousFetchResult in
-            completionHandler(asynchronousFetchResult.finalResult, asynchronousFetchResult.operationError)
+            completionClosure(asynchronousFetchResult.finalResult, asynchronousFetchResult.operationError)
         }
         
         let moc = self.managedObjectContext
@@ -116,7 +116,7 @@ extension Context {
             let result = moc.executeRequest(asynchronousFetchRequest, error: &error) as! NSAsynchronousFetchResult
             
             if error != nil {
-                completionHandler(nil, error)
+                completionClosure(nil, error)
             }
         }
         
@@ -125,7 +125,7 @@ extension Context {
         return progress
     }
     
-    internal func executeBatchUpdateRequestWithEntityDescription(entityDescription: NSEntityDescription, propertiesToUpdate: [NSObject : AnyObject], predicate: NSPredicate, completionHandler: (Int, NSError?) -> Void) {
+    internal func executeBatchUpdateRequestWithEntityDescription(entityDescription: NSEntityDescription, propertiesToUpdate: [NSObject : AnyObject], predicate: NSPredicate, completionClosure: (Int, NSError?) -> Void) {
         performInBackground(self) { backgroundContext in
             let batchUpdateRequest = NSBatchUpdateRequest(entity: entityDescription)
             batchUpdateRequest.propertiesToUpdate = propertiesToUpdate
@@ -138,10 +138,10 @@ extension Context {
                 let result = moc.executeRequest(batchUpdateRequest, error: &error) as! NSBatchUpdateResult
                 
                 if error == nil {
-                    completionHandler(result.result as! Int, nil)
+                    completionClosure(result.result as! Int, nil)
                 }
                 else {
-                    completionHandler(0, error)
+                    completionClosure(0, error)
                 }
             }
         }

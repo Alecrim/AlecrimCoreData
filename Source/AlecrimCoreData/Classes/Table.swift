@@ -224,10 +224,10 @@ extension Table {
 
 extension Table {
     
-    public func fetchAsync(completionHandler: ([T]?, NSError?) -> Void) -> NSProgress {
+    public func fetchAsync(completionClosure: ([T]?, NSError?) -> Void) -> NSProgress {
         return self.context.executeAsynchronousFetchRequestWithFetchRequest(self.toFetchRequest()) { objects, error in
             dispatch_async(dispatch_get_main_queue()) {
-                completionHandler(objects as? [T], error)
+                completionClosure(objects as? [T], error)
             }
         }
     }
@@ -238,12 +238,12 @@ extension Table {
 
 extension Table {
     
-    public func batchUpdate(propertiesToUpdateClosure: (T.Type) -> [NSObject : AnyObject], completionHandler: (Int, NSError?) -> Void) {
+    public func batchUpdate(propertiesToUpdateClosure: (T.Type) -> [NSObject : AnyObject], completionClosure: (Int, NSError?) -> Void) {
         let batchUpdatePredicate = self.predicate ?? NSPredicate(value: true)
         
         self.context.executeBatchUpdateRequestWithEntityDescription(self.entityDescription, propertiesToUpdate: propertiesToUpdateClosure(T.self), predicate: batchUpdatePredicate) { count, error in
             dispatch_async(dispatch_get_main_queue()) {
-                completionHandler(count, error)
+                completionClosure(count, error)
             }
         }
     }
