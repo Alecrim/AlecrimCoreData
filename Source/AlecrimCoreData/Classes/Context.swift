@@ -36,11 +36,6 @@ public class Context {
 
 extension Context {
     
-    public func save() -> Bool {
-        let (success, _) = self.save()
-        return success
-    }
-
     public func save() -> (Bool, NSError?) {
         return self.stack.saveManagedObjectContext(self.managedObjectContext)
     }
