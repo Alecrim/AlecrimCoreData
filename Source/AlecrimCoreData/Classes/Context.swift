@@ -113,10 +113,13 @@ extension Context {
         
         moc.performBlock {
             var error: NSError? = nil
-            let result = moc.executeRequest(asynchronousFetchRequest, error: &error) as! NSAsynchronousFetchResult
+            let asynchronousFetchResult = moc.executeRequest(asynchronousFetchRequest, error: &error) as! NSAsynchronousFetchResult
             
             if error != nil {
                 completionClosure(nil, error)
+            }
+            else if asynchronousFetchResult.operationError != nil {
+                completionClosure(nil, asynchronousFetchResult.operationError)
             }
         }
         
@@ -135,13 +138,13 @@ extension Context {
             let moc = backgroundContext.managedObjectContext
             moc.performBlock {
                 var error: NSError? = nil
-                let result = moc.executeRequest(batchUpdateRequest, error: &error) as! NSBatchUpdateResult
+                let batchUpdateResult = moc.executeRequest(batchUpdateRequest, error: &error) as! NSBatchUpdateResult
                 
-                if error == nil {
-                    completionClosure(result.result as! Int, nil)
+                if error != nil {
+                    completionClosure(0, error)
                 }
                 else {
-                    completionClosure(0, error)
+                    completionClosure(batchUpdateResult.result as! Int, nil)
                 }
             }
         }

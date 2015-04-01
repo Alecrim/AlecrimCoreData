@@ -241,9 +241,9 @@ extension Table {
     public func batchUpdate(propertiesToUpdateClosure: (T.Type) -> [NSObject : AnyObject], completionClosure: (Int, NSError?) -> Void) {
         let batchUpdatePredicate = self.predicate ?? NSPredicate(value: true)
         
-        self.context.executeBatchUpdateRequestWithEntityDescription(self.entityDescription, propertiesToUpdate: propertiesToUpdateClosure(T.self), predicate: batchUpdatePredicate) { count, error in
+        self.context.executeBatchUpdateRequestWithEntityDescription(self.entityDescription, propertiesToUpdate: propertiesToUpdateClosure(T.self), predicate: batchUpdatePredicate) { updatedObjectsCount, error in
             dispatch_async(dispatch_get_main_queue()) {
-                completionClosure(count, error)
+                completionClosure(updatedObjectsCount, error)
             }
         }
     }
