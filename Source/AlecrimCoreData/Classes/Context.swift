@@ -91,14 +91,60 @@ extension Context {
 
 extension Context {
     
-    internal func executeFetchRequest(request: NSFetchRequest!, error: NSErrorPointer) -> [AnyObject]? {
+    internal func executeFetchRequest(fetchRequest: NSFetchRequest, error: NSErrorPointer) -> [AnyObject]? {
         var objects: [AnyObject]?
         
         self.performAndWait {
-            objects = self.managedObjectContext.executeFetchRequest(request, error: error)
+            objects = self.managedObjectContext.executeFetchRequest(fetchRequest, error: error)
         }
         
         return objects
+    }
+    
+    internal func executeAsynchronousFetchRequestWithFetchRequest(fetchRequest: NSFetchRequest, completionHandler: ([AnyObject]?, NSError?) -> Void) -> NSProgress {
+        let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { asynchronousFetchResult in
+            completionHandler(asynchronousFetchResult.finalResult, asynchronousFetchResult.operationError)
+        }
+        
+        let moc = self.managedObjectContext
+        let progress = NSProgress(totalUnitCount: 1)
+        
+        progress.becomeCurrentWithPendingUnitCount(1)
+        
+        moc.performBlock {
+            var error: NSError? = nil
+            let result = moc.executeRequest(asynchronousFetchRequest, error: &error) as! NSAsynchronousFetchResult
+            
+            if error != nil {
+                completionHandler(nil, error)
+            }
+        }
+        
+        progress.resignCurrent()
+        
+        return progress
+    }
+    
+    internal func executeBatchUpdateRequestWithEntityDescription(entityDescription: NSEntityDescription, propertiesToUpdate: [NSObject : AnyObject], predicate: NSPredicate, completionHandler: (Int, NSError?) -> Void) {
+        performInBackground(self) { backgroundContext in
+            let batchUpdateRequest = NSBatchUpdateRequest(entity: entityDescription)
+            batchUpdateRequest.propertiesToUpdate = propertiesToUpdate
+            batchUpdateRequest.predicate = predicate
+            batchUpdateRequest.resultType = .UpdatedObjectsCountResultType
+            
+            let moc = backgroundContext.managedObjectContext
+            moc.performBlock {
+                var error: NSError? = nil
+                let result = moc.executeRequest(batchUpdateRequest, error: &error) as! NSBatchUpdateResult
+                
+                if error == nil {
+                    completionHandler(result.result as! Int, nil)
+                }
+                else {
+                    completionHandler(0, error)
+                }
+            }
+        }
     }
     
 }
