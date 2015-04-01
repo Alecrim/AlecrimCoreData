@@ -102,8 +102,13 @@ extension Context {
     }
     
     internal func executeAsynchronousFetchRequestWithFetchRequest(fetchRequest: NSFetchRequest, completionClosure: ([AnyObject]?, NSError?) -> Void) -> NSProgress {
+        var completionClosureCalled = false
+        
         let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { asynchronousFetchResult in
-            completionClosure(asynchronousFetchResult.finalResult, asynchronousFetchResult.operationError)
+            if !completionClosureCalled {
+                completionClosureCalled = true
+                completionClosure(asynchronousFetchResult.finalResult, asynchronousFetchResult.operationError)
+            }
         }
         
         let moc = self.managedObjectContext
@@ -116,9 +121,11 @@ extension Context {
             let asynchronousFetchResult = moc.executeRequest(asynchronousFetchRequest, error: &error) as! NSAsynchronousFetchResult
             
             if error != nil {
+                completionClosureCalled = true
                 completionClosure(nil, error)
             }
             else if asynchronousFetchResult.operationError != nil {
+                completionClosureCalled = true
                 completionClosure(nil, asynchronousFetchResult.operationError)
             }
         }
