@@ -19,7 +19,7 @@ You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodep
 
 You can create a inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
 
-\`\`\`swift
+```swift
 import AlecrimCoreData
 
 let dataContext = DataContext()!
@@ -28,7 +28,7 @@ class DataContext: Context {
 	var people:      Table<PersonEntity>     { return Table<PersonEntity>(context: self) }
 	var departments: Table<DepartmentEntity> { return Table<DepartmentEntity>(context: self) }
 }
-\`\`\`
+```
 
 It's important that properties (or methods) always return a _new_ instance of a `AlecrimCoreData.Table` class.
 
@@ -46,43 +46,43 @@ In the above section example, there are two entities: `Person` and `Department` 
 
 Say you have an Entity called Person, related to a Department (as seen in various Apple CoreData documentation [and MagicalRecord documentation too]). To get all of the Person entities as an array, use the following methods:
 
-\`\`\`swift
+```swift
 for person in dataContext.people {
 	println(person.firstName)
 }
-\`\`\`
+```
 
 You can also skip some results:
 
-\`\`\`swift
+```swift
 let people = dataContext.people.skip(3)
-\`\`\`
+```
 
 Or take only some results:
 
-\`\`\`swift
+```swift
 let people = dataContext.people.skip(3).take(7)
-\`\`\`
+```
 
 Or, to return the results sorted by a property:
 
-\`\`\`swift
+```swift
 let peopleSorted = dataContext.people.orderBy({ $0.lastName })
-\`\`\`
+```
 
 Or, to return the results sorted by multiple properties:
 
-\`\`\`swift
+```swift
 let peopleSorted = dataContext.people.orderBy({ $0.lastName }).thenBy({ $0.firstName })
 
 // OR
 
 let peopleSorted = dataContext.people.sortBy("lastName,firstName")
-\`\`\`
+```
 
 Or, to return the results sorted by multiple properties with different attributes:
 
-\`\`\`swift
+```swift
 let peopleSorted = dataContext.people.orderByDescending({ $0.lastName }).thenByAscending({ $0.firstName })
 
 // OR
@@ -92,21 +92,21 @@ let peopleSorted = dataContext.people.sortBy("lastName:0,firstName:1")
 // OR
 
 let peopleSorted = dataContext.people.sortBy("lastName:0:[cd],firstName:1:[cd]")
-\`\`\`
+```
 
 If you have a unique way of retrieving a single object from your data store (such as via an identifier), you can use the following code:
 
-\`\`\`swift
+```swift
 if let person = dataContext.people.first({ $0.identifier == 123 }) {
 	println(person.name)
 }
-\`\`\`
+```
 
 #### Advanced Fetching
 
 If you want to be more specific with your search, you can use predicates:
 
-\`\`\`swift
+```swift
 let itemsPerPage = 10  
 
 for pageNumber in 0..\<5 {
@@ -123,13 +123,13 @@ for pageNumber in 0..\<5 {
 	    println("\(person.firstName) \(person.lastName) - \(person.department.name)")
 	}
 }
-\`\`\`
+```
 
 #### Returning an Array
 
 The data is actually fetched from Persistent Store only when `toArray()` is explicitly or implicitly called. So you can combine and chain other methods before this.
 
-\`\`\`swift
+```swift
 let peopleArray = dataContext.people.toArray()
 
 // OR
@@ -147,55 +147,55 @@ let array = theSmiths.toArray()
 for person in dataContext.people.sortBy("firstName,lastName") {
 	// .toArray() is called implicitly when enumerating
 }
-\`\`\`
+```
 
 #### Converting to other class types
 
 Call the `to...` method in the end of chain.
 
-\`\`\`swift
+```swift
 let peopleFetchRequest = dataContext.people.toFetchRequest()
 let peopleArrayController = dataContext.people.toArrayController() // OS X only
 let peopleFetchedResultsController = dataContext.people.toFetchedResultsController() // iOS only
-\`\`\`
+```
 
 #### Find the number of entities
 
 You can also perform a count of the entities in your Persistent Store:
 
-\`\`\`swift
+```swift
 let count = dataContext.people.filter({ $0.lastName == "Smith" }).count()
-\`\`\`
+```
 
 ### Creating new Entities
 
 When you need to create a new instance of an Entity, use:
 
-\`\`\`swift
+```swift
 let person = dataContext.people.createEntity()
-\`\`\`
+```
 
 You can also create or get first existing entity matching the criteria. If the entity does not exist, a new one is created and the specified attribute is assigned from the searched value automatically.
 
-\`\`\`swift
+```swift
 let person = dataContext.people.firstOrCreated({ $ 0.identifier == 123 })
-\`\`\`
+```
 
 ### Deleting Entities
 
 To delete a single entity:
 
-\`\`\`swift
+```swift
 if let person = dataContext.people.first({ $0.identifier == 123 }) {
 	dataContext.people.deleteEntity(person)
 }
-\`\`\`
+```
 
 ## Saving
 
 You can save the data context in the end, after all changes were made.
 
-\`\`\`swift
+```swift
 let person = dataContext.people.firstOrCreated({ $0.identifier == 9 })
 person.firstName = "Christopher"
 person.lastName = "Eccleston"
@@ -210,13 +210,13 @@ if success {
 else {
 	println(error)
 }
-\`\`\`
+```
 
 ### Threading
 
 You can fetch and save entities in background calling a global function that creates a new data context instance for this:
 
-\`\`\`swift
+```swift
 // assuming that this department is saved and exists...
 let department = dataContext.departments.first({ $0.identifier == 100 })!
 
@@ -230,7 +230,7 @@ performInBackground(dataContext) { backgroundDataContext in
 	
 	backgroundDataContext.save()
 }
-\`\`\`
+```
 
 ## Using attributes and closure parameters
 
