@@ -18,8 +18,8 @@
 		14CCE8EF1AC1110000AE47F1 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E01AC1110000AE47F1 /* FetchedResultsController.swift */; };
 		14CCE8F01AC1110000AE47F1 /* FetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E11AC1110000AE47F1 /* FetchedResultsSectionInfo.swift */; };
 		14CCE8F11AC1110000AE47F1 /* FetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E11AC1110000AE47F1 /* FetchedResultsSectionInfo.swift */; };
-		14CCE8F21AC1110000AE47F1 /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E21AC1110000AE47F1 /* NSManagedObject+Extensions.swift */; };
-		14CCE8F31AC1110000AE47F1 /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E21AC1110000AE47F1 /* NSManagedObject+Extensions.swift */; };
+		14CCE8F21AC1110000AE47F1 /* NSManagedObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E21AC1110000AE47F1 /* NSManagedObjectExtensions.swift */; };
+		14CCE8F31AC1110000AE47F1 /* NSManagedObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E21AC1110000AE47F1 /* NSManagedObjectExtensions.swift */; };
 		14CCE8F41AC1110000AE47F1 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E31AC1110000AE47F1 /* Query.swift */; };
 		14CCE8F51AC1110000AE47F1 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E31AC1110000AE47F1 /* Query.swift */; };
 		14CCE8F61AC1110000AE47F1 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E41AC1110000AE47F1 /* Stack.swift */; };
@@ -39,7 +39,7 @@
 		14CCE8DF1AC1110000AE47F1 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		14CCE8E01AC1110000AE47F1 /* FetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
 		14CCE8E11AC1110000AE47F1 /* FetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
-		14CCE8E21AC1110000AE47F1 /* NSManagedObject+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extensions.swift"; sourceTree = "<group>"; };
+		14CCE8E21AC1110000AE47F1 /* NSManagedObjectExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSManagedObjectExtensions.swift; sourceTree = "<group>"; };
 		14CCE8E31AC1110000AE47F1 /* Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 		14CCE8E41AC1110000AE47F1 /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		14CCE8E51AC1110000AE47F1 /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
@@ -106,7 +106,7 @@
 				14CCE8DF1AC1110000AE47F1 /* Context.swift */,
 				14CCE8E01AC1110000AE47F1 /* FetchedResultsController.swift */,
 				14CCE8E11AC1110000AE47F1 /* FetchedResultsSectionInfo.swift */,
-				14CCE8E21AC1110000AE47F1 /* NSManagedObject+Extensions.swift */,
+				14CCE8E21AC1110000AE47F1 /* NSManagedObjectExtensions.swift */,
 				14CCE8E31AC1110000AE47F1 /* Query.swift */,
 				14CCE8E41AC1110000AE47F1 /* Stack.swift */,
 				14CCE8E51AC1110000AE47F1 /* Table.swift */,
@@ -232,7 +232,7 @@
 				14CCE8F01AC1110000AE47F1 /* FetchedResultsSectionInfo.swift in Sources */,
 				14CCE8EA1AC1110000AE47F1 /* Attribute.swift in Sources */,
 				14CCE8F61AC1110000AE47F1 /* Stack.swift in Sources */,
-				14CCE8F21AC1110000AE47F1 /* NSManagedObject+Extensions.swift in Sources */,
+				14CCE8F21AC1110000AE47F1 /* NSManagedObjectExtensions.swift in Sources */,
 				14CCE8EE1AC1110000AE47F1 /* FetchedResultsController.swift in Sources */,
 				14CCE8F41AC1110000AE47F1 /* Query.swift in Sources */,
 				14CCE8F81AC1110000AE47F1 /* Table.swift in Sources */,
@@ -248,7 +248,7 @@
 				14CCE8F11AC1110000AE47F1 /* FetchedResultsSectionInfo.swift in Sources */,
 				14CCE8EB1AC1110000AE47F1 /* Attribute.swift in Sources */,
 				14CCE8F71AC1110000AE47F1 /* Stack.swift in Sources */,
-				14CCE8F31AC1110000AE47F1 /* NSManagedObject+Extensions.swift in Sources */,
+				14CCE8F31AC1110000AE47F1 /* NSManagedObjectExtensions.swift in Sources */,
 				14CCE8EF1AC1110000AE47F1 /* FetchedResultsController.swift in Sources */,
 				14CCE8F51AC1110000AE47F1 /* Query.swift in Sources */,
 				14CCE8F91AC1110000AE47F1 /* Table.swift in Sources */,
