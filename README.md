@@ -109,7 +109,7 @@ If you want to be more specific with your search, you can use filter predicates:
 ```swift
 let itemsPerPage = 10  
 
-for pageNumber in 0..\<5 {
+for pageNumber in 0..<5 {
 	println("Page: \(pageNumber)")
 	
 	let peopleInCurrentPage = dataContext.people
@@ -166,9 +166,9 @@ for person in dataContext.people.sortBy("firstName,lastName") {
 Call the `to...` method in the end of chain.
 
 ```swift
-let peopleFetchRequest = dataContext.people.toFetchRequest()
-let peopleArrayController = dataContext.people.toArrayController() // OS X only
-let peopleFetchedResultsController = dataContext.people.toFetchedResultsController() // iOS only
+let fetchRequest = dataContext.people.toFetchRequest()
+let arrayController = dataContext.people.toArrayController() // OS X only
+let fetchedResultsController = dataContext.people.toFetchedResultsController() // iOS only
 ```
 
 #### Find the number of entities
