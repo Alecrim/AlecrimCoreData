@@ -1,16 +1,8 @@
-![AlecrimCoreData](AlecrimCoreData.png?raw=true)
+![AlecrimCoreData][image-1]
 
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Carthage compatible][image-2]][1]
 
-AlecrimCoreData is a framework to access CoreData objects more easily in Swift.
-
-## Features
-
-- Simpler classes and methods to access and save CoreData managed objects
-- Main and background contexts support
-- SQLite store type support with automatic creation of store file
-- InMemory store type support
-- iOS: FetchedResultsController class and UITableView helper methods
+AlecrimCoreData is a framework to easily access CoreData objects in Swift.
 
 ## Minimum Requirements
 
@@ -19,26 +11,26 @@ AlecrimCoreData is a framework to access CoreData objects more easily in Swift.
 
 ## Installation
 
-You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as a dependency for your application target.
+You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as an embedded binary in your application target.
 
 ## Getting Started
 
-### Data Context (*)
+### Data Context
 
 You can create a inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
 
-```swift
+\`\`\`swift
+import AlecrimCoreData
+
 let dataContext = DataContext()!
 
-final class DataContext: AlecrimCoreData.Context {
-	var people:      AlecrimCoreData.Table<PersonEntity>     { return AlecrimCoreData.Table<PersonEntity>(context: self) }
-	var departments: AlecrimCoreData.Table<DepartmentEntity> { return AlecrimCoreData.Table<DepartmentEntity>(context: self) }
+class DataContext: Context {
+	var people:      Table<PersonEntity>     { return Table<PersonEntity>(context: self) }
+	var departments: Table<DepartmentEntity> { return Table<DepartmentEntity>(context: self) }
 }
-```
+\`\`\`
 
 It's important that properties (or methods) always return a _new_ instance of a `AlecrimCoreData.Table` class.
-
-(*) "Data Context" is not the same as the CoreData Managed Object Context.
 
 ### Entities
 
@@ -54,43 +46,43 @@ In the above section example, there are two entities: `Person` and `Department` 
 
 Say you have an Entity called Person, related to a Department (as seen in various Apple CoreData documentation [and MagicalRecord documentation too]). To get all of the Person entities as an array, use the following methods:
 
-```swift
+\`\`\`swift
 for person in dataContext.people {
 	println(person.firstName)
 }
-```
+\`\`\`
 
 You can also skip some results:
 
-```swift
+\`\`\`swift
 let people = dataContext.people.skip(3)
-```
+\`\`\`
 
 Or take only some results:
 
-```swift
+\`\`\`swift
 let people = dataContext.people.skip(3).take(7)
-```
+\`\`\`
 
 Or, to return the results sorted by a property:
 
-```swift
+\`\`\`swift
 let peopleSorted = dataContext.people.orderBy({ $0.lastName })
-```
+\`\`\`
 
 Or, to return the results sorted by multiple properties:
 
-```swift
+\`\`\`swift
 let peopleSorted = dataContext.people.orderBy({ $0.lastName }).thenBy({ $0.firstName })
 
 // OR
 
 let peopleSorted = dataContext.people.sortBy("lastName,firstName")
-```
+\`\`\`
 
 Or, to return the results sorted by multiple properties with different attributes:
 
-```swift
+\`\`\`swift
 let peopleSorted = dataContext.people.orderByDescending({ $0.lastName }).thenByAscending({ $0.firstName })
 
 // OR
@@ -100,63 +92,44 @@ let peopleSorted = dataContext.people.sortBy("lastName:0,firstName:1")
 // OR
 
 let peopleSorted = dataContext.people.sortBy("lastName:0:[cd],firstName:1:[cd]")
-```
+\`\`\`
 
 If you have a unique way of retrieving a single object from your data store (such as via an identifier), you can use the following code:
 
-```swift
+\`\`\`swift
 if let person = dataContext.people.first({ $0.identifier == 123 }) {
 	println(person.name)
 }
-```
+\`\`\`
 
 #### Advanced Fetching
 
 If you want to be more specific with your search, you can use predicates:
 
-```swift
-let itemsPerPage = 10   
+\`\`\`swift
+let itemsPerPage = 10  
 
-for pageNumber in 0..<5 {
+for pageNumber in 0..\<5 {
 	println("Page: \(pageNumber)")
-
+	
 	let peopleInCurrentPage = dataContext.people
-		.filter({ $0.department << [dept1, dept2] })
-		.skip(pageNumber * itemsPerPage)
-		.take(itemsPerPage)
-		.orderBy({ $0.firstName })
-		.thenBy({ $0.lastName })
-
+	    .filter({ $0.department << [dept1, dept2] })
+	    .skip(pageNumber * itemsPerPage)
+	    .take(itemsPerPage)
+	    .orderBy({ $0.firstName })
+	    .thenBy({ $0.lastName })
+	
 	for person in peopleInCurrentPage {
-		println("\(person.firstName) \(person.lastName) - \(person.department.name)")
+	    println("\(person.firstName) \(person.lastName) - \(person.department.name)")
 	}
 }
-
-// OR
-
-let itemsPerPage = 10   
-let predicate = NSPredicate(format: "department IN %@", argumentArray: [[dept1, dept2]])
-
-for pageNumber in 0..<5 {
-	println("Page: \(pageNumber)")
-
-	let peopleInCurrentPage = dataContext.people
-		.filterBy(predicate: predicate)
-		.skip(pageNumber * itemsPerPage)
-		.take(itemsPerPage)
-		.sortBy("firstName,lastName")
-
-	for person in peopleInCurrentPage {
-		println("\(person.firstName) \(person.lastName) - \(person.department.name)")
-	}
-}
-```
+\`\`\`
 
 #### Returning an Array
 
 The data is actually fetched from Persistent Store only when `toArray()` is explicitly or implicitly called. So you can combine and chain other methods before this.
 
-```swift
+\`\`\`swift
 let peopleArray = dataContext.people.toArray()
 
 // OR
@@ -172,57 +145,57 @@ let array = theSmiths.toArray()
 // OR
 
 for person in dataContext.people.sortBy("firstName,lastName") {
-    // .toArray() is called implicitly when enumerating
+	// .toArray() is called implicitly when enumerating
 }
-```
+\`\`\`
 
 #### Converting to other class types
 
 Call the `to...` method in the end of chain.
 
-```swift
+\`\`\`swift
 let peopleFetchRequest = dataContext.people.toFetchRequest()
 let peopleArrayController = dataContext.people.toArrayController() // OS X only
 let peopleFetchedResultsController = dataContext.people.toFetchedResultsController() // iOS only
-```
+\`\`\`
 
 #### Find the number of entities
 
 You can also perform a count of the entities in your Persistent Store:
 
-```swift
+\`\`\`swift
 let count = dataContext.people.filter({ $0.lastName == "Smith" }).count()
-```
+\`\`\`
 
 ### Creating new Entities
 
 When you need to create a new instance of an Entity, use:
 
-```swift
+\`\`\`swift
 let person = dataContext.people.createEntity()
-```
+\`\`\`
 
 You can also create or get first existing entity matching the criteria. If the entity does not exist, a new one is created and the specified attribute is assigned from the searched value automatically.
 
-```swift
+\`\`\`swift
 let person = dataContext.people.firstOrCreated({ $ 0.identifier == 123 })
-```
+\`\`\`
 
 ### Deleting Entities
 
 To delete a single entity:
 
-```swift
+\`\`\`swift
 if let person = dataContext.people.first({ $0.identifier == 123 }) {
-    dataContext.people.deleteEntity(person)
+	dataContext.people.deleteEntity(person)
 }
-```
+\`\`\`
 
 ## Saving
 
 You can save the data context in the end, after all changes were made.
 
-```swift
+\`\`\`swift
 let person = dataContext.people.firstOrCreated({ $0.identifier == 9 })
 person.firstName = "Christopher"
 person.lastName = "Eccleston"
@@ -232,48 +205,32 @@ person.additionalInfo = "The best Doctor ever!"
 let (success, error) = dataContext.save()
 
 if success {
-    // ...
+	// ...
 }
 else {
-    println(error)
+	println(error)
 }
-
-// OR
-
-// check for success only
-if dataContext.save() {
-    // ...
-}
-```
-
-#### Rolling back
-
-To rollback the data context:
-
-```swift
-dataContext.rollback()
-```
-
-This only works if the data context was not saved yet.
+\`\`\`
 
 ### Threading
 
 You can fetch and save entities in background calling a global function that creates a new data context instance for this:
 
-```swift
+\`\`\`swift
 // assuming that this department is saved and exists...
 let department = dataContext.departments.first({ $0.identifier == 100 })!
 
 // the closure below will run in a background context queue
 performInBackground(dataContext) { backgroundDataContext in
-    if let person = backgroundDataContext.people.first({ $0.identifier == 321 }) {
-        person.department = department.inContext(backgroundDataContext)! // must bring to backgroundDataContextContext
-        person.otherData = "Other Data"
-    }
-
-    backgroundDataContext.save()
+	if let person = backgroundDataContext.people.first({ $0.identifier == 321 }) {
+	    // must bring to backgroundDataContextContext
+	    person.department = department.inContext(backgroundDataContext)! 
+	    person.otherData = "Other Data"
+	}
+	
+	backgroundDataContext.save()
 }
-```
+\`\`\`
 
 ## Using attributes and closure parameters
 
@@ -282,21 +239,30 @@ Implementation, docs and tests are in progress at this moment. A code generator 
 ## Branches and contribution
 
 - master - The production branch. Clone or fork this repository for the latest copy.
-- develop - The active development branch. [Pull requests](https://help.github.com/articles/creating-a-pull-request) should be directed to this branch.
+- develop - The active development branch. [Pull requests][2] should be directed to this branch.
 
 If you want to contribute, please feel free to fork the repository and send pull requests with your fixes, suggestions and additions. :-)
 
 ## Inspired and based on
 
-- [MagicalRecord](https://github.com/magicalpanda/MagicalRecord)
-- [QueryKit](https://github.com/QueryKit/QueryKit)
+- [MagicalRecord][3]
+- [QueryKit][4]
 
 ---
 
 ## Contact
 
-- [Vanderlei Martinelli](https://github.com/vmartinelli)
+- [Vanderlei Martinelli][5]
 
 ## License
 
 AlecrimCoreData is released under an MIT license. See LICENSE for more information.
+
+[1]:	https://github.com/Carthage/Carthage
+[2]:	https://help.github.com/articles/creating-a-pull-request
+[3]:	https://github.com/magicalpanda/MagicalRecord
+[4]:	https://github.com/QueryKit/QueryKit
+[5]:	https://github.com/vmartinelli
+
+[image-1]:	AlecrimCoreData.png?raw=true
+[image-2]:	https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat
