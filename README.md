@@ -104,7 +104,7 @@ if let person = dataContext.people.first({ $0.identifier == 123 }) {
 
 #### Advanced Fetching
 
-If you want to be more specific with your search, you can use predicates:
+If you want to be more specific with your search, you can use filter predicates:
 
 ```swift
 let itemsPerPage = 10  
@@ -114,14 +114,26 @@ for pageNumber in 0..\<5 {
 	
 	let peopleInCurrentPage = dataContext.people
 	    .filter({ $0.department << [dept1, dept2] })
-	    .skip(pageNumber * itemsPerPage)
-	    .take(itemsPerPage)
 	    .orderBy({ $0.firstName })
 	    .thenBy({ $0.lastName })
+	    .skip(pageNumber * itemsPerPage)
+	    .take(itemsPerPage)
 	
 	for person in peopleInCurrentPage {
 	    println("\(person.firstName) \(person.lastName) - \(person.department.name)")
 	}
+}
+```
+
+#### Asynchronous Fetching
+
+You can also fetch entities asynchronously and get the results later on main thread:
+
+```swift
+let progress = dataContext.people.fetchAsync { fetchedEntities, error in
+    if let entities = fetchedEntities {
+        // ...
+    }
 }
 ```
 
@@ -223,7 +235,7 @@ let department = dataContext.departments.first({ $0.identifier == 100 })!
 // the closure below will run in a background context queue
 performInBackground(dataContext) { backgroundDataContext in
 	if let person = backgroundDataContext.people.first({ $0.identifier == 321 }) {
-	    // must bring to backgroundDataContextContext
+	    // must bring to backgroundDataContext
 	    person.department = department.inContext(backgroundDataContext)! 
 	    person.otherData = "Other Data"
 	}
