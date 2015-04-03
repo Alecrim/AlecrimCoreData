@@ -9,6 +9,13 @@ AlecrimCoreData is a framework to easily access CoreData objects in Swift.
 - Xcode 6.3
 - iOS 8.1.3 / OS X 10.10.2
 
+## Version History
+
+- 3.0 - Swift framework; WIP; added attributes support, a code generation utility and other improvements
+- 2.0 - Swift framework; first public release as open source
+- 1.1 - Objective-C framework; private Alecrim team use
+- 1.0 - Objective-C framework; private Alecrim team use
+
 ## Installation
 
 You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as an embedded binary in your application target.
