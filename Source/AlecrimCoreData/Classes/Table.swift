@@ -220,6 +220,52 @@ extension Table {
     
 }
 
+// MARK: - Attribute - aggregate
+
+extension Table {
+    
+    public func sum<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U! {
+        return self.aggregateWithFunctionName("sum", attributeClosure: attributeClosure)
+    }
+
+    public func min<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U! {
+        return self.aggregateWithFunctionName("min", attributeClosure: attributeClosure)
+    }
+
+    public func max<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U! {
+        return self.aggregateWithFunctionName("max", attributeClosure: attributeClosure)
+    }
+
+    public func average<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U! {
+        return self.aggregateWithFunctionName("average", attributeClosure: attributeClosure)
+    }
+
+    private func aggregateWithFunctionName<U>(functionName: String, attributeClosure: (T.Type) -> Attribute<U>) -> U! {
+        let attribute = attributeClosure(T.self)
+        let attributeDescription = self.entityDescription.attributesByName[attribute.name] as! NSAttributeDescription
+        
+        let keyPathExpression = NSExpression(forKeyPath: attribute.name)
+        let functionExpression = NSExpression(forFunction: "\(functionName):", arguments: [keyPathExpression])
+        
+        let expressionDescription = NSExpressionDescription()
+        expressionDescription.name = "___\(functionName)"
+        expressionDescription.expression = functionExpression
+        expressionDescription.expressionResultType = attributeDescription.attributeType
+        
+        let fetchRequest = self.toFetchRequest()
+        fetchRequest.propertiesToFetch =  [expressionDescription]
+        fetchRequest.resultType = NSFetchRequestResultType.DictionaryResultType
+        
+        var error: NSError? = nil
+        let results = self.context.executeFetchRequest(fetchRequest, error: &error)
+
+        return (results?.first as? NSDictionary)?.valueForKey(expressionDescription.name) as? U
+    }
+
+}
+
+
+
 // MARK: - asynchronous fetch
 
 extension Table {
@@ -250,7 +296,7 @@ extension Table {
     
 }
 
-// MARK: - Helper Extensions
+// MARK: - iOS helper extensions
 
 #if os(iOS)
     
@@ -263,6 +309,8 @@ extension Table {
 }
     
 #endif
+
+// MARK: - OS X helper extensions
 
 #if os(OSX)
     
