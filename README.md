@@ -1,27 +1,19 @@
 ![AlecrimCoreData](AlecrimCoreData.png?raw=true)
 
-AlecrimCoreData is a framework to access CoreData objects more easily in Swift.
-
-## Features
-
-- Simpler classes and methods to access and save CoreData managed objects
-- Main and background contexts support
-- SQLite store type support with automatic creation of store file
-- InMemory store type support
-- iOS: FetchedResultsController class and UITableView helper methods
+AlecrimCoreData is a framework to easily access CoreData objects in Swift.
 
 ## Minimum Requirements
 
-- Xcode 6.1.1
+- Xcode 6.2
 - iOS 8.1.3 / OS X 10.10.2
 
 ## Installation
 
-You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as a dependency for your application target.
+You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as an embedded binary in your application target.
 
 ## Getting Started
 
-### Data Context (*)
+### Data Context
 
 You can create a inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
 
@@ -37,8 +29,6 @@ final class DataContext: AlecrimCoreData.Context {
 ```
 
 It's important that properties (or methods) always return a _new_ instance of a `AlecrimCoreData.Table` class.
-
-(*) "Data Context" is not the same as the CoreData Managed Object Context.
 
 ### Entities
 
@@ -266,7 +256,8 @@ let department = dataContext.departments.filterBy(attribute: "identifier", value
 // the closure below will run in a background context queue
 performInBackground(dataContext) { backgroundDataContext in
     if let person = backgroundDataContext.people.filterBy(attribute: "identifier", value: "321").first() {
-        person.department = department.inContext(backgroundDataContext)! // must be in backgroundDataContextContext
+        // must be in backgroundDataContext
+        person.department = department.inContext(backgroundDataContext)!
         person.otherData = "Other Data"
     }
 
