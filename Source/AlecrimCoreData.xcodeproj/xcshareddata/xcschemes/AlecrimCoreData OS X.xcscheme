@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1484415E1AD063B100057577"
-               BuildableName = "AlecrimCoreData OS X.framework"
+               BuildableName = "AlecrimCoreData.framework"
                BlueprintName = "AlecrimCoreData OS X"
                ReferencedContainer = "container:AlecrimCoreData.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1484415E1AD063B100057577"
-            BuildableName = "AlecrimCoreData OS X.framework"
+            BuildableName = "AlecrimCoreData.framework"
             BlueprintName = "AlecrimCoreData OS X"
             ReferencedContainer = "container:AlecrimCoreData.xcodeproj">
          </BuildableReference>
@@ -61,7 +61,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1484415E1AD063B100057577"
-            BuildableName = "AlecrimCoreData OS X.framework"
+            BuildableName = "AlecrimCoreData.framework"
             BlueprintName = "AlecrimCoreData OS X"
             ReferencedContainer = "container:AlecrimCoreData.xcodeproj">
          </BuildableReference>
