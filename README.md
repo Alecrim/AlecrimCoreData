@@ -1,7 +1,15 @@
 ![AlecrimCoreData][image-1]
 
-[![Carthage compatible][image-2]][1]
+[![Language: Swift](https://img.shields.io/badge/lang-Swift-yellow.svg?style=flat)](https://developer.apple.com/swift/)
+[![Platform](https://img.shields.io/cocoapods/p/AlecrimCoreData.svg)]
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://opensource.org/licenses/MIT)
+[![CocoaPods](https://img.shields.io/cocoapods/v/AlecrimCoreData.svg?style=flat)](http://cocoapods.org)
+[![Carthage](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)][1]
+[![Issues](https://img.shields.io/github/issues/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/issues?state=open)
+[![Forks](https://img.shields.io/github/forks/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/network)
+[![Stars](https://img.shields.io/github/stars/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/stargazers)
 
+// 
 AlecrimCoreData is a framework to easily access CoreData objects in Swift.
 
 ## Minimum Requirements
@@ -330,4 +338,4 @@ AlecrimCoreData is released under an MIT license. See LICENSE for more informati
 [5]:	https://github.com/vmartinelli
 
 [image-1]:	AlecrimCoreData.png?raw=true
-[image-2]:	https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat
+
