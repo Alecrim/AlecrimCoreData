@@ -1,7 +1,7 @@
 ![AlecrimCoreData][image-1]
 
 [![Language: Swift](https://img.shields.io/badge/lang-Swift-yellow.svg?style=flat)](https://developer.apple.com/swift/)
-[![Platform](https://img.shields.io/cocoapods/p/AlecrimCoreData.svg)]
+[![Platform](https://img.shields.io/cocoapods/p/AlecrimCoreData.svg)]()
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](http://opensource.org/licenses/MIT)
 [![CocoaPods](https://img.shields.io/cocoapods/v/AlecrimCoreData.svg?style=flat)](http://cocoapods.org)
 [![Carthage](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)][1]
@@ -9,7 +9,6 @@
 [![Forks](https://img.shields.io/github/forks/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/network)
 [![Stars](https://img.shields.io/github/stars/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/stargazers)
 
-// 
 AlecrimCoreData is a framework to easily access CoreData objects in Swift.
 
 ## Minimum Requirements
