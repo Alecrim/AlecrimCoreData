@@ -13,6 +13,13 @@
 		148441551AD0626000057577 /* NSManagedObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414C1AD0626000057577 /* NSManagedObjectExtensions.swift */; };
 		148441561AD0626000057577 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414D1AD0626000057577 /* Stack.swift */; };
 		148441591AD0626000057577 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148441501AD0626000057577 /* Table.swift */; };
+		149FB9E41AD0717600DBF9FF /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148441481AD0626000057577 /* Context.swift */; };
+		149FB9E51AD0717900DBF9FF /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414A1AD0626000057577 /* FetchedResultsController.swift */; };
+		149FB9E61AD0717D00DBF9FF /* FetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414B1AD0626000057577 /* FetchedResultsSectionInfo.swift */; };
+		149FB9E71AD0718000DBF9FF /* NSManagedObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414C1AD0626000057577 /* NSManagedObjectExtensions.swift */; };
+		149FB9E81AD0718300DBF9FF /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414D1AD0626000057577 /* Stack.swift */; };
+		149FB9E91AD0718700DBF9FF /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148441501AD0626000057577 /* Table.swift */; };
+		149FB9EA1AD0719000DBF9FF /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14FB834B1A2BC1AC00FCBD7C /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14FB834C1A2BC1AC00FCBD7C /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14FB834B1A2BC1AC00FCBD7C /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -102,6 +109,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				149FB9EA1AD0719000DBF9FF /* AlecrimCoreData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,6 +217,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				149FB9E91AD0718700DBF9FF /* Table.swift in Sources */,
+				149FB9E51AD0717900DBF9FF /* FetchedResultsController.swift in Sources */,
+				149FB9E81AD0718300DBF9FF /* Stack.swift in Sources */,
+				149FB9E61AD0717D00DBF9FF /* FetchedResultsSectionInfo.swift in Sources */,
+				149FB9E41AD0717600DBF9FF /* Context.swift in Sources */,
+				149FB9E71AD0718000DBF9FF /* NSManagedObjectExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,6 +416,7 @@
 				148441741AD063B100057577 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		14FB83401A2BC1AC00FCBD7C /* Build configuration list for PBXProject "AlecrimCoreData" */ = {
 			isa = XCConfigurationList;
