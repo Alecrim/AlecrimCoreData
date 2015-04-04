@@ -9,41 +9,63 @@
 /* Begin PBXBuildFile section */
 		14403DC41A2CBA1E0021935A /* DataContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14403DC21A2CBA1E0021935A /* DataContext.swift */; };
 		14403DC51A2CBA1E0021935A /* EventEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14403DC31A2CBA1E0021935A /* EventEntity.swift */; };
+		14C14C171AD06F7D00F91330 /* AlecrimCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14C14C111AD06F4400F91330 /* AlecrimCoreData.framework */; };
+		14C14C181AD06F7D00F91330 /* AlecrimCoreData.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 14C14C111AD06F4400F91330 /* AlecrimCoreData.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		14CF9DCF1A2C932200B64A45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9DCE1A2C932200B64A45 /* AppDelegate.swift */; };
 		14CF9DD11A2C932200B64A45 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9DD01A2C932200B64A45 /* ViewController.swift */; };
 		14CF9DD41A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9DD21A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodeld */; };
 		14CF9DD61A2C932300B64A45 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14CF9DD51A2C932300B64A45 /* Images.xcassets */; };
-		14D7BB9F1A2C97F50045897C /* AlecrimCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14D7BB9E1A2C97E60045897C /* AlecrimCoreData.framework */; };
 		14F1D3251A2D3401002437C0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 14F1D3231A2D3401002437C0 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		14D7BB9D1A2C97E60045897C /* PBXContainerItemProxy */ = {
+		14C14C0E1AD06F4400F91330 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */;
+			containerPortal = 14C14C091AD06F4400F91330 /* AlecrimCoreData.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 14CF9DF81A2C941000B64A45;
-			remoteInfo = AlecrimCoreData;
+			remoteGlobalIDString = 14FB83461A2BC1AC00FCBD7C;
+			remoteInfo = "AlecrimCoreData iOS";
 		};
-		14D7BBA01A2C98030045897C /* PBXContainerItemProxy */ = {
+		14C14C101AD06F4400F91330 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */;
+			containerPortal = 14C14C091AD06F4400F91330 /* AlecrimCoreData.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1484415F1AD063B100057577;
+			remoteInfo = "AlecrimCoreData OS X";
+		};
+		14C14C191AD06F7D00F91330 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 14C14C091AD06F4400F91330 /* AlecrimCoreData.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 14CF9DF71A2C941000B64A45;
-			remoteInfo = AlecrimCoreData;
+			remoteGlobalIDString = 1484415E1AD063B100057577;
+			remoteInfo = "AlecrimCoreData OS X";
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		14C14C1B1AD06F7D00F91330 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				14C14C181AD06F7D00F91330 /* AlecrimCoreData.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		14403DC21A2CBA1E0021935A /* DataContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataContext.swift; sourceTree = "<group>"; };
 		14403DC31A2CBA1E0021935A /* EventEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventEntity.swift; sourceTree = "<group>"; };
+		14C14C091AD06F4400F91330 /* AlecrimCoreData.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AlecrimCoreData.xcodeproj; path = ../../Source/AlecrimCoreData.xcodeproj; sourceTree = "<group>"; };
 		14CF9DC91A2C932200B64A45 /* AlecrimCoreDataExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlecrimCoreDataExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14CF9DCD1A2C932200B64A45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		14CF9DCE1A2C932200B64A45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		14CF9DD01A2C932200B64A45 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		14CF9DD31A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = AlecrimCoreDataExample.xcdatamodel; sourceTree = "<group>"; };
 		14CF9DD51A2C932300B64A45 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AlecrimCoreData.xcodeproj; path = "../../Source/OS X/AlecrimCoreData.xcodeproj"; sourceTree = "<group>"; };
 		14F1D3241A2D3401002437C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -52,13 +74,22 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14D7BB9F1A2C97F50045897C /* AlecrimCoreData.framework in Frameworks */,
+				14C14C171AD06F7D00F91330 /* AlecrimCoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		14C14C0A1AD06F4400F91330 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				14C14C0F1AD06F4400F91330 /* AlecrimCoreData.framework */,
+				14C14C111AD06F4400F91330 /* AlecrimCoreData.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		14CF9DC01A2C932200B64A45 = {
 			isa = PBXGroup;
 			children = (
@@ -102,17 +133,9 @@
 		14D7BB981A2C97C80045897C /* Dependencies */ = {
 			isa = PBXGroup;
 			children = (
-				14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */,
+				14C14C091AD06F4400F91330 /* AlecrimCoreData.xcodeproj */,
 			);
 			name = Dependencies;
-			sourceTree = "<group>";
-		};
-		14D7BB9A1A2C97E60045897C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				14D7BB9E1A2C97E60045897C /* AlecrimCoreData.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,11 +148,12 @@
 				14CF9DC51A2C932200B64A45 /* Sources */,
 				14CF9DC61A2C932200B64A45 /* Frameworks */,
 				14CF9DC71A2C932200B64A45 /* Resources */,
+				14C14C1B1AD06F7D00F91330 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				14D7BBA11A2C98030045897C /* PBXTargetDependency */,
+				14C14C1A1AD06F7D00F91330 /* PBXTargetDependency */,
 			);
 			name = AlecrimCoreDataExample;
 			productName = AlecrimCoreDataExample;
@@ -163,8 +187,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 14D7BB9A1A2C97E60045897C /* Products */;
-					ProjectRef = 14D7BB991A2C97E60045897C /* AlecrimCoreData.xcodeproj */;
+					ProductGroup = 14C14C0A1AD06F4400F91330 /* Products */;
+					ProjectRef = 14C14C091AD06F4400F91330 /* AlecrimCoreData.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -175,11 +199,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		14D7BB9E1A2C97E60045897C /* AlecrimCoreData.framework */ = {
+		14C14C0F1AD06F4400F91330 /* AlecrimCoreData.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = AlecrimCoreData.framework;
-			remoteRef = 14D7BB9D1A2C97E60045897C /* PBXContainerItemProxy */;
+			remoteRef = 14C14C0E1AD06F4400F91330 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		14C14C111AD06F4400F91330 /* AlecrimCoreData.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = AlecrimCoreData.framework;
+			remoteRef = 14C14C101AD06F4400F91330 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -212,10 +243,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		14D7BBA11A2C98030045897C /* PBXTargetDependency */ = {
+		14C14C1A1AD06F7D00F91330 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = AlecrimCoreData;
-			targetProxy = 14D7BBA01A2C98030045897C /* PBXContainerItemProxy */;
+			name = "AlecrimCoreData OS X";
+			targetProxy = 14C14C191AD06F7D00F91330 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

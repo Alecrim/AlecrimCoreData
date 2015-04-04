@@ -6,7 +6,13 @@
 //  Copyright (c) 2014 Alecrim. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <TargetConditionals.h>
+
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+    #import <UIKit/UIKit.h>
+#elif TARGET_OS_MAC
+    #import <Cocoa/Cocoa.h>
+#endif
 
 //! Project version number for AlecrimCoreData.
 FOUNDATION_EXPORT double AlecrimCoreDataVersionNumber;

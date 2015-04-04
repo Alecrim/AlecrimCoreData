@@ -7,32 +7,43 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		144827331A2BEFA000DA53F5 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144827321A2BEFA000DA53F5 /* FetchedResultsController.swift */; };
-		144827351A2BF09F00DA53F5 /* FetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144827341A2BF09F00DA53F5 /* FetchedResultsSectionInfo.swift */; };
-		144827371A2BF1B300DA53F5 /* Table+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144827361A2BF1B300DA53F5 /* Table+Extensions.swift */; };
-		144827391A2BF1C700DA53F5 /* FetchedResultsController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144827381A2BF1C700DA53F5 /* FetchedResultsController+Extensions.swift */; };
+		148441511AD0626000057577 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148441481AD0626000057577 /* Context.swift */; };
+		148441531AD0626000057577 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414A1AD0626000057577 /* FetchedResultsController.swift */; };
+		148441541AD0626000057577 /* FetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414B1AD0626000057577 /* FetchedResultsSectionInfo.swift */; };
+		148441551AD0626000057577 /* NSManagedObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414C1AD0626000057577 /* NSManagedObjectExtensions.swift */; };
+		148441561AD0626000057577 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414D1AD0626000057577 /* Stack.swift */; };
+		148441591AD0626000057577 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148441501AD0626000057577 /* Table.swift */; };
+		149FB9E41AD0717600DBF9FF /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148441481AD0626000057577 /* Context.swift */; };
+		149FB9E51AD0717900DBF9FF /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414A1AD0626000057577 /* FetchedResultsController.swift */; };
+		149FB9E61AD0717D00DBF9FF /* FetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414B1AD0626000057577 /* FetchedResultsSectionInfo.swift */; };
+		149FB9E71AD0718000DBF9FF /* NSManagedObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414C1AD0626000057577 /* NSManagedObjectExtensions.swift */; };
+		149FB9E81AD0718300DBF9FF /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1484414D1AD0626000057577 /* Stack.swift */; };
+		149FB9E91AD0718700DBF9FF /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148441501AD0626000057577 /* Table.swift */; };
+		149FB9EA1AD0719000DBF9FF /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14FB834B1A2BC1AC00FCBD7C /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		14FB834C1A2BC1AC00FCBD7C /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14FB834B1A2BC1AC00FCBD7C /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		14FB83641A2BC42800FCBD7C /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FB83631A2BC42800FCBD7C /* Context.swift */; };
-		14FB83661A2BC46600FCBD7C /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FB83651A2BC46600FCBD7C /* Stack.swift */; };
-		14FB836A1A2BD3EC00FCBD7C /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FB83691A2BD3EC00FCBD7C /* Table.swift */; };
-		14FB836D1A2BD64F00FCBD7C /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FB836C1A2BD64F00FCBD7C /* NSManagedObject+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		144827321A2BEFA000DA53F5 /* FetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
-		144827341A2BF09F00DA53F5 /* FetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
-		144827361A2BF1B300DA53F5 /* Table+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Table+Extensions.swift"; sourceTree = "<group>"; };
-		144827381A2BF1C700DA53F5 /* FetchedResultsController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FetchedResultsController+Extensions.swift"; sourceTree = "<group>"; };
+		148441481AD0626000057577 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
+		1484414A1AD0626000057577 /* FetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
+		1484414B1AD0626000057577 /* FetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
+		1484414C1AD0626000057577 /* NSManagedObjectExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSManagedObjectExtensions.swift; sourceTree = "<group>"; };
+		1484414D1AD0626000057577 /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
+		148441501AD0626000057577 /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
+		1484415F1AD063B100057577 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		14FB83461A2BC1AC00FCBD7C /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		14FB834A1A2BC1AC00FCBD7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		14FB834B1A2BC1AC00FCBD7C /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
-		14FB83631A2BC42800FCBD7C /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Context.swift; path = ../../../Shared/AlecrimCoreData/Classes/Context.swift; sourceTree = "<group>"; };
-		14FB83651A2BC46600FCBD7C /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Stack.swift; path = ../../../Shared/AlecrimCoreData/Classes/Stack.swift; sourceTree = "<group>"; };
-		14FB83691A2BD3EC00FCBD7C /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Table.swift; path = ../../../Shared/AlecrimCoreData/Classes/Table.swift; sourceTree = "<group>"; };
-		14FB836C1A2BD64F00FCBD7C /* NSManagedObject+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSManagedObject+Extensions.swift"; path = "../../../Shared/AlecrimCoreData/Extensions/NSManagedObject+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1484415B1AD063B100057577 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		14FB83421A2BC1AC00FCBD7C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -43,6 +54,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		148441471AD0626000057577 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				148441481AD0626000057577 /* Context.swift */,
+				1484414A1AD0626000057577 /* FetchedResultsController.swift */,
+				1484414B1AD0626000057577 /* FetchedResultsSectionInfo.swift */,
+				1484414C1AD0626000057577 /* NSManagedObjectExtensions.swift */,
+				1484414D1AD0626000057577 /* Stack.swift */,
+				148441501AD0626000057577 /* Table.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		14FB833C1A2BC1AC00FCBD7C = {
 			isa = PBXGroup;
 			children = (
@@ -55,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				14FB83461A2BC1AC00FCBD7C /* AlecrimCoreData.framework */,
+				1484415F1AD063B100057577 /* AlecrimCoreData.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -63,8 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				14FB834B1A2BC1AC00FCBD7C /* AlecrimCoreData.h */,
-				14FB83621A2BC24800FCBD7C /* Classes */,
-				14FB836B1A2BD63200FCBD7C /* Extensions */,
+				148441471AD0626000057577 /* Classes */,
 				14FB83491A2BC1AC00FCBD7C /* Supporting Files */,
 			);
 			path = AlecrimCoreData;
@@ -78,31 +102,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		14FB83621A2BC24800FCBD7C /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				14FB83631A2BC42800FCBD7C /* Context.swift */,
-				14FB83651A2BC46600FCBD7C /* Stack.swift */,
-				14FB83691A2BD3EC00FCBD7C /* Table.swift */,
-				144827321A2BEFA000DA53F5 /* FetchedResultsController.swift */,
-				144827341A2BF09F00DA53F5 /* FetchedResultsSectionInfo.swift */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
-		14FB836B1A2BD63200FCBD7C /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				14FB836C1A2BD64F00FCBD7C /* NSManagedObject+Extensions.swift */,
-				144827381A2BF1C700DA53F5 /* FetchedResultsController+Extensions.swift */,
-				144827361A2BF1B300DA53F5 /* Table+Extensions.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		1484415C1AD063B100057577 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				149FB9EA1AD0719000DBF9FF /* AlecrimCoreData.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		14FB83431A2BC1AC00FCBD7C /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -114,9 +124,27 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		14FB83451A2BC1AC00FCBD7C /* AlecrimCoreData */ = {
+		1484415E1AD063B100057577 /* AlecrimCoreData OS X */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 14FB835C1A2BC1AC00FCBD7C /* Build configuration list for PBXNativeTarget "AlecrimCoreData" */;
+			buildConfigurationList = 148441721AD063B100057577 /* Build configuration list for PBXNativeTarget "AlecrimCoreData OS X" */;
+			buildPhases = (
+				1484415A1AD063B100057577 /* Sources */,
+				1484415B1AD063B100057577 /* Frameworks */,
+				1484415C1AD063B100057577 /* Headers */,
+				1484415D1AD063B100057577 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "AlecrimCoreData OS X";
+			productName = AlecrimCoreData;
+			productReference = 1484415F1AD063B100057577 /* AlecrimCoreData.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		14FB83451A2BC1AC00FCBD7C /* AlecrimCoreData iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 14FB835C1A2BC1AC00FCBD7C /* Build configuration list for PBXNativeTarget "AlecrimCoreData iOS" */;
 			buildPhases = (
 				14FB83411A2BC1AC00FCBD7C /* Sources */,
 				14FB83421A2BC1AC00FCBD7C /* Frameworks */,
@@ -127,7 +155,7 @@
 			);
 			dependencies = (
 			);
-			name = AlecrimCoreData;
+			name = "AlecrimCoreData iOS";
 			productName = AlecrimCoreData;
 			productReference = 14FB83461A2BC1AC00FCBD7C /* AlecrimCoreData.framework */;
 			productType = "com.apple.product-type.framework";
@@ -141,6 +169,9 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = Alecrim;
 				TargetAttributes = {
+					1484415E1AD063B100057577 = {
+						CreatedOnToolsVersion = 6.2;
+					};
 					14FB83451A2BC1AC00FCBD7C = {
 						CreatedOnToolsVersion = 6.1;
 					};
@@ -158,12 +189,20 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				14FB83451A2BC1AC00FCBD7C /* AlecrimCoreData */,
+				14FB83451A2BC1AC00FCBD7C /* AlecrimCoreData iOS */,
+				1484415E1AD063B100057577 /* AlecrimCoreData OS X */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1484415D1AD063B100057577 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		14FB83441A2BC1AC00FCBD7C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -174,24 +213,79 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1484415A1AD063B100057577 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				149FB9E91AD0718700DBF9FF /* Table.swift in Sources */,
+				149FB9E51AD0717900DBF9FF /* FetchedResultsController.swift in Sources */,
+				149FB9E81AD0718300DBF9FF /* Stack.swift in Sources */,
+				149FB9E61AD0717D00DBF9FF /* FetchedResultsSectionInfo.swift in Sources */,
+				149FB9E41AD0717600DBF9FF /* Context.swift in Sources */,
+				149FB9E71AD0718000DBF9FF /* NSManagedObjectExtensions.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		14FB83411A2BC1AC00FCBD7C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14FB836A1A2BD3EC00FCBD7C /* Table.swift in Sources */,
-				14FB83661A2BC46600FCBD7C /* Stack.swift in Sources */,
-				14FB836D1A2BD64F00FCBD7C /* NSManagedObject+Extensions.swift in Sources */,
-				144827351A2BF09F00DA53F5 /* FetchedResultsSectionInfo.swift in Sources */,
-				144827331A2BEFA000DA53F5 /* FetchedResultsController.swift in Sources */,
-				14FB83641A2BC42800FCBD7C /* Context.swift in Sources */,
-				144827391A2BF1C700DA53F5 /* FetchedResultsController+Extensions.swift in Sources */,
-				144827371A2BF1B300DA53F5 /* Table+Extensions.swift in Sources */,
+				148441541AD0626000057577 /* FetchedResultsSectionInfo.swift in Sources */,
+				148441591AD0626000057577 /* Table.swift in Sources */,
+				148441551AD0626000057577 /* NSManagedObjectExtensions.swift in Sources */,
+				148441531AD0626000057577 /* FetchedResultsController.swift in Sources */,
+				148441561AD0626000057577 /* Stack.swift in Sources */,
+				148441511AD0626000057577 /* Context.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		148441731AD063B100057577 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = AlecrimCoreData/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = AlecrimCoreData;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		148441741AD063B100057577 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
+				INFOPLIST_FILE = AlecrimCoreData/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = AlecrimCoreData;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		14FB835A1A2BC1AC00FCBD7C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -231,6 +325,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -270,6 +365,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -288,7 +384,7 @@
 				INFOPLIST_FILE = AlecrimCoreData/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = AlecrimCoreData;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -305,7 +401,7 @@
 				INFOPLIST_FILE = AlecrimCoreData/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = AlecrimCoreData;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -313,6 +409,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		148441721AD063B100057577 /* Build configuration list for PBXNativeTarget "AlecrimCoreData OS X" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				148441731AD063B100057577 /* Debug */,
+				148441741AD063B100057577 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		14FB83401A2BC1AC00FCBD7C /* Build configuration list for PBXProject "AlecrimCoreData" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -322,7 +427,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		14FB835C1A2BC1AC00FCBD7C /* Build configuration list for PBXNativeTarget "AlecrimCoreData" */ = {
+		14FB835C1A2BC1AC00FCBD7C /* Build configuration list for PBXNativeTarget "AlecrimCoreData iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				14FB835D1A2BC1AC00FCBD7C /* Debug */,
