@@ -5,9 +5,54 @@ AlecrimCoreData is a framework to easily access CoreData objects in Swift.
 ## Minimum Requirements
 
 - Xcode 6.2
-- iOS 8.2 / OS X 10.10.2
+- iOS 8.2 / OS X 10.10
 
 ## Installation
+
+### CocoaPods
+
+[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects.
+
+CocoaPods 0.36 adds supports for Swift and embedded frameworks. You can install it with the following command:
+
+```bash
+$ gem install cocoapods
+```
+
+To integrate AlecrimCoreData into your Xcode project using CocoaPods, specify it in your `Podfile`:
+
+```ruby
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.2'
+use_frameworks!
+
+pod 'AlecrimCoreData', '~> 2.1'
+```
+
+Then, run the following command:
+
+```bash
+$ pod install
+```
+
+### Carthage
+
+Carthage is a decentralized dependency manager that automates the process of adding frameworks to your Cocoa application.
+
+You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
+
+```bash
+$ brew update
+$ brew install carthage
+```
+
+To integrate AlecrimCoreData into your Xcode project using Carthage, specify it in your `Cartfile`:
+
+```ogdl
+github "Alecrim/AlecrimCoreData" == 2.1
+```
+
+### Manually
 
 You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as an embedded binary in your application target.
 
