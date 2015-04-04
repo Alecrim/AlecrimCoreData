@@ -1,5 +1,5 @@
 //
-//  NSManagedObject+Extensions.swift
+//  NSManagedObjectExtensions.swift
 //  AlecrimCoreData
 //
 //  Created by Vanderlei Martinelli on 2014-06-24.

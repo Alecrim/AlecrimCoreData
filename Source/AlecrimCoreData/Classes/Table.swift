@@ -272,7 +272,7 @@ extension Table {
     
 }
 
-// SWIFT_BUG: Error -> Linker error if this extensions are outside this source file. Workaround -> Put the extensions here.
+// MARK: - iOS helper extensions
 
 #if os(iOS)
 
@@ -285,6 +285,8 @@ extension Table {
 }
     
 #endif
+
+// MARK: - OS X helper extensions
 
 #if os(OSX)
 
