@@ -72,12 +72,19 @@ public final class Attribute<T> {
 // MARK: - Equatable protocol
 
 extension Attribute: Equatable {
-    // Swift language development team:
-    // I still think the operator func implementation should be in here and not out there.
+
 }
 
 public func ==<T>(left: Attribute<T>, right: Attribute<T>) -> Bool {
     return left.name == right.name
+}
+
+// MARK: - Hashable protocol
+
+extension Attribute: Hashable {
+    
+    public var hashValue: Int { return self.name.hashValue }
+    
 }
 
 // MARK: - Attribute operators

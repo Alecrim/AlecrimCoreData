@@ -283,17 +283,33 @@ extension Table {
 // MARK: - batch updates
 
 extension Table {
-    
-    public func batchUpdate(propertiesToUpdateClosure: (T.Type) -> [NSObject : AnyObject], completionClosure: (Int, NSError?) -> Void) {
+
+    public func batchUpdate(propertiesToUpdateClosure: () -> [NSString : AnyObject], completionClosure: (Int, NSError?) -> Void) {
+        let propertiesToUpdate = propertiesToUpdateClosure()
         let batchUpdatePredicate = self.predicate ?? NSPredicate(value: true)
         
-        self.context.executeBatchUpdateRequestWithEntityDescription(self.entityDescription, propertiesToUpdate: propertiesToUpdateClosure(T.self), predicate: batchUpdatePredicate) { updatedObjectsCount, error in
+        self.context.executeBatchUpdateRequestWithEntityDescription(self.entityDescription, propertiesToUpdate: propertiesToUpdate, predicate: batchUpdatePredicate) { updatedObjectsCount, error in
             dispatch_async(dispatch_get_main_queue()) {
                 completionClosure(updatedObjectsCount, error)
             }
         }
     }
-    
+
+    public func batchUpdate<U>(attributeToUpdateClosure: (T.Type) -> (Attribute<U>, U), completionClosure: (Int, NSError?) -> Void) {
+        let attributeAndValue = attributeToUpdateClosure(T.self)
+        
+        var propertiesToUpdate = [NSString : AnyObject]()
+        propertiesToUpdate[attributeAndValue.0.name as NSString] = attributeAndValue.1 as? AnyObject
+        
+        let batchUpdatePredicate = self.predicate ?? NSPredicate(value: true)
+        
+        self.context.executeBatchUpdateRequestWithEntityDescription(self.entityDescription, propertiesToUpdate: propertiesToUpdate, predicate: batchUpdatePredicate) { updatedObjectsCount, error in
+            dispatch_async(dispatch_get_main_queue()) {
+                completionClosure(updatedObjectsCount, error)
+            }
+        }
+    }
+
 }
 
 // MARK: - iOS helper extensions
