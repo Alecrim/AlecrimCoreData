@@ -16,7 +16,5 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/Alecrim/AlecrimCoreData.git", :tag => s.version }
 
   s.source_files = "Source/**/*.swift"
-  #s.ios.exclude_files = "Source/OS X/**/*.swift"
-  #s.osx.exclude_files = "Source/iOS/**/*.swift"
 
 end
