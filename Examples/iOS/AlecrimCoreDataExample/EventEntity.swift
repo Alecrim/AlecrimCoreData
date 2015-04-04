@@ -8,9 +8,16 @@
 
 import Foundation
 import CoreData
+import AlecrimCoreData
 
 class EventEntity: NSManagedObject {
 
     @NSManaged var timeStamp: NSDate
 
+}
+
+extension EventEntity {
+    
+    static let timeStamp = AlecrimCoreData.Attribute<NSDate>("timeStamp")
+    
 }

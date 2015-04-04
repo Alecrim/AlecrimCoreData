@@ -18,7 +18,7 @@ public final class FetchedResultsController<T: NSManagedObject> {
     private let fetchRequest: NSFetchRequest
     private let managedObjectContext: NSManagedObjectContext
     private let sectionNameKeyPath: String?
-    private let cacheName: String? = nil
+    private let cacheName: String?
     
     private var hasUnderlyingFetchedResultsController = false
     private var underlyingFecthedResultsControllerDelegate: FecthedResultsControllerDelegate! = nil
@@ -124,15 +124,15 @@ extension FetchedResultsController {
 
 extension FetchedResultsController {
     
-    public var entities: [T] {
-        return self.underlyingFetchedResultsController.fetchedObjects as [T]
+    public var entities: [T]! {
+        return self.underlyingFetchedResultsController.fetchedObjects as? [T]
     }
     
-    public func entityAtIndexPath(indexPath: NSIndexPath) -> T! {
-        return self.underlyingFetchedResultsController.objectAtIndexPath(indexPath) as? T
+    public func entityAtIndexPath(indexPath: NSIndexPath) -> T {
+        return self.underlyingFetchedResultsController.objectAtIndexPath(indexPath) as! T
     }
     
-    public func indexPathForEntity(entity: T) -> NSIndexPath! {
+    public func indexPathForEntity(entity: T) -> NSIndexPath? {
         return self.underlyingFetchedResultsController.indexPathForObject(entity)
     }
     
@@ -157,11 +157,11 @@ extension FetchedResultsController {
 
 extension FetchedResultsController {
     
-    public var sectionIndexTitles: [String]! {
-        return self.underlyingFetchedResultsController.sectionIndexTitles as? [String]
+    public var sectionIndexTitles: [String] {
+        return self.underlyingFetchedResultsController.sectionIndexTitles as! [String]
     }
     
-    public func sectionIndexTitleForSectionName(sectionName: String) -> String! {
+    public func sectionIndexTitleForSectionName(sectionName: String) -> String? {
         return self.underlyingFetchedResultsController.sectionIndexTitleForSectionName(sectionName)
     }
     
@@ -179,26 +179,26 @@ extension FetchedResultsController {
         super.init()
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch type {
         case .Insert:
-            self.fetchedResultsController.didInsertEntityClosure?(anObject as NSManagedObject, newIndexPath!)
+            self.fetchedResultsController.didInsertEntityClosure?(anObject as! NSManagedObject, newIndexPath!)
             
         case .Delete:
-            self.fetchedResultsController.didDeleteEntityClosure?(anObject as NSManagedObject, indexPath!)
+            self.fetchedResultsController.didDeleteEntityClosure?(anObject as! NSManagedObject, indexPath!)
             
         case .Update:
-            self.fetchedResultsController.didUpdateEntityClosure?(anObject as NSManagedObject, indexPath!)
+            self.fetchedResultsController.didUpdateEntityClosure?(anObject as! NSManagedObject, indexPath!)
             
         case .Move:
-            self.fetchedResultsController.didMoveEntityClosure?(anObject as NSManagedObject, indexPath!, newIndexPath!)
+            self.fetchedResultsController.didMoveEntityClosure?(anObject as! NSManagedObject, indexPath!, newIndexPath!)
             
         default:
             break
         }
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    @objc func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         switch type {
         case .Insert:
             self.fetchedResultsController.didInsertSectionClosure?(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
@@ -211,22 +211,22 @@ extension FetchedResultsController {
         }
     }
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    @objc func controllerWillChangeContent(controller: NSFetchedResultsController) {
         self.fetchedResultsController.willChangeContentClosure?()
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    @objc func controllerDidChangeContent(controller: NSFetchedResultsController) {
         self.fetchedResultsController.didChangeContentClosure?()
     }
     
-    func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
+    @objc func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
         return self.fetchedResultsController.sectionIndexTitleClosure?(sectionName!)
     }
 
 }
 
-// MARK: - Helper extensions
-
+// MARK: - Helper Extensions
+    
 extension FetchedResultsController {
     
     public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade) -> Self {
@@ -261,5 +261,5 @@ extension FetchedResultsController {
     }
     
 }
-
+    
 #endif

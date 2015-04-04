@@ -9,12 +9,6 @@
 import Foundation
 import CoreData
 
-// can be changed to nil or other suffix
-public var entityNameSuffix: NSString? = "Entity"
-
-// entity names cache
-private var entityNames = Dictionary<String, String>()
-
 extension NSManagedObject {
     
     public func inContext(context: Context) -> Self? {
@@ -55,7 +49,7 @@ extension NSManagedObject {
     internal class var entityName: String {
         let className = NSStringFromClass(self)
         
-        if let name = entityNames[className] {
+        if let name = Config.cachedEntityNames[className] {
             return name
         }
         else {
@@ -65,15 +59,22 @@ extension NSManagedObject {
                 name = name.substringFromIndex(range.location + 1)
             }
             
-            if let suffix = entityNameSuffix {
-                if !name.isEqualToString(suffix) && name.hasSuffix(suffix) {
-                    name = name.substringToIndex(name.length - suffix.length)
+            if let prefix = Config.entityClassNamePrefix {
+                if !name.isEqualToString(prefix) && name.hasPrefix(prefix) {
+                    name = name.substringFromIndex((prefix as NSString).length)
                 }
             }
             
-            entityNames[className] = name
+            if let suffix = Config.entityClassNameSuffix {
+                if !name.isEqualToString(suffix) && name.hasSuffix(suffix) {
+                    name = name.substringToIndex(name.length - (suffix as NSString).length)
+                }
+            }
             
-            return name
+            let nameAsString = name as! String
+            Config.cachedEntityNames[className] = nameAsString
+            
+            return nameAsString
         }
     }
     

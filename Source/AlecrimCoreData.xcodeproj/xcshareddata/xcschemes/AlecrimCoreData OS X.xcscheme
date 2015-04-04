@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0620"
+   LastUpgradeVersion = "0630"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1484415E1AD063B100057577"
+               BlueprintIdentifier = "14CCE8C11AC10F4600AE47F1"
                BuildableName = "AlecrimCoreData.framework"
                BlueprintName = "AlecrimCoreData OS X"
                ReferencedContainer = "container:AlecrimCoreData.xcodeproj">
@@ -42,7 +42,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1484415E1AD063B100057577"
+            BlueprintIdentifier = "14CCE8C11AC10F4600AE47F1"
             BuildableName = "AlecrimCoreData.framework"
             BlueprintName = "AlecrimCoreData OS X"
             ReferencedContainer = "container:AlecrimCoreData.xcodeproj">
@@ -60,7 +60,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1484415E1AD063B100057577"
+            BlueprintIdentifier = "14CCE8C11AC10F4600AE47F1"
             BuildableName = "AlecrimCoreData.framework"
             BlueprintName = "AlecrimCoreData OS X"
             ReferencedContainer = "container:AlecrimCoreData.xcodeproj">
