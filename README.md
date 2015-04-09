@@ -38,10 +38,10 @@ To integrate AlecrimCoreData into your Xcode project using CocoaPods, specify it
 
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '8.3'
+platform :ios, '8.0'
 use_frameworks!
 
-pod 'AlecrimCoreData', '~> 3.0-beta.2'
+pod 'AlecrimCoreData', '~> 3.0-beta.3'
 ```
 
 Then, run the following command:
