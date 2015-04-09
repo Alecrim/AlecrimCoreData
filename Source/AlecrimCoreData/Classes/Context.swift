@@ -11,18 +11,20 @@ import CoreData
 
 public class Context {
     
-    public let managedObjectContext: NSManagedObjectContext! // The underlying managed object context
     private let stack: Stack!
+    public let managedObjectContext: NSManagedObjectContext! // The underlying managed object context
     
-    public init?(managedObjectModelName: String? = nil, stackType: StackType = StackType.SQLite) {
-        if let stack = Stack(managedObjectModelName: managedObjectModelName, stackType: stackType) {
+    public init?(stackType: StackType = StackType.SQLite, managedObjectModelName: String? = nil, storeOptions: [NSObject : AnyObject]? = nil) {
+        if let stack = Stack(stackType: stackType, managedObjectModelName: managedObjectModelName, storeOptions: storeOptions) {
             self.stack = stack
+            self.managedObjectContext = stack.mainManagedObjectContext
         }
         else {
+            self.stack = nil
+            self.managedObjectContext = nil
+
             return nil
         }
-        
-        self.managedObjectContext = self.stack.mainManagedObjectContext
     }
     
     private init(parentContext: Context) {
@@ -34,11 +36,6 @@ public class Context {
 
 extension Context {
     
-    public func save() -> Bool {
-        let (success, _) = self.save()
-        return success
-    }
-
     public func save() -> (Bool, NSError?) {
         return self.stack.saveManagedObjectContext(self.managedObjectContext)
     }
@@ -89,6 +86,76 @@ extension Context {
     }
     
     #endif
+    
+}
+
+extension Context {
+    
+    internal func executeFetchRequest(fetchRequest: NSFetchRequest, error: NSErrorPointer) -> [AnyObject]? {
+        var objects: [AnyObject]?
+        
+        self.performAndWait {
+            objects = self.managedObjectContext.executeFetchRequest(fetchRequest, error: error)
+        }
+        
+        return objects
+    }
+    
+    internal func executeAsynchronousFetchRequestWithFetchRequest(fetchRequest: NSFetchRequest, completionClosure: ([AnyObject]?, NSError?) -> Void) -> NSProgress {
+        var completionClosureCalled = false
+        
+        let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { asynchronousFetchResult in
+            if !completionClosureCalled {
+                completionClosureCalled = true
+                completionClosure(asynchronousFetchResult.finalResult, asynchronousFetchResult.operationError)
+            }
+        }
+        
+        let moc = self.managedObjectContext
+        let progress = NSProgress(totalUnitCount: 1)
+        
+        progress.becomeCurrentWithPendingUnitCount(1)
+        
+        moc.performBlock {
+            var error: NSError? = nil
+            let asynchronousFetchResult = moc.executeRequest(asynchronousFetchRequest, error: &error) as! NSAsynchronousFetchResult
+            
+            if error != nil {
+                completionClosureCalled = true
+                completionClosure(nil, error)
+            }
+            else if asynchronousFetchResult.operationError != nil {
+                completionClosureCalled = true
+                completionClosure(nil, asynchronousFetchResult.operationError)
+            }
+        }
+        
+        progress.resignCurrent()
+        
+        return progress
+    }
+    
+    internal func executeBatchUpdateRequestWithEntityDescription(entityDescription: NSEntityDescription, propertiesToUpdate: [NSObject : AnyObject], predicate: NSPredicate, completionClosure: (Int, NSError?) -> Void) {
+        performInBackground(self) { backgroundContext in
+            let batchUpdateRequest = NSBatchUpdateRequest(entity: entityDescription)
+            batchUpdateRequest.propertiesToUpdate = propertiesToUpdate
+            batchUpdateRequest.predicate = predicate
+            batchUpdateRequest.resultType = .UpdatedObjectsCountResultType
+            
+            let moc = backgroundContext.managedObjectContext
+            moc.performBlock {
+                var error: NSError? = nil
+                let batchUpdateResult = moc.executeRequest(batchUpdateRequest, error: &error) as! NSBatchUpdateResult
+                
+                if error != nil {
+                    completionClosure(0, error)
+                }
+                else {
+                    completionClosure(batchUpdateResult.result as! Int, nil)
+                }
+            }
+        }
+    }
     
 }
 
