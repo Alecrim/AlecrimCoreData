@@ -35,7 +35,7 @@
 /* Begin PBXFileReference section */
 		14403DC21A2CBA1E0021935A /* DataContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataContext.swift; sourceTree = "<group>"; };
 		14403DC31A2CBA1E0021935A /* EventEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventEntity.swift; sourceTree = "<group>"; };
-		14ACF59D1AC87C5E0010130B /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AlecrimCoreData.framework; path = "AlecrimCoreData.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		14ACF59D1AC87C5E0010130B /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		14CF9DC91A2C932200B64A45 /* AlecrimCoreDataExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlecrimCoreDataExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14CF9DCD1A2C932200B64A45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		14CF9DCE1A2C932200B64A45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
