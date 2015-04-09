@@ -4,7 +4,6 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/develop/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/v/AlecrimCoreData.svg?style=flat)](http://cocoapods.org)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)][1]
-[![Issues](https://img.shields.io/github/issues/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/issues?state=open)
 [![Forks](https://img.shields.io/github/forks/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/network)
 [![Stars](https://img.shields.io/github/stars/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/stargazers)
 
@@ -13,11 +12,11 @@ AlecrimCoreData is a framework to easily access CoreData objects in Swift.
 ## Minimum Requirements
 
 - Xcode 6.3
-- iOS 8.3 / OS X 10.10
+- iOS 8.0 / OS X 10.10
 
 ## Version History
 
-- 3.0 - Swift framework; WIP; added attributes support, a code generation utility and other improvements
+- 3.0 - Swift framework; WIP; added attributes support and other improvements
 - 2.1 - Swift framework; added CocoaPods and Carthage support
 - 2.0 - Swift framework; first public release as open source
 - 1.1 - Objective-C framework; private Alecrim team use
@@ -42,7 +41,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.3'
 use_frameworks!
 
-pod 'AlecrimCoreData', '~> 3.0-beta.1'
+pod 'AlecrimCoreData', '~> 3.0-beta.2'
 ```
 
 Then, run the following command:
@@ -65,7 +64,7 @@ $ brew install carthage
 To integrate AlecrimCoreData into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "Alecrim/AlecrimCoreData" == 3.0-beta.1
+github "Alecrim/AlecrimCoreData" >= 2.0
 ```
 
 ### Manually
