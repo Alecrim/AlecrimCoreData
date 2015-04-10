@@ -142,13 +142,13 @@ public func ~=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
 }
 
 public func <<<T>(left: Attribute<T>, right: [T]) -> NSComparisonPredicate {
-    let value = map(right) { $0 as! NSObject }
+    let value = map(right) { $0 as! AnyObject } as NSArray
     
     return left.expression << NSExpression(forConstantValue: value)
 }
 
 public func <<<T>(left: Attribute<T>, right: Range<T>) -> NSComparisonPredicate {
-    let value = [right.startIndex as! NSObject, right.endIndex as! NSObject] as NSArray
+    let value = [right.startIndex as! AnyObject, right.endIndex as! AnyObject] as NSArray
     let rightExpression = NSExpression(forConstantValue: value)
     
     return NSComparisonPredicate(leftExpression: left.expression, rightExpression: rightExpression, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.BetweenPredicateOperatorType, options: NSComparisonPredicateOptions(0))
