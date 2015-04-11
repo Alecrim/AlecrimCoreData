@@ -48,23 +48,142 @@ public final class Attribute<T> {
     
     private func expressionForValue(value: T) -> NSExpression {
         // TODO: Find a cleaner implementation
-        if let value = value as? NSObject {
-            return NSExpression(forConstantValue: value as NSObject)
-        }
+        let mirror = reflect(value)
         
-        if sizeof(value.dynamicType) == sizeof(uintptr_t) {
-            let value = unsafeBitCast(value, Optional<NSObject>.self)
-            if let value = value {
-                return NSExpression(forConstantValue: value)
+        if mirror.disposition == .Optional {
+            let dt = value.dynamicType
+
+            // here we have to test the optional object type, one by one
+            if dt is NSObject?.Type {
+                let o = unsafeBitCast(value, Optional<NSObject>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: v)
+                }
+            }
+            else if dt is NSString?.Type {
+                let o = unsafeBitCast(value, Optional<NSString>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: v)
+                }
+            }
+            else if dt is NSDate?.Type {
+                let o = unsafeBitCast(value, Optional<NSDate>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: v)
+                }
+            }
+            else if dt is NSDecimalNumber?.Type {
+                let o = unsafeBitCast(value, Optional<NSDecimalNumber>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: v)
+                }
+            }
+            else if dt is NSNumber?.Type {
+                let o = unsafeBitCast(value, Optional<NSNumber>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: v)
+                }
+            }
+            else if dt is NSData?.Type {
+                let o = unsafeBitCast(value, Optional<NSData>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: v)
+                }
+            }
+
+            //
+            if dt is String?.Type {
+                let o = unsafeBitCast(value, Optional<String>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: v as NSString)
+                }
+            }
+            else if dt is Int?.Type {
+                let o = unsafeBitCast(value, Optional<Int>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: NSNumber(integer: v))
+                }
+            }
+            else if dt is Int64?.Type {
+                let o = unsafeBitCast(value, Optional<Int64>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: NSNumber(longLong: v))
+                }
+            }
+            else if dt is Int32?.Type {
+                let o = unsafeBitCast(value, Optional<Int32>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: NSNumber(int: v))
+                }
+            }
+            else if dt is Int16?.Type {
+                let o = unsafeBitCast(value, Optional<Int16>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: NSNumber(short: v))
+                }
+            }
+            else if dt is Double?.Type {
+                let o = unsafeBitCast(value, Optional<Double>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: NSNumber(double: v))
+                }
+            }
+            else if dt is Float?.Type {
+                let o = unsafeBitCast(value, Optional<Float>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: NSNumber(float: v))
+                }
+            }
+            else if dt is Bool?.Type {
+                let o = unsafeBitCast(value, Optional<Bool>.self)
+                if let v = o.0 {
+                    return NSExpression(forConstantValue: NSNumber(bool: v))
+                }
+            }
+        }
+        else {
+            //
+            if let v = value as? NSObject {
+                return NSExpression(forConstantValue: v)
+            }
+            
+            //
+            if let v = value as? String {
+                return NSExpression(forConstantValue: v as NSString)
+            }
+            else if let v = value as? Int {
+                return NSExpression(forConstantValue: NSNumber(integer: v))
+            }
+            else if let v = value as? Int64 {
+                return NSExpression(forConstantValue: NSNumber(longLong: v))
+            }
+            else if let v = value as? Int32 {
+                return NSExpression(forConstantValue: NSNumber(int: v))
+            }
+            else if let v = value as? Int16 {
+                return NSExpression(forConstantValue: NSNumber(short: v))
+            }
+            else if let v = value as? Double {
+                return NSExpression(forConstantValue: NSNumber(double: v))
+            }
+            else if let v = value as? Float {
+                return NSExpression(forConstantValue: NSNumber(float: v))
+            }
+            else if let v = value as? Bool {
+                return NSExpression(forConstantValue: NSNumber(bool: v))
             }
         }
         
-        let value = unsafeBitCast(value, Optional<String>.self)
-        if let value = value {
-            return NSExpression(forConstantValue: value)
-        }
-        
         return NSExpression(forConstantValue: NSNull())
+    }
+    
+    private func comparisonPredicateOptions() -> NSComparisonPredicateOptions {
+        if T.self is String.Type || T.self is String?.Type || T.self is NSString.Type || T.self is NSString?.Type {
+            return Config.stringComparisonPredicateOptions
+        }
+        else {
+            return NSComparisonPredicateOptions(0)
+        }
     }
     
 }
@@ -87,78 +206,246 @@ extension Attribute: Hashable {
     
 }
 
+// MARK: - Attribute methods
+
+extension Attribute {
+
+    public func matches(regularExpressionString: String) -> NSComparisonPredicate {
+        return NSComparisonPredicate(
+            leftExpression: self.expression,
+            rightExpression: NSExpression(forConstantValue: regularExpressionString),
+            modifier: .DirectPredicateModifier,
+            type: .MatchesPredicateOperatorType,
+            options: self.comparisonPredicateOptions()
+        )
+    }
+
+    public func contains(value: T) -> NSComparisonPredicate {
+        return NSComparisonPredicate(
+            leftExpression: self.expression,
+            rightExpression: self.expressionForValue(value),
+            modifier: .DirectPredicateModifier,
+            type: .ContainsPredicateOperatorType,
+            options: self.comparisonPredicateOptions()
+        )
+    }
+    
+    public func contains(otherAttribute: Attribute<T>) -> NSComparisonPredicate {
+        return NSComparisonPredicate(
+            leftExpression: self.expression,
+            rightExpression: otherAttribute.expression,
+            modifier: .DirectPredicateModifier,
+            type: .ContainsPredicateOperatorType,
+            options: self.comparisonPredicateOptions()
+        )
+    }
+
+    public func beginsWith(value: T) -> NSComparisonPredicate {
+        return NSComparisonPredicate(
+            leftExpression: self.expression,
+            rightExpression: self.expressionForValue(value),
+            modifier: .DirectPredicateModifier,
+            type: .BeginsWithPredicateOperatorType,
+            options: self.comparisonPredicateOptions()
+        )
+    }
+
+    public func beginsWith(otherAttribute: Attribute<T>) -> NSComparisonPredicate {
+        return NSComparisonPredicate(
+            leftExpression: self.expression,
+            rightExpression: otherAttribute.expression,
+            modifier: .DirectPredicateModifier,
+            type: .BeginsWithPredicateOperatorType,
+            options: self.comparisonPredicateOptions()
+        )
+    }
+
+    public func endsWith(value: T) -> NSComparisonPredicate {
+        return NSComparisonPredicate(
+            leftExpression: self.expression,
+            rightExpression: self.expressionForValue(value),
+            modifier: .DirectPredicateModifier,
+            type: .EndsWithPredicateOperatorType,
+            options: self.comparisonPredicateOptions()
+        )
+    }
+
+    public func endsWith(otherAttribute: Attribute<T>) -> NSComparisonPredicate {
+        return NSComparisonPredicate(
+            leftExpression: self.expression,
+            rightExpression: otherAttribute.expression,
+            modifier: .DirectPredicateModifier,
+            type: .EndsWithPredicateOperatorType,
+            options: self.comparisonPredicateOptions()
+        )
+    }
+
+}
+
+
 // MARK: - Attribute operators
 
 public func ==<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
-    return left.expression == left.expressionForValue(right)
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: left.expressionForValue(right),
+        modifier: .DirectPredicateModifier,
+        type: .EqualToPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func ==<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
-    return left.expression == right.expression
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: right.expression,
+        modifier: .DirectPredicateModifier,
+        type: .EqualToPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func !=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
-    return left.expression != left.expressionForValue(right)
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: left.expressionForValue(right),
+        modifier: .DirectPredicateModifier,
+        type: .NotEqualToPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func !=<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
-    return left.expression != right.expression
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: right.expression,
+        modifier: .DirectPredicateModifier,
+        type: .NotEqualToPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func ><T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
-    return left.expression > left.expressionForValue(right)
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: left.expressionForValue(right),
+        modifier: .DirectPredicateModifier,
+        type: .GreaterThanPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func ><T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
-    return left.expression > right.expression
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: right.expression,
+        modifier: .DirectPredicateModifier,
+        type: .GreaterThanPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func >=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
-    return left.expression >= left.expressionForValue(right)
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: left.expressionForValue(right),
+        modifier: .DirectPredicateModifier,
+        type: .GreaterThanOrEqualToPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func >=<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
-    return left.expression >= right.expression
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: right.expression,
+        modifier: .DirectPredicateModifier,
+        type: .GreaterThanOrEqualToPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func <<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
-    return left.expression < left.expressionForValue(right)
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: left.expressionForValue(right),
+        modifier: .DirectPredicateModifier,
+        type: .LessThanPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func <<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
-    return left.expression < right.expression
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: right.expression,
+        modifier: .DirectPredicateModifier,
+        type: .LessThanPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func <=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
-    return left.expression <= left.expressionForValue(right)
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: left.expressionForValue(right),
+        modifier: .DirectPredicateModifier,
+        type: .LessThanOrEqualToPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func <=<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredicate {
-    return left.expression <= right.expression
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: right.expression,
+        modifier: .DirectPredicateModifier,
+        type: .LessThanOrEqualToPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func ~=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
-    return left.expression ~= left.expressionForValue(right)
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: left.expressionForValue(right),
+        modifier: .DirectPredicateModifier,
+        type: .LikePredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func <<<T>(left: Attribute<T>, right: [T]) -> NSComparisonPredicate {
-    let value = map(right) { $0 as! AnyObject } as NSArray
+    let rightValue = map(right) { $0 as! AnyObject }
+    let rightExpression = NSExpression(forConstantValue: rightValue)
     
-    return left.expression << NSExpression(forConstantValue: value)
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: rightExpression,
+        modifier: .DirectPredicateModifier,
+        type: .InPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 public func <<<T>(left: Attribute<T>, right: Range<T>) -> NSComparisonPredicate {
-    let value = [right.startIndex as! AnyObject, right.endIndex as! AnyObject] as NSArray
-    let rightExpression = NSExpression(forConstantValue: value)
+    let rightValue = [right.startIndex as! AnyObject, right.endIndex as! AnyObject] as NSArray
+    let rightExpression = NSExpression(forConstantValue: rightValue)
     
-    return NSComparisonPredicate(leftExpression: left.expression, rightExpression: rightExpression, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.BetweenPredicateOperatorType, options: NSComparisonPredicateOptions(0))
+    return NSComparisonPredicate(
+        leftExpression: left.expression,
+        rightExpression: rightExpression,
+        modifier: .DirectPredicateModifier,
+        type: .BetweenPredicateOperatorType,
+        options: left.comparisonPredicateOptions()
+    )
 }
 
 prefix public func !(left: Attribute<Bool>) -> NSComparisonPredicate {
     return left == false
 }
 
-// MARK: - NSPredicate - public extensions
+// MARK: - NSPredicate extensions
 
 public func &&(left: NSPredicate, right: NSPredicate) -> NSCompoundPredicate {
     return NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [left, right])
@@ -170,38 +457,4 @@ public func ||(left: NSPredicate, right: NSPredicate) -> NSCompoundPredicate {
 
 prefix public func !(left: NSPredicate) -> NSCompoundPredicate {
     return NSCompoundPredicate(type: NSCompoundPredicateType.NotPredicateType, subpredicates: [left])
-}
-
-// MARK: - NSExpression - private extensions
-
-private func ==(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
-    return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.EqualToPredicateOperatorType, options: NSComparisonPredicateOptions(0))
-}
-
-private func !=(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
-    return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.NotEqualToPredicateOperatorType, options: NSComparisonPredicateOptions(0))
-}
-
-private func >(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
-    return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.GreaterThanPredicateOperatorType, options: NSComparisonPredicateOptions(0))
-}
-
-private func >=(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
-    return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.GreaterThanOrEqualToPredicateOperatorType, options: NSComparisonPredicateOptions(0))
-}
-
-private func <(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
-    return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.LessThanPredicateOperatorType, options: NSComparisonPredicateOptions(0))
-}
-
-private func <=(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
-    return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.LessThanOrEqualToPredicateOperatorType, options: NSComparisonPredicateOptions(0))
-}
-
-private func ~=(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
-    return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.LikePredicateOperatorType, options: NSComparisonPredicateOptions(0))
-}
-
-private func <<(left: NSExpression, right: NSExpression) -> NSComparisonPredicate {
-    return NSComparisonPredicate(leftExpression: left, rightExpression: right, modifier: NSComparisonPredicateModifier.DirectPredicateModifier, type: NSPredicateOperatorType.InPredicateOperatorType, options: NSComparisonPredicateOptions(0))
 }
