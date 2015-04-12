@@ -27,6 +27,8 @@
 		14CCE8F81AC1110000AE47F1 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E51AC1110000AE47F1 /* Table.swift */; };
 		14CCE8F91AC1110000AE47F1 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CCE8E51AC1110000AE47F1 /* Table.swift */; };
 		14CCE9261AC114DD00AE47F1 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14CCE8A61AC10E5500AE47F1 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		14F1524A1AD9ED4E0074E284 /* AttributeQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F152491AD9ED4E0074E284 /* AttributeQuery.swift */; };
+		14F1524B1AD9ED4E0074E284 /* AttributeQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F152491AD9ED4E0074E284 /* AttributeQuery.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,7 @@
 		14CCE8E31AC1110000AE47F1 /* Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 		14CCE8E41AC1110000AE47F1 /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		14CCE8E51AC1110000AE47F1 /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
+		14F152491AD9ED4E0074E284 /* AttributeQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeQuery.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				14CCE8DE1AC1110000AE47F1 /* Attribute.swift */,
+				14F152491AD9ED4E0074E284 /* AttributeQuery.swift */,
 				144A244F1AC39E1800F808AA /* Config.swift */,
 				14CCE8DF1AC1110000AE47F1 /* Context.swift */,
 				14CCE8E01AC1110000AE47F1 /* FetchedResultsController.swift */,
@@ -230,6 +234,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				14CCE8F01AC1110000AE47F1 /* FetchedResultsSectionInfo.swift in Sources */,
+				14F1524A1AD9ED4E0074E284 /* AttributeQuery.swift in Sources */,
 				14CCE8EA1AC1110000AE47F1 /* Attribute.swift in Sources */,
 				14CCE8F61AC1110000AE47F1 /* Stack.swift in Sources */,
 				14CCE8F21AC1110000AE47F1 /* NSManagedObjectExtensions.swift in Sources */,
@@ -246,6 +251,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				14CCE8F11AC1110000AE47F1 /* FetchedResultsSectionInfo.swift in Sources */,
+				14F1524B1AD9ED4E0074E284 /* AttributeQuery.swift in Sources */,
 				14CCE8EB1AC1110000AE47F1 /* Attribute.swift in Sources */,
 				14CCE8F71AC1110000AE47F1 /* Stack.swift in Sources */,
 				14CCE8F31AC1110000AE47F1 /* NSManagedObjectExtensions.swift in Sources */,
