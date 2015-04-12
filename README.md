@@ -38,7 +38,7 @@ In the above section example, there are two entities: `Person` and `Department` 
 
 You can write managed object classes by hand or generate them using Xcode generator. Now you can also use ACDGen. ;-)
 
-ACDGen app is a CoreData entity class generator made with AlecrimCoreData in mind. It is completely optional, but since it can also generate attribute class members for use in closure parameters, the experience using AlecrimCoreData is greatly improved. You can download it for free from: http://putaddresshere.
+ACDGen app is a CoreData entity class generator made with AlecrimCoreData in mind. It is completely optional, but since it can also generate attribute class members for use in closure parameters, the experience using AlecrimCoreData is greatly improved. You can download it for free from: http://opensource.alecrim.com/alecrimcoredata/bin/ACDGen.dmg.
 
 ## Usage
 
@@ -309,6 +309,12 @@ You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodep
 
 If you want to contribute, please feel free to fork the repository and send pull requests with your fixes, suggestions and additions. :-)
 
+### Inspired and based on
+
+- [MagicalRecord](https://github.com/magicalpanda/MagicalRecord)
+- [QueryKit](https://github.com/QueryKit/QueryKit)
+
+
 ### Version History
 
 - 3.0 - Swift framework; added attributes support and many other improvements
@@ -316,12 +322,6 @@ If you want to contribute, please feel free to fork the repository and send pull
 - 2.0 - Swift framework; first public release as open source
 - 1.1 - Objective-C framework; private Alecrim team use
 - 1.0 - Objective-C framework; private Alecrim team use
-
-
-### Inspired and based on
-
-- [MagicalRecord](https://github.com/magicalpanda/MagicalRecord)
-- [QueryKit](https://github.com/QueryKit/QueryKit)
 
 ---
 
