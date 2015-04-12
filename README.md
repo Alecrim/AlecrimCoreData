@@ -1,81 +1,19 @@
-![AlecrimCoreData][image-1]
+![AlecrimCoreData](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/master/AlecrimCoreData.png)
 
 [![Language: Swift](https://img.shields.io/badge/lang-Swift-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/develop/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/v/AlecrimCoreData.svg?style=flat)](http://cocoapods.org)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)][1]
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Forks](https://img.shields.io/github/forks/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/network)
 [![Stars](https://img.shields.io/github/stars/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/stargazers)
 
 AlecrimCoreData is a framework to easily access CoreData objects in Swift.
 
-## Minimum Requirements
-
-- Xcode 6.3
-- iOS 8.0 / OS X 10.10
-
-## Version History
-
-- 3.0 - Swift framework; WIP; added attributes support and other improvements
-- 2.1 - Swift framework; added CocoaPods and Carthage support
-- 2.0 - Swift framework; first public release as open source
-- 1.1 - Objective-C framework; private Alecrim team use
-- 1.0 - Objective-C framework; private Alecrim team use
-
-## Installation
-
-### CocoaPods
-
-[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects.
-
-CocoaPods 0.36 adds supports for Swift and embedded frameworks. You can install it with the following command:
-
-```bash
-$ gem install cocoapods
-```
-
-To integrate AlecrimCoreData into your Xcode project using CocoaPods, specify it in your `Podfile`:
-
-```ruby
-source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '8.0'
-use_frameworks!
-
-pod 'AlecrimCoreData', '~> 3.0-beta.3'
-```
-
-Then, run the following command:
-
-```bash
-$ pod install
-```
-
-### Carthage
-
-Carthage is a decentralized dependency manager that automates the process of adding frameworks to your Cocoa application.
-
-You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
-
-```bash
-$ brew update
-$ brew install carthage
-```
-
-To integrate AlecrimCoreData into your Xcode project using Carthage, specify it in your `Cartfile`:
-
-```ogdl
-github "Alecrim/AlecrimCoreData" >= 2.0
-```
-
-### Manually
-
-You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as an embedded binary in your application target.
-
 ## Getting Started
 
 ### Data Context
 
-You can create a inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
+To use AlecrimCoreData you will need to create a inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
 
 ```swift
 import AlecrimCoreData
@@ -95,6 +33,10 @@ It's important that properties (or methods) always return a _new_ instance of a 
 It's assumed that all entity classes was already created and added to the project.
 
 In the above section example, there are two entities: `Person` and `Department` (with `Entity` suffix added to their class names). You can name the entity classes as you like, of course.
+
+## Code Generation Tool
+
+ACDGen is a code generator app made with AlecrimCoreData in mind to help on using attributes and closure parameters. You can download it here.
 
 ## Usage
 
@@ -302,37 +244,89 @@ performInBackground(dataContext) { backgroundDataContext in
 }
 ```
 
-## Using attributes and closure parameters
+## Using
 
-Implementation, docs and tests are in progress at this moment. A code generator utility is in internal beta and will be available soon.
+### Minimum Requirements
 
-## Branches and contribution
+- Xcode 6.3
+- iOS 8.0 / OS X 10.10
+
+### Installation
+
+#### CocoaPods
+
+[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects.
+
+CocoaPods 0.36 adds supports for Swift and embedded frameworks. You can install it with the following command:
+
+```bash
+$ gem install cocoapods
+```
+
+To integrate AlecrimCoreData into your Xcode project using CocoaPods, specify it in your `Podfile`:
+
+```ruby
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
+use_frameworks!
+
+pod 'AlecrimCoreData', '~> 3.0'
+```
+
+Then, run the following command:
+
+```bash
+$ pod install
+```
+
+#### Carthage
+
+Carthage is a decentralized dependency manager that automates the process of adding frameworks to your Cocoa application.
+
+You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
+
+```bash
+$ brew update
+$ brew install carthage
+```
+
+To integrate AlecrimCoreData into your Xcode project using Carthage, specify it in your `Cartfile`:
+
+```ogdl
+github "Alecrim/AlecrimCoreData" >= 3.0
+```
+
+#### Manually
+
+You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as an embedded binary in your application target.
+
+### Branches and contribution
 
 - master - The production branch. Clone or fork this repository for the latest copy.
-- develop - The active development branch. [Pull requests][2] should be directed to this branch.
+- develop - The active development branch. [Pull requests](https://help.github.com/articles/creating-a-pull-request) should be directed to this branch.
 
 If you want to contribute, please feel free to fork the repository and send pull requests with your fixes, suggestions and additions. :-)
 
-## Inspired and based on
+### Version History
 
-- [MagicalRecord][3]
-- [QueryKit][4]
+- 3.0 - Swift framework; added attributes support and many other improvements
+- 2.1 - Swift framework; added CocoaPods and Carthage support
+- 2.0 - Swift framework; first public release as open source
+- 1.1 - Objective-C framework; private Alecrim team use
+- 1.0 - Objective-C framework; private Alecrim team use
+
+
+### Inspired and based on
+
+- [MagicalRecord](https://github.com/magicalpanda/MagicalRecord)
+- [QueryKit](https://github.com/QueryKit/QueryKit)
 
 ---
 
 ## Contact
 
-- [Vanderlei Martinelli][5]
+- [Vanderlei Martinelli](https://github.com/vmartinelli)
 
 ## License
 
 AlecrimCoreData is released under an MIT license. See LICENSE for more information.
-
-[1]:	https://github.com/Carthage/Carthage
-[2]:	https://help.github.com/articles/creating-a-pull-request
-[3]:	https://github.com/magicalpanda/MagicalRecord
-[4]:	https://github.com/QueryKit/QueryKit
-[5]:	https://github.com/vmartinelli
-
-[image-1]:	AlecrimCoreData.png?raw=true
-
