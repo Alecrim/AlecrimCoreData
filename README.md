@@ -4,8 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/develop/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/v/AlecrimCoreData.svg?style=flat)](http://cocoapods.org)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Forks](https://img.shields.io/github/forks/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/network)
 [![Stars](https://img.shields.io/github/stars/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/stargazers)
+[![Forks](https://img.shields.io/github/forks/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/network)
 
 AlecrimCoreData is a framework to easily access CoreData objects in Swift.
 
@@ -302,14 +302,14 @@ github "Alecrim/AlecrimCoreData" >= 3.0
 
 You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as an embedded binary in your application target.
 
-### Branches and contribution
+### Branches and Contribution
 
 - master - The production branch. Clone or fork this repository for the latest copy.
 - develop - The active development branch. [Pull requests](https://help.github.com/articles/creating-a-pull-request) should be directed to this branch.
 
 If you want to contribute, please feel free to fork the repository and send pull requests with your fixes, suggestions and additions. :-)
 
-### Inspired and based on
+### Inspired By
 
 - [MagicalRecord](https://github.com/magicalpanda/MagicalRecord)
 - [QueryKit](https://github.com/QueryKit/QueryKit)
