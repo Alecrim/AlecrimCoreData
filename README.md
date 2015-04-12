@@ -38,7 +38,7 @@ In the above section example, there are two entities: `Person` and `Department` 
 
 You can write managed object classes by hand or generate them using Xcode generator. Now you can also use ACDGen. ;-)
 
-ACDGen app is a CoreData entity class generator made with AlecrimCoreData in mind. It is completely optional, but since it can also generate attribute class members for use in closure parameters, the experience using AlecrimCoreData is greatly improved. You can download it for free from: http://opensource.alecrim.com/alecrimcoredata/bin/ACDGen.dmg.
+ACDGen app is a CoreData entity class generator made with AlecrimCoreData in mind. It is completely optional, but since it can also generate attribute class members for use in closure parameters, the experience using AlecrimCoreData is greatly improved. You can download it for free from http://opensource.alecrim.com/alecrimcoredata/3/bin/ACDGen.dmg.
 
 ## Usage
 
