@@ -19,7 +19,7 @@ public final class AttributeQuery: Query {
         self.propertiesToFetch += propertiesToFetch
     }
 
-    override func clone() -> Self {
+    override internal func clone() -> Self {
         let other = unsafeBitCast(super.clone(), self.dynamicType)
         
         other.propertiesToFetch = self.propertiesToFetch
