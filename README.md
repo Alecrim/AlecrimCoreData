@@ -34,9 +34,11 @@ It's assumed that all entity classes was already created and added to the projec
 
 In the above section example, there are two entities: `Person` and `Department` (with `Entity` suffix added to their class names). You can name the entity classes as you like, of course.
 
-### Code Generation Tool
+### Optional Code Generation Tool
 
-ACDGen is a code generator app made with AlecrimCoreData in mind to help on using attributes and closure parameters. You can download it here.
+You can write managed object classes by hand or generate them using Xcode generator. But now you can also use ACDGen. ;-)
+
+ACDGen app is a CoreData entity class generator made with AlecrimCoreData in mind. Since it can also generate attributes for use in closure parameters, the experience using AlecrimCoreData is greatly improved. You can download it for free from: http://putaddresshere.
 
 ## Usage
 
