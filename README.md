@@ -21,8 +21,8 @@ import AlecrimCoreData
 let dataContext = DataContext()!
 
 class DataContext: Context {
-	var people:      Table<PersonEntity>     { return Table<PersonEntity>(context: self) }
-	var departments: Table<DepartmentEntity> { return Table<DepartmentEntity>(context: self) }
+	var people:      Table<Person>     { return Table<Person>(context: self) }
+	var departments: Table<Department> { return Table<Department>(context: self) }
 }
 ```
 
@@ -30,9 +30,7 @@ It's important that properties (or methods) always return a _new_ instance of a 
 
 ### Entities
 
-It's assumed that all entity classes was already created and added to the project.
-
-In the above section example, there are two entities: `Person` and `Department` (with `Entity` suffix added to their class names). You can name the entity classes as you like, of course.
+It's assumed that all entity classes was already created and added to the project. In the above section example, there are two entities: `Person` and `Department`.
 
 ### Optional Code Generation Tool
 
