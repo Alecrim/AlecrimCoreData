@@ -108,7 +108,7 @@ extension ContextOptions {
         }
         else {
             var name: NSString = className
-            let range = name.rangeOfString(".")
+            let range = name.rangeOfString(".", options: (.BackwardsSearch))
             if range.location != NSNotFound {
                 name = name.substringFromIndex(range.location + 1)
             }
