@@ -20,15 +20,12 @@ public final class ContextOptions {
     public let mainBundle: NSBundle = NSBundle.mainBundle()
     public var modelBundle: NSBundle = NSBundle.mainBundle()
 
-    public var managedObjectModelName: String! = nil    // defaults to main bundle name
     private(set) public var managedObjectModelURL: NSURL! = nil
     private(set) public var managedObjectModel: NSManagedObjectModel! = nil
     
     private(set) public var localStoreFileURL: NSURL! = nil
     public var localStoreRelativePath: String! = nil    // defaults to main bundle identifier
     public var localStoreFileName: String! = nil        // defaults to managed object model name + ".sqlite"
-
-    public var stackType = StackType.SQLite
 
     public var configuration: String? = nil
     
@@ -39,7 +36,15 @@ public final class ContextOptions {
     public var migratePersistentStoresAutomatically = true
     public var inferMappingModelAutomaticallyOption = true
     
-    public var storeOptions: [NSObject : AnyObject]? = nil
+    public let stackType: StackType
+    private(set) public var managedObjectModelName: String!          // defaults to main bundle name
+    private(set) public var storeOptions: [NSObject : AnyObject]!
+    
+    public init(stackType: StackType = StackType.SQLite, managedObjectModelName: String? = nil, storeOptions: [NSObject : AnyObject]? = nil) {
+        self.stackType = stackType
+        self.managedObjectModelName = managedObjectModelName
+        self.storeOptions = storeOptions
+    }
     
 }
 

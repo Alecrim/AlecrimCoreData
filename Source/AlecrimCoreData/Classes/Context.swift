@@ -15,14 +15,6 @@ public class Context {
     private let stack: Stack!
     public let managedObjectContext: NSManagedObjectContext! // The underlying managed object context
 
-    public convenience init?(stackType: StackType, managedObjectModelName: String? = nil) {
-        let contextOptions = ContextOptions()
-        contextOptions.stackType = stackType
-        contextOptions.managedObjectModelName = managedObjectModelName
-        
-        self.init(contextOptions: contextOptions)
-    }
-    
     public init?(contextOptions: ContextOptions? = nil) {
         self.contextOptions = (contextOptions == nil ? ContextOptions() : contextOptions!)
         self.contextOptions.fillEmptyOptions()
