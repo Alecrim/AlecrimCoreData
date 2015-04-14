@@ -11,11 +11,13 @@ import CoreData
 
 public final class ContextOptions {
     
-    internal static var cachedEntityNames = Dictionary<String, String>()
-    public static var fetchBatchSize = 20
+    private var cachedEntityNames = Dictionary<String, String>()
+
     public static var stringComparisonPredicateOptions = (NSComparisonPredicateOptions.CaseInsensitivePredicateOption | NSComparisonPredicateOptions.DiacriticInsensitivePredicateOption)
-    public static var entityClassNamePrefix: String? = nil
-    public static var entityClassNameSuffix: String? = nil
+    
+    public var fetchBatchSize = 20
+    public var entityClassNamePrefix: String? = nil
+    public var entityClassNameSuffix: String? = nil
 
     public let mainBundle: NSBundle = NSBundle.mainBundle()
     public var modelBundle: NSBundle = NSBundle.mainBundle()
@@ -89,6 +91,44 @@ extension ContextOptions {
                     fileManager.createDirectoryAtURL(pesistentStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
                 }
             }
+        }
+    }
+    
+}
+
+// MARK: entity class names x entity names
+
+extension ContextOptions {
+    
+    internal func entityNameFromClass(aClass: AnyClass) -> String {
+        let className = NSStringFromClass(aClass)
+        
+        if let name = self.cachedEntityNames[className] {
+            return name
+        }
+        else {
+            var name: NSString = className
+            let range = name.rangeOfString(".")
+            if range.location != NSNotFound {
+                name = name.substringFromIndex(range.location + 1)
+            }
+            
+            if let prefix = self.entityClassNamePrefix {
+                if !name.isEqualToString(prefix) && name.hasPrefix(prefix) {
+                    name = name.substringFromIndex((prefix as NSString).length)
+                }
+            }
+            
+            if let suffix = self.entityClassNameSuffix {
+                if !name.isEqualToString(suffix) && name.hasSuffix(suffix) {
+                    name = name.substringToIndex(name.length - (suffix as NSString).length)
+                }
+            }
+            
+            let nameAsString = name as! String
+            self.cachedEntityNames[className] = nameAsString
+            
+            return nameAsString
         }
     }
     

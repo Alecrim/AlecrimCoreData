@@ -14,7 +14,8 @@ public final class Table<T: NSManagedObject>: Query {
     private lazy var entityDescription: NSEntityDescription = { return NSEntityDescription.entityForName(self.entityName, inManagedObjectContext: self.context.managedObjectContext)! }()
     
     public convenience init(context: Context) {
-        self.init(context: context, entityName: T.entityName)
+        let entityName = context.contextOptions.entityNameFromClass(T.self)
+        self.init(context: context, entityName: entityName)
     }
     
     public required init(context: Context, entityName: String) {
@@ -380,7 +381,7 @@ extension Table {
         arrayController.automaticallyRearrangesObjects = true
         
         let defaultFetchRequest = arrayController.defaultFetchRequest()
-        defaultFetchRequest.fetchBatchSize = ContextOptions.fetchBatchSize
+        defaultFetchRequest.fetchBatchSize = self.context.contextOptions.fetchBatchSize
         defaultFetchRequest.fetchOffset = self.offset
         defaultFetchRequest.fetchLimit = self.limit
         
