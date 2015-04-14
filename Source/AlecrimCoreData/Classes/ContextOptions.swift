@@ -38,7 +38,7 @@ public final class ContextOptions {
     
     public let stackType: StackType
     private(set) public var managedObjectModelName: String!          // defaults to main bundle name
-    private(set) public var storeOptions: [NSObject : AnyObject]!
+    internal(set) public var storeOptions: [NSObject : AnyObject]!
     
     public init(stackType: StackType = StackType.SQLite, managedObjectModelName: String? = nil, storeOptions: [NSObject : AnyObject]? = nil) {
         self.stackType = stackType
