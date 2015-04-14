@@ -23,9 +23,9 @@ public final class ContextOptions {
     private(set) public var managedObjectModelURL: NSURL! = nil
     private(set) public var managedObjectModel: NSManagedObjectModel! = nil
     
-    private(set) public var localStoreFileURL: NSURL! = nil
-    public var localStoreRelativePath: String! = nil    // defaults to main bundle identifier
-    public var localStoreFileName: String! = nil        // defaults to managed object model name + ".sqlite"
+    private(set) public var persistentStoreURL: NSURL! = nil
+    public var pesistentStoreRelativePath: String! = nil    // defaults to main bundle identifier
+    public var pesistentStoreFileName: String! = nil        // defaults to managed object model name + ".sqlite"
 
     public var configuration: String? = nil
     
@@ -69,28 +69,24 @@ extension ContextOptions {
         
         // local store
         if let bundleIdentifier = self.mainBundle.bundleIdentifier {
-            if self.localStoreRelativePath == nil {
-                self.localStoreRelativePath = bundleIdentifier
+            if self.pesistentStoreRelativePath == nil {
+                self.pesistentStoreRelativePath = bundleIdentifier
             }
             
             let fileManager = NSFileManager.defaultManager()
             let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
             
             if let applicationSupportDirectoryURL = urls.last as? NSURL {
-                if self.localStoreFileName == nil {
-                    self.localStoreFileName = self.managedObjectModelName.stringByAppendingPathExtension("sqlite")!
+                if self.pesistentStoreFileName == nil {
+                    self.pesistentStoreFileName = self.managedObjectModelName.stringByAppendingPathExtension("sqlite")!
                 }
                 
-                let localStoreURL = applicationSupportDirectoryURL.URLByAppendingPathComponent(self.localStoreRelativePath, isDirectory: true)
-
-                self.localStoreFileURL = localStoreURL.URLByAppendingPathComponent(self.localStoreFileName, isDirectory: false)
+                let pesistentStoreDirectoryURL = applicationSupportDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreRelativePath, isDirectory: true)
+                self.persistentStoreURL = pesistentStoreDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreFileName, isDirectory: false)
                 
-                if let localStorePath = localStoreURL.path {
-                    let fileManager = NSFileManager.defaultManager()
-
-                    if !fileManager.fileExistsAtPath(localStorePath) {
-                        fileManager.createDirectoryAtURL(localStoreURL, withIntermediateDirectories: true, attributes: nil, error: nil)
-                    }
+                let fileManager = NSFileManager.defaultManager()
+                if !fileManager.fileExistsAtPath(pesistentStoreDirectoryURL.path!) {
+                    fileManager.createDirectoryAtURL(pesistentStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
                 }
             }
         }
