@@ -13,6 +13,6 @@ let dataContext = DataContext()!
 
 final class DataContext: AlecrimCoreData.Context {
 
-    var events: AlecrimCoreData.Table<EventEntity> { return AlecrimCoreData.Table<EventEntity>(context: self) }
+    var events: AlecrimCoreData.Table<Event> { return AlecrimCoreData.Table<Event>(context: self) }
     
 }

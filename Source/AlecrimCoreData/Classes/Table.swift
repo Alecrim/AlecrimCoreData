@@ -380,7 +380,7 @@ extension Table {
         arrayController.automaticallyRearrangesObjects = true
         
         let defaultFetchRequest = arrayController.defaultFetchRequest()
-        defaultFetchRequest.fetchBatchSize = Config.fetchBatchSize
+        defaultFetchRequest.fetchBatchSize = ContextOptions.fetchBatchSize
         defaultFetchRequest.fetchOffset = self.offset
         defaultFetchRequest.fetchLimit = self.limit
         

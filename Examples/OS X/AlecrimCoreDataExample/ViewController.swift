@@ -48,7 +48,7 @@ class ViewController: NSViewController {
     }
     
     func remove(sender: AnyObject) {
-        if let entity = self.arrayController.selectedObjects.first as? EventEntity {
+        if let entity = self.arrayController.selectedObjects.first as? Event {
             dataContext.events.deleteEntity(entity)
             
             if !dataContext.save().0 {

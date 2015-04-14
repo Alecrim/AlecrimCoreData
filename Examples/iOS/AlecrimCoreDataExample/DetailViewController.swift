@@ -13,7 +13,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var detailDescriptionLabel: UILabel!
 
 
-    var detailItem: EventEntity? {
+    var detailItem: Event? {
         didSet {
             // Update the view.
             self.configureView()

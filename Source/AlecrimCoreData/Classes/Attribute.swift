@@ -179,7 +179,7 @@ public final class Attribute<T> {
     
     private func comparisonPredicateOptions() -> NSComparisonPredicateOptions {
         if T.self is String.Type || T.self is String?.Type || T.self is NSString.Type || T.self is NSString?.Type {
-            return Config.stringComparisonPredicateOptions
+            return ContextOptions.stringComparisonPredicateOptions
         }
         else {
             return NSComparisonPredicateOptions(0)

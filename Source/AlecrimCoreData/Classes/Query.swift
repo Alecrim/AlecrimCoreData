@@ -28,7 +28,7 @@ public class Query {
     public func toFetchRequest() -> NSFetchRequest {
         let fetchRequest = NSFetchRequest(entityName: self.entityName)
         
-        fetchRequest.fetchBatchSize = Config.fetchBatchSize
+        fetchRequest.fetchBatchSize = ContextOptions.fetchBatchSize
         fetchRequest.fetchOffset = self.offset
         fetchRequest.fetchLimit = self.limit
         

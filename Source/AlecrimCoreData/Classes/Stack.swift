@@ -18,12 +18,11 @@ private var backgroundContexts = NSMutableArray()
 
 internal final class Stack {
   
-    private let stackType: StackType;
-    private let model: NSManagedObjectModel!
+    private let contextOptions: ContextOptions
     
     private var coordinator: NSPersistentStoreCoordinator! {
         didSet {
-            if self.coordinator != oldValue && self.stackType == .SQLite && Config.iCloudEnabled {
+            if self.coordinator != oldValue && self.contextOptions.stackType == .SQLite && self.contextOptions.ubiquityEnabled {
                 if self.coordinator != nil {
                     NSNotificationCenter.defaultCenter().addObserver(
                         self,
@@ -62,63 +61,34 @@ internal final class Stack {
 
     // MARK: - constructors
     
-    internal init?(stackType: StackType, var managedObjectModelName: String?, storeOptions: [NSObject : AnyObject]?) {
-        self.stackType = stackType
+    internal init?(contextOptions: ContextOptions) {
+        self.contextOptions = contextOptions
 
-        // if managed object model name is nil, try to get default name from main bundle
-        let mainBundle = Config.mainBundle
-        let modelBundle = Config.modelBundle
-        
-        if managedObjectModelName == nil {
-            if let infoDictionary = mainBundle.infoDictionary {
-                managedObjectModelName = infoDictionary[kCFBundleNameKey] as? String
-            }
-        }
-        
-        if managedObjectModelName == nil {
-            // Swift 1.2 things
-            self.model = nil
+        if contextOptions.managedObjectModel == nil {
             self.coordinator = nil
             self.store = nil
             self.rootManagedObjectContext = nil
             self.mainManagedObjectContext = nil
 
-            //
-            return nil
-        }
-        
-        // model
-        self.model = Stack.managedObjectModelWithName(managedObjectModelName, bundle: modelBundle)
-        
-        if self.model == nil {
-            // Swift 1.2 things
-            self.coordinator = nil
-            self.store = nil
-            self.rootManagedObjectContext = nil
-            self.mainManagedObjectContext = nil
-            
-            //
             return nil
         }
         
         // coordinator
-        self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.model)
+        self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.contextOptions.managedObjectModel)
         
         // store
-        switch self.stackType {
+        switch contextOptions.stackType {
         case .SQLite:
-            self.store = Stack.persistentStoreForSQLiteStoreTypeWithCoordinator(self.coordinator, managedObjectModelName: managedObjectModelName, mainBundle: mainBundle, storeOptions: storeOptions)
+            self.store = Stack.persistentStoreForSQLiteStoreTypeWithCoordinator(self.coordinator, contextOptions: contextOptions)
             
         case .InMemory:
-            self.store = Stack.persistentStoreForInMemoryStoreTypeWithCoordinator(self.coordinator, storeOptions: storeOptions)
+            self.store = Stack.persistentStoreForInMemoryStoreTypeWithCoordinator(self.coordinator, contextOptions: contextOptions)
         }
         
         if self.store == nil {
-            // Swift 1.2 things
             self.rootManagedObjectContext = nil
             self.mainManagedObjectContext = nil
             
-            //
             return nil
         }
         
@@ -268,75 +238,46 @@ extension Stack {
         return nil
     }
     
-    private class func persistentStoreForSQLiteStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, managedObjectModelName: String?, mainBundle: NSBundle, var storeOptions: [NSObject : AnyObject]?) -> NSPersistentStore? {
-        if let momn = managedObjectModelName {
-            if let localStoreURL = Stack.localSQLiteStoreURLForBundle(mainBundle) {
-                if let localStorePath = localStoreURL.path {
-                    let fileManager = NSFileManager.defaultManager()
-                    var error: NSError? = nil
-                    
-                    if !fileManager.fileExistsAtPath(localStorePath) {
-                        if !fileManager.createDirectoryAtURL(localStoreURL, withIntermediateDirectories: true, attributes: nil, error: &error) {
-                            println(error)
-                            return nil
-                        }
-                    }
-                }
+    private class func persistentStoreForSQLiteStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, contextOptions: ContextOptions) -> NSPersistentStore? {
+        if let localStoreFileURL = contextOptions.localStoreFileURL {
+            if contextOptions.storeOptions == nil {
+                contextOptions.storeOptions = [NSObject : AnyObject]()
                 
-                let storeFilename = momn.stringByAppendingPathExtension("sqlite")!
-                let localStoreFileURL = localStoreURL.URLByAppendingPathComponent(storeFilename, isDirectory: false)
-                
-                if storeOptions == nil {
-                    storeOptions = [NSObject : AnyObject]()
-                    if Config.iCloudEnabled {
-                        storeOptions?[NSPersistentStoreUbiquitousContentNameKey] = Config.ubiquitousContentName
-                        storeOptions?[NSPersistentStoreUbiquitousContentURLKey] = Config.ubiquitousContentURL
-                        storeOptions?[NSMigratePersistentStoresAutomaticallyOption] = true // always true, ignores Config value
-                        storeOptions?[NSInferMappingModelAutomaticallyOption] = true // always true, ignores Config value
-                    }
-                    else {
-                        storeOptions?[NSMigratePersistentStoresAutomaticallyOption] = Config.migratePersistentStoresAutomatically
-                        storeOptions?[NSInferMappingModelAutomaticallyOption] = Config.inferMappingModelAutomaticallyOption
-                    }
-                }
-                
-                var error: NSError? = nil
-                if let store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: storeOptions, error: &error) {
-                    return store
+                if contextOptions.ubiquityEnabled {
+                    contextOptions.storeOptions?[NSPersistentStoreUbiquitousContentNameKey] = contextOptions.ubiquitousContentName
+                    contextOptions.storeOptions?[NSPersistentStoreUbiquitousContentURLKey] = contextOptions.ubiquitousContentRelativePath
+                    contextOptions.storeOptions?[NSMigratePersistentStoresAutomaticallyOption] = true // always true, ignores Config value
+                    contextOptions.storeOptions?[NSInferMappingModelAutomaticallyOption] = true // always true, ignores Config value
                 }
                 else {
-                    println(error)
-                    return nil
+                    contextOptions.storeOptions?[NSMigratePersistentStoresAutomaticallyOption] = contextOptions.migratePersistentStoresAutomatically
+                    contextOptions.storeOptions?[NSInferMappingModelAutomaticallyOption] = contextOptions.inferMappingModelAutomaticallyOption
                 }
+            }
+            
+            var error: NSError? = nil
+            if let store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: contextOptions.configuration, URL: localStoreFileURL, options: contextOptions.storeOptions, error: &error) {
+                return store
+            }
+            else {
+                println(error)
+                return nil
             }
         }
         
         return nil
     }
     
-    private class func persistentStoreForInMemoryStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, storeOptions: [NSObject : AnyObject]?) -> NSPersistentStore? {
+    private class func persistentStoreForInMemoryStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, contextOptions: ContextOptions) -> NSPersistentStore? {
         var error: NSError? = nil
         
-        if let store = coordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: storeOptions, error: &error) {
+        if let store = coordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: contextOptions.configuration, URL: nil, options: contextOptions.storeOptions, error: &error) {
             return store
         }
         else {
             println(error)
             return nil
         }
-    }
-
-    private class func localSQLiteStoreURLForBundle(bundle: NSBundle) -> NSURL? {
-        if let bundleIdentifier = bundle.bundleIdentifier {
-            let fileManager = NSFileManager.defaultManager()
-            let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
-
-            if let applicationSupportDirectoryURL = urls.last as? NSURL {
-                return applicationSupportDirectoryURL.URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
-            }
-        }
-        
-        return nil
     }
 
 }

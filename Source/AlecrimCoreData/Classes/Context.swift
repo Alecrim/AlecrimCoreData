@@ -11,11 +11,23 @@ import CoreData
 
 public class Context {
     
+    internal let contextOptions: ContextOptions
     private let stack: Stack!
     public let managedObjectContext: NSManagedObjectContext! // The underlying managed object context
+
+    public convenience init?(stackType: StackType, managedObjectModelName: String? = nil) {
+        let contextOptions = ContextOptions()
+        contextOptions.stackType = stackType
+        contextOptions.managedObjectModelName = managedObjectModelName
+        
+        self.init(contextOptions: contextOptions)
+    }
     
-    public init?(stackType: StackType = StackType.SQLite, managedObjectModelName: String? = nil, storeOptions: [NSObject : AnyObject]? = nil) {
-        if let stack = Stack(stackType: stackType, managedObjectModelName: managedObjectModelName, storeOptions: storeOptions) {
+    public init?(contextOptions: ContextOptions? = nil) {
+        self.contextOptions = (contextOptions == nil ? ContextOptions() : contextOptions!)
+        self.contextOptions.fillEmptyOptions()
+        
+        if let stack = Stack(contextOptions: self.contextOptions) {
             self.stack = stack
             self.managedObjectContext = stack.mainManagedObjectContext
         }
@@ -28,6 +40,7 @@ public class Context {
     }
     
     private init(parentContext: Context) {
+        self.contextOptions = parentContext.contextOptions
         self.stack = parentContext.stack
         self.managedObjectContext = parentContext.stack.createBackgroundManagedObjectContext()
     }
