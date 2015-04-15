@@ -182,7 +182,7 @@ public final class Attribute<T> {
             return ContextOptions.stringComparisonPredicateOptions
         }
         else {
-            return NSComparisonPredicateOptions(0)
+            return NSComparisonPredicateOptions.allZeros
         }
     }
     
