@@ -270,7 +270,7 @@ class DataContext: AlecrimCoreData.Context {
 		contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
 
         // only needed if entity class names are different from entity names
-		contextOptions.entityClassNameSufix = "Entity"
+		contextOptions.entityClassNameSuffix = "Entity"
 
         // enable iCloud Core Data sync
 		contextOptions.ubiquityEnabled = true
@@ -317,7 +317,7 @@ class DataContext: AlecrimCoreData.Context {
         contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
 
         // only needed if entity class names are different from entity names
-        contextOptions.entityClassNameSufix = "Entity"
+        contextOptions.entityClassNameSuffix = "Entity"
 
         // call super
 		super.init(contextOptions: contextOptions)
