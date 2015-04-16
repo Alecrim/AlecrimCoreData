@@ -7,7 +7,7 @@
 [![Forks](https://img.shields.io/github/forks/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/network)
 [![Stars](https://img.shields.io/github/stars/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/stargazers)
 
-AlecrimCoreData is a framework to easily access CoreData objects in Swift.
+AlecrimCoreData is a framework to easily access Core Data objects in Swift.
 
 ## Getting Started
 
@@ -30,13 +30,13 @@ It's important that properties (or methods) always return a _new_ instance of a 
 
 ### Entities
 
-It's assumed that all entity classes was already created and added to the project. In the above section example, there are two entities: `Person` and `Department`.
+It's assumed that all entity classes was already created and added to the project. In the above section example there are two entities: `Person` and `Department`.
 
 ### Optional Code Generation Tool
 
-You can write managed object classes by hand or generate them using Xcode generator. Now you can also use ACDGen. ;-)
+You can write managed object classes by hand or generate them using Xcode. Now you can also use ACDGen. ;-)
 
-ACDGen app is a CoreData entity class generator made with AlecrimCoreData in mind. It is completely optional, but since it can also generate attribute class members for use in closure parameters, the experience using AlecrimCoreData is greatly improved. You can download it for free from http://opensource.alecrim.com/AlecrimCoreData/ACDGen.zip.
+ACDGen app is a Core Data entity class generator made with AlecrimCoreData in mind. It is completely optional, but since it can also generate attribute class members for use in closure parameters, the experience using AlecrimCoreData is greatly improved. You can download it for free from http://opensource.alecrim.com/AlecrimCoreData/ACDGen.zip.
 
 ## Usage
 
@@ -44,7 +44,7 @@ ACDGen app is a CoreData entity class generator made with AlecrimCoreData in min
 
 #### Basic Fetching
 
-Say you have an Entity called Person, related to a Department (as seen in various Apple CoreData documentation [and MagicalRecord documentation too]). To get all of the Person entities as an array, use the following methods:
+Say you have an Entity called Person, related to a Department (as seen in various Apple Core Data documentation). To get all of the Person entities as an array, use the following methods:
 
 ```swift
 for person in dataContext.people {
@@ -243,6 +243,148 @@ performInBackground(dataContext) { backgroundDataContext in
 	backgroundDataContext.save()
 }
 ```
+
+## Advanced Configuration
+
+You can use `Config` class for a custom configuration.
+
+### iCloud
+
+Example configuration when using iCloud Core Data sync.
+
+```swift
+import Foundation
+import AlecrimCoreData
+
+class DataContext: AlecrimCoreData.Context {
+
+	var people:      Table<PersonEntity>     { return Table<PersonEntity>(context: self) }
+	var departments: Table<DepartmentEntity> { return Table<DepartmentEntity>(context: self) }
+
+	// MARK - custom init
+
+	public init?() {
+		let contextOptions = ContextOptions(stackType: .SQLite)
+		contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
+		contextOptions.entityClassNameSufix = "Entity"
+
+		contextOptions.ubiquityEnabled = true
+		contextOptions.ubiquitousContainerIdentifier = "iCloud.com.company.MyApp"
+
+		super.init(contextOptions: contextOptions)
+	}
+
+}
+```
+
+### Ensembles
+
+Example configuration when using [Ensembles](http://www.ensembles.io).
+
+```swift
+import Foundation
+import AlecrimCoreData
+import Ensembles
+
+class DataContext: AlecrimCoreData.Context {
+
+	var people:      Table<PersonEntity>     { return Table<PersonEntity>(context: self) }
+	var departments: Table<DepartmentEntity> { return Table<DepartmentEntity>(context: self) }
+
+	// MARK: - ensembles support
+
+	var cloudFileSystem: CDEICloudFileSystem! = nil
+	var ensemble: CDEPersistentStoreEnsemble! = nil
+	var ensembleDelegate: EnsembleDelegate! = nil
+
+	var obs1: AnyObject! = nil
+	var obs2: AnyObject! = nil
+
+	// MARK - custom init
+
+	public init?() {
+		let contextOptions = ContextOptions(stackType: .SQLite)
+		contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
+		contextOptions.entityClassNameSufix = "Entity"
+
+		super.init(contextOptions: contextOptions)
+
+		//
+		self.cloudFileSystem = CDEICloudFileSystem(ubiquityContainerIdentifier: "iCloud.com.company.MyApp")
+		self.ensemble = CDEPersistentStoreEnsemble(
+			ensembleIdentifier: "EnsembleStore",
+			persistentStoreURL: contextOptions.persistentStoreURL,
+			managedObjectModelURL: contextOptions.managedObjectModelURL,
+			cloudFileSystem: self.cloudFileSystem
+		)
+
+		self.ensembleDelegate = EnsembleDelegate(managedObjectContext: self.managedObjectContext)
+		ensemble.delegate = self.ensembleDelegate
+
+
+		self.obs1 = NSNotificationCenter.defaultCenter().addObserverForName(CDEMonitoredManagedObjectContextDidSaveNotification, object: nil, queue: nil) { [unowned self] notification in
+			self.sync()
+		}
+
+		self.obs2 = NSNotificationCenter.defaultCenter().addObserverForName(CDEICloudFileSystemDidDownloadFilesNotification, object: nil, queue: nil) { [unowned self] notification in
+			self.sync()
+		}
+
+		//
+		self.sync()
+	}
+
+	deinit {
+		NSNotificationCenter.defaultCenter().removeObserver(self.obs1)
+		NSNotificationCenter.defaultCenter().removeObserver(self.obs2)
+	}
+
+	private func sync() {
+		if self.ensemble.leeched {
+			self.ensemble.mergeWithCompletion { error in
+				if let error = error {
+					println(error)
+				}
+			}
+		}
+		else {
+			self.ensemble.leechPersistentStoreWithCompletion { error in
+				if let error = error {
+					println(error)
+				}
+			}
+		}
+	}
+}
+
+class EnsembleDelegate: NSObject, CDEPersistentStoreEnsembleDelegate  {
+
+	let managedObjectContext: NSManagedObjectContext
+
+	init(managedObjectContext: NSManagedObjectContext) {
+		self.managedObjectContext = managedObjectContext
+	}
+
+	@objc func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble, didSaveMergeChangesWithNotification notification: NSNotification) {
+		var currentContext: NSManagedObjectContext? = self.managedObjectContext
+
+		while let c = currentContext {
+			c.performBlockAndWait {
+				c.mergeChangesFromContextDidSaveNotification(notification)
+			}
+
+			currentContext = currentContext?.parentContext
+    	}
+	}
+
+	@objc func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble, globalIdentifiersForManagedObjects objects: [AnyObject]) -> [AnyObject] {
+		return (objects as NSArray).valueForKeyPath("uniqueIdentifier") as! [AnyObject]
+	}
+
+}
+
+```
+
 
 ## Using
 
