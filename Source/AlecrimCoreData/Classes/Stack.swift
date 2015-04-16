@@ -240,21 +240,18 @@ extension Stack {
     }
     
     private class func persistentStoreForSQLiteStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, contextOptions: ContextOptions) -> NSPersistentStore? {
-        if contextOptions.storeOptions == nil {
-            contextOptions.storeOptions = [NSObject : AnyObject]()
-            
-            if contextOptions.ubiquityEnabled {
-                contextOptions.storeOptions?[NSPersistentStoreUbiquitousContentNameKey] = contextOptions.ubiquitousContentName
-                contextOptions.storeOptions?[NSPersistentStoreUbiquitousContentURLKey] = contextOptions.ubiquitousContentURL
-                contextOptions.storeOptions?[NSMigratePersistentStoresAutomaticallyOption] = true // always true, ignores Config value
-                contextOptions.storeOptions?[NSInferMappingModelAutomaticallyOption] = true // always true, ignores Config value
-            }
-            else {
-                contextOptions.storeOptions?[NSMigratePersistentStoresAutomaticallyOption] = contextOptions.migratePersistentStoresAutomatically
-                contextOptions.storeOptions?[NSInferMappingModelAutomaticallyOption] = contextOptions.inferMappingModelAutomaticallyOption
-            }
+        if contextOptions.ubiquityEnabled {
+            contextOptions.storeOptions[NSPersistentStoreUbiquitousContentNameKey] = contextOptions.ubiquitousContentName
+            contextOptions.storeOptions[NSPersistentStoreUbiquitousContentURLKey] = contextOptions.ubiquitousContentURL
+            contextOptions.storeOptions[NSPersistentStoreUbiquitousContainerIdentifierKey] = contextOptions.ubiquitousContainerIdentifier
+            contextOptions.storeOptions[NSMigratePersistentStoresAutomaticallyOption] = true // always true, ignores Config value
+            contextOptions.storeOptions[NSInferMappingModelAutomaticallyOption] = true // always true, ignores Config value
         }
-        
+        else {
+            contextOptions.storeOptions[NSMigratePersistentStoresAutomaticallyOption] = contextOptions.migratePersistentStoresAutomatically
+            contextOptions.storeOptions[NSInferMappingModelAutomaticallyOption] = contextOptions.inferMappingModelAutomaticallyOption
+        }
+
         var error: NSError? = nil
         if let store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: contextOptions.configuration, URL: contextOptions.persistentStoreURL, options: contextOptions.storeOptions, error: &error) {
             return store
