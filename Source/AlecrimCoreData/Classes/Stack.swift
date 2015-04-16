@@ -156,7 +156,7 @@ extension Stack {
         var currentContext: NSManagedObjectContext? = self.mainManagedObjectContext
         
         while let c = currentContext {
-            c.performBlock {
+            c.performBlockAndWait {
                 var error: NSError? = nil
                 c.save(&error)
                 c.reset()
@@ -170,7 +170,7 @@ extension Stack {
         var currentContext: NSManagedObjectContext? = self.mainManagedObjectContext
         
         while let c = currentContext {
-            c.performBlock {
+            c.performBlockAndWait {
                 c.reset()
             }
             
@@ -182,7 +182,7 @@ extension Stack {
         var currentContext: NSManagedObjectContext? = self.mainManagedObjectContext
         
         while let c = currentContext {
-            c.performBlock {
+            c.performBlockAndWait {
                 c.mergeChangesFromContextDidSaveNotification(notification)
             }
             
@@ -316,14 +316,14 @@ private final class StackBackgroundManagedObjectContext: NSManagedObjectContext 
 
     @objc private func backgroundManagedObjectContextDidSave(notification: NSNotification) {
         if let mainContext = self.stack.mainManagedObjectContext {
-            mainContext.performBlock {
+            mainContext.performBlockAndWait {
                 mainContext.mergeChangesFromContextDidSaveNotification(notification)
             }
         }
     }
     
     @objc private func persistentStoreCoordinatorStoresWillChange(notification: NSNotification) {
-        self.performBlock {
+        self.performBlockAndWait {
             var error: NSError? = nil
             self.save(&error)
             self.reset()
@@ -331,13 +331,13 @@ private final class StackBackgroundManagedObjectContext: NSManagedObjectContext 
     }
     
     @objc private func persistentStoreCoordinatorStoresDidChange(notification: NSNotification) {
-        self.performBlock {
+        self.performBlockAndWait {
             self.reset()
         }
     }
     
     @objc private func persistentStoreDidImportUbiquitousContentChanges(notification: NSNotification) {
-        self.performBlock {
+        self.performBlockAndWait {
             self.mergeChangesFromContextDidSaveNotification(notification)
         }
     }
