@@ -248,7 +248,7 @@ performInBackground(dataContext) { backgroundDataContext in
 
 You can use `ContextOptions` class for a custom configuration.
 
-### iCloud
+### iCloud Core Data sync
 
 Example configuration when using iCloud Core Data sync.
 
@@ -425,7 +425,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 use_frameworks!
 
-pod 'AlecrimCoreData', '~> 3.0'
+pod 'AlecrimCoreData', '~> 3.0-beta.4'
 ```
 
 Then, run the following command:
@@ -448,7 +448,7 @@ $ brew install carthage
 To integrate AlecrimCoreData into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "Alecrim/AlecrimCoreData" >= 3.0
+github "Alecrim/AlecrimCoreData" >= 2.0
 ```
 
 #### Manually
