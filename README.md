@@ -302,7 +302,7 @@ class DataContext: AlecrimCoreData.Context {
 
 	// MARK - custom init
 
-	public init?() {
+	init?() {
 		let contextOptions = ContextOptions(stackType: .SQLite)
 		contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
 		contextOptions.entityClassNameSufix = "Entity"
@@ -339,7 +339,7 @@ class DataContext: AlecrimCoreData.Context {
 		NSNotificationCenter.defaultCenter().removeObserver(self.obs2)
 	}
 
-	private func sync() {
+	func sync() {
 		if self.ensemble.leeched {
 			self.ensemble.mergeWithCompletion { error in
 				if let error = error {
