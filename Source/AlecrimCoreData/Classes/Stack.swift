@@ -20,40 +20,7 @@ internal final class Stack {
   
     private let contextOptions: ContextOptions
     
-    private var coordinator: NSPersistentStoreCoordinator! {
-        didSet {
-            if self.coordinator != oldValue && self.contextOptions.stackType == .SQLite && self.contextOptions.ubiquityEnabled {
-                if self.coordinator != nil {
-                    NSNotificationCenter.defaultCenter().addObserver(
-                        self,
-                        selector: Selector("persistentStoreCoordinatorStoresWillChange:"),
-                        name: NSPersistentStoreCoordinatorStoresWillChangeNotification,
-                        object: self.coordinator
-                    )
-                    
-                    NSNotificationCenter.defaultCenter().addObserver(
-                        self,
-                        selector: Selector("persistentStoreCoordinatorStoresDidChange:"),
-                        name: NSPersistentStoreCoordinatorStoresDidChangeNotification,
-                        object: self.coordinator
-                    )
-                    
-                    NSNotificationCenter.defaultCenter().addObserver(
-                        self,
-                        selector: Selector("persistentStoreDidImportUbiquitousContentChanges:"),
-                        name: NSPersistentStoreDidImportUbiquitousContentChangesNotification,
-                        object: self.coordinator
-                    )
-                }
-                else {
-                    NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresWillChangeNotification, object: self.coordinator)
-                    NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresDidChangeNotification, object: self.coordinator)
-                    NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreDidImportUbiquitousContentChangesNotification, object: coordinator)
-                }
-            }
-        }
-    }
-
+    private let coordinator: NSPersistentStoreCoordinator!
     private let store: NSPersistentStore!
     
     private let rootManagedObjectContext: NSManagedObjectContext!
@@ -106,10 +73,44 @@ internal final class Stack {
         mmoc.parentContext = self.rootManagedObjectContext
         
         self.mainManagedObjectContext = mmoc
+        
+        //
+        self.addObservers()
     }
     
     deinit {
-        self.coordinator = nil // setting coordinator to nil also removes notifications
+        self.removeObservers()
+    }
+    
+    private func addObservers() {
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector: Selector("persistentStoreCoordinatorStoresWillChange:"),
+            name: NSPersistentStoreCoordinatorStoresWillChangeNotification,
+            object: self.coordinator
+        )
+        
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector: Selector("persistentStoreCoordinatorStoresDidChange:"),
+            name: NSPersistentStoreCoordinatorStoresDidChangeNotification,
+            object: self.coordinator
+        )
+        
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector: Selector("persistentStoreDidImportUbiquitousContentChanges:"),
+            name: NSPersistentStoreDidImportUbiquitousContentChangesNotification,
+            object: self.coordinator
+        )
+    }
+    
+    private func removeObservers() {
+        if self.contextOptions.stackType == .SQLite && self.contextOptions.ubiquityEnabled {
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresWillChangeNotification, object: self.coordinator)
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresDidChangeNotification, object: self.coordinator)
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreDidImportUbiquitousContentChangesNotification, object: coordinator)
+        }
     }
 
 }
