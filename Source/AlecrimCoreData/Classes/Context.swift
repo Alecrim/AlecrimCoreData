@@ -82,7 +82,15 @@ extension Context {
 extension Context {
 
     public var hasChanges: Bool { return self.managedObjectContext.hasChanges }
-    public var undoManager: NSUndoManager? { return self.managedObjectContext.undoManager }
+    
+    public var undoManager: NSUndoManager? {
+        get {
+            return self.managedObjectContext.undoManager
+        }
+        set {
+            self.managedObjectContext.undoManager = newValue
+        }
+    }
     
     #if os(OSX)
 
