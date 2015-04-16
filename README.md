@@ -246,7 +246,7 @@ performInBackground(dataContext) { backgroundDataContext in
 
 ## Advanced Configuration
 
-You can use `Config` class for a custom configuration.
+You can use `ContextOptions` class for a custom configuration.
 
 ### iCloud
 
