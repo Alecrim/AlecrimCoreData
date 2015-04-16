@@ -34,7 +34,7 @@ public final class ContextOptions {
     public var ubiquityEnabled = false
     public var ubiquitousContainerIdentifier: String!                   // defaults to "iCloud." + main bundle identifier
     public var ubiquitousContentName = "UbiquityStore"
-    public var ubiquitousContentRelativePath: String! = "Data/Ubiquity/TransactionLogs"
+    public var ubiquitousContentRelativePath: String! = "CoreData/TransactionLogs"
     private(set) public var ubiquitousContentURL: NSURL! = nil
     
     public var migratePersistentStoresAutomatically = true
