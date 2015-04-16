@@ -245,7 +245,7 @@ extension Stack {
             
             if contextOptions.ubiquityEnabled {
                 contextOptions.storeOptions?[NSPersistentStoreUbiquitousContentNameKey] = contextOptions.ubiquitousContentName
-                contextOptions.storeOptions?[NSPersistentStoreUbiquitousContentURLKey] = contextOptions.ubiquitousContentRelativePath
+                contextOptions.storeOptions?[NSPersistentStoreUbiquitousContentURLKey] = contextOptions.ubiquitousContentURL
                 contextOptions.storeOptions?[NSMigratePersistentStoresAutomaticallyOption] = true // always true, ignores Config value
                 contextOptions.storeOptions?[NSInferMappingModelAutomaticallyOption] = true // always true, ignores Config value
             }

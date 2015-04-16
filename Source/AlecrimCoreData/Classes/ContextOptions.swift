@@ -26,20 +26,22 @@ public final class ContextOptions {
     private(set) public var managedObjectModel: NSManagedObjectModel! = nil
     
     private(set) public var persistentStoreURL: NSURL! = nil
-    public var pesistentStoreRelativePath: String! = nil    // defaults to main bundle identifier
-    public var pesistentStoreFileName: String! = nil        // defaults to managed object model name + ".sqlite"
+    public var pesistentStoreRelativePath: String! = nil                // defaults to main bundle identifier
+    public var pesistentStoreFileName: String! = nil                    // defaults to managed object model name + ".sqlite"
 
     public var configuration: String? = nil
     
     public var ubiquityEnabled = false
+    public var ubiquityContainerIdentifier: String!                     // defaults to "iCloud." + main bundle identifier
     public var ubiquitousContentName = "UbiquityStore"
-    public var ubiquitousContentRelativePath = "Data/TransactionLogs"
+    private(set) public var ubiquitousContentURL: NSURL! = nil
+    public var ubiquitousContentRelativePath: String! = "Data/TransactionLogs"
     
     public var migratePersistentStoresAutomatically = true
     public var inferMappingModelAutomaticallyOption = true
     
     public let stackType: StackType
-    private(set) public var managedObjectModelName: String!          // defaults to main bundle name
+    private(set) public var managedObjectModelName: String!             // defaults to main bundle name
     internal(set) public var storeOptions: [NSObject : AnyObject]!
     
     public init(stackType: StackType = StackType.SQLite, managedObjectModelName: String? = nil, storeOptions: [NSObject : AnyObject]? = nil) {
@@ -90,6 +92,29 @@ extension ContextOptions {
                 if !fileManager.fileExistsAtPath(pesistentStoreDirectoryURL.path!) {
                     fileManager.createDirectoryAtURL(pesistentStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
                 }
+            }
+        }
+        
+        // iCloud
+        if self.ubiquityEnabled {
+            if self.ubiquityContainerIdentifier == nil {
+                if let bundleIdentifier = self.mainBundle.bundleIdentifier {
+                    self.ubiquityContainerIdentifier = NSString(format: "%@.%@", "iCloud", bundleIdentifier) as String
+                }
+            }
+            
+            if self.ubiquityContainerIdentifier != nil {
+                if var ubiquitousContentURL = NSFileManager.defaultManager().URLForUbiquityContainerIdentifier(self.ubiquityContainerIdentifier) {
+                    if let ubiquitousContentRelativePath = self.ubiquitousContentRelativePath {
+                        ubiquitousContentURL = ubiquitousContentURL.URLByAppendingPathComponent(ubiquitousContentRelativePath, isDirectory: true)
+                    }
+                    
+                    self.ubiquitousContentURL = ubiquitousContentURL
+                }
+            }
+            
+            if self.ubiquitousContentURL == nil  {
+                self.ubiquityEnabled = false
             }
         }
     }
