@@ -263,7 +263,7 @@ class DataContext: AlecrimCoreData.Context {
 
 	// MARK - custom init
 
-	public init?() {
+	init?() {
 		let contextOptions = ContextOptions(stackType: .SQLite)
 
         // only needed if model is not in main bundle
