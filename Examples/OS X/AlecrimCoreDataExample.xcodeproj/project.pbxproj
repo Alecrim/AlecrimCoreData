@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		14403DC41A2CBA1E0021935A /* DataContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14403DC21A2CBA1E0021935A /* DataContext.swift */; };
-		14403DC51A2CBA1E0021935A /* EventEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14403DC31A2CBA1E0021935A /* EventEntity.swift */; };
+		14403DC51A2CBA1E0021935A /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14403DC31A2CBA1E0021935A /* Event.swift */; };
 		14ACF59E1AC87C5E0010130B /* AlecrimCoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14ACF59D1AC87C5E0010130B /* AlecrimCoreData.framework */; };
 		14ACF59F1AC87C5E0010130B /* AlecrimCoreData.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 14ACF59D1AC87C5E0010130B /* AlecrimCoreData.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		14CF9DCF1A2C932200B64A45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9DCE1A2C932200B64A45 /* AppDelegate.swift */; };
@@ -34,7 +34,7 @@
 
 /* Begin PBXFileReference section */
 		14403DC21A2CBA1E0021935A /* DataContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataContext.swift; sourceTree = "<group>"; };
-		14403DC31A2CBA1E0021935A /* EventEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventEntity.swift; sourceTree = "<group>"; };
+		14403DC31A2CBA1E0021935A /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		14ACF59D1AC87C5E0010130B /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		14CF9DC91A2C932200B64A45 /* AlecrimCoreDataExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlecrimCoreDataExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14CF9DCD1A2C932200B64A45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -91,7 +91,7 @@
 				14F1D3231A2D3401002437C0 /* Main.storyboard */,
 				14CF9DD21A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodeld */,
 				14403DC21A2CBA1E0021935A /* DataContext.swift */,
-				14403DC31A2CBA1E0021935A /* EventEntity.swift */,
+				14403DC31A2CBA1E0021935A /* Event.swift */,
 				14CF9DCC1A2C932200B64A45 /* Supporting Files */,
 			);
 			path = AlecrimCoreDataExample;
@@ -176,7 +176,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				14CF9DD11A2C932200B64A45 /* ViewController.swift in Sources */,
-				14403DC51A2CBA1E0021935A /* EventEntity.swift in Sources */,
+				14403DC51A2CBA1E0021935A /* Event.swift in Sources */,
 				14CF9DD41A2C932200B64A45 /* AlecrimCoreDataExample.xcdatamodeld in Sources */,
 				14CF9DCF1A2C932200B64A45 /* AppDelegate.swift in Sources */,
 				14403DC41A2CBA1E0021935A /* DataContext.swift in Sources */,

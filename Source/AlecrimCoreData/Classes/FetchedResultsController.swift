@@ -59,6 +59,7 @@ public final class FetchedResultsController<T: NSManagedObject> {
     
     private var didInsertSectionClosure: ((FetchedResultsSectionInfo<T>, Int) -> Void)?
     private var didDeleteSectionClosure: ((FetchedResultsSectionInfo<T>, Int) -> Void)?
+    private var didUpdateSectionClosure: ((FetchedResultsSectionInfo<T>, Int) -> Void)?
     
     private var didInsertEntityClosure: ((T, NSIndexPath) -> Void)?
     private var didDeleteEntityClosure: ((T, NSIndexPath) -> Void)?
@@ -86,7 +87,12 @@ public final class FetchedResultsController<T: NSManagedObject> {
         self.didDeleteSectionClosure = closure
         return self
     }
-    
+
+    public func didUpdateSection(closure: (FetchedResultsSectionInfo<T>, Int) -> Void) -> Self {
+        self.didUpdateSectionClosure = closure
+        return self
+    }
+
     public func didInsertEntity(closure: (T, NSIndexPath) -> Void) -> Self {
         self.didInsertEntityClosure = closure
         return self
@@ -206,6 +212,9 @@ extension FetchedResultsController {
         case .Delete:
             self.fetchedResultsController.didDeleteSectionClosure?(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
             
+        case .Update:
+            self.fetchedResultsController.didUpdateSectionClosure?(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            
         default:
             break
         }
@@ -240,6 +249,9 @@ extension FetchedResultsController {
             .didDeleteSection { [unowned tableView] sectionInfo, sectionIndex in
                 tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
             }
+            .didUpdateSection { [unowned tableView] sectionInfo, sectionIndex in
+                tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
+            }
             .didInsertEntity { [unowned tableView] entity, newIndexPath in
                 tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: rowAnimation)
             }
@@ -255,11 +267,114 @@ extension FetchedResultsController {
             }
             .didChangeContent { [unowned tableView] in
                 tableView.endUpdates()
-        }
+            }
         
         return self
     }
-    
+
+    public func bindToCollectionView(collectionView: UICollectionView) -> Self {
+        var insertedSectionIndexes = NSMutableIndexSet()
+        var deletedSectionIndexes = NSMutableIndexSet()
+        var updatedSectionIndexes = NSMutableIndexSet()
+        
+        var insertedItemIndexPaths = [NSIndexPath]()
+        var deletedItemIndexPaths = [NSIndexPath]()
+        var updatedItemIndexPaths = [NSIndexPath]()
+        
+        var hasMoves = false
+        
+        self
+            .willChangeContent {
+                insertedSectionIndexes.removeAllIndexes()
+                deletedSectionIndexes.removeAllIndexes()
+                updatedSectionIndexes.removeAllIndexes()
+                
+                insertedItemIndexPaths.removeAll(keepCapacity: false)
+                deletedItemIndexPaths.removeAll(keepCapacity: false)
+                updatedItemIndexPaths.removeAll(keepCapacity: false)
+                
+                hasMoves = false
+            }
+            .didInsertSection { sectionInfo, sectionIndex in
+                insertedSectionIndexes.addIndex(sectionIndex)
+            }
+            .didDeleteSection { sectionInfo, sectionIndex in
+                deletedSectionIndexes.addIndex(sectionIndex)
+            }
+            .didUpdateSection { sectionInfo, sectionIndex in
+                updatedSectionIndexes.addIndex(sectionIndex)
+            }
+            .didInsertEntity { entity, newIndexPath in
+                insertedItemIndexPaths.append(newIndexPath)
+            }
+            .didDeleteEntity { entity, indexPath in
+                deletedItemIndexPaths.append(indexPath)
+            }
+            .didUpdateEntity { entity, indexPath in
+                updatedItemIndexPaths.append(indexPath)
+            }
+            .didMoveEntity { entity, indexPath, newIndexPath in
+                hasMoves = true
+            }
+            .didChangeContent { [unowned collectionView] in
+                if hasMoves {
+                    collectionView.reloadData()
+
+                    insertedSectionIndexes.removeAllIndexes()
+                    deletedSectionIndexes.removeAllIndexes()
+                    updatedSectionIndexes.removeAllIndexes()
+                    
+                    insertedItemIndexPaths.removeAll(keepCapacity: false)
+                    deletedItemIndexPaths.removeAll(keepCapacity: false)
+                    updatedItemIndexPaths.removeAll(keepCapacity: false)
+                    
+                    hasMoves = false
+                }
+                else {
+                    collectionView.performBatchUpdates({
+                        if deletedSectionIndexes.count > 0 {
+                            collectionView.deleteSections(deletedSectionIndexes)
+                        }
+                        
+                        if insertedSectionIndexes.count > 0 {
+                            collectionView.insertSections(insertedSectionIndexes)
+                        }
+                        
+                        if updatedSectionIndexes.count > 0 {
+                            collectionView.reloadSections(updatedSectionIndexes)
+                        }
+                        
+                        if deletedItemIndexPaths.count > 0 {
+                            collectionView.deleteItemsAtIndexPaths(deletedItemIndexPaths)
+                        }
+                        
+                        if insertedItemIndexPaths.count > 0 {
+                            collectionView.insertItemsAtIndexPaths(insertedItemIndexPaths)
+                        }
+                        
+                        if updatedItemIndexPaths.count > 0 {
+                            collectionView.reloadItemsAtIndexPaths(updatedItemIndexPaths)
+                        }
+                    },
+                        completion: { finished in
+                            if finished {
+                                insertedSectionIndexes.removeAllIndexes()
+                                deletedSectionIndexes.removeAllIndexes()
+                                updatedSectionIndexes.removeAllIndexes()
+                                
+                                insertedItemIndexPaths.removeAll(keepCapacity: false)
+                                deletedItemIndexPaths.removeAll(keepCapacity: false)
+                                updatedItemIndexPaths.removeAll(keepCapacity: false)
+                                
+                                hasMoves = false
+                            }
+                    })
+                }
+            }
+        
+        return self
+    }
+
 }
     
 #endif

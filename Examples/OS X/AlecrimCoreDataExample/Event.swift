@@ -1,5 +1,5 @@
 //
-//  EventEntity.swift
+//  Event.swift
 //  AlecrimCoreDataExample
 //
 //  Created by Vanderlei Martinelli on 2014-11-30.
@@ -10,13 +10,13 @@ import Foundation
 import CoreData
 import AlecrimCoreData
 
-class EventEntity: NSManagedObject {
+class Event: NSManagedObject {
 
     @NSManaged var timeStamp: NSDate
     
 }
 
-extension EventEntity {
+extension Event {
     
     static let timeStamp = AlecrimCoreData.Attribute<NSDate>("timeStamp")
     

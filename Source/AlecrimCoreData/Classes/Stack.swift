@@ -14,111 +14,46 @@ public enum StackType {
     case InMemory
 }
 
-private var backgroundContexts = NSMutableArray()
-
 internal final class Stack {
   
-    private let stackType: StackType;
-    private let model: NSManagedObjectModel!
+    private let contextOptions: ContextOptions
     
-    private var coordinator: NSPersistentStoreCoordinator! {
-        didSet {
-            if self.coordinator != oldValue && self.stackType == .SQLite && Config.iCloudEnabled {
-                if self.coordinator != nil {
-                    NSNotificationCenter.defaultCenter().addObserver(
-                        self,
-                        selector: Selector("persistentStoreCoordinatorStoresWillChange:"),
-                        name: NSPersistentStoreCoordinatorStoresWillChangeNotification,
-                        object: self.coordinator
-                    )
-                    
-                    NSNotificationCenter.defaultCenter().addObserver(
-                        self,
-                        selector: Selector("persistentStoreCoordinatorStoresDidChange:"),
-                        name: NSPersistentStoreCoordinatorStoresDidChangeNotification,
-                        object: self.coordinator
-                    )
-                    
-                    NSNotificationCenter.defaultCenter().addObserver(
-                        self,
-                        selector: Selector("persistentStoreDidImportUbiquitousContentChanges:"),
-                        name: NSPersistentStoreDidImportUbiquitousContentChangesNotification,
-                        object: self.coordinator
-                    )
-                }
-                else {
-                    NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresWillChangeNotification, object: self.coordinator)
-                    NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresDidChangeNotification, object: self.coordinator)
-                    NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreDidImportUbiquitousContentChangesNotification, object: coordinator)
-                }
-            }
-        }
-    }
-
+    private let coordinator: NSPersistentStoreCoordinator!
     private let store: NSPersistentStore!
     
     private let rootManagedObjectContext: NSManagedObjectContext!
     internal let mainManagedObjectContext: NSManagedObjectContext!
-
+    
     // MARK: - constructors
     
-    internal init?(stackType: StackType, var managedObjectModelName: String?, storeOptions: [NSObject : AnyObject]?) {
-        self.stackType = stackType
+    internal init?(contextOptions: ContextOptions) {
+        self.contextOptions = contextOptions
 
-        // if managed object model name is nil, try to get default name from main bundle
-        let mainBundle = Config.mainBundle
-        let modelBundle = Config.modelBundle
-        
-        if managedObjectModelName == nil {
-            if let infoDictionary = mainBundle.infoDictionary {
-                managedObjectModelName = infoDictionary[kCFBundleNameKey] as? String
-            }
-        }
-        
-        if managedObjectModelName == nil {
-            // Swift 1.2 things
-            self.model = nil
+        if contextOptions.managedObjectModel == nil {
             self.coordinator = nil
             self.store = nil
             self.rootManagedObjectContext = nil
             self.mainManagedObjectContext = nil
 
-            //
-            return nil
-        }
-        
-        // model
-        self.model = Stack.managedObjectModelWithName(managedObjectModelName, bundle: modelBundle)
-        
-        if self.model == nil {
-            // Swift 1.2 things
-            self.coordinator = nil
-            self.store = nil
-            self.rootManagedObjectContext = nil
-            self.mainManagedObjectContext = nil
-            
-            //
             return nil
         }
         
         // coordinator
-        self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.model)
+        self.coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.contextOptions.managedObjectModel)
         
         // store
-        switch self.stackType {
+        switch contextOptions.stackType {
         case .SQLite:
-            self.store = Stack.persistentStoreForSQLiteStoreTypeWithCoordinator(self.coordinator, managedObjectModelName: managedObjectModelName, mainBundle: mainBundle, storeOptions: storeOptions)
+            self.store = Stack.persistentStoreForSQLiteStoreTypeWithCoordinator(self.coordinator, contextOptions: contextOptions)
             
         case .InMemory:
-            self.store = Stack.persistentStoreForInMemoryStoreTypeWithCoordinator(self.coordinator, storeOptions: storeOptions)
+            self.store = Stack.persistentStoreForInMemoryStoreTypeWithCoordinator(self.coordinator, contextOptions: contextOptions)
         }
         
         if self.store == nil {
-            // Swift 1.2 things
             self.rootManagedObjectContext = nil
             self.mainManagedObjectContext = nil
             
-            //
             return nil
         }
         
@@ -136,10 +71,46 @@ internal final class Stack {
         mmoc.parentContext = self.rootManagedObjectContext
         
         self.mainManagedObjectContext = mmoc
+        
+        //
+        self.addObservers()
     }
     
     deinit {
-        self.coordinator = nil // setting coordinator to nil also removes notifications
+        self.removeObservers()
+    }
+    
+    private func addObservers() {
+        if self.contextOptions.stackType == .SQLite && self.contextOptions.ubiquityEnabled {
+            NSNotificationCenter.defaultCenter().addObserver(
+                self,
+                selector: Selector("persistentStoreCoordinatorStoresWillChange:"),
+                name: NSPersistentStoreCoordinatorStoresWillChangeNotification,
+                object: self.coordinator
+            )
+            
+            NSNotificationCenter.defaultCenter().addObserver(
+                self,
+                selector: Selector("persistentStoreCoordinatorStoresDidChange:"),
+                name: NSPersistentStoreCoordinatorStoresDidChangeNotification,
+                object: self.coordinator
+            )
+            
+            NSNotificationCenter.defaultCenter().addObserver(
+                self,
+                selector: Selector("persistentStoreDidImportUbiquitousContentChanges:"),
+                name: NSPersistentStoreDidImportUbiquitousContentChangesNotification,
+                object: self.coordinator
+            )
+        }
+    }
+    
+    private func removeObservers() {
+        if self.contextOptions.stackType == .SQLite && self.contextOptions.ubiquityEnabled {
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresWillChangeNotification, object: self.coordinator)
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresDidChangeNotification, object: self.coordinator)
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreDidImportUbiquitousContentChangesNotification, object: coordinator)
+        }
     }
 
 }
@@ -149,12 +120,7 @@ internal final class Stack {
 extension Stack {
 
     internal func createBackgroundManagedObjectContext() -> NSManagedObjectContext {
-        let backgroundContext = StackBackgroundManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        backgroundContext.undoManager = nil
-        
-        backgroundContext.parentContext = self.rootManagedObjectContext
-        backgroundContext.mainContext = self.mainManagedObjectContext
+        let backgroundContext = StackBackgroundManagedObjectContext(stack: self)
         
         return backgroundContext
     }
@@ -190,7 +156,7 @@ extension Stack {
         var currentContext: NSManagedObjectContext? = self.mainManagedObjectContext
         
         while let c = currentContext {
-            c.performBlock {
+            c.performBlockAndWait {
                 var error: NSError? = nil
                 c.save(&error)
                 c.reset()
@@ -198,35 +164,17 @@ extension Stack {
             
             currentContext = currentContext?.parentContext
         }
-        
-        for backgroundContext in backgroundContexts {
-            if let c = backgroundContext as? StackBackgroundManagedObjectContext {
-                c.performBlock {
-                    var error: NSError? = nil
-                    c.save(&error)
-                    c.reset()
-                }
-            }
-        }
     }
     
     @objc private func persistentStoreCoordinatorStoresDidChange(notification: NSNotification) {
         var currentContext: NSManagedObjectContext? = self.mainManagedObjectContext
         
         while let c = currentContext {
-            c.performBlock {
+            c.performBlockAndWait {
                 c.reset()
             }
             
             currentContext = currentContext?.parentContext
-        }
-        
-        for backgroundContext in backgroundContexts {
-            if let c = backgroundContext as? StackBackgroundManagedObjectContext {
-                c.performBlock {
-                    c.reset()
-                }
-            }
         }
     }
     
@@ -234,19 +182,11 @@ extension Stack {
         var currentContext: NSManagedObjectContext? = self.mainManagedObjectContext
         
         while let c = currentContext {
-            c.performBlock {
+            c.performBlockAndWait {
                 c.mergeChangesFromContextDidSaveNotification(notification)
             }
             
             currentContext = currentContext?.parentContext
-        }
-        
-        for backgroundContext in backgroundContexts {
-            if let c = backgroundContext as? StackBackgroundManagedObjectContext {
-                c.performBlock {
-                    c.mergeChangesFromContextDidSaveNotification(notification)
-                }
-            }
         }
     }
     
@@ -268,56 +208,33 @@ extension Stack {
         return nil
     }
     
-    private class func persistentStoreForSQLiteStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, managedObjectModelName: String?, mainBundle: NSBundle, var storeOptions: [NSObject : AnyObject]?) -> NSPersistentStore? {
-        if let momn = managedObjectModelName {
-            if let localStoreURL = Stack.localSQLiteStoreURLForBundle(mainBundle) {
-                if let localStorePath = localStoreURL.path {
-                    let fileManager = NSFileManager.defaultManager()
-                    var error: NSError? = nil
-                    
-                    if !fileManager.fileExistsAtPath(localStorePath) {
-                        if !fileManager.createDirectoryAtURL(localStoreURL, withIntermediateDirectories: true, attributes: nil, error: &error) {
-                            println(error)
-                            return nil
-                        }
-                    }
-                }
-                
-                let storeFilename = momn.stringByAppendingPathExtension("sqlite")!
-                let localStoreFileURL = localStoreURL.URLByAppendingPathComponent(storeFilename, isDirectory: false)
-                
-                if storeOptions == nil {
-                    storeOptions = [NSObject : AnyObject]()
-                    if Config.iCloudEnabled {
-                        storeOptions?[NSPersistentStoreUbiquitousContentNameKey] = Config.ubiquitousContentName
-                        storeOptions?[NSPersistentStoreUbiquitousContentURLKey] = Config.ubiquitousContentURL
-                        storeOptions?[NSMigratePersistentStoresAutomaticallyOption] = true // always true, ignores Config value
-                        storeOptions?[NSInferMappingModelAutomaticallyOption] = true // always true, ignores Config value
-                    }
-                    else {
-                        storeOptions?[NSMigratePersistentStoresAutomaticallyOption] = Config.migratePersistentStoresAutomatically
-                        storeOptions?[NSInferMappingModelAutomaticallyOption] = Config.inferMappingModelAutomaticallyOption
-                    }
-                }
-                
-                var error: NSError? = nil
-                if let store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: localStoreFileURL, options: storeOptions, error: &error) {
-                    return store
-                }
-                else {
-                    println(error)
-                    return nil
-                }
-            }
+    private class func persistentStoreForSQLiteStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, contextOptions: ContextOptions) -> NSPersistentStore? {
+        if contextOptions.ubiquityEnabled {
+            contextOptions.storeOptions[NSPersistentStoreUbiquitousContentNameKey] = contextOptions.ubiquitousContentName
+            contextOptions.storeOptions[NSPersistentStoreUbiquitousContentURLKey] = contextOptions.ubiquitousContentURL
+            contextOptions.storeOptions[NSPersistentStoreUbiquitousContainerIdentifierKey] = contextOptions.ubiquitousContainerIdentifier
+            
+            contextOptions.migratePersistentStoresAutomatically = true // always true, ignores previous value
+            contextOptions.inferMappingModelAutomaticallyOption = true // always true, ignores previous value
         }
+
+        contextOptions.storeOptions[NSMigratePersistentStoresAutomaticallyOption] = contextOptions.migratePersistentStoresAutomatically
+        contextOptions.storeOptions[NSInferMappingModelAutomaticallyOption] = contextOptions.inferMappingModelAutomaticallyOption
         
-        return nil
+        var error: NSError? = nil
+        if let store = coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: contextOptions.configuration, URL: contextOptions.persistentStoreURL, options: contextOptions.storeOptions, error: &error) {
+            return store
+        }
+        else {
+            println(error)
+            return nil
+        }
     }
     
-    private class func persistentStoreForInMemoryStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, storeOptions: [NSObject : AnyObject]?) -> NSPersistentStore? {
+    private class func persistentStoreForInMemoryStoreTypeWithCoordinator(coordinator: NSPersistentStoreCoordinator, contextOptions: ContextOptions) -> NSPersistentStore? {
         var error: NSError? = nil
         
-        if let store = coordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: nil, URL: nil, options: storeOptions, error: &error) {
+        if let store = coordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: contextOptions.configuration, URL: nil, options: contextOptions.storeOptions, error: &error) {
             return store
         }
         else {
@@ -326,56 +243,103 @@ extension Stack {
         }
     }
 
-    private class func localSQLiteStoreURLForBundle(bundle: NSBundle) -> NSURL? {
-        if let bundleIdentifier = bundle.bundleIdentifier {
-            let fileManager = NSFileManager.defaultManager()
-            let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
-
-            if let applicationSupportDirectoryURL = urls.last as? NSURL {
-                return applicationSupportDirectoryURL.URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
-            }
-        }
-        
-        return nil
-    }
-
 }
 
 // MARK: - private classes
 
 private final class StackBackgroundManagedObjectContext: NSManagedObjectContext {
     
-    private var mainContext: NSManagedObjectContext! {
-        didSet {
-            if self.mainContext != oldValue {
-                if self.mainContext != nil {
-                    backgroundContexts.addObject(self)
-                    
-                    NSNotificationCenter.defaultCenter().addObserver(
-                        self,
-                        selector: Selector("backgroundManagedObjectContextDidSave:"),
-                        name: NSManagedObjectContextDidSaveNotification,
-                        object: self
-                    )
-                }
-                else {
-                    NSNotificationCenter.defaultCenter().removeObserver(self, name: NSManagedObjectContextDidSaveNotification, object: self)
-                    
-                    backgroundContexts.removeObject(self)
-                }
+    private let stack: Stack
+    
+    private init(stack: Stack) {
+        self.stack = stack
+        super.init(concurrencyType: .PrivateQueueConcurrencyType)
+        
+        self.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        self.undoManager = nil
+        self.parentContext = self.stack.rootManagedObjectContext
+        
+
+        self.addObservers()
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        self.removeObservers()
+    }
+    
+    private func addObservers() {
+        if self.stack.contextOptions.stackType == .SQLite && self.stack.contextOptions.ubiquityEnabled {
+            NSNotificationCenter.defaultCenter().addObserver(
+                self,
+                selector: Selector("persistentStoreCoordinatorStoresWillChange:"),
+                name: NSPersistentStoreCoordinatorStoresWillChangeNotification,
+                object: self.stack.coordinator
+            )
+            
+            NSNotificationCenter.defaultCenter().addObserver(
+                self,
+                selector: Selector("persistentStoreCoordinatorStoresDidChange:"),
+                name: NSPersistentStoreCoordinatorStoresDidChangeNotification,
+                object: self.stack.coordinator
+            )
+            
+            NSNotificationCenter.defaultCenter().addObserver(
+                self,
+                selector: Selector("persistentStoreDidImportUbiquitousContentChanges:"),
+                name: NSPersistentStoreDidImportUbiquitousContentChangesNotification,
+                object: self.stack.coordinator
+            )
+        }
+        
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector: Selector("backgroundManagedObjectContextDidSave:"),
+            name: NSManagedObjectContextDidSaveNotification,
+            object: self
+        )
+    }
+    
+    private func removeObservers() {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NSManagedObjectContextDidSaveNotification, object: self)
+
+        if self.stack.contextOptions.stackType == .SQLite && self.stack.contextOptions.ubiquityEnabled {
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresWillChangeNotification, object: self.stack.coordinator)
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresDidChangeNotification, object: self.stack.coordinator)
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreDidImportUbiquitousContentChangesNotification, object: self.stack.coordinator)
+        }
+        
+    }
+
+    @objc private func backgroundManagedObjectContextDidSave(notification: NSNotification) {
+        if let mainContext = self.stack.mainManagedObjectContext {
+            mainContext.performBlockAndWait {
+                mainContext.mergeChangesFromContextDidSaveNotification(notification)
             }
         }
     }
     
-    deinit {
-        self.mainContext = nil // setting mainContext to nil also removes notifications
-    }
-    
-    @objc private func backgroundManagedObjectContextDidSave(notification: NSNotification) {
-        self.mainContext.performBlock {
-            self.mainContext.mergeChangesFromContextDidSaveNotification(notification)
+    @objc private func persistentStoreCoordinatorStoresWillChange(notification: NSNotification) {
+        self.performBlockAndWait {
+            var error: NSError? = nil
+            self.save(&error)
+            self.reset()
         }
     }
     
+    @objc private func persistentStoreCoordinatorStoresDidChange(notification: NSNotification) {
+        self.performBlockAndWait {
+            self.reset()
+        }
+    }
+    
+    @objc private func persistentStoreDidImportUbiquitousContentChanges(notification: NSNotification) {
+        self.performBlockAndWait {
+            self.mergeChangesFromContextDidSaveNotification(notification)
+        }
+    }
 }
 

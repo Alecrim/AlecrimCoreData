@@ -14,7 +14,8 @@ public final class Table<T: NSManagedObject>: Query {
     private lazy var entityDescription: NSEntityDescription = { return NSEntityDescription.entityForName(self.entityName, inManagedObjectContext: self.context.managedObjectContext)! }()
     
     public convenience init(context: Context) {
-        self.init(context: context, entityName: T.entityName)
+        let entityName = context.contextOptions.entityNameFromClass(T.self)
+        self.init(context: context, entityName: entityName)
     }
     
     public required init(context: Context, entityName: String) {
@@ -284,30 +285,65 @@ extension Table {
 
 extension Table {
 
-    public func batchUpdate(propertiesToUpdateClosure: () -> [NSString : AnyObject], completionClosure: (Int, NSError?) -> Void) {
-        let propertiesToUpdate = propertiesToUpdateClosure()
+    public func batchUpdate(propertiesToUpdate: [NSString : AnyObject], completionClosure: (Int, NSError?) -> Void) {
         let batchUpdatePredicate = self.predicate ?? NSPredicate(value: true)
         
-        self.context.executeBatchUpdateRequestWithEntityDescription(self.entityDescription, propertiesToUpdate: propertiesToUpdate, predicate: batchUpdatePredicate) { updatedObjectsCount, error in
+        self.context.executeBatchUpdateRequestWithEntityDescription(
+            self.entityDescription,
+            propertiesToUpdate: propertiesToUpdate,
+            predicate: batchUpdatePredicate
+        ) { updatedObjectsCount, error in
             dispatch_async(dispatch_get_main_queue()) {
                 completionClosure(updatedObjectsCount, error)
             }
         }
     }
 
+//    public func batchUpdate(propertiesToUpdateClosure: (T.Type) -> [NSString : AnyObject], completionClosure: (Int, NSError?) -> Void) {
+//        let propertiesToUpdate = propertiesToUpdateClosure(T.self)
+//        self.batchUpdate(propertiesToUpdate, completionClosure: completionClosure)
+//    }
+
     public func batchUpdate<U>(attributeToUpdateClosure: (T.Type) -> (Attribute<U>, U), completionClosure: (Int, NSError?) -> Void) {
         let attributeAndValue = attributeToUpdateClosure(T.self)
-        
         var propertiesToUpdate = [NSString : AnyObject]()
+
         propertiesToUpdate[attributeAndValue.0.name as NSString] = attributeAndValue.1 as? AnyObject
         
-        let batchUpdatePredicate = self.predicate ?? NSPredicate(value: true)
-        
-        self.context.executeBatchUpdateRequestWithEntityDescription(self.entityDescription, propertiesToUpdate: propertiesToUpdate, predicate: batchUpdatePredicate) { updatedObjectsCount, error in
-            dispatch_async(dispatch_get_main_queue()) {
-                completionClosure(updatedObjectsCount, error)
-            }
-        }
+        self.batchUpdate(propertiesToUpdate, completionClosure: completionClosure)
+    }
+    
+}
+
+// MARK: - AttributeQuery support
+
+extension Table {
+
+    public func select(propertiesToFetch: [String]) -> AttributeQuery {
+        let attributeQuery = AttributeQuery(context: self.context, entityName: self.entityName, propertiesToFetch: propertiesToFetch)
+        return attributeQuery
+    }
+
+//    public func select(propertiesToFetch: String...) -> AttributeQuery {
+//        return self.select(propertiesToFetch)
+//    }
+
+//    public func select(propertiesToFetchClosure: (T.Type) -> [String]) -> AttributeQuery {
+//        let propertiesToFetch = propertiesToFetchClosure(T.self)
+//        return self.select(propertiesToFetch)
+//    }
+
+    public func select<U>(attributeToSelectClosure: (T.Type) -> Attribute<U>) -> AttributeQuery {
+        return self.select([attributeToSelectClosure(T.self).name])
+    }
+    
+    public func select() -> AttributeQuery {
+        let propertiesToFetch = (self.entityDescription.attributesByName as NSDictionary).allKeys as! [String]
+        return self.select(propertiesToFetch)
+    }
+    
+    public func distinct() -> AttributeQuery {
+        return self.select().distinct()
     }
 
 }
@@ -345,7 +381,7 @@ extension Table {
         arrayController.automaticallyRearrangesObjects = true
         
         let defaultFetchRequest = arrayController.defaultFetchRequest()
-        defaultFetchRequest.fetchBatchSize = Config.fetchBatchSize
+        defaultFetchRequest.fetchBatchSize = self.context.contextOptions.fetchBatchSize
         defaultFetchRequest.fetchOffset = self.offset
         defaultFetchRequest.fetchLimit = self.limit
         

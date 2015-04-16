@@ -1,81 +1,19 @@
-![AlecrimCoreData][image-1]
+![AlecrimCoreData](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/master/AlecrimCoreData.png)
 
 [![Language: Swift](https://img.shields.io/badge/lang-Swift-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/develop/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/v/AlecrimCoreData.svg?style=flat)](http://cocoapods.org)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)][1]
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![Forks](https://img.shields.io/github/forks/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/network)
 [![Stars](https://img.shields.io/github/stars/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/stargazers)
 
-AlecrimCoreData is a framework to easily access CoreData objects in Swift.
-
-## Minimum Requirements
-
-- Xcode 6.3
-- iOS 8.0 / OS X 10.10
-
-## Version History
-
-- 3.0 - Swift framework; WIP; added attributes support and other improvements
-- 2.1 - Swift framework; added CocoaPods and Carthage support
-- 2.0 - Swift framework; first public release as open source
-- 1.1 - Objective-C framework; private Alecrim team use
-- 1.0 - Objective-C framework; private Alecrim team use
-
-## Installation
-
-### CocoaPods
-
-[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects.
-
-CocoaPods 0.36 adds supports for Swift and embedded frameworks. You can install it with the following command:
-
-```bash
-$ gem install cocoapods
-```
-
-To integrate AlecrimCoreData into your Xcode project using CocoaPods, specify it in your `Podfile`:
-
-```ruby
-source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '8.0'
-use_frameworks!
-
-pod 'AlecrimCoreData', '~> 3.0-beta.3'
-```
-
-Then, run the following command:
-
-```bash
-$ pod install
-```
-
-### Carthage
-
-Carthage is a decentralized dependency manager that automates the process of adding frameworks to your Cocoa application.
-
-You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
-
-```bash
-$ brew update
-$ brew install carthage
-```
-
-To integrate AlecrimCoreData into your Xcode project using Carthage, specify it in your `Cartfile`:
-
-```ogdl
-github "Alecrim/AlecrimCoreData" >= 2.0
-```
-
-### Manually
-
-You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as an embedded binary in your application target.
+AlecrimCoreData is a framework to easily access Core Data objects in Swift.
 
 ## Getting Started
 
 ### Data Context
 
-You can create a inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
+To use AlecrimCoreData you will need to create a inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
 
 ```swift
 import AlecrimCoreData
@@ -83,8 +21,8 @@ import AlecrimCoreData
 let dataContext = DataContext()!
 
 class DataContext: Context {
-	var people:      Table<PersonEntity>     { return Table<PersonEntity>(context: self) }
-	var departments: Table<DepartmentEntity> { return Table<DepartmentEntity>(context: self) }
+	var people:      Table<Person>     { return Table<Person>(context: self) }
+	var departments: Table<Department> { return Table<Department>(context: self) }
 }
 ```
 
@@ -92,9 +30,13 @@ It's important that properties (or methods) always return a _new_ instance of a 
 
 ### Entities
 
-It's assumed that all entity classes was already created and added to the project.
+It's assumed that all entity classes was already created and added to the project. In the above section example there are two entities: `Person` and `Department`.
 
-In the above section example, there are two entities: `Person` and `Department` (with `Entity` suffix added to their class names). You can name the entity classes as you like, of course.
+### Optional Code Generation Tool
+
+You can write managed object classes by hand or generate them using Xcode. Now you can also use ACDGen. ;-)
+
+ACDGen app is a Core Data entity class generator made with AlecrimCoreData in mind. It is completely optional, but since it can also generate attribute class members for use in closure parameters, the experience using AlecrimCoreData is greatly improved. You can download it for free from http://opensource.alecrim.com/AlecrimCoreData/ACDGen.zip.
 
 ## Usage
 
@@ -102,7 +44,7 @@ In the above section example, there are two entities: `Person` and `Department` 
 
 #### Basic Fetching
 
-Say you have an Entity called Person, related to a Department (as seen in various Apple CoreData documentation [and MagicalRecord documentation too]). To get all of the Person entities as an array, use the following methods:
+Say you have an Entity called Person, related to a Department (as seen in various Apple Core Data documentation). To get all of the Person entities as an array, use the following methods:
 
 ```swift
 for person in dataContext.people {
@@ -302,37 +244,244 @@ performInBackground(dataContext) { backgroundDataContext in
 }
 ```
 
-## Using attributes and closure parameters
+## Advanced Configuration
 
-Implementation, docs and tests are in progress at this moment. A code generator utility is in internal beta and will be available soon.
+You can use `ContextOptions` class for a custom configuration.
 
-## Branches and contribution
+### iCloud Core Data sync
+
+Example configuration when using iCloud Core Data sync.
+
+```swift
+import Foundation
+import AlecrimCoreData
+
+class DataContext: AlecrimCoreData.Context {
+
+	var people:      Table<PersonEntity>     { return Table<PersonEntity>(context: self) }
+	var departments: Table<DepartmentEntity> { return Table<DepartmentEntity>(context: self) }
+
+	// MARK - custom init
+
+	init?() {
+		let contextOptions = ContextOptions(stackType: .SQLite)
+
+        // only needed if model is not in main bundle
+		contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
+
+        // only needed if entity class names are different from entity names
+		contextOptions.entityClassNameSufix = "Entity"
+
+        // enable iCloud Core Data sync
+		contextOptions.ubiquityEnabled = true
+
+        // only needed if the identifier is different from default identifier
+		contextOptions.ubiquitousContainerIdentifier = "iCloud.com.company.MyApp"
+
+		// call super
+		super.init(contextOptions: contextOptions)
+	}
+
+}
+```
+
+### Ensembles
+
+Example configuration when using [Ensembles](http://www.ensembles.io).
+
+```swift
+import Foundation
+import AlecrimCoreData
+import Ensembles
+
+class DataContext: AlecrimCoreData.Context {
+
+	var people:      Table<PersonEntity>     { return Table<PersonEntity>(context: self) }
+	var departments: Table<DepartmentEntity> { return Table<DepartmentEntity>(context: self) }
+
+	// MARK: - ensembles support
+
+	var cloudFileSystem: CDEICloudFileSystem! = nil
+	var ensemble: CDEPersistentStoreEnsemble! = nil
+	var ensembleDelegate: EnsembleDelegate! = nil
+
+	var obs1: AnyObject! = nil
+	var obs2: AnyObject! = nil
+
+	// MARK - custom init
+
+	init?() {
+		let contextOptions = ContextOptions(stackType: .SQLite)
+
+        // only needed if model is not in main bundle
+        contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
+
+        // only needed if entity class names are different from entity names
+        contextOptions.entityClassNameSufix = "Entity"
+
+        // call super
+		super.init(contextOptions: contextOptions)
+
+		//
+		self.cloudFileSystem = CDEICloudFileSystem(ubiquityContainerIdentifier: "iCloud.com.company.MyApp")
+		self.ensemble = CDEPersistentStoreEnsemble(
+			ensembleIdentifier: "EnsembleStore",
+			persistentStoreURL: contextOptions.persistentStoreURL,
+			managedObjectModelURL: contextOptions.managedObjectModelURL,
+			cloudFileSystem: self.cloudFileSystem
+		)
+
+		self.ensembleDelegate = EnsembleDelegate(managedObjectContext: self.managedObjectContext)
+		ensemble.delegate = self.ensembleDelegate
+
+        //
+		self.obs1 = NSNotificationCenter.defaultCenter().addObserverForName(CDEMonitoredManagedObjectContextDidSaveNotification, object: nil, queue: nil) { [unowned self] notification in
+			self.sync()
+		}
+
+		self.obs2 = NSNotificationCenter.defaultCenter().addObserverForName(CDEICloudFileSystemDidDownloadFilesNotification, object: nil, queue: nil) { [unowned self] notification in
+			self.sync()
+		}
+
+		//
+		self.sync()
+	}
+
+	deinit {
+		NSNotificationCenter.defaultCenter().removeObserver(self.obs1)
+		NSNotificationCenter.defaultCenter().removeObserver(self.obs2)
+	}
+
+	func sync() {
+		if self.ensemble.leeched {
+			self.ensemble.mergeWithCompletion { error in
+				if let error = error {
+					println(error)
+				}
+			}
+		}
+		else {
+			self.ensemble.leechPersistentStoreWithCompletion { error in
+				if let error = error {
+					println(error)
+				}
+			}
+		}
+	}
+}
+
+class EnsembleDelegate: NSObject, CDEPersistentStoreEnsembleDelegate  {
+
+	let managedObjectContext: NSManagedObjectContext
+
+	init(managedObjectContext: NSManagedObjectContext) {
+		self.managedObjectContext = managedObjectContext
+	}
+
+	@objc func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble, didSaveMergeChangesWithNotification notification: NSNotification) {
+		var currentContext: NSManagedObjectContext? = self.managedObjectContext
+
+		while let c = currentContext {
+			c.performBlockAndWait {
+				c.mergeChangesFromContextDidSaveNotification(notification)
+			}
+
+			currentContext = currentContext?.parentContext
+    	}
+	}
+
+	@objc func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble, globalIdentifiersForManagedObjects objects: [AnyObject]) -> [AnyObject] {
+		return (objects as NSArray).valueForKeyPath("uniqueIdentifier") as! [AnyObject]
+	}
+
+}
+
+```
+
+
+## Using
+
+### Minimum Requirements
+
+- Xcode 6.3
+- iOS 8.0 / OS X 10.10
+
+### Installation
+
+#### CocoaPods
+
+[CocoaPods](http://cocoapods.org) is a dependency manager for Cocoa projects.
+
+CocoaPods 0.36 adds supports for Swift and embedded frameworks. You can install it with the following command:
+
+```bash
+$ gem install cocoapods
+```
+
+To integrate AlecrimCoreData into your Xcode project using CocoaPods, specify it in your `Podfile`:
+
+```ruby
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
+use_frameworks!
+
+pod 'AlecrimCoreData', '~> 3.0-beta.4'
+```
+
+Then, run the following command:
+
+```bash
+$ pod install
+```
+
+#### Carthage
+
+Carthage is a decentralized dependency manager that automates the process of adding frameworks to your Cocoa application.
+
+You can install Carthage with [Homebrew](http://brew.sh/) using the following command:
+
+```bash
+$ brew update
+$ brew install carthage
+```
+
+To integrate AlecrimCoreData into your Xcode project using Carthage, specify it in your `Cartfile`:
+
+```ogdl
+github "Alecrim/AlecrimCoreData" >= 2.0
+```
+
+#### Manually
+
+You can add AlecrimCoreData as a git submodule, drag the `AlecrimCoreData.xcodeproj` file into your Xcode project and add the framework product as an embedded binary in your application target.
+
+### Branches and Contribution
 
 - master - The production branch. Clone or fork this repository for the latest copy.
-- develop - The active development branch. [Pull requests][2] should be directed to this branch.
+- develop - The active development branch. [Pull requests](https://help.github.com/articles/creating-a-pull-request) should be directed to this branch.
 
 If you want to contribute, please feel free to fork the repository and send pull requests with your fixes, suggestions and additions. :-)
 
-## Inspired and based on
+### Inspired By
 
-- [MagicalRecord][3]
-- [QueryKit][4]
+- [MagicalRecord](https://github.com/magicalpanda/MagicalRecord)
+- [QueryKit](https://github.com/QueryKit/QueryKit)
+
+
+### Version History
+
+- 3.0 - Swift framework; added attributes support and many other improvements
+- 2.1 - Swift framework; added CocoaPods and Carthage support
+- 2.0 - Swift framework; first public release as open source
+- 1.1 - Objective-C framework; private Alecrim team use
+- 1.0 - Objective-C framework; private Alecrim team use
 
 ---
 
 ## Contact
 
-- [Vanderlei Martinelli][5]
+- [Vanderlei Martinelli](https://github.com/vmartinelli)
 
 ## License
 
 AlecrimCoreData is released under an MIT license. See LICENSE for more information.
-
-[1]:	https://github.com/Carthage/Carthage
-[2]:	https://help.github.com/articles/creating-a-pull-request
-[3]:	https://github.com/magicalpanda/MagicalRecord
-[4]:	https://github.com/QueryKit/QueryKit
-[5]:	https://github.com/vmartinelli
-
-[image-1]:	AlecrimCoreData.png?raw=true
-

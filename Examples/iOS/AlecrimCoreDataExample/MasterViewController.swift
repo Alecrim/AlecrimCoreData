@@ -14,7 +14,7 @@ class MasterViewController: UITableViewController {
 
     var detailViewController: DetailViewController? = nil
     
-    lazy var fetchedResultsController: FetchedResultsController<EventEntity> = {
+    lazy var fetchedResultsController: FetchedResultsController<Event> = {
         let frc = dataContext.events.orderByDescending({ $0.timeStamp }).toFetchedResultsController()
         frc.bindToTableView(self.tableView)
         
@@ -50,10 +50,10 @@ class MasterViewController: UITableViewController {
     }
 
     func insertNewObject(sender: AnyObject) {
-        let newEventEntity = dataContext.events.createEntity()
+        let newEvent = dataContext.events.createEntity()
         
         // Configure the new managed object.
-        newEventEntity.timeStamp = NSDate()
+        newEvent.timeStamp = NSDate()
         
         // Save the background data context.
         let (success, error) = dataContext.save()

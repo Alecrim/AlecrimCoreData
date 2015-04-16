@@ -44,39 +44,3 @@ extension NSManagedObject {
     
 }
 
-extension NSManagedObject {
-    
-    internal class var entityName: String {
-        let className = NSStringFromClass(self)
-        
-        if let name = Config.cachedEntityNames[className] {
-            return name
-        }
-        else {
-            var name: NSString = className
-            let range = name.rangeOfString(".")
-            if range.location != NSNotFound {
-                name = name.substringFromIndex(range.location + 1)
-            }
-            
-            if let prefix = Config.entityClassNamePrefix {
-                if !name.isEqualToString(prefix) && name.hasPrefix(prefix) {
-                    name = name.substringFromIndex((prefix as NSString).length)
-                }
-            }
-            
-            if let suffix = Config.entityClassNameSuffix {
-                if !name.isEqualToString(suffix) && name.hasSuffix(suffix) {
-                    name = name.substringToIndex(name.length - (suffix as NSString).length)
-                }
-            }
-            
-            let nameAsString = name as! String
-            Config.cachedEntityNames[className] = nameAsString
-            
-            return nameAsString
-        }
-    }
-    
-}
-
