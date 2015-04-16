@@ -203,7 +203,7 @@ if let person = dataContext.people.first({ $0.identifier == 123 }) {
 }
 ```
 
-## Saving
+### Saving
 
 You can save the data context in the end, after all changes were made.
 
@@ -224,7 +224,7 @@ else {
 }
 ```
 
-### Threading
+#### Threading
 
 You can fetch and save entities in background calling a global function that creates a new data context instance for this:
 
@@ -244,11 +244,11 @@ performInBackground(dataContext) { backgroundDataContext in
 }
 ```
 
-## Advanced Configuration
+### Advanced Configuration
 
 You can use `ContextOptions` class for a custom configuration.
 
-### iCloud Core Data sync
+#### iCloud Core Data sync
 
 Example configuration when using iCloud Core Data sync.
 
@@ -285,7 +285,7 @@ class DataContext: AlecrimCoreData.Context {
 }
 ```
 
-### Ensembles
+#### Ensembles
 
 Example configuration when using [Ensembles](http://www.ensembles.io).
 
