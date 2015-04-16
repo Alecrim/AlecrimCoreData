@@ -278,6 +278,7 @@ class DataContext: AlecrimCoreData.Context {
         // only needed if the identifier is different from default identifier
 		contextOptions.ubiquitousContainerIdentifier = "iCloud.com.company.MyApp"
 
+		// call super
 		super.init(contextOptions: contextOptions)
 	}
 
