@@ -322,7 +322,7 @@ class DataContext: AlecrimCoreData.Context {
         // call super
 		super.init(contextOptions: contextOptions)
 
-		//
+		// configure Ensembles
 		self.cloudFileSystem = CDEICloudFileSystem(ubiquityContainerIdentifier: "iCloud.com.company.MyApp")
 		self.ensemble = CDEPersistentStoreEnsemble(
 			ensembleIdentifier: "EnsembleStore",
@@ -331,10 +331,11 @@ class DataContext: AlecrimCoreData.Context {
 			cloudFileSystem: self.cloudFileSystem
 		)
 
+		// assign delegate
 		self.ensembleDelegate = EnsembleDelegate(managedObjectContext: self.managedObjectContext)
-		ensemble.delegate = self.ensembleDelegate
+		self.ensemble.delegate = self.ensembleDelegate
 
-        //
+        // set observers
 		self.obs1 = NSNotificationCenter.defaultCenter().addObserverForName(CDEMonitoredManagedObjectContextDidSaveNotification, object: nil, queue: nil) { [unowned self] notification in
 			self.sync()
 		}
@@ -343,7 +344,7 @@ class DataContext: AlecrimCoreData.Context {
 			self.sync()
 		}
 
-		//
+		// initial sync
 		self.sync()
 	}
 
