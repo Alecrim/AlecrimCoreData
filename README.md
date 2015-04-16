@@ -265,10 +265,17 @@ class DataContext: AlecrimCoreData.Context {
 
 	public init?() {
 		let contextOptions = ContextOptions(stackType: .SQLite)
+
+        // only needed if model is not in main bundle
 		contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
+
+        // only needed if entity class names are different from entity names
 		contextOptions.entityClassNameSufix = "Entity"
 
+        // enable iCloud Core Data sync
 		contextOptions.ubiquityEnabled = true
+
+        // only needed if the identifier is different from default identifier
 		contextOptions.ubiquitousContainerIdentifier = "iCloud.com.company.MyApp"
 
 		super.init(contextOptions: contextOptions)
@@ -304,9 +311,14 @@ class DataContext: AlecrimCoreData.Context {
 
 	init?() {
 		let contextOptions = ContextOptions(stackType: .SQLite)
-		contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
-		contextOptions.entityClassNameSufix = "Entity"
 
+        // only needed if model is not in main bundle
+        contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
+
+        // only needed if entity class names are different from entity names
+        contextOptions.entityClassNameSufix = "Entity"
+
+        // call super
 		super.init(contextOptions: contextOptions)
 
 		//
@@ -321,7 +333,7 @@ class DataContext: AlecrimCoreData.Context {
 		self.ensembleDelegate = EnsembleDelegate(managedObjectContext: self.managedObjectContext)
 		ensemble.delegate = self.ensembleDelegate
 
-
+        //
 		self.obs1 = NSNotificationCenter.defaultCenter().addObserverForName(CDEMonitoredManagedObjectContextDidSaveNotification, object: nil, queue: nil) { [unowned self] notification in
 			self.sync()
 		}
