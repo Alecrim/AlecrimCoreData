@@ -11,27 +11,41 @@ import CoreData
 
 public class Context {
     
-    internal let contextOptions: ContextOptions
-    private let stack: Stack!
-    public let managedObjectContext: NSManagedObjectContext! // The underlying managed object context
+    private(set) internal var contextOptions: ContextOptions
+    private var stack: Stack!
+    private(set) public var managedObjectContext: NSManagedObjectContext! // The underlying managed object context
 
     public init?(contextOptions: ContextOptions? = nil) {
         self.contextOptions = (contextOptions == nil ? ContextOptions() : contextOptions!)
-        self.contextOptions.fillEmptyOptions()
         
-        if let stack = Stack(contextOptions: self.contextOptions) {
-            self.stack = stack
-            self.managedObjectContext = stack.mainManagedObjectContext
-        }
-        else {
+        if self.contextOptions.filled {
+            // HAX: (vmartinelli) 2015-04-16 -> if filled == true, this constructor was called from the convenience init below and
+            //                                  stack and managedObjectContext will be assigned there
             self.stack = nil
             self.managedObjectContext = nil
-
-            return nil
         }
+        else {
+            self.contextOptions.fillEmptyOptions()
+            
+            if let stack = Stack(contextOptions: self.contextOptions) {
+                self.stack = stack
+                self.managedObjectContext = stack.mainManagedObjectContext
+            }
+            else {
+                self.stack = nil
+                self.managedObjectContext = nil
+                
+                return nil
+            }
+        }
+        
     }
     
-    private init(parentContext: Context) {
+    // HAX: (vmartinelli) 2015-04-16 -> EXC_BAD_ACCESS if this contructor is not a convenience init
+    //                                  and a property of inherited Context class is called
+    private convenience init?(parentContext: Context) {
+        self.init(contextOptions: parentContext.contextOptions)
+        
         self.contextOptions = parentContext.contextOptions
         self.stack = parentContext.stack
         self.managedObjectContext = parentContext.stack.createBackgroundManagedObjectContext()
@@ -175,7 +189,7 @@ extension Context {
 // MARK: - public global functions
 
 public func performInBackground<T: Context>(parentContext: T, closure: (T) -> Void) {
-    let backgroundContext = T(parentContext: parentContext)
+    let backgroundContext = T(parentContext: parentContext)!
     
     backgroundContext.perform {
         closure(backgroundContext)

@@ -44,6 +44,8 @@ public final class ContextOptions {
     public var managedObjectModelName: String!             // defaults to main bundle name
     public var storeOptions: [NSObject : AnyObject]!
     
+    private(set) internal var filled = false
+    
     public init(stackType: StackType = StackType.SQLite, managedObjectModelName: String? = nil, storeOptions: [NSObject : AnyObject]? = nil) {
         self.stackType = stackType
         self.managedObjectModelName = managedObjectModelName
@@ -55,6 +57,11 @@ public final class ContextOptions {
 extension ContextOptions {
     
     internal func fillEmptyOptions() {
+        //
+        if self.filled {
+            return
+        }
+        
         // if managed object model name is nil, try to get default name from main bundle
         if self.managedObjectModelName == nil {
             if let infoDictionary = self.mainBundle.infoDictionary {
@@ -122,6 +129,9 @@ extension ContextOptions {
         if self.storeOptions == nil {
             self.storeOptions = [NSObject : AnyObject]()
         }
+        
+        //
+        self.filled = true
     }
     
 }
