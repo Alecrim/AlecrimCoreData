@@ -104,6 +104,20 @@ if let person = dataContext.people.first({ $0.identifier == 123 }) {
 }
 ```
 
+#### Count Entities
+
+You can perform a count of the entities in your Persistent Store:
+
+```swift
+let count = dataContext.people.filter({ $0.lastName == "Smith" }).count()
+```
+
+Or:
+
+```swift
+let count = dataContext.people.count({ $0.lastName == "Smith" })
+```
+
 #### Aggregate Functions
 
 You can use aggregate functions on a single attribute:
@@ -205,14 +219,6 @@ let fetchedResultsController = dataContext.people.toFetchedResultsController()
 // iOS only (returns a native NSFetchedResultsController instance)
 let fetchedResultsController = dataContext.people.toNativeFetchedResultsController()
 
-```
-
-#### Find the number of entities
-
-You can also perform a count of the entities in your Persistent Store:
-
-```swift
-let count = dataContext.people.filter({ $0.lastName == "Smith" }).count()
 ```
 
 ### Creating new Entities
