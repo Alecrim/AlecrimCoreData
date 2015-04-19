@@ -277,7 +277,7 @@ let department = dataContext.departments.first({ $0.identifier == 100 })!
 // the closure below will run in a background context queue
 performInBackground(dataContext) { bgc in
 	if let person = bgc.people.first({ $0.identifier == 321 }) {
-	    // we must department bring to our background context
+	    // we must bring department to our background context
 	    person.department = department.inContext(bgc)! 
 	    person.otherData = "Other Data"
 	}
@@ -288,7 +288,7 @@ performInBackground(dataContext) { bgc in
 }
 ```
 
-#### Batch Updates
+### Batch Updates
 
 You can do batch updates on a single attribute using:
 
