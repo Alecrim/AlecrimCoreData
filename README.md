@@ -114,6 +114,22 @@ let total = dataContext.entities.sum({ $0.value })
 
 The `sum`, `min`, `max` and `average` functions are supported.
 
+#### Selecting Only Some Attributes
+
+You can specify an attribute to select:
+
+```swift
+let lastNames = dataContext.people.select({ $0.lastName }).distinct()
+```
+
+Or multiple properties to select:
+
+```swift
+let firstAndLastNames = dataContext.people.select(["firstName", "lastName"])
+```
+
+In both cases the result is an array of `NSDictionary`.
+
 #### Advanced Fetching
 
 If you want to be more specific with your search, you can use filter predicates:
@@ -272,22 +288,6 @@ performInBackground(dataContext) { bgc in
 }
 ```
 
-#### Selecting Only Some Attributes
-
-You can specify an attribute to select:
-
-```swift
-let lastNames = dataContext.people.select({ $0.lastName }).distinct()
-```
-
-Or multiple properties to select:
-
-```swift
-let firstAndLastNames = dataContext.people.select(["firstName", "lastName"])
-```
-
-In both cases the result is an array of `NSDictionary`.
-
 #### Batch Updates
 
 You can do batch updates on a single attribute using:
@@ -316,12 +316,12 @@ You can use `ContextOptions` class for a custom configuration.
 
 #### iCloud Core Data sync
 
-See `Samples` folder for a configuration example for a `DataContext` that uses iCloud Core Data sync.
+See `Samples` folder for a configuration example for iCloud Core Data sync.
 
 
 #### Ensembles
 
-See `Samples` folder for a configuration example when using [Ensembles](http://www.ensembles.io).
+See `Samples` folder for a configuration example for [Ensembles](http://www.ensembles.io).
 
 ## Using
 
