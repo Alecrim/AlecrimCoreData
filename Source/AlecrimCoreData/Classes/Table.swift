@@ -190,32 +190,32 @@ extension Table {
 extension Table {
     
     public func orderBy<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).name
+        let attributeName = orderingClosure(T.self).___name
         return self.sortBy(attributeName, ascending: true)
     }
     
     public func orderByAscending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).name
+        let attributeName = orderingClosure(T.self).___name
         return self.sortBy(attributeName, ascending: true)
     }
     
     public func orderByDescending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).name
+        let attributeName = orderingClosure(T.self).___name
         return self.sortBy(attributeName, ascending: false)
     }
     
     public func thenBy<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).name
+        let attributeName = orderingClosure(T.self).___name
         return self.sortBy(attributeName, ascending: true)
     }
     
     public func thenByAscending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).name
+        let attributeName = orderingClosure(T.self).___name
         return self.sortBy(attributeName, ascending: true)
     }
     
     public func thenByDescending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).name
+        let attributeName = orderingClosure(T.self).___name
         return self.sortBy(attributeName, ascending: false)
     }
     
@@ -243,9 +243,9 @@ extension Table {
 
     private func aggregateWithFunctionName<U>(functionName: String, attributeClosure: (T.Type) -> Attribute<U>) -> U! {
         let attribute = attributeClosure(T.self)
-        let attributeDescription = self.entityDescription.attributesByName[attribute.name] as! NSAttributeDescription
+        let attributeDescription = self.entityDescription.attributesByName[attribute.___name] as! NSAttributeDescription
         
-        let keyPathExpression = NSExpression(forKeyPath: attribute.name)
+        let keyPathExpression = NSExpression(forKeyPath: attribute.___name)
         let functionExpression = NSExpression(forFunction: "\(functionName):", arguments: [keyPathExpression])
         
         let expressionDescription = NSExpressionDescription()
@@ -308,7 +308,7 @@ extension Table {
         let attributeAndValue = attributeToUpdateClosure(T.self)
         var propertiesToUpdate = [NSString : AnyObject]()
 
-        propertiesToUpdate[attributeAndValue.0.name as NSString] = attributeAndValue.1 as? AnyObject
+        propertiesToUpdate[attributeAndValue.0.___name as NSString] = attributeAndValue.1 as? AnyObject
         
         self.batchUpdate(propertiesToUpdate, completionClosure: completionClosure)
     }
@@ -334,7 +334,7 @@ extension Table {
 //    }
 
     public func select<U>(attributeToSelectClosure: (T.Type) -> Attribute<U>) -> AttributeQuery {
-        return self.select([attributeToSelectClosure(T.self).name])
+        return self.select([attributeToSelectClosure(T.self).___name])
     }
     
     public func select() -> AttributeQuery {

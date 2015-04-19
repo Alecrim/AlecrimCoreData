@@ -36,15 +36,15 @@
 
 import Foundation
 
-public final class Attribute<T> {
+public class Attribute<T> {
     
-    public let name: String
+    public let ___name: String
     
     public init(_ name: String) {
-        self.name = name
+        self.___name = name
     }
     
-    private lazy var expression: NSExpression = { return NSExpression(forKeyPath: self.name) }()
+    private lazy var expression: NSExpression = { return NSExpression(forKeyPath: self.___name) }()
     
     private func expressionForValue(value: T) -> NSExpression {
         // TODO: Find a cleaner implementation
@@ -195,14 +195,14 @@ extension Attribute: Equatable {
 }
 
 public func ==<T>(left: Attribute<T>, right: Attribute<T>) -> Bool {
-    return left.name == right.name
+    return left.___name == right.___name
 }
 
 // MARK: - Hashable protocol
 
 extension Attribute: Hashable {
     
-    public var hashValue: Int { return self.name.hashValue }
+    public var hashValue: Int { return self.___name.hashValue }
     
 }
 
@@ -458,3 +458,11 @@ public func ||(left: NSPredicate, right: NSPredicate) -> NSCompoundPredicate {
 prefix public func !(left: NSPredicate) -> NSCompoundPredicate {
     return NSCompoundPredicate(type: NSCompoundPredicateType.NotPredicateType, subpredicates: [left])
 }
+
+
+// MARK: ACDGen support
+
+public class SingleEntityAttribute<T>: Attribute<T> {
+    
+}
+
