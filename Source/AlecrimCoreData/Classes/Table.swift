@@ -353,11 +353,22 @@ extension Table {
 #if os(iOS)
     
 extension Table {
-    
+
     public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchedResultsController<T> {
         return FetchedResultsController<T>(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context.managedObjectContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
-    
+
+    public func toNativeFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil, performFetch: Bool = true) -> NSFetchedResultsController {
+        let frc = NSFetchedResultsController(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context.managedObjectContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+        
+        if performFetch {
+            var error: NSError? = nil
+            let success = frc.performFetch(&error)
+        }
+        
+        return frc
+    }
+
 }
     
 #endif
