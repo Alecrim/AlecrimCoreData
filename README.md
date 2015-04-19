@@ -36,7 +36,9 @@ It's assumed that all entity classes was already created and added to the projec
 
 You can write managed object classes by hand or generate them using Xcode. Now you can also use ACDGen. ;-)
 
-ACDGen app is a Core Data entity class generator made with AlecrimCoreData in mind. It is completely optional, but since it can also generate attribute class members for use in closure parameters, the experience using AlecrimCoreData is greatly improved. You can download it for free from http://opensource.alecrim.com/AlecrimCoreData/ACDGen.zip.
+ACDGen app is a Core Data entity class generator made with AlecrimCoreData in mind. It is completely optional, but since it can also generate attribute class members for use in closure parameters, the experience using AlecrimCoreData is greatly improved.
+
+You can use it from `Bin` folder.
 
 ## Usage
 
@@ -101,6 +103,46 @@ if let person = dataContext.people.first({ $0.identifier == 123 }) {
 	println(person.name)
 }
 ```
+
+#### Count Entities
+
+You can perform a count of the entities in your Persistent Store:
+
+```swift
+let count = dataContext.people.filter({ $0.lastName == "Smith" }).count()
+```
+
+Or:
+
+```swift
+let count = dataContext.people.count({ $0.lastName == "Smith" })
+```
+
+#### Aggregate Functions
+
+You can use aggregate functions on a single attribute:
+
+```swift
+let total = dataContext.entities.sum({ $0.value })
+```
+
+The `sum`, `min`, `max` and `average` functions are supported.
+
+#### Selecting Only Some Attributes
+
+You can specify an attribute to select:
+
+```swift
+let lastNames = dataContext.people.select({ $0.lastName }).distinct()
+```
+
+Or multiple properties to select:
+
+```swift
+let firstAndLastNames = dataContext.people.select(["firstName", "lastName"])
+```
+
+In both cases the result is an array of `NSDictionary`.
 
 #### Advanced Fetching
 
@@ -167,16 +209,16 @@ Call the `to...` method in the end of chain.
 
 ```swift
 let fetchRequest = dataContext.people.toFetchRequest()
-let arrayController = dataContext.people.toArrayController() // OS X only
-let fetchedResultsController = dataContext.people.toFetchedResultsController() // iOS only
-```
 
-#### Find the number of entities
+// OS X only
+let arrayController = dataContext.people.toArrayController()
 
-You can also perform a count of the entities in your Persistent Store:
+// iOS only (returns an AlecrimCoreData FecthedResultsController strong typed instance)
+let fetchedResultsController = dataContext.people.toFetchedResultsController() 
 
-```swift
-let count = dataContext.people.filter({ $0.lastName == "Smith" }).count()
+// iOS only (returns a native NSFetchedResultsController instance)
+let fetchedResultsController = dataContext.people.toNativeFetchedResultsController()
+
 ```
 
 ### Creating new Entities
@@ -203,7 +245,14 @@ if let person = dataContext.people.first({ $0.identifier == 123 }) {
 }
 ```
 
-## Saving
+To delete many entities:
+
+```swift
+dataContext.people.filter({ $0.canBeDeleted == true }).delete()
+```
+
+
+### Saving
 
 You can save the data context in the end, after all changes were made.
 
@@ -215,7 +264,6 @@ person.additionalInfo = "The best Doctor ever!"
 
 // get success and error
 let (success, error) = dataContext.save()
-
 if success {
 	// ...
 }
@@ -224,7 +272,7 @@ else {
 }
 ```
 
-### Threading
+#### Threading
 
 You can fetch and save entities in background calling a global function that creates a new data context instance for this:
 
@@ -233,171 +281,53 @@ You can fetch and save entities in background calling a global function that cre
 let department = dataContext.departments.first({ $0.identifier == 100 })!
 
 // the closure below will run in a background context queue
-performInBackground(dataContext) { backgroundDataContext in
-	if let person = backgroundDataContext.people.first({ $0.identifier == 321 }) {
-	    // must bring to backgroundDataContext
-	    person.department = department.inContext(backgroundDataContext)! 
+performInBackground(dataContext) { bgc in
+	if let person = bgc.people.first({ $0.identifier == 321 }) {
+	    // we must bring department to our background context
+	    person.department = department.inContext(bgc)! 
 	    person.otherData = "Other Data"
 	}
 	
-	backgroundDataContext.save()
+	if bgc.save().0 {
+		// ...
+	}
 }
 ```
 
-## Advanced Configuration
+### Batch Updates
+
+You can do batch updates on a single attribute using:
+
+```swift
+dataContext.entities.batchUpdate({ ($0.modified, true) }) { countOfUpdatedEntities, error in
+    if error == nil {
+		// ...
+	}
+}
+```
+
+Or you can specify multiples properties to update:
+
+```swift
+dataContext.entities.batchUpdate(["modified" : true, "dateModified" : NSDate()]) { countOfUpdatedEntities, error in
+	if error == nil {
+		// ...
+	}
+}
+```
+
+### Advanced Configuration
 
 You can use `ContextOptions` class for a custom configuration.
 
-### iCloud Core Data sync
+#### iCloud Core Data sync
 
-Example configuration when using iCloud Core Data sync.
+See `Samples` folder for a configuration example for iCloud Core Data sync.
 
-```swift
-import Foundation
-import AlecrimCoreData
 
-class DataContext: AlecrimCoreData.Context {
+#### Ensembles
 
-	var people:      Table<PersonEntity>     { return Table<PersonEntity>(context: self) }
-	var departments: Table<DepartmentEntity> { return Table<DepartmentEntity>(context: self) }
-
-	// MARK - custom init
-
-	init?() {
-		let contextOptions = ContextOptions(stackType: .SQLite)
-
-        // only needed if model is not in main bundle
-		contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
-
-        // only needed if entity class names are different from entity names
-		contextOptions.entityClassNameSufix = "Entity"
-
-        // enable iCloud Core Data sync
-		contextOptions.ubiquityEnabled = true
-
-        // only needed if the identifier is different from default identifier
-		contextOptions.ubiquitousContainerIdentifier = "iCloud.com.company.MyApp"
-
-		// call super
-		super.init(contextOptions: contextOptions)
-	}
-
-}
-```
-
-### Ensembles
-
-Example configuration when using [Ensembles](http://www.ensembles.io).
-
-```swift
-import Foundation
-import AlecrimCoreData
-import Ensembles
-
-class DataContext: AlecrimCoreData.Context {
-
-	var people:      Table<PersonEntity>     { return Table<PersonEntity>(context: self) }
-	var departments: Table<DepartmentEntity> { return Table<DepartmentEntity>(context: self) }
-
-	// MARK: - ensembles support
-
-	var cloudFileSystem: CDEICloudFileSystem! = nil
-	var ensemble: CDEPersistentStoreEnsemble! = nil
-	var ensembleDelegate: EnsembleDelegate! = nil
-
-	var obs1: AnyObject! = nil
-	var obs2: AnyObject! = nil
-
-	// MARK - custom init
-
-	init?() {
-		let contextOptions = ContextOptions(stackType: .SQLite)
-
-        // only needed if model is not in main bundle
-        contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
-
-        // only needed if entity class names are different from entity names
-        contextOptions.entityClassNameSufix = "Entity"
-
-        // call super
-		super.init(contextOptions: contextOptions)
-
-		//
-		self.cloudFileSystem = CDEICloudFileSystem(ubiquityContainerIdentifier: "iCloud.com.company.MyApp")
-		self.ensemble = CDEPersistentStoreEnsemble(
-			ensembleIdentifier: "EnsembleStore",
-			persistentStoreURL: contextOptions.persistentStoreURL,
-			managedObjectModelURL: contextOptions.managedObjectModelURL,
-			cloudFileSystem: self.cloudFileSystem
-		)
-
-		self.ensembleDelegate = EnsembleDelegate(managedObjectContext: self.managedObjectContext)
-		ensemble.delegate = self.ensembleDelegate
-
-        //
-		self.obs1 = NSNotificationCenter.defaultCenter().addObserverForName(CDEMonitoredManagedObjectContextDidSaveNotification, object: nil, queue: nil) { [unowned self] notification in
-			self.sync()
-		}
-
-		self.obs2 = NSNotificationCenter.defaultCenter().addObserverForName(CDEICloudFileSystemDidDownloadFilesNotification, object: nil, queue: nil) { [unowned self] notification in
-			self.sync()
-		}
-
-		//
-		self.sync()
-	}
-
-	deinit {
-		NSNotificationCenter.defaultCenter().removeObserver(self.obs1)
-		NSNotificationCenter.defaultCenter().removeObserver(self.obs2)
-	}
-
-	func sync() {
-		if self.ensemble.leeched {
-			self.ensemble.mergeWithCompletion { error in
-				if let error = error {
-					println(error)
-				}
-			}
-		}
-		else {
-			self.ensemble.leechPersistentStoreWithCompletion { error in
-				if let error = error {
-					println(error)
-				}
-			}
-		}
-	}
-}
-
-class EnsembleDelegate: NSObject, CDEPersistentStoreEnsembleDelegate  {
-
-	let managedObjectContext: NSManagedObjectContext
-
-	init(managedObjectContext: NSManagedObjectContext) {
-		self.managedObjectContext = managedObjectContext
-	}
-
-	@objc func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble, didSaveMergeChangesWithNotification notification: NSNotification) {
-		var currentContext: NSManagedObjectContext? = self.managedObjectContext
-
-		while let c = currentContext {
-			c.performBlockAndWait {
-				c.mergeChangesFromContextDidSaveNotification(notification)
-			}
-
-			currentContext = currentContext?.parentContext
-    	}
-	}
-
-	@objc func persistentStoreEnsemble(ensemble: CDEPersistentStoreEnsemble, globalIdentifiersForManagedObjects objects: [AnyObject]) -> [AnyObject] {
-		return (objects as NSArray).valueForKeyPath("uniqueIdentifier") as! [AnyObject]
-	}
-
-}
-
-```
-
+See `Samples` folder for a configuration example for [Ensembles](http://www.ensembles.io).
 
 ## Using
 
@@ -425,7 +355,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 use_frameworks!
 
-pod 'AlecrimCoreData', '~> 3.0-beta.4'
+pod 'AlecrimCoreData', '~> 3.0-beta.5'
 ```
 
 Then, run the following command:
