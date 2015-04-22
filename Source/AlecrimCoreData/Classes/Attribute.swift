@@ -464,5 +464,7 @@ prefix public func !(left: NSPredicate) -> NSCompoundPredicate {
 
 public class SingleEntityAttribute<T>: Attribute<T> {
     
+    public override init(_ name: String) { super.init(name) }
+    
 }
 

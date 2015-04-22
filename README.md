@@ -32,13 +32,13 @@ It's important that properties (or methods) always return a _new_ instance of a 
 
 It's assumed that all entity classes was already created and added to the project. In the above section example there are two entities: `Person` and `Department`.
 
-### Optional Code Generation Tool
+### ACDGen
 
 You can write managed object classes by hand or generate them using Xcode. Now you can also use ACDGen. ;-)
 
 ACDGen app is a Core Data entity class generator made with AlecrimCoreData in mind. It is completely optional, but since it can also generate attribute class members for use in closure parameters, the experience using AlecrimCoreData is greatly improved.
 
-You can use it from `Bin` folder.
+You can open it from the `Bin` folder.
 
 ## Usage
 
@@ -355,7 +355,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 use_frameworks!
 
-pod 'AlecrimCoreData', '~> 3.0-beta.5'
+pod 'AlecrimCoreData', '~> 3.0-beta.6'
 ```
 
 Then, run the following command:
