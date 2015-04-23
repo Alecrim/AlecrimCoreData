@@ -66,7 +66,7 @@ extension AttributeQuery {
             results += objects
         }
         
-        // ensure distinct results
+        // HAX: ensure distinct results
         if self.returnsDistinctResults {
             let set = NSSet(array: results)
             results = set.allObjects as! [NSDictionary]
