@@ -299,11 +299,6 @@ extension Table {
         }
     }
 
-//    public func batchUpdate(propertiesToUpdateClosure: (T.Type) -> [NSString : AnyObject], completionClosure: (Int, NSError?) -> Void) {
-//        let propertiesToUpdate = propertiesToUpdateClosure(T.self)
-//        self.batchUpdate(propertiesToUpdate, completionClosure: completionClosure)
-//    }
-
     public func batchUpdate<U>(attributeToUpdateClosure: (T.Type) -> (Attribute<U>, U), completionClosure: (Int, NSError?) -> Void) {
         let attributeAndValue = attributeToUpdateClosure(T.self)
         var propertiesToUpdate = [NSString : AnyObject]()
@@ -320,18 +315,9 @@ extension Table {
 extension Table {
 
     public func select(propertiesToFetch: [String]) -> AttributeQuery {
-        let attributeQuery = AttributeQuery(context: self.context, entityName: self.entityName, propertiesToFetch: propertiesToFetch)
+        let attributeQuery = AttributeQuery(previousQuery: self, propertiesToFetch: propertiesToFetch)
         return attributeQuery
     }
-
-//    public func select(propertiesToFetch: String...) -> AttributeQuery {
-//        return self.select(propertiesToFetch)
-//    }
-
-//    public func select(propertiesToFetchClosure: (T.Type) -> [String]) -> AttributeQuery {
-//        let propertiesToFetch = propertiesToFetchClosure(T.self)
-//        return self.select(propertiesToFetch)
-//    }
 
     public func select<U>(attributeToSelectClosure: (T.Type) -> Attribute<U>) -> AttributeQuery {
         return self.select([attributeToSelectClosure(T.self).___name])
