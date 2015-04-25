@@ -50,7 +50,18 @@ public class Query {
         return other
     }
     
-    internal func sortDescriptorsFromString(string: String, defaultAscendingValue: Bool) -> [NSSortDescriptor] {
+    internal func executeFetchRequest(fetchRequest: NSFetchRequest) -> [AnyObject]? {
+        var objects: [AnyObject]?
+        
+        self.context.managedObjectContext.performBlockAndWait {
+            var executeFetchRequestError: NSError? = nil
+            objects = self.context.managedObjectContext.executeFetchRequest(fetchRequest, error: &executeFetchRequestError)
+        }
+        
+        return objects
+    }
+
+    private func sortDescriptorsFromString(string: String, defaultAscendingValue: Bool) -> [NSSortDescriptor] {
         var sortDescriptors = [NSSortDescriptor]()
         
         let sortKeys = string.componentsSeparatedByString(",") as [String]
@@ -78,17 +89,6 @@ public class Query {
         }
         
         return sortDescriptors
-    }
-    
-    internal func executeFetchRequest(fetchRequest: NSFetchRequest) -> [AnyObject]? {
-        var objects: [AnyObject]?
-        
-        self.context.managedObjectContext.performBlockAndWait {
-            var executeFetchRequestError: NSError? = nil
-            objects = self.context.managedObjectContext.executeFetchRequest(fetchRequest, error: &executeFetchRequestError)
-        }
-        
-        return objects
     }
     
 }
@@ -142,8 +142,15 @@ extension Query {
     }
     
     public func sortBy(sortTerm: String, ascending: Bool = true) -> Self {
+        return self.sortBy(sortDescriptors: self.sortDescriptorsFromString(sortTerm, defaultAscendingValue: ascending))
+    }
+    
+    public func sortBy(sortDescriptor addedSortDescriptor: NSSortDescriptor) -> Self {
+        return self.sortBy(sortDescriptors: [addedSortDescriptor])
+    }
+    
+    public func sortBy(sortDescriptors addedSortDescriptors: [NSSortDescriptor]) -> Self {
         let clone = self.clone()
-        let addedSortDescriptors = self.sortDescriptorsFromString(sortTerm, defaultAscendingValue: ascending)
         
         if clone.sortDescriptors == nil {
             clone.sortDescriptors = addedSortDescriptors
