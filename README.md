@@ -169,11 +169,13 @@ for pageNumber in 0..<5 {
 
 #### Collection Operators
 
-You can use collection operators for "to many" relationships. Above is an example using `count` operator:
+You can use collection operators for "to many" relationships:
 
 ```swift
 let crowdedDepartments = dataContext.departments.filter({ $0.people.count > 100 })
 ```
+
+Only the `count` operator is supported in this version.
 
 #### Asynchronous Fetching
 
