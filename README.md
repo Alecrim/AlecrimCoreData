@@ -256,7 +256,7 @@ if let person = dataContext.people.first({ $0.identifier == 123 }) {
 To delete many entities:
 
 ```swift
-dataContext.people.filter({ $0.canBeDeleted == true }).delete()
+dataContext.departments.filter({ $0.people.count == 0 }).delete()
 ```
 
 
