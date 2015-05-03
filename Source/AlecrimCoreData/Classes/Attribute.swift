@@ -44,7 +44,9 @@ public class Attribute<T> {
         self.___name = name
     }
     
-    private lazy var expression: NSExpression = { return NSExpression(forKeyPath: self.___name) }()
+    private var expression: NSExpression {
+        return NSExpression(forKeyPath: self.___name)
+    }
     
     private func expressionForValue(value: T) -> NSExpression {
         // TODO: Find a cleaner implementation
@@ -460,7 +462,7 @@ prefix public func !(left: NSPredicate) -> NSCompoundPredicate {
 }
 
 
-// MARK: ACDGen support
+// MARK: - Entity attribute support
 
 public class SingleEntityAttribute<T>: Attribute<T> {
     
@@ -468,3 +470,25 @@ public class SingleEntityAttribute<T>: Attribute<T> {
     
 }
 
+public class EntitySetAttribute<T>: Attribute<T> {
+    
+    public override init(_ name: String) { super.init(name) }
+    
+    public lazy var count: EntitySetCollectionOperatorAttribute<Int> =  EntitySetCollectionOperatorAttribute<Int>(collectionOperator: "@count", entitySetAttributeName: self.___name)
+    
+}
+
+public class EntitySetCollectionOperatorAttribute<T>: Attribute<T> {
+    
+    private let entitySetAttributeName: String
+    
+    public init(collectionOperator: String, entitySetAttributeName: String) {
+        self.entitySetAttributeName = entitySetAttributeName
+        super.init(collectionOperator)
+    }
+
+    private override var expression: NSExpression {
+        return NSExpression(forKeyPath: "\(self.entitySetAttributeName).\(self.___name)")
+    }
+    
+}

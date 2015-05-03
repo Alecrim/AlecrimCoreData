@@ -167,6 +167,16 @@ for pageNumber in 0..<5 {
 }
 ```
 
+#### Collection Operators
+
+You can use collection operators for "to many" relationships:
+
+```swift
+let crowdedDepartments = dataContext.departments.filter({ $0.people.count > 100 })
+```
+
+Only the `count` operator is supported in this version.
+
 #### Asynchronous Fetching
 
 You can also fetch entities asynchronously and get the results later on main thread:
@@ -248,7 +258,7 @@ if let person = dataContext.people.first({ $0.identifier == 123 }) {
 To delete many entities:
 
 ```swift
-dataContext.people.filter({ $0.canBeDeleted == true }).delete()
+dataContext.departments.filter({ $0.people.count == 0 }).delete()
 ```
 
 
@@ -355,7 +365,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 use_frameworks!
 
-pod 'AlecrimCoreData', '~> 3.0-beta.6'
+pod 'AlecrimCoreData', '~> 3.0-beta.7’
 ```
 
 Then, run the following command:

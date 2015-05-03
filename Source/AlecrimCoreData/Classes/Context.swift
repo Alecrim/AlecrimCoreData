@@ -105,16 +105,25 @@ extension Context {
             self.managedObjectContext.undoManager = newValue
         }
     }
-    
-    #if os(OSX)
+
+}
+
+#if os(OSX)
+
+extension Context {
 
     public func commitEditing() -> Bool {
         return self.managedObjectContext.commitEditing()
     }
     
-    #endif
-    
+    public func discardEditing() {
+        self.managedObjectContext.discardEditing()
+    }
+
 }
+    
+#endif
+
 
 extension Context {
     

@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "AlecrimCoreData"
-  s.version      = "3.0-beta.6"
+  s.version      = "3.0-beta.7"
   s.summary      = "A framework to easily access Core Data objects in Swift."
   s.homepage     = "https://github.com/Alecrim/AlecrimCoreData"
 

@@ -14,8 +14,15 @@ public final class AttributeQuery: Query {
     private var propertiesToFetch = [String]()
     private var returnsDistinctResults = false
     
-    internal convenience init(context: Context, entityName: String, propertiesToFetch: [String]) {
-        self.init(context: context, entityName: entityName)
+    internal convenience init(previousQuery: Query, propertiesToFetch: [String]) {
+        self.init(context: previousQuery.context, entityName: previousQuery.entityName)
+        
+        self.offset = previousQuery.offset
+        self.limit = previousQuery.limit
+        
+        self.predicate = previousQuery.predicate?.copy() as? NSPredicate
+        self.sortDescriptors = previousQuery.sortDescriptors
+
         self.propertiesToFetch += propertiesToFetch
     }
 
@@ -50,14 +57,21 @@ extension AttributeQuery {
     public func toArray() -> [NSDictionary] {
         let fetchRequest = self.toFetchRequest()
         fetchRequest.resultType = .DictionaryResultType
-        fetchRequest.propertiesToFetch = self.propertiesToFetch
         fetchRequest.returnsDistinctResults = self.returnsDistinctResults
+        fetchRequest.propertiesToFetch = self.propertiesToFetch
         
         var results = [NSDictionary]()
         
         if let objects = self.executeFetchRequest(fetchRequest) as? [NSDictionary] {
             results += objects
         }
+        
+        // HAX: ensure distinct results
+        if self.returnsDistinctResults {
+            let set = NSSet(array: results)
+            results = set.allObjects as! [NSDictionary]
+        }
+        
         
         return results
     }
