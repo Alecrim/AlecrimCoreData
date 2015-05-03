@@ -365,7 +365,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 use_frameworks!
 
-pod 'AlecrimCoreData', '~> 3.0-beta.6'
+pod 'AlecrimCoreData', '~> 3.0-beta.7’
 ```
 
 Then, run the following command:
