@@ -392,7 +392,7 @@ If you want to contribute, please feel free to fork the repository and send pull
 
 ### Version History
 
-- 3.0 - Swift framework; added attributes support and many other improvements
+- 3.0 - Swift framework; made AlecrimCoreData a universal framework (iOS and OS X); removed Carthage support as it does not support universal frameworks; added attributes support and many other improvements
 - 2.1 - Swift framework; added CocoaPods and Carthage support
 - 2.0 - Swift framework; first public release as open source
 - 1.1 - Objective-C framework; private Alecrim team use
