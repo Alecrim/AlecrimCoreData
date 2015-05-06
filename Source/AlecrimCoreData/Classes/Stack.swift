@@ -76,6 +76,16 @@ internal final class Stack {
         self.addObservers()
     }
     
+    internal init?(rootManagedObjectContext: NSManagedObjectContext, mainManagedObjectContext: NSManagedObjectContext, contextOptions: ContextOptions) {
+        self.contextOptions = contextOptions
+        self.coordinator = rootManagedObjectContext.persistentStoreCoordinator
+        self.store = self.coordinator.persistentStores.first as! NSPersistentStore
+        self.rootManagedObjectContext = rootManagedObjectContext
+        self.mainManagedObjectContext = mainManagedObjectContext
+        
+        self.addObservers()
+    }
+    
     deinit {
         self.removeObservers()
     }

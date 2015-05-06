@@ -56,48 +56,50 @@ public final class ContextOptions {
 
 extension ContextOptions {
     
-    internal func fillEmptyOptions() {
+    internal func fillEmptyOptions(customConfiguration: Bool = false) {
         //
         if self.filled {
             return
         }
         
-        // if managed object model name is nil, try to get default name from main bundle
-        if self.managedObjectModelName == nil {
-            if let infoDictionary = self.mainBundle.infoDictionary {
-                self.managedObjectModelName = infoDictionary[kCFBundleNameKey] as? String
-            }
-        }
-
-        // managed object model
-        if self.managedObjectModelName != nil {
-            self.managedObjectModelURL = self.modelBundle.URLForResource(self.managedObjectModelName!, withExtension: "momd")
-            
-            if self.managedObjectModelURL != nil {
-                self.managedObjectModel = NSManagedObjectModel(contentsOfURL: self.managedObjectModelURL)
-            }
-        }
-        
-        // local store
-        if let bundleIdentifier = self.mainBundle.bundleIdentifier {
-            if self.pesistentStoreRelativePath == nil {
-                self.pesistentStoreRelativePath = bundleIdentifier
+        if !customConfiguration {
+            // if managed object model name is nil, try to get default name from main bundle
+            if self.managedObjectModelName == nil {
+                if let infoDictionary = self.mainBundle.infoDictionary {
+                    self.managedObjectModelName = infoDictionary[kCFBundleNameKey] as? String
+                }
             }
             
-            let fileManager = NSFileManager.defaultManager()
-            let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+            // managed object model
+            if self.managedObjectModelName != nil {
+                self.managedObjectModelURL = self.modelBundle.URLForResource(self.managedObjectModelName!, withExtension: "momd")
+                
+                if self.managedObjectModelURL != nil {
+                    self.managedObjectModel = NSManagedObjectModel(contentsOfURL: self.managedObjectModelURL)
+                }
+            }
             
-            if let applicationSupportDirectoryURL = urls.last as? NSURL {
-                if self.pesistentStoreFileName == nil {
-                    self.pesistentStoreFileName = self.managedObjectModelName.stringByAppendingPathExtension("sqlite")!
+            // local store
+            if let bundleIdentifier = self.mainBundle.bundleIdentifier {
+                if self.pesistentStoreRelativePath == nil {
+                    self.pesistentStoreRelativePath = bundleIdentifier
                 }
                 
-                let pesistentStoreDirectoryURL = applicationSupportDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreRelativePath, isDirectory: true)
-                self.persistentStoreURL = pesistentStoreDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreFileName, isDirectory: false)
-                
                 let fileManager = NSFileManager.defaultManager()
-                if !fileManager.fileExistsAtPath(pesistentStoreDirectoryURL.path!) {
-                    fileManager.createDirectoryAtURL(pesistentStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
+                let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+                
+                if let applicationSupportDirectoryURL = urls.last as? NSURL {
+                    if self.pesistentStoreFileName == nil {
+                        self.pesistentStoreFileName = self.managedObjectModelName.stringByAppendingPathExtension("sqlite")!
+                    }
+                    
+                    let pesistentStoreDirectoryURL = applicationSupportDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreRelativePath, isDirectory: true)
+                    self.persistentStoreURL = pesistentStoreDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreFileName, isDirectory: false)
+                    
+                    let fileManager = NSFileManager.defaultManager()
+                    if !fileManager.fileExistsAtPath(pesistentStoreDirectoryURL.path!) {
+                        fileManager.createDirectoryAtURL(pesistentStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
+                    }
                 }
             }
         }
