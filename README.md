@@ -129,7 +129,7 @@ You can use aggregate functions on a single attribute:
 let total = dataContext.entities.sum({ $0.value })
 ```
 
-The `sum`, `min`, `max` and `average` functions are supported. If the orginal property is an `Optional` the result will be an `Optional` too.
+The `sum`, `min`, `max` and `average` functions are supported. If the original property is an `Optional` the result will be an `Optional` too.
 
 #### Selecting Only Some Attributes
 
