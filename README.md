@@ -74,7 +74,9 @@ let peopleSorted = dataContext.people.orderBy({ $0.lastName })
 Or, to return the results sorted by multiple properties:
 
 ```swift
-let peopleSorted = dataContext.people.orderBy({ $0.lastName }).thenBy({ $0.firstName })
+let peopleSorted = dataContext.people
+	.orderBy { $0.lastName }
+    .thenBy { $0.firstName }
 
 // OR
 
@@ -84,7 +86,9 @@ let peopleSorted = dataContext.people.sortBy("lastName,firstName")
 Or, to return the results sorted by multiple properties with different attributes:
 
 ```swift
-let peopleSorted = dataContext.people.orderByDescending({ $0.lastName }).thenByAscending({ $0.firstName })
+let peopleSorted = dataContext.people
+	.orderByDescending { $0.lastName }
+    .thenByAscending { $0.firstName }
 
 // OR
 
@@ -125,7 +129,7 @@ You can use aggregate functions on a single attribute:
 let total = dataContext.entities.sum({ $0.value })
 ```
 
-The `sum`, `min`, `max` and `average` functions are supported.
+The `sum`, `min`, `max` and `average` functions are supported. If the orginal property is an `Optional` the result will be an `Optional` too.
 
 #### Selecting Only Some Attributes
 
@@ -154,9 +158,9 @@ for pageNumber in 0..<5 {
 	println("Page: \(pageNumber)")
 	
 	let peopleInCurrentPage = dataContext.people
-	    .filter({ $0.department << [dept1, dept2] })
-	    .orderBy({ $0.firstName })
-	    .thenBy({ $0.lastName })
+	    .filter { $0.department << [dept1, dept2] }
+	    .orderBy { $0.firstName }
+	    .thenBy { $0.lastName }
 	    .skip(pageNumber * itemsPerPage)
 	    .take(itemsPerPage)
 	
@@ -201,7 +205,10 @@ let peopleArray = dataContext.people.sortBy("firstName,lastName").toArray()
 
 // OR
 
-let theSmiths = dataContext.people.filter({ $0.lastName == "Smith" }).orderBy({ $0.firstName })
+let theSmiths = dataContext.people
+	.filter { $0.lastName == "Smith" }
+    .orderBy { $0.firstName }
+    
 let count = theSmiths.count()
 let array = theSmiths.toArray()
 
