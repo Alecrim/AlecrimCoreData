@@ -175,7 +175,7 @@ for pageNumber in 0..<5 {
 You can use collection operators for "to many" relationships:
 
 ```swift
-let crowdedDepartments = dataContext.departments.filter({ $0.people.count > 100 })
+let crowdedDepartments = dataContext.departments.filter { $0.people.count > 100 }
 ```
 
 Only the `count` operator is supported in this version.
