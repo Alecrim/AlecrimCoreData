@@ -259,8 +259,19 @@ extension Table {
         
         var error: NSError? = nil
         let results = self.context.executeFetchRequest(fetchRequest, error: &error)
-
-        return (results?.first as? NSDictionary)?.valueForKey(expressionDescription.name) as? U
+        
+        if let value: AnyObject = (results?.first as? NSDictionary)?.valueForKey(expressionDescription.name) {
+            if let safeValue = value as? U {
+                return safeValue
+            }
+            else {
+                // HAX: try brute force
+                return unsafeBitCast(value, U.self)
+            }
+        }
+        else {
+            return nil
+        }
     }
 
 }
