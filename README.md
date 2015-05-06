@@ -186,8 +186,8 @@ You can also fetch entities asynchronously and get the results later on main thr
 
 ```swift
 let progress = dataContext.people.fetchAsync { fetchedEntities, error in
-    if let entities = fetchedEntities {
-        // ...
+    if error != nil {
+        // Do a nice error handling here
     }
 }
 ```
