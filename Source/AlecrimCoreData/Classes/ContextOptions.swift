@@ -25,6 +25,7 @@ public final class ContextOptions {
     private(set) public var managedObjectModelURL: NSURL! = nil
     private(set) public var managedObjectModel: NSManagedObjectModel! = nil
     
+    public var groupIdentifier: String?     // intented for extension use
     public var pesistentStoreRelativePath: String! = nil                // defaults to main bundle identifier
     public var pesistentStoreFileName: String! = nil                    // defaults to managed object model name + ".sqlite"
     private(set) public var persistentStoreURL: NSURL! = nil
@@ -85,14 +86,21 @@ extension ContextOptions {
             }
             
             let fileManager = NSFileManager.defaultManager()
-            let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+            var pesistentStoreContainerUrl: NSURL?
             
-            if let applicationSupportDirectoryURL = urls.last as? NSURL {
+            if let identifier = groupIdentifier {
+                pesistentStoreContainerUrl = NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier(identifier)
+            } else{
+                let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+                pesistentStoreContainerUrl = urls.last as? NSURL
+            }
+            
+            if let containerUrl = pesistentStoreContainerUrl {
                 if self.pesistentStoreFileName == nil {
                     self.pesistentStoreFileName = self.managedObjectModelName.stringByAppendingPathExtension("sqlite")!
                 }
                 
-                let pesistentStoreDirectoryURL = applicationSupportDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreRelativePath, isDirectory: true)
+                let pesistentStoreDirectoryURL = containerUrl.URLByAppendingPathComponent(self.pesistentStoreRelativePath, isDirectory: true)
                 self.persistentStoreURL = pesistentStoreDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreFileName, isDirectory: false)
                 
                 let fileManager = NSFileManager.defaultManager()
