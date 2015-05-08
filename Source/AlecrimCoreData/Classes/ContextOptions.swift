@@ -40,7 +40,7 @@ public final class ContextOptions {
     public private(set) var managedObjectModel: NSManagedObjectModel! = nil
 
     // MARK: - public peroprties - app extensions
-    public var securityApplicationGroupIdentifier: String?              // intented for app extension use (com.apple.security.application-groups entitlement needd)
+    public var securityApplicationGroupIdentifier: String?              // intented for app extensions use (com.apple.security.application-groups entitlement needed)
 
     // MARK: - public properties - persistent location
     public var pesistentStoreRelativePath: String! = nil                // defaults to main bundle identifier
@@ -107,6 +107,7 @@ extension ContextOptions {
             let pesistentStoreContainerURL: NSURL?
             
             if let securityApplicationGroupIdentifier = self.securityApplicationGroupIdentifier {
+                // stored in "~/Library/Group Containers/." (this method also creates the directory if it does not yet exist)
                 pesistentStoreContainerURL = fileManager.containerURLForSecurityApplicationGroupIdentifier(securityApplicationGroupIdentifier)
             } else{
                 let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
@@ -121,7 +122,6 @@ extension ContextOptions {
                 let pesistentStoreDirectoryURL = containerURL.URLByAppendingPathComponent(self.pesistentStoreRelativePath, isDirectory: true)
                 self.persistentStoreURL = pesistentStoreDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreFileName, isDirectory: false)
                 
-                let fileManager = NSFileManager.defaultManager()
                 if !fileManager.fileExistsAtPath(pesistentStoreDirectoryURL.path!) {
                     fileManager.createDirectoryAtURL(pesistentStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
                 }
