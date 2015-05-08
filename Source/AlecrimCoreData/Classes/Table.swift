@@ -225,23 +225,23 @@ extension Table {
 
 extension Table {
     
-    public func sum<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U! {
+    public func sum<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U {
         return self.aggregateWithFunctionName("sum", attributeClosure: attributeClosure)
     }
 
-    public func min<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U! {
+    public func min<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U {
         return self.aggregateWithFunctionName("min", attributeClosure: attributeClosure)
     }
 
-    public func max<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U! {
+    public func max<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U {
         return self.aggregateWithFunctionName("max", attributeClosure: attributeClosure)
     }
 
-    public func average<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U! {
+    public func average<U>(attributeClosure: (T.Type) -> Attribute<U>) -> U {
         return self.aggregateWithFunctionName("average", attributeClosure: attributeClosure)
     }
 
-    private func aggregateWithFunctionName<U>(functionName: String, attributeClosure: (T.Type) -> Attribute<U>) -> U! {
+    private func aggregateWithFunctionName<U>(functionName: String, attributeClosure: (T.Type) -> Attribute<U>) -> U {
         let attribute = attributeClosure(T.self)
         let attributeDescription = self.entityDescription.attributesByName[attribute.___name] as! NSAttributeDescription
         
@@ -260,17 +260,13 @@ extension Table {
         var error: NSError? = nil
         let results = self.context.executeFetchRequest(fetchRequest, error: &error)
         
-        if let value: AnyObject = (results?.first as? NSDictionary)?.valueForKey(expressionDescription.name) {
-            if let safeValue = value as? U {
-                return safeValue
-            }
-            else {
-                // HAX: try brute force
-                return unsafeBitCast(value, U.self)
-            }
+        let value: AnyObject = (results!.first as! NSDictionary).valueForKey(expressionDescription.name)!
+        if let safeValue = value as? U {
+            return safeValue
         }
         else {
-            return nil
+            // HAX: try brute force
+            return unsafeBitCast(value, U.self)
         }
     }
 
