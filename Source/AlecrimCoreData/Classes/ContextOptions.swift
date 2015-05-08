@@ -10,42 +10,55 @@ import Foundation
 import CoreData
 
 public final class ContextOptions {
-    
-    private var cachedEntityNames = Dictionary<String, String>()
 
+    // MARK: - public static properties
     public static var stringComparisonPredicateOptions = (NSComparisonPredicateOptions.CaseInsensitivePredicateOption | NSComparisonPredicateOptions.DiacriticInsensitivePredicateOption)
-    
+
+    // MARK: - public properties - fetch request
     public var fetchBatchSize = 20
-    public var entityClassNamePrefix: String? = nil
-    public var entityClassNameSuffix: String? = nil
-
-    public let mainBundle: NSBundle = NSBundle.mainBundle()
-    public var modelBundle: NSBundle = NSBundle.mainBundle()
-
-    private(set) public var managedObjectModelURL: NSURL! = nil
-    private(set) public var managedObjectModel: NSManagedObjectModel! = nil
     
-    public var pesistentStoreRelativePath: String! = nil                // defaults to main bundle identifier
-    public var pesistentStoreFileName: String! = nil                    // defaults to managed object model name + ".sqlite"
-    private(set) public var persistentStoreURL: NSURL! = nil
-
+    // MARK: - public properties - entity class names x entity names
+    public var entityClassNamePrefix: String? = nil                     // you will have to change this if your class names begin with prefixes (for example: DMCustomer)
+    public var entityClassNameSuffix: String? = nil                     // you will have to change this if your class names have suffixes (for example: CustomerEntity)
+    
+    // MARK: - public properties - stack options
+    public let stackType: StackType
     public var configuration: String? = nil
+
+    // MARK: - public properties - store options
+    public var storeOptions: [NSObject : AnyObject]!
+    public var migratePersistentStoresAutomatically = true
+    public var inferMappingModelAutomaticallyOption = true
+
+    // MARK: - public properties - bundles
+    public let mainBundle: NSBundle = NSBundle.mainBundle()
+    public var modelBundle: NSBundle = NSBundle.mainBundle()            // you will have to change this if your xcdatamodeld file is not in the main bundle (in a framework bundle, for example)
     
-    public var ubiquityEnabled = false
+    // MARK: - public properties - managed object model
+    public var managedObjectModelName: String!                          // defaults to main bundle name
+    public private(set) var managedObjectModelURL: NSURL! = nil
+    public private(set) var managedObjectModel: NSManagedObjectModel! = nil
+
+    // MARK: - public peroprties - app extensions
+    public var securityApplicationGroupIdentifier: String?              // intented for app extensions use (com.apple.security.application-groups entitlement needed)
+
+    // MARK: - public properties - persistent location
+    public var persistentStoreRelativePath: String! = nil               // defaults to main bundle identifier
+    public var persistentStoreFileName: String! = nil                   // defaults to managed object model name + ".sqlite"
+    public private(set) var persistentStoreURL: NSURL! = nil
+
+    // MARK: - public properties - iCloud
+    public var ubiquityEnabled = false                                  // turns the iCloud "light" on/off
     public var ubiquitousContainerIdentifier: String!                   // defaults to "iCloud." + main bundle identifier
     public var ubiquitousContentName = "UbiquityStore"
     public var ubiquitousContentRelativePath: String! = "CoreData/TransactionLogs"
-    private(set) public var ubiquitousContentURL: NSURL! = nil
+    public private(set) var ubiquitousContentURL: NSURL! = nil
+
+    // MARK: - private / internal properties
+    internal private(set) var filled = false
+    private var cachedEntityNames = Dictionary<String, String>()
     
-    public var migratePersistentStoresAutomatically = true
-    public var inferMappingModelAutomaticallyOption = true
-    
-    public let stackType: StackType
-    public var managedObjectModelName: String!             // defaults to main bundle name
-    public var storeOptions: [NSObject : AnyObject]!
-    
-    private(set) internal var filled = false
-    
+    // MARK: - init (finally)
     public init(stackType: StackType = StackType.SQLite, managedObjectModelName: String? = nil, storeOptions: [NSObject : AnyObject]? = nil) {
         self.stackType = stackType
         self.managedObjectModelName = managedObjectModelName
@@ -56,9 +69,15 @@ public final class ContextOptions {
 
 extension ContextOptions {
     
-    internal func fillEmptyOptions() {
+    internal func fillEmptyOptions(customConfiguration: Bool = false) {
         //
         if self.filled {
+            return
+        }
+        
+        // verify if we have exiting managed object contexts set (customConfiguration == true in this case)
+        if customConfiguration {
+            self.filled = true
             return
         }
         
@@ -68,7 +87,7 @@ extension ContextOptions {
                 self.managedObjectModelName = infoDictionary[kCFBundleNameKey] as? String
             }
         }
-
+        
         // managed object model
         if self.managedObjectModelName != nil {
             self.managedObjectModelURL = self.modelBundle.URLForResource(self.managedObjectModelName!, withExtension: "momd")
@@ -80,24 +99,31 @@ extension ContextOptions {
         
         // local store
         if let bundleIdentifier = self.mainBundle.bundleIdentifier {
-            if self.pesistentStoreRelativePath == nil {
-                self.pesistentStoreRelativePath = bundleIdentifier
+            if self.persistentStoreRelativePath == nil {
+                self.persistentStoreRelativePath = bundleIdentifier
             }
             
             let fileManager = NSFileManager.defaultManager()
-            let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+            let persistentStoreContainerURL: NSURL?
             
-            if let applicationSupportDirectoryURL = urls.last as? NSURL {
-                if self.pesistentStoreFileName == nil {
-                    self.pesistentStoreFileName = self.managedObjectModelName.stringByAppendingPathExtension("sqlite")!
+            if let securityApplicationGroupIdentifier = self.securityApplicationGroupIdentifier {
+                // stored in "~/Library/Group Containers/." (this method also creates the directory if it does not yet exist)
+                persistentStoreContainerURL = fileManager.containerURLForSecurityApplicationGroupIdentifier(securityApplicationGroupIdentifier)
+            } else{
+                let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
+                persistentStoreContainerURL = urls.last as? NSURL
+            }
+            
+            if let containerURL = persistentStoreContainerURL {
+                if self.persistentStoreFileName == nil {
+                    self.persistentStoreFileName = self.managedObjectModelName.stringByAppendingPathExtension("sqlite")!
                 }
                 
-                let pesistentStoreDirectoryURL = applicationSupportDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreRelativePath, isDirectory: true)
-                self.persistentStoreURL = pesistentStoreDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreFileName, isDirectory: false)
+                let persistentStoreDirectoryURL = containerURL.URLByAppendingPathComponent(self.persistentStoreRelativePath, isDirectory: true)
+                self.persistentStoreURL = persistentStoreDirectoryURL.URLByAppendingPathComponent(self.persistentStoreFileName, isDirectory: false)
                 
-                let fileManager = NSFileManager.defaultManager()
-                if !fileManager.fileExistsAtPath(pesistentStoreDirectoryURL.path!) {
-                    fileManager.createDirectoryAtURL(pesistentStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
+                if !fileManager.fileExistsAtPath(persistentStoreDirectoryURL.path!) {
+                    fileManager.createDirectoryAtURL(persistentStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
                 }
             }
         }

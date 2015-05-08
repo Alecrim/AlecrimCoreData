@@ -41,6 +41,49 @@ public class Context {
         
     }
     
+    public init?(rootManagedObjectContext: NSManagedObjectContext, mainManagedObjectContext: NSManagedObjectContext) {
+        if let coordinator = rootManagedObjectContext.persistentStoreCoordinator, let store = coordinator.persistentStores.first as? NSPersistentStore {
+            var stackType: StackType! = nil
+            if store.type == NSSQLiteStoreType {
+                stackType = .SQLite
+            }
+            else if store.type == NSInMemoryStoreType {
+                stackType = .InMemory
+            }
+
+            if stackType != nil {
+                self.contextOptions = ContextOptions(stackType: stackType, managedObjectModelName: nil, storeOptions: store.options)
+                self.contextOptions.fillEmptyOptions(customConfiguration: true)
+                
+                if let stack = Stack(rootManagedObjectContext: rootManagedObjectContext, mainManagedObjectContext: mainManagedObjectContext, contextOptions: self.contextOptions) {
+                    self.stack = stack
+                    self.managedObjectContext = stack.mainManagedObjectContext
+                }
+                else {
+                    self.stack = nil
+                    self.managedObjectContext = nil
+                    
+                    return nil
+                }
+            }
+            else {
+                self.contextOptions = ContextOptions()
+                self.stack = nil
+                self.managedObjectContext = nil
+                
+                return nil
+            }
+        }
+        else {
+            self.contextOptions = ContextOptions()
+            self.stack = nil
+            self.managedObjectContext = nil
+            
+            return nil
+        }
+        
+    }
+    
     // HAX: (vmartinelli) 2015-04-16 -> EXC_BAD_ACCESS if this contructor is not a convenience init
     //                                  and a property of inherited Context class is called
     private convenience init?(parentContext: Context) {

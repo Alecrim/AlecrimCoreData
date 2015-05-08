@@ -15,16 +15,16 @@ public final class FetchedResultsController<T: NSManagedObject> {
     
     // MARK: -
     
-    private let fetchRequest: NSFetchRequest
-    private let managedObjectContext: NSManagedObjectContext
-    private let sectionNameKeyPath: String?
-    private let cacheName: String?
+    private var initialFetchRequest: NSFetchRequest!
+    private let initialManagedObjectContext: NSManagedObjectContext
+    private let initialSectionNameKeyPath: String?
+    private let initialCacheName: String?
     
     private var hasUnderlyingFetchedResultsController = false
     private var underlyingFecthedResultsControllerDelegate: FecthedResultsControllerDelegate! = nil
     
     private lazy var underlyingFetchedResultsController: NSFetchedResultsController = {
-        let frc = NSFetchedResultsController(fetchRequest: self.fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: self.sectionNameKeyPath, cacheName: self.cacheName)
+        let frc = NSFetchedResultsController(fetchRequest: self.initialFetchRequest, managedObjectContext: self.initialManagedObjectContext, sectionNameKeyPath: self.initialSectionNameKeyPath, cacheName: self.initialCacheName)
         
         // we have to retain the delegate first
         self.underlyingFecthedResultsControllerDelegate = FecthedResultsControllerDelegate(fetchedResultsController: unsafeBitCast(self, FetchedResultsController<NSManagedObject>.self))
@@ -39,10 +39,10 @@ public final class FetchedResultsController<T: NSManagedObject> {
         }()
     
     internal init(fetchRequest: NSFetchRequest, managedObjectContext: NSManagedObjectContext, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
-        self.fetchRequest = fetchRequest
-        self.managedObjectContext = managedObjectContext
-        self.sectionNameKeyPath = sectionNameKeyPath
-        self.cacheName = cacheName
+        self.initialFetchRequest = fetchRequest
+        self.initialManagedObjectContext = managedObjectContext
+        self.initialSectionNameKeyPath = sectionNameKeyPath
+        self.initialCacheName = cacheName
     }
     
     deinit {
@@ -127,6 +127,29 @@ extension FetchedResultsController {
     }
     
 }
+    
+extension FetchedResultsController {
+    
+    public var fetchRequest: NSFetchRequest {
+        return self.underlyingFetchedResultsController.fetchRequest
+    }
+    
+    public func performFetch(error: NSErrorPointer) -> Bool {
+        if let cacheName = self.underlyingFetchedResultsController.cacheName {
+            FetchedResultsController.deleteCacheWithName(cacheName)
+        }
+        
+        return self.underlyingFetchedResultsController.performFetch(error)
+    }
+    
+    public func refresh() -> (Bool, NSError?) {
+        var error: NSError? = nil
+        let success = self.performFetch(&error)
+        
+        return (success, error)
+    }
+    
+}
 
 extension FetchedResultsController {
     
@@ -174,9 +197,9 @@ extension FetchedResultsController {
 }
 
 // MARK: - delegate class
-// SWIFT_BUG: Error -> Swift does now understand a generic class as a delegate from NSFetchedResultsController. Workaround -> create a non-generic class.
 
-@objc(ALCFecthedResultsControllerDelegate) private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate {
+@objc(ALCFecthedResultsControllerDelegate)
+private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsControllerDelegate {
     
     unowned let fetchedResultsController: FetchedResultsController<NSManagedObject>
     
