@@ -12,24 +12,25 @@ import CoreData
 public final class ContextOptions {
     
     private var cachedEntityNames = Dictionary<String, String>()
-
+    
     public static var stringComparisonPredicateOptions = (NSComparisonPredicateOptions.CaseInsensitivePredicateOption | NSComparisonPredicateOptions.DiacriticInsensitivePredicateOption)
     
     public var fetchBatchSize = 20
     public var entityClassNamePrefix: String? = nil
     public var entityClassNameSuffix: String? = nil
-
+    
     public let mainBundle: NSBundle = NSBundle.mainBundle()
     public var modelBundle: NSBundle = NSBundle.mainBundle()
-
+    
     private(set) public var managedObjectModelURL: NSURL! = nil
     private(set) public var managedObjectModel: NSManagedObjectModel! = nil
     
-    public var groupIdentifier: String?     // intented for extension use
+    public var securityApplicationGroupIdentifier: String?              // intented for extension use
+    
     public var pesistentStoreRelativePath: String! = nil                // defaults to main bundle identifier
     public var pesistentStoreFileName: String! = nil                    // defaults to managed object model name + ".sqlite"
     private(set) public var persistentStoreURL: NSURL! = nil
-
+    
     public var configuration: String? = nil
     
     public var ubiquityEnabled = false
@@ -57,9 +58,15 @@ public final class ContextOptions {
 
 extension ContextOptions {
     
-    internal func fillEmptyOptions() {
+    internal func fillEmptyOptions(customConfiguration: Bool = false) {
         //
         if self.filled {
+            return
+        }
+        
+        // verify if we have exiting managed object contexts set (customConfiguration == true in this case)
+        if customConfiguration {
+            self.filled = true
             return
         }
         
@@ -69,7 +76,7 @@ extension ContextOptions {
                 self.managedObjectModelName = infoDictionary[kCFBundleNameKey] as? String
             }
         }
-
+        
         // managed object model
         if self.managedObjectModelName != nil {
             self.managedObjectModelURL = self.modelBundle.URLForResource(self.managedObjectModelName!, withExtension: "momd")
@@ -86,21 +93,21 @@ extension ContextOptions {
             }
             
             let fileManager = NSFileManager.defaultManager()
-            var pesistentStoreContainerUrl: NSURL?
+            let pesistentStoreContainerURL: NSURL?
             
-            if let identifier = groupIdentifier {
-                pesistentStoreContainerUrl = NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier(identifier)
+            if let securityApplicationGroupIdentifier = self.securityApplicationGroupIdentifier {
+                pesistentStoreContainerURL = fileManager.containerURLForSecurityApplicationGroupIdentifier(securityApplicationGroupIdentifier)
             } else{
                 let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
-                pesistentStoreContainerUrl = urls.last as? NSURL
+                pesistentStoreContainerURL = urls.last as? NSURL
             }
             
-            if let containerUrl = pesistentStoreContainerUrl {
+            if let containerURL = pesistentStoreContainerURL {
                 if self.pesistentStoreFileName == nil {
                     self.pesistentStoreFileName = self.managedObjectModelName.stringByAppendingPathExtension("sqlite")!
                 }
                 
-                let pesistentStoreDirectoryURL = containerUrl.URLByAppendingPathComponent(self.pesistentStoreRelativePath, isDirectory: true)
+                let pesistentStoreDirectoryURL = containerURL.URLByAppendingPathComponent(self.pesistentStoreRelativePath, isDirectory: true)
                 self.persistentStoreURL = pesistentStoreDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreFileName, isDirectory: false)
                 
                 let fileManager = NSFileManager.defaultManager()
