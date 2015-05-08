@@ -43,8 +43,8 @@ public final class ContextOptions {
     public var securityApplicationGroupIdentifier: String?              // intented for app extensions use (com.apple.security.application-groups entitlement needed)
 
     // MARK: - public properties - persistent location
-    public var pesistentStoreRelativePath: String! = nil                // defaults to main bundle identifier
-    public var pesistentStoreFileName: String! = nil                    // defaults to managed object model name + ".sqlite"
+    public var persistentStoreRelativePath: String! = nil               // defaults to main bundle identifier
+    public var persistentStoreFileName: String! = nil                   // defaults to managed object model name + ".sqlite"
     public private(set) var persistentStoreURL: NSURL! = nil
 
     // MARK: - public properties - iCloud
@@ -99,31 +99,31 @@ extension ContextOptions {
         
         // local store
         if let bundleIdentifier = self.mainBundle.bundleIdentifier {
-            if self.pesistentStoreRelativePath == nil {
-                self.pesistentStoreRelativePath = bundleIdentifier
+            if self.persistentStoreRelativePath == nil {
+                self.persistentStoreRelativePath = bundleIdentifier
             }
             
             let fileManager = NSFileManager.defaultManager()
-            let pesistentStoreContainerURL: NSURL?
+            let persistentStoreContainerURL: NSURL?
             
             if let securityApplicationGroupIdentifier = self.securityApplicationGroupIdentifier {
                 // stored in "~/Library/Group Containers/." (this method also creates the directory if it does not yet exist)
-                pesistentStoreContainerURL = fileManager.containerURLForSecurityApplicationGroupIdentifier(securityApplicationGroupIdentifier)
+                persistentStoreContainerURL = fileManager.containerURLForSecurityApplicationGroupIdentifier(securityApplicationGroupIdentifier)
             } else{
                 let urls = fileManager.URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask)
-                pesistentStoreContainerURL = urls.last as? NSURL
+                persistentStoreContainerURL = urls.last as? NSURL
             }
             
-            if let containerURL = pesistentStoreContainerURL {
-                if self.pesistentStoreFileName == nil {
-                    self.pesistentStoreFileName = self.managedObjectModelName.stringByAppendingPathExtension("sqlite")!
+            if let containerURL = persistentStoreContainerURL {
+                if self.persistentStoreFileName == nil {
+                    self.persistentStoreFileName = self.managedObjectModelName.stringByAppendingPathExtension("sqlite")!
                 }
                 
-                let pesistentStoreDirectoryURL = containerURL.URLByAppendingPathComponent(self.pesistentStoreRelativePath, isDirectory: true)
-                self.persistentStoreURL = pesistentStoreDirectoryURL.URLByAppendingPathComponent(self.pesistentStoreFileName, isDirectory: false)
+                let persistentStoreDirectoryURL = containerURL.URLByAppendingPathComponent(self.persistentStoreRelativePath, isDirectory: true)
+                self.persistentStoreURL = persistentStoreDirectoryURL.URLByAppendingPathComponent(self.persistentStoreFileName, isDirectory: false)
                 
-                if !fileManager.fileExistsAtPath(pesistentStoreDirectoryURL.path!) {
-                    fileManager.createDirectoryAtURL(pesistentStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
+                if !fileManager.fileExistsAtPath(persistentStoreDirectoryURL.path!) {
+                    fileManager.createDirectoryAtURL(persistentStoreDirectoryURL, withIntermediateDirectories: true, attributes: nil, error: nil)
                 }
             }
         }
