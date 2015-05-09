@@ -19,11 +19,15 @@ import CoreData
 //     Example:
 //
 //     public final class DataContext: BaseDataContext {
-//         let contextOptions = ContextOptions(stackType: StackType.SQLite)
 //
-//         // set options here...
+//         public init?() {
+//             let contextOptions = ContextOptions(stackType: StackType.SQLite)
 //
-//         super.init(contextOptions: contextOptions)
+//             // set options here...
+//
+//             super.init(contextOptions: contextOptions)
+//         }
+//
 //     }
 //
 //  If you are writing an app extension you may be specially interested in
