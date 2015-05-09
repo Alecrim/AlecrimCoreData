@@ -142,8 +142,13 @@ extension Stack {
         var error: NSError? = nil
         
         while let c = currentContext {
-            c.performBlockAndWait {
-                success = c.save(&error)
+            if c.hasChanges {
+                c.performBlockAndWait {
+                    success = c.save(&error)
+                }
+            }
+            else {
+                success = true
             }
             
             if (!success) {
