@@ -336,6 +336,11 @@ dataContext.entities.batchUpdate(["modified" : true, "dateModified" : NSDate()])
 
 You can use `ContextOptions` class for a custom configuration.
 
+#### App Extensions
+
+See `Samples` folder for a configuration example for use in the main app and its extensions.
+
+
 #### iCloud Core Data sync
 
 See `Samples` folder for a configuration example for iCloud Core Data sync.
