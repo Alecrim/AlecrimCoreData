@@ -22,12 +22,12 @@ class iCloudDataContext: AlecrimCoreData.Context {
         
         // only needed if model is not in main bundle
         contextOptions.modelBundle = NSBundle(forClass: iCloudDataContext.self)
-        
+
+        // only needed if the identifier is different from default identifier
+        contextOptions.ubiquitousContainerIdentifier = "iCloud.com.company.MyAppName"
+
         // enable iCloud Core Data sync
         contextOptions.ubiquityEnabled = true
-        
-        // only needed if the identifier is different from default identifier
-        contextOptions.ubiquitousContainerIdentifier = "iCloud.com.company.MyApp"
         
         // call super
         super.init(contextOptions: contextOptions)
