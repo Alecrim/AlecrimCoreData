@@ -1,5 +1,5 @@
 //
-//  AppExtensionDataContension.swift
+//  AppExtensionDataContext.swift
 //
 //  Created by Vanderlei Martinelli on 2015-05-09.
 //
@@ -7,7 +7,7 @@
 import Foundation
 import AlecrimCoreData
 
-class DataContext: AlecrimCoreData.Context {
+class AppExtensionDataContext: AlecrimCoreData.Context {
     
     var people:      Table<PersonEntity>     { return Table<PersonEntity>(context: self) }
     var departments: Table<DepartmentEntity> { return Table<DepartmentEntity>(context: self) }
@@ -21,7 +21,7 @@ class DataContext: AlecrimCoreData.Context {
         contextOptions.entityClassNameSuffix = "Entity"
         
         // needed as your model probably is not in the main bundle
-        contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
+        contextOptions.modelBundle = NSBundle(forClass: AppExtensionDataContext.self)
         
         // set the managed object model name, usually the same name as the main app name
         contextOptions.managedObjectModelName = "MyModelName"
