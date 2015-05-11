@@ -15,11 +15,7 @@ extension NSManagedObject {
         return self.inManagedObjectContext(context.managedObjectContext)
     }
     
-}
-
-extension NSManagedObject {
-    
-    private func inManagedObjectContext(otherManagedObjectContext: NSManagedObjectContext) -> Self? {
+    public func inManagedObjectContext(otherManagedObjectContext: NSManagedObjectContext) -> Self? {
         if self.managedObjectContext == otherManagedObjectContext {
             return self
         }
