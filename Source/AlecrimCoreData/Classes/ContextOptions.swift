@@ -83,7 +83,7 @@ public final class ContextOptions {
     internal private(set) var filled = false
     private var cachedEntityNames = Dictionary<String, String>()
     
-    // MARK: - internal background context machinery support
+    // MARK: - internal properties - background context machinery (you did not see it)
     internal var __stack: Stack? = nil
     
     // MARK: - init (finally)

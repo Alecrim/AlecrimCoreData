@@ -12,8 +12,9 @@ import CoreData
 public class Context {
     
     private let stack: Stack!
-    public let managedObjectContext: NSManagedObjectContext! // The underlying managed object context
-    private var background: Bool = false
+    public let managedObjectContext: NSManagedObjectContext!    // the underlying managed object context
+    
+    private var ___background: Bool = false                     // background context machinery (you did not see it)
     
     internal var contextOptions: ContextOptions { return self.stack.contextOptions }
 
@@ -28,7 +29,7 @@ public class Context {
         }
         else {
             self.managedObjectContext = stack?.backgroundManagedObjectContext
-            self.background = true
+            self.___background = true
             stackContextOptions.__stack = nil
         }
         
@@ -154,7 +155,7 @@ extension Context {
     internal func executeFetchRequest(fetchRequest: NSFetchRequest, error: NSErrorPointer) -> [AnyObject]? {
         var objects: [AnyObject]?
         
-        if self.background {
+        if self.___background {
             // already in "performBlock"
             objects = self.managedObjectContext.executeFetchRequest(fetchRequest, error: error)
         }
