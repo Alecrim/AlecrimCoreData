@@ -84,7 +84,7 @@ public final class ContextOptions {
     private var cachedEntityNames = Dictionary<String, String>()
     
     // MARK: - internal properties - background context machinery (you did not see it)
-    internal var __stack: Stack? = nil
+    internal var ___stack: Stack? = nil
     
     // MARK: - init (finally)
     public init(stackType: StackType = StackType.SQLite, managedObjectModelName: String? = nil, storeOptions: [NSObject : AnyObject]? = nil) {

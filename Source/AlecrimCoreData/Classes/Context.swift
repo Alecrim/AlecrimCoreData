@@ -22,7 +22,7 @@ public class Context {
         let stackContextOptions = (contextOptions == nil ? ContextOptions() : contextOptions!)
         stackContextOptions.fillEmptyOptions()
         
-        var stack = stackContextOptions.__stack
+        var stack = stackContextOptions.___stack
         if stack == nil {
             stack = Stack(contextOptions: stackContextOptions)
             self.managedObjectContext = stack?.mainManagedObjectContext
@@ -30,7 +30,7 @@ public class Context {
         else {
             self.managedObjectContext = stack?.backgroundManagedObjectContext
             self.___background = true
-            stackContextOptions.__stack = nil
+            stackContextOptions.___stack = nil
         }
         
         self.stack = stack
@@ -227,7 +227,7 @@ extension Context {
 // MARK: - public global functions
 
 public func performInBackground<T: Context>(parentContext: T, closure: (T) -> Void) {
-    parentContext.contextOptions.__stack = parentContext.stack
+    parentContext.contextOptions.___stack = parentContext.stack
     let backgroundContext = T(contextOptions: parentContext.contextOptions)!
     
     backgroundContext.perform {
