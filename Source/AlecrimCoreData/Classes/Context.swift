@@ -11,34 +11,28 @@ import CoreData
 
 public class Context {
     
-    private(set) internal var contextOptions: ContextOptions
-    private var stack: Stack!
-    private(set) public var managedObjectContext: NSManagedObjectContext! // The underlying managed object context
+    private let stack: Stack!
+    public let managedObjectContext: NSManagedObjectContext! // The underlying managed object context
+    private var background: Bool = false
+    
+    internal var contextOptions: ContextOptions { return self.stack.contextOptions }
 
-    public init?(contextOptions: ContextOptions? = nil) {
-        self.contextOptions = (contextOptions == nil ? ContextOptions() : contextOptions!)
+    public required init?(contextOptions: ContextOptions? = nil) {
+        let stackContextOptions = (contextOptions == nil ? ContextOptions() : contextOptions!)
+        stackContextOptions.fillEmptyOptions()
         
-        if self.contextOptions.filled {
-            // HAX: (vmartinelli) 2015-04-16 -> if filled == true, this constructor was called from the convenience init below and
-            //                                  stack and managedObjectContext will be assigned there
-            self.stack = nil
-            self.managedObjectContext = nil
+        var stack = stackContextOptions.__stack
+        if stack == nil {
+            stack = Stack(contextOptions: stackContextOptions)
+            self.managedObjectContext = stack?.mainManagedObjectContext
         }
         else {
-            self.contextOptions.fillEmptyOptions()
-            
-            if let stack = Stack(contextOptions: self.contextOptions) {
-                self.stack = stack
-                self.managedObjectContext = stack.mainManagedObjectContext
-            }
-            else {
-                self.stack = nil
-                self.managedObjectContext = nil
-                
-                return nil
-            }
+            self.managedObjectContext = stack?.backgroundManagedObjectContext
+            self.background = true
+            stackContextOptions.__stack = nil
         }
         
+        self.stack = stack
     }
     
     public init?(rootManagedObjectContext: NSManagedObjectContext, mainManagedObjectContext: NSManagedObjectContext) {
@@ -52,10 +46,10 @@ public class Context {
             }
 
             if stackType != nil {
-                self.contextOptions = ContextOptions(stackType: stackType, managedObjectModelName: nil, storeOptions: store.options)
-                self.contextOptions.fillEmptyOptions(customConfiguration: true)
+                let stackContextOptions = ContextOptions(stackType: stackType, managedObjectModelName: nil, storeOptions: store.options)
+                stackContextOptions.fillEmptyOptions(customConfiguration: true)
                 
-                if let stack = Stack(rootManagedObjectContext: rootManagedObjectContext, mainManagedObjectContext: mainManagedObjectContext, contextOptions: self.contextOptions) {
+                if let stack = Stack(rootManagedObjectContext: rootManagedObjectContext, mainManagedObjectContext: mainManagedObjectContext, contextOptions: stackContextOptions) {
                     self.stack = stack
                     self.managedObjectContext = stack.mainManagedObjectContext
                 }
@@ -67,7 +61,6 @@ public class Context {
                 }
             }
             else {
-                self.contextOptions = ContextOptions()
                 self.stack = nil
                 self.managedObjectContext = nil
                 
@@ -75,7 +68,6 @@ public class Context {
             }
         }
         else {
-            self.contextOptions = ContextOptions()
             self.stack = nil
             self.managedObjectContext = nil
             
@@ -83,17 +75,6 @@ public class Context {
         }
         
     }
-    
-    // HAX: (vmartinelli) 2015-04-16 -> EXC_BAD_ACCESS if this contructor is not a convenience init
-    //                                  and a property of inherited Context class is called
-    private convenience init?(parentContext: Context) {
-        self.init(contextOptions: parentContext.contextOptions)
-        
-        self.contextOptions = parentContext.contextOptions
-        self.stack = parentContext.stack
-        self.managedObjectContext = parentContext.stack.createBackgroundManagedObjectContext()
-    }
-    
 }
 
 extension Context {
@@ -173,8 +154,14 @@ extension Context {
     internal func executeFetchRequest(fetchRequest: NSFetchRequest, error: NSErrorPointer) -> [AnyObject]? {
         var objects: [AnyObject]?
         
-        self.performAndWait {
+        if self.background {
+            // already in "performBlock"
             objects = self.managedObjectContext.executeFetchRequest(fetchRequest, error: error)
+        }
+        else {
+            self.managedObjectContext.performBlockAndWait {
+                objects = self.managedObjectContext.executeFetchRequest(fetchRequest, error: error)
+            }
         }
         
         return objects
@@ -215,23 +202,21 @@ extension Context {
     }
     
     internal func executeBatchUpdateRequestWithEntityDescription(entityDescription: NSEntityDescription, propertiesToUpdate: [NSObject : AnyObject], predicate: NSPredicate, completionClosure: (Int, NSError?) -> Void) {
-        performInBackground(self) { backgroundContext in
-            let batchUpdateRequest = NSBatchUpdateRequest(entity: entityDescription)
-            batchUpdateRequest.propertiesToUpdate = propertiesToUpdate
-            batchUpdateRequest.predicate = predicate
-            batchUpdateRequest.resultType = .UpdatedObjectsCountResultType
+        let batchUpdateRequest = NSBatchUpdateRequest(entity: entityDescription)
+        batchUpdateRequest.propertiesToUpdate = propertiesToUpdate
+        batchUpdateRequest.predicate = predicate
+        batchUpdateRequest.resultType = .UpdatedObjectsCountResultType
+        
+        let moc = self.stack.backgroundManagedObjectContext
+        moc.performBlock {
+            var error: NSError? = nil
+            let batchUpdateResult = moc.executeRequest(batchUpdateRequest, error: &error) as! NSBatchUpdateResult
             
-            let moc = backgroundContext.managedObjectContext
-            moc.performBlock {
-                var error: NSError? = nil
-                let batchUpdateResult = moc.executeRequest(batchUpdateRequest, error: &error) as! NSBatchUpdateResult
-                
-                if error != nil {
-                    completionClosure(0, error)
-                }
-                else {
-                    completionClosure(batchUpdateResult.result as! Int, nil)
-                }
+            if error != nil {
+                completionClosure(0, error)
+            }
+            else {
+                completionClosure(batchUpdateResult.result as! Int, nil)
             }
         }
     }
@@ -241,7 +226,8 @@ extension Context {
 // MARK: - public global functions
 
 public func performInBackground<T: Context>(parentContext: T, closure: (T) -> Void) {
-    let backgroundContext = T(parentContext: parentContext)!
+    parentContext.contextOptions.__stack = parentContext.stack
+    let backgroundContext = T(contextOptions: parentContext.contextOptions)!
     
     backgroundContext.perform {
         closure(backgroundContext)

@@ -14,7 +14,7 @@ class iCloudDataContext: AlecrimCoreData.Context {
     
     // MARK - custom init
     
-    init?() {
+    convenience init?() {
         let contextOptions = ContextOptions(stackType: .SQLite)
         
         // only needed if entity class names are different from entity names
@@ -29,8 +29,8 @@ class iCloudDataContext: AlecrimCoreData.Context {
         // enable iCloud Core Data sync
         contextOptions.ubiquityEnabled = true
         
-        // call super
-        super.init(contextOptions: contextOptions)
+        // call designated initializer
+        self.init(contextOptions: contextOptions)
     }
     
 }

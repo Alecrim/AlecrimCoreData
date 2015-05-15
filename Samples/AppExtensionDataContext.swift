@@ -14,7 +14,7 @@ class AppExtensionDataContext: AlecrimCoreData.Context {
     
     // MARK - custom init
     
-    init?() {
+    convenience init?() {
         let contextOptions = ContextOptions(stackType: .SQLite)
         
         // only needed if entity class names are different from entity names
@@ -32,8 +32,8 @@ class AppExtensionDataContext: AlecrimCoreData.Context {
         // the same identifier used to group your main app and its extensions
         contextOptions.applicationGroupIdentifier = "group.com.company.MyAppName"
         
-        // call super
-        super.init(contextOptions: contextOptions)
+        // call designated initializer
+        self.init(contextOptions: contextOptions)
     }
     
 }
