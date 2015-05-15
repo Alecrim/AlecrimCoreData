@@ -280,9 +280,7 @@ extension Table {
     
     public func fetchAsync(completionClosure: ([T]!, NSError?) -> Void) -> NSProgress {
         return self.context.executeAsynchronousFetchRequestWithFetchRequest(self.toFetchRequest()) { objects, error in
-            dispatch_async(dispatch_get_main_queue()) {
-                completionClosure(objects as? [T], error)
-            }
+            completionClosure(objects as? [T], error)
         }
     }
 
