@@ -243,6 +243,10 @@ public func performInBackground<T: Context>(parentContext: T, createNewBackgroun
     let backgroundContext = T(contextOptions: parentContext.contextOptions)!
     
     backgroundContext.perform {
+        if !createNewBackgroundManagedObjectContext {
+            backgroundContext.managedObjectContext.reset()
+        }
+        
         closure(backgroundContext)
     }
 }
