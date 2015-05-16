@@ -85,6 +85,7 @@ public final class ContextOptions {
     
     // MARK: - internal properties - background context machinery (you did not see it)
     internal var ___stack: Stack? = nil
+    internal var ___stackUsesNewBackgroundManagedObjectContext = false
     
     // MARK: - init (finally)
     public init(stackType: StackType = StackType.SQLite, managedObjectModelName: String? = nil, storeOptions: [NSObject : AnyObject]? = nil) {

@@ -125,21 +125,15 @@ internal final class Stack {
 
 }
 
-// MARK: - private methods
+// MARK: - internal methods
 
 extension Stack {
-    
-    private func createBackgroundManagedObjectContext() -> NSManagedObjectContext {
+
+    internal func createBackgroundManagedObjectContext() -> NSManagedObjectContext {
         let backgroundContext = StackBackgroundManagedObjectContext(stack: self)
         
         return backgroundContext
     }
-
-}
-
-// MARK: - internal methods
-
-extension Stack {
 
     internal func saveManagedObjectContext(context: NSManagedObjectContext) -> (Bool, NSError?) {
         var currentContext: NSManagedObjectContext? = context

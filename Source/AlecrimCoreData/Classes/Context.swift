@@ -28,7 +28,14 @@ public class Context {
             self.managedObjectContext = stack?.mainManagedObjectContext
         }
         else {
-            self.managedObjectContext = stack?.backgroundManagedObjectContext
+            if stackContextOptions.___stackUsesNewBackgroundManagedObjectContext {
+                self.managedObjectContext = stack?.createBackgroundManagedObjectContext()
+                stackContextOptions.___stackUsesNewBackgroundManagedObjectContext = false
+            }
+            else {
+                self.managedObjectContext = stack?.backgroundManagedObjectContext
+            }
+            
             self.___background = true
             stackContextOptions.___stack = nil
         }
@@ -227,10 +234,16 @@ extension Context {
 // MARK: - public global functions
 
 public func performInBackground<T: Context>(parentContext: T, closure: (T) -> Void) {
+    performInBackground(parentContext, false, closure)
+}
+
+public func performInBackground<T: Context>(parentContext: T, createNewBackgroundManagedObjectContext: Bool, closure: (T) -> Void) {
     parentContext.contextOptions.___stack = parentContext.stack
+    parentContext.contextOptions.___stackUsesNewBackgroundManagedObjectContext = createNewBackgroundManagedObjectContext
     let backgroundContext = T(contextOptions: parentContext.contextOptions)!
     
     backgroundContext.perform {
         closure(backgroundContext)
     }
 }
+
