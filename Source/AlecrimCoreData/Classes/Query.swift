@@ -51,12 +51,8 @@ public class Query {
     }
     
     internal func executeFetchRequest(fetchRequest: NSFetchRequest) -> [AnyObject]? {
-        var objects: [AnyObject]?
-        
-        self.context.managedObjectContext.performBlockAndWait {
-            var executeFetchRequestError: NSError? = nil
-            objects = self.context.managedObjectContext.executeFetchRequest(fetchRequest, error: &executeFetchRequestError)
-        }
+        var executeFetchRequestError: NSError? = nil
+        let objects = self.context.executeFetchRequest(fetchRequest, error: &executeFetchRequestError)
         
         return objects
     }

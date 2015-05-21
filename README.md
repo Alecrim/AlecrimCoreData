@@ -336,6 +336,11 @@ dataContext.entities.batchUpdate(["modified" : true, "dateModified" : NSDate()])
 
 You can use `ContextOptions` class for a custom configuration.
 
+#### App Extensions
+
+See `Samples` folder for a configuration example for use in the main app and its extensions.
+
+
 #### iCloud Core Data sync
 
 See `Samples` folder for a configuration example for iCloud Core Data sync.
@@ -371,7 +376,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '8.0'
 use_frameworks!
 
-pod 'AlecrimCoreData', '~> 3.0-beta.8’
+pod 'AlecrimCoreData', '~> 3.0'
 ```
 
 Then, run the following command:
@@ -399,11 +404,11 @@ If you want to contribute, please feel free to fork the repository and send pull
 
 ### Version History
 
-- 3.0 - Swift framework; added attributes support and many other improvements
-- 2.1 - Swift framework; added CocoaPods and Carthage support
-- 2.0 - Swift framework; first public release as open source
-- 1.1 - Objective-C framework; private Alecrim team use
-- 1.0 - Objective-C framework; private Alecrim team use
+- 3.0 - Swift framework: added attributes support and many other improvements
+- 2.1 - Swift framework: added CocoaPods and Carthage support
+- 2.0 - Swift framework: first public release as open source
+- 1.1 - Objective-C framework: private Alecrim team use
+- 1.0 - Objective-C framework: private Alecrim team use
 
 ---
 

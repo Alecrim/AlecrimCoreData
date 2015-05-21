@@ -24,17 +24,17 @@ class EnsemblesDataContext: AlecrimCoreData.Context {
     
     // MARK - custom init
     
-    init?() {
+    convenience init?() {
         let contextOptions = ContextOptions(stackType: .SQLite)
-        
-        // only needed if model is not in main bundle
-        contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
         
         // only needed if entity class names are different from entity names
         contextOptions.entityClassNameSuffix = "Entity"
         
-        // call super
-        super.init(contextOptions: contextOptions)
+        // only needed if model is not in main bundle
+        contextOptions.modelBundle = NSBundle(forClass: EnsemblesDataContext.self)
+        
+        // call designated initializer
+        self.init(contextOptions: contextOptions)
         
         // configure Ensembles
         self.cloudFileSystem = CDEICloudFileSystem(ubiquityContainerIdentifier: "iCloud.com.company.MyApp")

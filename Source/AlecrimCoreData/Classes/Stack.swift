@@ -16,13 +16,13 @@ public enum StackType {
 
 internal final class Stack {
   
-    private let contextOptions: ContextOptions
-    
+    internal let contextOptions: ContextOptions
     private let coordinator: NSPersistentStoreCoordinator!
     private let store: NSPersistentStore!
     
-    private let rootManagedObjectContext: NSManagedObjectContext!
+    internal let rootManagedObjectContext: NSManagedObjectContext!
     internal let mainManagedObjectContext: NSManagedObjectContext!
+    internal lazy var backgroundManagedObjectContext: NSManagedObjectContext = { self.createBackgroundManagedObjectContext() }()
     
     // MARK: - constructors
     
@@ -134,7 +134,7 @@ extension Stack {
         
         return backgroundContext
     }
-    
+
     internal func saveManagedObjectContext(context: NSManagedObjectContext) -> (Bool, NSError?) {
         var currentContext: NSManagedObjectContext? = context
         
@@ -142,8 +142,13 @@ extension Stack {
         var error: NSError? = nil
         
         while let c = currentContext {
-            c.performBlockAndWait {
-                success = c.save(&error)
+            if c.hasChanges {
+                c.performBlockAndWait {
+                    success = c.save(&error)
+                }
+            }
+            else {
+                success = true
             }
             
             if (!success) {
@@ -259,7 +264,7 @@ extension Stack {
 
 private final class StackBackgroundManagedObjectContext: NSManagedObjectContext {
     
-    private let stack: Stack
+    private unowned let stack: Stack
     
     private init(stack: Stack) {
         self.stack = stack

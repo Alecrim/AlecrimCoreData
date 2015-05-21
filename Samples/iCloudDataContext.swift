@@ -14,23 +14,23 @@ class iCloudDataContext: AlecrimCoreData.Context {
     
     // MARK - custom init
     
-    init?() {
+    convenience init?() {
         let contextOptions = ContextOptions(stackType: .SQLite)
-        
-        // only needed if model is not in main bundle
-        contextOptions.modelBundle = NSBundle(forClass: DataContext.self)
         
         // only needed if entity class names are different from entity names
         contextOptions.entityClassNameSuffix = "Entity"
         
+        // only needed if model is not in main bundle
+        contextOptions.modelBundle = NSBundle(forClass: iCloudDataContext.self)
+
+        // only needed if the identifier is different from default identifier
+        contextOptions.ubiquitousContainerIdentifier = "iCloud.com.company.MyAppName"
+
         // enable iCloud Core Data sync
         contextOptions.ubiquityEnabled = true
         
-        // only needed if the identifier is different from default identifier
-        contextOptions.ubiquitousContainerIdentifier = "iCloud.com.company.MyApp"
-        
-        // call super
-        super.init(contextOptions: contextOptions)
+        // call designated initializer
+        self.init(contextOptions: contextOptions)
     }
     
 }
