@@ -309,7 +309,14 @@ private final class StackBackgroundManagedObjectContext: NSManagedObjectContext 
                 object: self.stack.coordinator
             )
         }
-        
+
+        NSNotificationCenter.defaultCenter().addObserver(
+            self,
+            selector: Selector("backgroundManagedObjectContextWillSave:"),
+            name: NSManagedObjectContextWillSaveNotification,
+            object: self
+        )
+
         NSNotificationCenter.defaultCenter().addObserver(
             self,
             selector: Selector("backgroundManagedObjectContextDidSave:"),
@@ -319,6 +326,7 @@ private final class StackBackgroundManagedObjectContext: NSManagedObjectContext 
     }
     
     private func removeObservers() {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NSManagedObjectContextWillSaveNotification, object: self)
         NSNotificationCenter.defaultCenter().removeObserver(self, name: NSManagedObjectContextDidSaveNotification, object: self)
 
         if self.stack.contextOptions.stackType == .SQLite && self.stack.contextOptions.ubiquityEnabled {
@@ -329,9 +337,33 @@ private final class StackBackgroundManagedObjectContext: NSManagedObjectContext 
         
     }
 
+    @objc private func backgroundManagedObjectContextWillSave(notification: NSNotification) {
+        if let context = notification.object as? NSManagedObjectContext {
+            if let insertedObjects = context.insertedObjects as? Set<NSManagedObject> {
+                if insertedObjects.count > 0 {
+                    var error: NSError? = nil
+                    if !context.obtainPermanentIDsForObjects((insertedObjects as NSSet).allObjects, error: &error) {
+                        println(error)
+                    }
+                }
+            }
+        }
+    }
+
     @objc private func backgroundManagedObjectContextDidSave(notification: NSNotification) {
         if let mainContext = self.stack.mainManagedObjectContext {
             mainContext.performBlockAndWait {
+                if let userInfo = notification.userInfo {
+                    let dict = userInfo as NSDictionary
+                    if let updatedObjects = dict[NSUpdatedObjectsKey] as? Set<NSManagedObject> {
+                        if updatedObjects.count > 0 {
+                            for object in updatedObjects {
+                                mainContext.objectWithID(object.objectID).willAccessValueForKey(nil) // ensure that a fault has been fired
+                            }
+                        }
+                    }
+                }
+                
                 mainContext.mergeChangesFromContextDidSaveNotification(notification)
             }
         }
