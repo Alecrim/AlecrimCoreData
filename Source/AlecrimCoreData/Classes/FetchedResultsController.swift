@@ -211,6 +211,10 @@ extension FetchedResultsController {
         let predicate = predicateClosure(T.self)
         return self.refreshWithPredicate(predicate, keepOriginalPredicate: true)
     }
+
+    public func resetFilter() -> (success: Bool, error: NSError?) {
+        return self.resetPredicate()
+    }
     
     public func reset() -> (success: Bool, error: NSError?) {
         return self.resetPredicateAndSortDescriptors()
