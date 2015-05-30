@@ -17,8 +17,8 @@ public class Query {
     internal var offset: Int = 0
     internal var limit: Int = 0
 
-    internal var predicate: NSPredicate?
-    internal var sortDescriptors: [NSSortDescriptor]?
+    public internal(set) var predicate: NSPredicate?
+    public internal(set) var sortDescriptors: [NSSortDescriptor]?
     
     public required init(context: Context, entityName: String) {
         self.context = context
