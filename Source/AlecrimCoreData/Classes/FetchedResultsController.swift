@@ -20,6 +20,9 @@ public final class FetchedResultsController<T: NSManagedObject> {
     private let initialSectionNameKeyPath: String?
     private let initialCacheName: String?
     
+    private let initialPredicate: NSPredicate?
+    private let initialSortDescriptors: [NSSortDescriptor]?
+    
     private var hasUnderlyingFetchedResultsController = false
     private var underlyingFecthedResultsControllerDelegate: FecthedResultsControllerDelegate! = nil
     
@@ -43,6 +46,9 @@ public final class FetchedResultsController<T: NSManagedObject> {
         self.initialManagedObjectContext = managedObjectContext
         self.initialSectionNameKeyPath = sectionNameKeyPath
         self.initialCacheName = cacheName
+        
+        self.initialPredicate = fetchRequest.predicate?.copy() as? NSPredicate
+        self.initialSortDescriptors = fetchRequest.sortDescriptors as? [NSSortDescriptor]
     }
     
     deinit {
@@ -53,6 +59,8 @@ public final class FetchedResultsController<T: NSManagedObject> {
     }
     
     // MARK: - delegate support
+
+    private var needsReloadDataClosure: (() -> Void)?
     
     private var willChangeContentClosure: (() -> Void)?
     private var didChangeContentClosure: (() -> Void)?
@@ -67,7 +75,12 @@ public final class FetchedResultsController<T: NSManagedObject> {
     private var didMoveEntityClosure: ((T, NSIndexPath, NSIndexPath) -> Void)?
     
     private var sectionIndexTitleClosure: ((String) -> String!)?
-    
+
+    private func needsReloadData(closure: () -> Void) -> Self {
+        self.needsReloadDataClosure = closure
+        return self
+    }
+
     public func willChangeContent(closure: () -> Void) -> Self {
         self.willChangeContentClosure = closure
         return self
@@ -142,13 +155,107 @@ extension FetchedResultsController {
         return self.underlyingFetchedResultsController.performFetch(error)
     }
     
-    public func refresh() -> (Bool, NSError?) {
+    public func refresh() -> (success: Bool, error: NSError?) {
+        self.needsReloadDataClosure?()
+        
+        self.willChangeContentClosure?()
+        
         var error: NSError? = nil
         let success = self.performFetch(&error)
+        
+        self.didChangeContentClosure?()
         
         return (success, error)
     }
     
+}
+    
+extension FetchedResultsController {
+    
+    public func refreshWithPredicate(predicate: NSPredicate?, keepOriginalPredicate: Bool = false) -> (success: Bool, error: NSError?) {
+        self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
+        
+        return self.refresh()
+    }
+
+    public func refreshWithSortDescriptors(sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool = false) -> (success: Bool, error: NSError?) {
+        self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
+        
+        return self.refresh()
+    }
+
+    public func refreshWithPredicate(predicate: NSPredicate?, andSortDescriptors sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool = true, keepOriginalSortDescriptors: Bool = true) -> (success: Bool, error: NSError?) {
+        self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
+        self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
+        
+        return self.refresh()
+    }
+    
+    public func resetPredicate() -> (success: Bool, error: NSError?) {
+        return self.refreshWithPredicate(self.initialPredicate, keepOriginalPredicate: false)
+    }
+    
+    public func resetSortDescriptors() -> (success: Bool, error: NSError?) {
+        return self.refreshWithSortDescriptors(self.initialSortDescriptors, keepOriginalSortDescriptors: false)
+    }
+    
+    public func resetPredicateAndSortDescriptors() -> (success: Bool, error: NSError?) {
+        return self.refreshWithPredicate(self.initialPredicate, andSortDescriptors: self.initialSortDescriptors, keepOriginalPredicate: false, keepOriginalSortDescriptors: false)
+    }
+    
+}
+    
+extension FetchedResultsController {
+    
+    private func assignPredicate(predicate: NSPredicate?, keepOriginalPredicate: Bool) {
+        let newPredicate: NSPredicate?
+        
+        if keepOriginalPredicate {
+            if let initialPredicate = self.initialPredicate {
+                if let predicate = predicate {
+                    newPredicate = NSCompoundPredicate(type: .AndPredicateType, subpredicates: [initialPredicate, predicate])
+                }
+                else {
+                    newPredicate = initialPredicate
+                }
+            }
+            else {
+                newPredicate = predicate
+            }
+        }
+        else {
+            newPredicate = predicate
+        }
+        
+        self.fetchRequest.predicate = newPredicate
+    }
+    
+    private func assignSortDescriptors(sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool) {
+        let newSortDescriptors: [NSSortDescriptor]?
+        
+        if keepOriginalSortDescriptors {
+            if let initialSortDescriptors = self.initialSortDescriptors {
+                if let sortDescriptors = sortDescriptors {
+                    var tempSortDescriptors = initialSortDescriptors
+                    tempSortDescriptors += sortDescriptors
+                    
+                    newSortDescriptors = tempSortDescriptors
+                }
+                else {
+                    newSortDescriptors = initialSortDescriptors
+                }
+            }
+            else {
+                newSortDescriptors = sortDescriptors
+            }
+        }
+        else {
+            newSortDescriptors = sortDescriptors
+        }
+        
+        self.fetchRequest.sortDescriptors = newSortDescriptors
+    }
+
 }
 
 extension FetchedResultsController {
@@ -169,12 +276,12 @@ extension FetchedResultsController {
 
 extension FetchedResultsController {
     
-    public var sections: [FetchedResultsSectionInfo<T>]! {
+    public var sections: [FetchedResultsSectionInfo<T>] {
         if let underlyingSections = self.underlyingFetchedResultsController.sections as? [NSFetchedResultsSectionInfo] {
             return underlyingSections.map { FetchedResultsSectionInfo<T>(underlyingSectionInfo: $0) }
         }
         else {
-            return nil
+            return [FetchedResultsSectionInfo<T>]() // always return a valid array
         }
     }
     
@@ -262,34 +369,60 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
 extension FetchedResultsController {
     
     public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade) -> Self {
+        var reloadData = false
+
         self
+            .needsReloadData {
+                reloadData = true
+            }
             .willChangeContent { [unowned tableView] in
-                tableView.beginUpdates()
+                if !reloadData {
+                    tableView.beginUpdates()
+                }
             }
             .didInsertSection { [unowned tableView] sectionInfo, sectionIndex in
-                tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
+                if !reloadData {
+                    tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
+                }
             }
             .didDeleteSection { [unowned tableView] sectionInfo, sectionIndex in
-                tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
+                if !reloadData {
+                    tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
+                }
             }
             .didUpdateSection { [unowned tableView] sectionInfo, sectionIndex in
-                tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
+                if !reloadData {
+                    tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
+                }
             }
             .didInsertEntity { [unowned tableView] entity, newIndexPath in
-                tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: rowAnimation)
+                if !reloadData {
+                    tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: rowAnimation)
+                }
             }
             .didDeleteEntity { [unowned tableView] entity, indexPath in
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
+                if !reloadData {
+                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
+                }
             }
             .didUpdateEntity { [unowned tableView] entity, indexPath in
-                tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
+                if !reloadData {
+                    tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
+                }
             }
             .didMoveEntity { [unowned tableView] entity, indexPath, newIndexPath in
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
-                tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: rowAnimation)
+                if !reloadData {
+                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
+                    tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: rowAnimation)
+                }
             }
             .didChangeContent { [unowned tableView] in
-                tableView.endUpdates()
+                if reloadData {
+                    tableView.reloadData()
+                }
+                else {
+                    tableView.endUpdates()
+                }
             }
         
         return self
@@ -304,9 +437,12 @@ extension FetchedResultsController {
         var deletedItemIndexPaths = [NSIndexPath]()
         var updatedItemIndexPaths = [NSIndexPath]()
         
-        var hasMoves = false
+        var reloadData = false
         
         self
+            .needsReloadData {
+                reloadData = true
+            }
             .willChangeContent {
                 insertedSectionIndexes.removeAllIndexes()
                 deletedSectionIndexes.removeAllIndexes()
@@ -315,8 +451,6 @@ extension FetchedResultsController {
                 insertedItemIndexPaths.removeAll(keepCapacity: false)
                 deletedItemIndexPaths.removeAll(keepCapacity: false)
                 updatedItemIndexPaths.removeAll(keepCapacity: false)
-                
-                hasMoves = false
             }
             .didInsertSection { sectionInfo, sectionIndex in
                 insertedSectionIndexes.addIndex(sectionIndex)
@@ -337,10 +471,10 @@ extension FetchedResultsController {
                 updatedItemIndexPaths.append(indexPath)
             }
             .didMoveEntity { entity, indexPath, newIndexPath in
-                hasMoves = true
+                reloadData = true
             }
             .didChangeContent { [unowned collectionView] in
-                if hasMoves {
+                if reloadData {
                     collectionView.reloadData()
 
                     insertedSectionIndexes.removeAllIndexes()
@@ -351,7 +485,7 @@ extension FetchedResultsController {
                     deletedItemIndexPaths.removeAll(keepCapacity: false)
                     updatedItemIndexPaths.removeAll(keepCapacity: false)
                     
-                    hasMoves = false
+                    reloadData = false
                 }
                 else {
                     collectionView.performBatchUpdates({
@@ -389,7 +523,7 @@ extension FetchedResultsController {
                                 deletedItemIndexPaths.removeAll(keepCapacity: false)
                                 updatedItemIndexPaths.removeAll(keepCapacity: false)
                                 
-                                hasMoves = false
+                                reloadData = false
                             }
                     })
                 }
