@@ -12,7 +12,7 @@ AlecrimCoreData is a framework to easily access Core Data objects in Swift.
 
 ### Data Context
 
-To use AlecrimCoreData you will need to create a inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
+To use AlecrimCoreData you will need to create an inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
 
 ```swift
 import AlecrimCoreData
