@@ -470,7 +470,6 @@ public class SingleEntityAttribute<T>: Attribute<T> {
     
 }
 
-//public class EntitySetAttribute<T: SequenceType where T.Generator.Element == NSManagedObject>: Attribute<T> {
 public class EntitySetAttribute<T: CollectionType>: Attribute<T> {
 
     public override init(_ name: String) { super.init(name) }
