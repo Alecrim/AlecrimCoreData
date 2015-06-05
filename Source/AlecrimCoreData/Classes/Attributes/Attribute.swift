@@ -7,8 +7,8 @@
 //
 
 //
-//  Contains modified versions of QueryKit (https://github.com/QueryKit/QueryKit)
-//  Attribute.swift, Expression.swift and Predicate.swift source codes
+//  Contains modified versions of QueryKit [https://github.com/QueryKit/QueryKit]
+//  Attribute.swift and Expression.swift source codes.
 //
 //  Copyright (c) 2012-2014, Kyle Fuller
 //  All rights reserved.
@@ -44,7 +44,7 @@ public class Attribute<T> {
         self.___name = name
     }
     
-    private var expression: NSExpression {
+    internal var expression: NSExpression {
         return NSExpression(forKeyPath: self.___name)
     }
     
@@ -445,50 +445,4 @@ public func <<<T>(left: Attribute<T>, right: Range<T>) -> NSComparisonPredicate 
 
 prefix public func !(left: Attribute<Bool>) -> NSComparisonPredicate {
     return left == false
-}
-
-// MARK: - NSPredicate extensions
-
-public func &&(left: NSPredicate, right: NSPredicate) -> NSCompoundPredicate {
-    return NSCompoundPredicate(type: NSCompoundPredicateType.AndPredicateType, subpredicates: [left, right])
-}
-
-public func ||(left: NSPredicate, right: NSPredicate) -> NSCompoundPredicate {
-    return NSCompoundPredicate(type: NSCompoundPredicateType.OrPredicateType, subpredicates: [left, right])
-}
-
-prefix public func !(left: NSPredicate) -> NSCompoundPredicate {
-    return NSCompoundPredicate(type: NSCompoundPredicateType.NotPredicateType, subpredicates: [left])
-}
-
-
-// MARK: - Entity attribute support
-
-public class SingleEntityAttribute<T>: Attribute<T> {
-    
-    public override init(_ name: String) { super.init(name) }
-    
-}
-
-public class EntitySetAttribute<T>: Attribute<T> {
-    
-    public override init(_ name: String) { super.init(name) }
-    
-    public lazy var count: EntitySetCollectionOperatorAttribute<Int> =  EntitySetCollectionOperatorAttribute<Int>(collectionOperator: "@count", entitySetAttributeName: self.___name)
-    
-}
-
-public class EntitySetCollectionOperatorAttribute<T>: Attribute<T> {
-    
-    private let entitySetAttributeName: String
-    
-    public init(collectionOperator: String, entitySetAttributeName: String) {
-        self.entitySetAttributeName = entitySetAttributeName
-        super.init(collectionOperator)
-    }
-
-    private override var expression: NSExpression {
-        return NSExpression(forKeyPath: "\(self.entitySetAttributeName).\(self.___name)")
-    }
-    
 }

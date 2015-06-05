@@ -385,7 +385,7 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
     
 extension FetchedResultsController {
     
-    public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade) -> Self {
+    public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, reloadRowsAtIndexPathsClosure: (([NSIndexPath]) -> Void)? = nil) -> Self {
         var reloadData = false
 
         self
@@ -424,7 +424,12 @@ extension FetchedResultsController {
             }
             .didUpdateEntity { [unowned tableView] entity, indexPath in
                 if !reloadData {
-                    tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
+                    if let reloadRowsAtIndexPathsClosure = reloadRowsAtIndexPathsClosure {
+                        reloadRowsAtIndexPathsClosure([indexPath])
+                    }
+                    else {
+                        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
+                    }
                 }
             }
             .didMoveEntity { [unowned tableView] entity, indexPath, newIndexPath in
@@ -445,7 +450,7 @@ extension FetchedResultsController {
         return self
     }
 
-    public func bindToCollectionView(collectionView: UICollectionView) -> Self {
+    public func bindToCollectionView(collectionView: UICollectionView, reloadItemsAtIndexPaths: (([NSIndexPath]) -> Void)? = nil) -> Self {
         var insertedSectionIndexes = NSMutableIndexSet()
         var deletedSectionIndexes = NSMutableIndexSet()
         var updatedSectionIndexes = NSMutableIndexSet()
@@ -527,7 +532,12 @@ extension FetchedResultsController {
                         }
                         
                         if updatedItemIndexPaths.count > 0 {
-                            collectionView.reloadItemsAtIndexPaths(updatedItemIndexPaths)
+                            if let reloadItemsAtIndexPaths = reloadItemsAtIndexPaths {
+                                reloadItemsAtIndexPaths(updatedItemIndexPaths)
+                            }
+                            else {
+                                collectionView.reloadItemsAtIndexPaths(updatedItemIndexPaths)
+                            }
                         }
                     },
                         completion: { finished in
