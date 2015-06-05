@@ -418,7 +418,7 @@ public func ~=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
 }
 
 public func <<<T>(left: Attribute<T>, right: [T]) -> NSComparisonPredicate {
-    let rightValue = map(right) { $0 as! AnyObject }
+    let rightValue = map(right) { left.expressionForValue($0).constantValue }
     let rightExpression = NSExpression(forConstantValue: rightValue)
     
     return NSComparisonPredicate(
