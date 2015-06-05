@@ -278,7 +278,7 @@ extension Table {
 
 extension Table {
     
-    public func fetchAsync(completionClosure: ([T]!, NSError?) -> Void) -> NSProgress {
+    public func fetchAsync(completionClosure: ([T]!, NSError?) -> Void) -> FetchAsyncHandler {
         return self.context.executeAsynchronousFetchRequestWithFetchRequest(self.toFetchRequest()) { objects, error in
             completionClosure(objects as? [T], error)
         }
@@ -391,7 +391,7 @@ extension Table {
         let success = arrayController.fetchWithRequest(nil, merge: false, error: &error)
         
         if !success {
-            println(error)
+            alecrimCoreDataHandleError(error)
         }
         
         return arrayController

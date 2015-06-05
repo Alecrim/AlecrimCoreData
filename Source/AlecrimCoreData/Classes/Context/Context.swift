@@ -175,9 +175,14 @@ extension Context {
         return objects
     }
     
-    internal func executeAsynchronousFetchRequestWithFetchRequest(fetchRequest: NSFetchRequest, completionClosure: ([AnyObject]?, NSError?) -> Void) -> NSProgress {
+    internal func executeAsynchronousFetchRequestWithFetchRequest(fetchRequest: NSFetchRequest, completionClosure: ([AnyObject]?, NSError?) -> Void) -> FetchAsyncHandler {
+        //
+        let moc = self.managedObjectContext
+        
+        //
         var completionClosureCalled = false
         
+        //
         let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { asynchronousFetchResult in
             if !completionClosureCalled {
                 completionClosureCalled = true
@@ -185,28 +190,34 @@ extension Context {
             }
         }
         
-        let moc = self.managedObjectContext
-        let progress = NSProgress(totalUnitCount: 1)
+        //
+        let handler = FetchAsyncHandler(asynchronousFetchRequest: asynchronousFetchRequest)
         
-        progress.becomeCurrentWithPendingUnitCount(1)
-        
+        //
         moc.performBlock {
             var error: NSError? = nil
-            let asynchronousFetchResult = moc.executeRequest(asynchronousFetchRequest, error: &error) as! NSAsynchronousFetchResult
-            
-            if error != nil {
+            if handler.cancelled {
                 completionClosureCalled = true
-                completionClosure(nil, error)
+                completionClosure(nil, NSError(domain: "com.alecrim.AlecrimCoreData", code: NSUserCancelledError, userInfo: nil))
             }
-            else if asynchronousFetchResult.operationError != nil {
-                completionClosureCalled = true
-                completionClosure(nil, asynchronousFetchResult.operationError)
+            else {
+                handler.foolProgress.becomeCurrentWithPendingUnitCount(1)
+                handler.asynchronousFetchResult = moc.executeRequest(asynchronousFetchRequest, error: &error) as? NSAsynchronousFetchResult
+                handler.foolProgress.resignCurrent()
+                
+                if error != nil {
+                    completionClosureCalled = true
+                    completionClosure(nil, error)
+                }
+                else if handler.asynchronousFetchResult?.operationError != nil {
+                    completionClosureCalled = true
+                    completionClosure(nil, handler.asynchronousFetchResult!.operationError)
+                }
             }
         }
         
-        progress.resignCurrent()
-        
-        return progress
+        //
+        return handler
     }
     
     internal func executeBatchUpdateRequestWithEntityDescription(entityDescription: NSEntityDescription, propertiesToUpdate: [NSObject : AnyObject], predicate: NSPredicate, completionClosure: (Int, NSError?) -> Void) {
@@ -231,7 +242,7 @@ extension Context {
     
 }
 
-// MARK: - public global functions
+// MARK: - public global functions - background contexts
 
 public func performInBackground<T: Context>(parentContext: T, closure: (T) -> Void) {
     performInBackground(parentContext, false, closure)
@@ -251,3 +262,19 @@ public func performInBackground<T: Context>(parentContext: T, createNewBackgroun
     }
 }
 
+// MARK: - internal global functions - error handling
+
+internal func alecrimCoreDataHandleError(error: NSError?, filename: String = __FILE__, line: Int = __LINE__, funcname: String = __FUNCTION__) {
+    if let error = error where error.code != NSUserCancelledError {
+        //    #if DEBUG
+        var dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss:SSS"
+
+        var process = NSProcessInfo.processInfo()
+        var threadId = NSThread.isMainThread() ? "main" : "background"
+        
+        let string = "\(dateFormatter.stringFromDate(NSDate())) \(process.processName) [\(process.processIdentifier):\(threadId)] \(filename.lastPathComponent)(\(line)) \(funcname):\r\t\(error)\n"
+        println(error)
+        //    #endif
+    }
+}

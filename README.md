@@ -185,7 +185,7 @@ Only the `count` operator is supported in this version.
 You can also fetch entities asynchronously and get the results later on main thread:
 
 ```swift
-let progress = dataContext.people.fetchAsync { fetchedEntities, error in
+let fetchAsyncHandler = dataContext.people.fetchAsync { fetchedEntities, error in
     if error != nil {
         // Do a nice error handling here
     }
