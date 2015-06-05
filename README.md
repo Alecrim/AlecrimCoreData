@@ -12,7 +12,7 @@ AlecrimCoreData is a framework to easily access Core Data objects in Swift.
 
 ### Data Context
 
-To use AlecrimCoreData you will need to create a inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
+To use AlecrimCoreData you will need to create an inherited class from `AlecrimCoreData.Context` and declare a property or method for each entity in your data context like the example below:
 
 ```swift
 import AlecrimCoreData
@@ -185,7 +185,7 @@ Only the `count` operator is supported in this version.
 You can also fetch entities asynchronously and get the results later on main thread:
 
 ```swift
-let progress = dataContext.people.fetchAsync { fetchedEntities, error in
+let fetchAsyncHandler = dataContext.people.fetchAsync { fetchedEntities, error in
     if error != nil {
         // Do a nice error handling here
     }
