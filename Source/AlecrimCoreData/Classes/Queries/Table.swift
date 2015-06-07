@@ -57,9 +57,9 @@ extension Table {
         }
     }
     
-    public func refreshEntity(entity: T) {
+    public func refreshEntity(entity: T, mergeChanges: Bool = true) {
         if let moc = entity.managedObjectContext {
-            moc.refreshObject(entity, mergeChanges: true)
+            moc.refreshObject(entity, mergeChanges: mergeChanges)
         }
     }
     
@@ -67,19 +67,31 @@ extension Table {
 
 extension Table {
     
-    public func delete() {
+    public func delete() -> (Bool, [NSError]?) {
         let fetchRequest = self.toFetchRequest()
-        fetchRequest.returnsObjectsAsFaults = true
-        fetchRequest.includesPropertyValues = false
+        fetchRequest.resultType = .ManagedObjectIDResultType
 
-        var results = [T]()
+        var errors = [NSError]()
         
-        if let objects = self.executeFetchRequest(fetchRequest) as? [T] {
-            results += objects
-        }
+        if let objectIDs = self.executeFetchRequest(fetchRequest) as? [NSManagedObjectID] {
+            for objectID in objectIDs {
+                var retrieveExistingObjectError: NSError? = nil
 
-        for entity in results {
-            self.deleteEntity(entity)
+                if let object = self.context.managedObjectContext.existingObjectWithID(objectID, error: &retrieveExistingObjectError) {
+                    self.context.managedObjectContext.deleteObject(object)
+                }
+                
+                if let retrieveExistingObjectError = retrieveExistingObjectError {
+                    errors.append(retrieveExistingObjectError)
+                }
+            }
+        }
+        
+        if errors.count == 0 {
+            return (true, nil)
+        }
+        else {
+            return (false, errors)
         }
     }
     
