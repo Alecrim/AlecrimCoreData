@@ -21,7 +21,14 @@ public final class Table<T: NSManagedObject>: Query {
     public required init(context: Context, entityName: String) {
         super.init(context: context, entityName: entityName)
     }
-    
+ 
+    public override func toFetchRequest() -> NSFetchRequest {
+        let fetchRequest = super.toFetchRequest()
+        fetchRequest.entity = self.entityDescription
+        
+        return fetchRequest
+    }
+
 }
 
 // MARK: create, delete and refresh entities
@@ -383,24 +390,22 @@ extension Table {
 extension Table {
         
     public func toArrayController() -> NSArrayController {
+        let fetchRequest = self.toFetchRequest()
+        
         let arrayController = NSArrayController()
         
         arrayController.managedObjectContext = self.context.managedObjectContext
-        arrayController.entityName = self.entityName
+        arrayController.entityName = fetchRequest.entityName
         
-        arrayController.fetchPredicate = self.predicate?.copy() as? NSPredicate
-        arrayController.sortDescriptors = sortDescriptors
+        arrayController.fetchPredicate = fetchRequest.predicate
+        arrayController.sortDescriptors = fetchRequest.sortDescriptors
         
         arrayController.automaticallyPreparesContent = true
         arrayController.automaticallyRearrangesObjects = true
-        
-        let defaultFetchRequest = arrayController.defaultFetchRequest()
-        defaultFetchRequest.fetchBatchSize = self.context.contextOptions.fetchBatchSize
-        defaultFetchRequest.fetchOffset = self.offset
-        defaultFetchRequest.fetchLimit = self.limit
+        arrayController.usesLazyFetching = true
         
         var error: NSError? = nil
-        let success = arrayController.fetchWithRequest(nil, merge: false, error: &error)
+        let success = arrayController.fetchWithRequest(fetchRequest, merge: false, error: &error)
         
         if !success {
             alecrimCoreDataHandleError(error)
