@@ -148,7 +148,13 @@ public class ALCFetchedResultsController: NSObject {
     // MARK: -
 
     public func performFetch(error: NSErrorPointer) -> Bool {
-        return self.calculateSections(error: error).success
+        var success = false
+        
+        self.managedObjectContext.performBlockAndWait {
+            self.calculateSections(error: error).success
+        }
+        
+        return success
     }
     
     public func objectAtIndexPath(indexPath: NSIndexPath) -> AnyObject {
@@ -222,19 +228,24 @@ extension ALCFetchedResultsController {
             let contextUpdatedObjects = notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject> ?? Set<NSManagedObject>()
             let contextDeletedObjects = notification.userInfo?[NSDeletedObjectsKey] as? Set<NSManagedObject> ?? Set<NSManagedObject>()
             
-            var insertedObjects = filter(contextInsertedObjects, { $0.entity.name == self.fetchRequest.entityName }).map { $0.inManagedObjectContext(self.managedObjectContext)! }
-            let updatedObjects = filter(contextUpdatedObjects, { $0.entity.name == self.fetchRequest.entityName }).map { $0.inManagedObjectContext(self.managedObjectContext)! }
-            var deletedObjects = filter(contextDeletedObjects, { $0.entity.name == self.fetchRequest.entityName }).map { $0.inManagedObjectContext(self.managedObjectContext)! }
-            
-            if let predicate = self.fetchRequest.predicate {
-                insertedObjects = (insertedObjects as NSArray).filteredArrayUsingPredicate(predicate) as! [NSManagedObject]
-                deletedObjects = (deletedObjects as NSArray).filteredArrayUsingPredicate(predicate) as! [NSManagedObject]
-            }
-            
-            if insertedObjects.count > 0 || updatedObjects.count > 0 || deletedObjects.count > 0 {
-                let (success, oldSections, oldFetchedObjects, newSections, newFetchedObjects) = self.calculateSections(error: nil)
-                if success && self.delegate != nil && oldSections != nil && oldFetchedObjects != nil && newSections != nil && newFetchedObjects != nil {
-                    self.handleCallbacksWithDelegate(self.delegate!, oldSections: oldSections as! [ALCSectionInfo], oldFetchedObjects: oldFetchedObjects as! [NSManagedObject], newSections: self.sections as! [ALCSectionInfo], newFetchedObjects: self.fetchedObjects as! [NSManagedObject], insertedObjects: insertedObjects, updatedObjects: updatedObjects, deletedObjects: deletedObjects)
+            self.managedObjectContext.performBlock {
+                var insertedObjects = filter(contextInsertedObjects, { $0.entity.name == self.fetchRequest.entityName }).map { $0.inManagedObjectContext(self.managedObjectContext)! }
+                let updatedObjects = filter(contextUpdatedObjects, { $0.entity.name == self.fetchRequest.entityName }).map { $0.inManagedObjectContext(self.managedObjectContext)! }
+                var deletedObjects = filter(contextDeletedObjects, { $0.entity.name == self.fetchRequest.entityName }).map { $0.inManagedObjectContext(self.managedObjectContext)! }
+                
+                if let predicate = self.fetchRequest.predicate {
+                    insertedObjects = (insertedObjects as NSArray).filteredArrayUsingPredicate(predicate) as! [NSManagedObject]
+                    
+                    // updatedObjects is a special case handled in handleCallbacksWithDelegate
+                    
+                    deletedObjects = (deletedObjects as NSArray).filteredArrayUsingPredicate(predicate) as! [NSManagedObject]
+                }
+                
+                if insertedObjects.count > 0 || updatedObjects.count > 0 || deletedObjects.count > 0 {
+                    let (success, oldSections, oldFetchedObjects, newSections, newFetchedObjects) = self.calculateSections(error: nil)
+                    if success && self.delegate != nil && oldSections != nil && oldFetchedObjects != nil && newSections != nil && newFetchedObjects != nil {
+                        self.handleCallbacksWithDelegate(self.delegate!, oldSections: oldSections as! [ALCSectionInfo], oldFetchedObjects: oldFetchedObjects as! [NSManagedObject], newSections: self.sections as! [ALCSectionInfo], newFetchedObjects: self.fetchedObjects as! [NSManagedObject], insertedObjects: insertedObjects, updatedObjects: updatedObjects, deletedObjects: deletedObjects)
+                    }
                 }
             }
         }
@@ -279,10 +290,7 @@ extension ALCFetchedResultsController {
             countFetchRequest.propertiesToGroupBy = [self.sectionNameKeyPath!]
             
             var countFetchRequestError: NSError? = nil
-            var results: [AnyObject]? = nil
-            //self.managedObjectContext.performBlockAndWait {
-                results = self.managedObjectContext.executeFetchRequest(countFetchRequest, error: &countFetchRequestError)
-            //}
+            var results: [AnyObject]? = self.managedObjectContext.executeFetchRequest(countFetchRequest, error: &countFetchRequestError)
             
             if countFetchRequestError != nil {
                 errorPointer.memory = countFetchRequestError
@@ -358,11 +366,8 @@ extension ALCFetchedResultsController {
             }
             
             //
-            //self.managedObjectContext.performBlockAndWait {
             var error: NSError? = nil
             self.fetchedObjects = self.managedObjectContext.executeFetchRequest(self.fetchRequest, error: &error)
-            //}
-
             if error != nil {
                 errorPointer.memory = error
                 return (false, oldSections, oldFetchedObjects, self.sections, self.fetchedObjects)
@@ -372,10 +377,8 @@ extension ALCFetchedResultsController {
             self.sections = calculatedSections
         }
         else {
-            //self.managedObjectContext.performBlockAndWait {
             var error: NSError? = nil
             self.fetchedObjects = self.managedObjectContext.executeFetchRequest(self.fetchRequest, error: &error)
-            //}
             
             if error != nil {
                 errorPointer.memory = error
@@ -472,55 +475,49 @@ extension ALCFetchedResultsController {
             }
             
             //
-            if newIndexPath == nil {
+            if newIndexPath == nil && oldIndexPath == nil {
+                if let index = find(updatedObjects, updatedObject) {
+                    updatedObjects.removeAtIndex(index)
+                }
+            }
+            else if newIndexPath == nil && oldIndexPath != nil {
                 if let index = find(updatedObjects, updatedObject) {
                     updatedObjects.removeAtIndex(index)
                 }
                 
-                if let predicate = self.fetchRequest.predicate where predicate.evaluateWithObject(updatedObject) {
-                    deletedObjects.append(updatedObject)
-                }
+                deletedObjects.append(updatedObject)
             }
-            else if oldIndexPath == nil {
+            else if newIndexPath != nil && oldIndexPath == nil {
                 if let index = find(updatedObjects, updatedObject) {
                     updatedObjects.removeAtIndex(index)
                 }
                 
-                if let predicate = self.fetchRequest.predicate where predicate.evaluateWithObject(updatedObject) {
-                    insertedObjects.append(updatedObject)
-                }
+                insertedObjects.append(updatedObject)
             }
-            else {
-                if let predicate = self.fetchRequest.predicate where predicate.evaluateWithObject(updatedObject) {
-                    var inSortDescriptors = false
-                    if let changedValues = updatedObject.changedValues() as? [String: AnyObject], let sortDescriptors = self.fetchRequest.sortDescriptors as? [NSSortDescriptor] {
-                        for changedValueKey in changedValues.keys {
-                            for sortDescriptor in sortDescriptors {
-                                if let sortDescriptorKey = sortDescriptor.key() {
-                                    if sortDescriptorKey == changedValueKey {
-                                        inSortDescriptors = true
-                                        break
-                                    }
+            else { // newIndexPath != nil && oldIndexPath != nil
+                var inSortDescriptors = false
+                if let changedValues = updatedObject.changedValues() as? [String: AnyObject], let sortDescriptors = self.fetchRequest.sortDescriptors as? [NSSortDescriptor] {
+                    for changedValueKey in changedValues.keys {
+                        for sortDescriptor in sortDescriptors {
+                            if let sortDescriptorKey = sortDescriptor.key() {
+                                if sortDescriptorKey == changedValueKey {
+                                    inSortDescriptors = true
+                                    break
                                 }
                             }
-                            if inSortDescriptors {
-                                break
-                            }
                         }
-                    }
-                    
-                    if inSortDescriptors {
-                        if let index = find(updatedObjects, updatedObject) {
-                            updatedObjects.removeAtIndex(index)
+                        if inSortDescriptors {
+                            break
                         }
-                        
-                        movedObjects.append(updatedObject)
                     }
                 }
-                else {
+                
+                if inSortDescriptors {
                     if let index = find(updatedObjects, updatedObject) {
                         updatedObjects.removeAtIndex(index)
                     }
+                    
+                    movedObjects.append(updatedObject)
                 }
             }
         }
