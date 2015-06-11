@@ -20,11 +20,12 @@ extension NSManagedObject {
             return self
         }
         
-        var error: NSError? = nil
         if self.objectID.temporaryID {
             if let moc = self.managedObjectContext {
+                var error: NSError? = nil
                 let success = moc.obtainPermanentIDsForObjects([self as NSManagedObject], error: &error)
                 if !success {
+                    alecrimCoreDataHandleError(error)
                     return nil
                 }
             }
@@ -33,7 +34,12 @@ extension NSManagedObject {
             }
         }
         
+        var error: NSError? = nil
         let objectInContext = otherManagedObjectContext.existingObjectWithID(self.objectID, error: &error)
+        
+        if error != nil {
+            alecrimCoreDataHandleError(error)
+        }
         
         return unsafeBitCast(objectInContext, self.dynamicType)
     }

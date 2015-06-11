@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1451E0161B29F7BA00689C58 /* ALCFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1451E0151B29F7BA00689C58 /* ALCFetchedResultsController.swift */; };
 		1464BD1D1B20F973007CD240 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD0F1B20F973007CD240 /* Attribute.swift */; };
 		1464BD1E1B20F973007CD240 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD111B20F973007CD240 /* Context.swift */; };
 		1464BD1F1B20F973007CD240 /* ContextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD121B20F973007CD240 /* ContextOptions.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1451E0151B29F7BA00689C58 /* ALCFetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALCFetchedResultsController.swift; sourceTree = "<group>"; };
 		1464BD0F1B20F973007CD240 /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		1464BD111B20F973007CD240 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		1464BD121B20F973007CD240 /* ContextOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextOptions.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 		1464BD161B20F973007CD240 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				1451E0151B29F7BA00689C58 /* ALCFetchedResultsController.swift */,
 				1464BD171B20F973007CD240 /* FetchedResultsController.swift */,
 				1464BD181B20F973007CD240 /* FetchedResultsSectionInfo.swift */,
 			);
@@ -246,6 +249,7 @@
 				1464BD2E1B20FAB5007CD240 /* NSPredicateExtensions.swift in Sources */,
 				1464BD2C1B20FA81007CD240 /* EntitySetCollectionOperatorAttribute.swift in Sources */,
 				149733741B21F716000A0EDE /* FetchAsyncHandler.swift in Sources */,
+				1451E0161B29F7BA00689C58 /* ALCFetchedResultsController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

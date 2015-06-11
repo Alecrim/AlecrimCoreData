@@ -21,14 +21,14 @@ public final class Table<T: NSManagedObject>: Query {
     public required init(context: Context, entityName: String) {
         super.init(context: context, entityName: entityName)
     }
- 
+    
     public override func toFetchRequest() -> NSFetchRequest {
         let fetchRequest = super.toFetchRequest()
         fetchRequest.entity = self.entityDescription
         
         return fetchRequest
     }
-
+    
 }
 
 // MARK: create, delete and refresh entities
@@ -358,10 +358,8 @@ extension Table {
 
 }
 
-// MARK: - iOS helper extensions
+// MARK: - iOS and OS X helper extensions
 
-#if os(iOS)
-    
 extension Table {
 
     public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchedResultsController<T> {
@@ -381,8 +379,6 @@ extension Table {
 
 }
     
-#endif
-
 // MARK: - OS X helper extensions
 
 #if os(OSX)
@@ -392,7 +388,7 @@ extension Table {
     public func toArrayController() -> NSArrayController {
         let fetchRequest = self.toFetchRequest()
         
-        let arrayController = NSArrayController()
+        let arrayController = NSArrayController(content: nil)
         
         arrayController.managedObjectContext = self.context.managedObjectContext
         arrayController.entityName = fetchRequest.entityName
