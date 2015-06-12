@@ -274,7 +274,7 @@ internal func alecrimCoreDataHandleError(error: NSError?, filename: String = __F
         var threadId = NSThread.isMainThread() ? "main" : "background"
         
         let string = "\(dateFormatter.stringFromDate(NSDate())) \(process.processName) [\(process.processIdentifier):\(threadId)] \(filename.lastPathComponent)(\(line)) \(funcname):\r\t\(error)\n"
-        println(error)
+        println(string)
         //    #endif
     }
 }
