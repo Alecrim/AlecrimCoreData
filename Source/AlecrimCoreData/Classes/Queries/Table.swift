@@ -353,6 +353,12 @@ extension Table {
 
 extension Table {
 
+    public func toFetchedResultsController<U>(sectionNameKeyPathClosure: (T.Type) -> Attribute<U>) -> FetchedResultsController<T> {
+        let sectionNameKeyPath = sectionNameKeyPathClosure(T.self).___name
+        return self.toFetchedResultsController(sectionNameKeyPath: sectionNameKeyPath, cacheName:
+            nil)
+    }
+    
     public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchedResultsController<T> {
         return FetchedResultsController<T>(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context.managedObjectContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
