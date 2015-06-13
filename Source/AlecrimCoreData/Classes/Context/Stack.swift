@@ -241,7 +241,7 @@ extension Stack {
             return store
         }
         else {
-            println(error)
+            alecrimCoreDataHandleError(error)
             return nil
         }
     }
@@ -253,7 +253,7 @@ extension Stack {
             return store
         }
         else {
-            println(error)
+            alecrimCoreDataHandleError(error)
             return nil
         }
     }
@@ -343,7 +343,7 @@ private final class StackBackgroundManagedObjectContext: NSManagedObjectContext 
                 if insertedObjects.count > 0 {
                     var error: NSError? = nil
                     if !context.obtainPermanentIDsForObjects((insertedObjects as NSSet).allObjects, error: &error) {
-                        println(error)
+                        alecrimCoreDataHandleError(error)
                     }
                 }
             }

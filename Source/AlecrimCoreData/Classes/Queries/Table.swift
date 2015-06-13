@@ -22,6 +22,13 @@ public final class Table<T: NSManagedObject>: Query {
         super.init(context: context, entityName: entityName)
     }
     
+    public override func toFetchRequest() -> NSFetchRequest {
+        let fetchRequest = super.toFetchRequest()
+        fetchRequest.entity = self.entityDescription
+        
+        return fetchRequest
+    }
+    
 }
 
 // MARK: create, delete and refresh entities
@@ -45,7 +52,7 @@ extension Table {
         }
     }
 
-    public func deleteEntity(entity: T) -> (Bool, NSError?) {
+    public func deleteEntity(entity: T) -> (success: Bool, error: NSError?) {
         var retrieveExistingObjectError: NSError? = nil
         
         if let managedObjectInContext = self.context.managedObjectContext.existingObjectWithID(entity.objectID, error: &retrieveExistingObjectError) {
@@ -57,9 +64,9 @@ extension Table {
         }
     }
     
-    public func refreshEntity(entity: T) {
+    public func refreshEntity(entity: T, mergeChanges: Bool = true) {
         if let moc = entity.managedObjectContext {
-            moc.refreshObject(entity, mergeChanges: true)
+            moc.refreshObject(entity, mergeChanges: mergeChanges)
         }
     }
     
@@ -67,19 +74,31 @@ extension Table {
 
 extension Table {
     
-    public func delete() {
+    public func delete() -> (success: Bool, errors: [NSError]?) {
         let fetchRequest = self.toFetchRequest()
-        fetchRequest.returnsObjectsAsFaults = true
-        fetchRequest.includesPropertyValues = false
+        fetchRequest.resultType = .ManagedObjectIDResultType
 
-        var results = [T]()
+        var errors = [NSError]()
         
-        if let objects = self.executeFetchRequest(fetchRequest) as? [T] {
-            results += objects
-        }
+        if let objectIDs = self.executeFetchRequest(fetchRequest) as? [NSManagedObjectID] {
+            for objectID in objectIDs {
+                var retrieveExistingObjectError: NSError? = nil
 
-        for entity in results {
-            self.deleteEntity(entity)
+                if let object = self.context.managedObjectContext.existingObjectWithID(objectID, error: &retrieveExistingObjectError) {
+                    self.context.managedObjectContext.deleteObject(object)
+                }
+                
+                if let retrieveExistingObjectError = retrieveExistingObjectError {
+                    errors.append(retrieveExistingObjectError)
+                }
+            }
+        }
+        
+        if errors.count == 0 {
+            return (true, nil)
+        }
+        else {
+            return (false, errors)
         }
     }
     
@@ -120,16 +139,7 @@ extension Table {
 extension Table {
     
     public func first() -> T? {
-        let fetchRequest = self.toFetchRequest()
-        fetchRequest.fetchLimit = 1
-        
-        var results = [T]()
-        
-        if let objects = self.executeFetchRequest(fetchRequest) as? [T] {
-            results += objects
-        }
-        
-        return (results.isEmpty ? nil : results[0])
+        return self.take(1).toArray().first
     }
     
 }
@@ -278,7 +288,7 @@ extension Table {
 
 extension Table {
     
-    public func fetchAsync(completionClosure: ([T]!, NSError?) -> Void) -> NSProgress {
+    public func fetchAsync(completionClosure: ([T]!, NSError?) -> Void) -> FetchAsyncHandler {
         return self.context.executeAsynchronousFetchRequestWithFetchRequest(self.toFetchRequest()) { objects, error in
             completionClosure(objects as? [T], error)
         }
@@ -339,12 +349,16 @@ extension Table {
 
 }
 
-// MARK: - iOS helper extensions
+// MARK: - iOS and OS X helper extensions
 
-#if os(iOS)
-    
 extension Table {
 
+    public func toFetchedResultsController<U>(sectionNameKeyPathClosure: (T.Type) -> Attribute<U>) -> FetchedResultsController<T> {
+        let sectionNameKeyPath = sectionNameKeyPathClosure(T.self).___name
+        return self.toFetchedResultsController(sectionNameKeyPath: sectionNameKeyPath, cacheName:
+            nil)
+    }
+    
     public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchedResultsController<T> {
         return FetchedResultsController<T>(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context.managedObjectContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
@@ -362,8 +376,6 @@ extension Table {
 
 }
     
-#endif
-
 // MARK: - OS X helper extensions
 
 #if os(OSX)
@@ -371,27 +383,25 @@ extension Table {
 extension Table {
         
     public func toArrayController() -> NSArrayController {
-        let arrayController = NSArrayController()
+        let fetchRequest = self.toFetchRequest()
+        
+        let arrayController = NSArrayController(content: nil)
         
         arrayController.managedObjectContext = self.context.managedObjectContext
-        arrayController.entityName = self.entityName
+        arrayController.entityName = fetchRequest.entityName
         
-        arrayController.fetchPredicate = self.predicate?.copy() as? NSPredicate
-        arrayController.sortDescriptors = sortDescriptors
+        arrayController.fetchPredicate = fetchRequest.predicate
+        arrayController.sortDescriptors = fetchRequest.sortDescriptors
         
         arrayController.automaticallyPreparesContent = true
         arrayController.automaticallyRearrangesObjects = true
-        
-        let defaultFetchRequest = arrayController.defaultFetchRequest()
-        defaultFetchRequest.fetchBatchSize = self.context.contextOptions.fetchBatchSize
-        defaultFetchRequest.fetchOffset = self.offset
-        defaultFetchRequest.fetchLimit = self.limit
+        arrayController.usesLazyFetching = true
         
         var error: NSError? = nil
-        let success = arrayController.fetchWithRequest(nil, merge: false, error: &error)
+        let success = arrayController.fetchWithRequest(fetchRequest, merge: false, error: &error)
         
         if !success {
-            println(error)
+            alecrimCoreDataHandleError(error)
         }
         
         return arrayController

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1451E0161B29F7BA00689C58 /* ALCFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1451E0151B29F7BA00689C58 /* ALCFetchedResultsController.swift */; };
 		1464BD1D1B20F973007CD240 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD0F1B20F973007CD240 /* Attribute.swift */; };
 		1464BD1E1B20F973007CD240 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD111B20F973007CD240 /* Context.swift */; };
 		1464BD1F1B20F973007CD240 /* ContextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD121B20F973007CD240 /* ContextOptions.swift */; };
@@ -21,10 +22,12 @@
 		1464BD2A1B20FA29007CD240 /* EntitySetAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD291B20FA29007CD240 /* EntitySetAttribute.swift */; };
 		1464BD2C1B20FA81007CD240 /* EntitySetCollectionOperatorAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD2B1B20FA81007CD240 /* EntitySetCollectionOperatorAttribute.swift */; };
 		1464BD2E1B20FAB5007CD240 /* NSPredicateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD2D1B20FAB5007CD240 /* NSPredicateExtensions.swift */; };
+		149733741B21F716000A0EDE /* FetchAsyncHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149733731B21F716000A0EDE /* FetchAsyncHandler.swift */; };
 		14CCE9261AC114DD00AE47F1 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14CCE8A61AC10E5500AE47F1 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1451E0151B29F7BA00689C58 /* ALCFetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALCFetchedResultsController.swift; sourceTree = "<group>"; };
 		1464BD0F1B20F973007CD240 /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		1464BD111B20F973007CD240 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		1464BD121B20F973007CD240 /* ContextOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextOptions.swift; sourceTree = "<group>"; };
@@ -39,6 +42,7 @@
 		1464BD291B20FA29007CD240 /* EntitySetAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntitySetAttribute.swift; sourceTree = "<group>"; };
 		1464BD2B1B20FA81007CD240 /* EntitySetCollectionOperatorAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntitySetCollectionOperatorAttribute.swift; sourceTree = "<group>"; };
 		1464BD2D1B20FAB5007CD240 /* NSPredicateExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSPredicateExtensions.swift; sourceTree = "<group>"; };
+		149733731B21F716000A0EDE /* FetchAsyncHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchAsyncHandler.swift; sourceTree = "<group>"; };
 		14CCE8A51AC10E5500AE47F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		14CCE8A61AC10E5500AE47F1 /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
 		14CCE8C21AC10F4600AE47F1 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -84,6 +88,7 @@
 				1464BD111B20F973007CD240 /* Context.swift */,
 				1464BD121B20F973007CD240 /* ContextOptions.swift */,
 				1464BD131B20F973007CD240 /* Stack.swift */,
+				149733731B21F716000A0EDE /* FetchAsyncHandler.swift */,
 			);
 			path = Context;
 			sourceTree = "<group>";
@@ -100,6 +105,7 @@
 		1464BD161B20F973007CD240 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				1451E0151B29F7BA00689C58 /* ALCFetchedResultsController.swift */,
 				1464BD171B20F973007CD240 /* FetchedResultsController.swift */,
 				1464BD181B20F973007CD240 /* FetchedResultsSectionInfo.swift */,
 			);
@@ -242,6 +248,8 @@
 				1464BD211B20F973007CD240 /* NSManagedObjectExtensions.swift in Sources */,
 				1464BD2E1B20FAB5007CD240 /* NSPredicateExtensions.swift in Sources */,
 				1464BD2C1B20FA81007CD240 /* EntitySetCollectionOperatorAttribute.swift in Sources */,
+				149733741B21F716000A0EDE /* FetchAsyncHandler.swift in Sources */,
+				1451E0161B29F7BA00689C58 /* ALCFetchedResultsController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,7 +354,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 237;
+				CURRENT_PROJECT_VERSION = 238;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = "$(DYLIB_CURRENT_VERSION)";
@@ -369,7 +377,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 237;
+				CURRENT_PROJECT_VERSION = 238;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = "$(DYLIB_CURRENT_VERSION)";
 				DYLIB_CURRENT_VERSION = "$(CURRENT_PROJECT_VERSION)";

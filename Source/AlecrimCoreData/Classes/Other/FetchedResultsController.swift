@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Alecrim. All rights reserved.
 //
 
-#if os(iOS)
-    
 import Foundation
 import CoreData
 
@@ -381,7 +379,9 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
 
 }
 
-// MARK: - Helper Extensions
+// MARK: - Helper Extensions - iOS
+
+#if os(iOS)
     
 extension FetchedResultsController {
     
@@ -560,5 +560,5 @@ extension FetchedResultsController {
     }
 
 }
-    
+
 #endif

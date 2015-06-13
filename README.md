@@ -185,7 +185,7 @@ Only the `count` operator is supported in this version.
 You can also fetch entities asynchronously and get the results later on main thread:
 
 ```swift
-let progress = dataContext.people.fetchAsync { fetchedEntities, error in
+let fetchAsyncHandler = dataContext.people.fetchAsync { fetchedEntities, error in
     if error != nil {
         // Do a nice error handling here
     }
@@ -229,10 +229,11 @@ let fetchRequest = dataContext.people.toFetchRequest()
 // OS X only
 let arrayController = dataContext.people.toArrayController()
 
-// iOS only (returns an AlecrimCoreData FecthedResultsController strong typed instance)
+// iOS and OS X
 let fetchedResultsController = dataContext.people.toFetchedResultsController() 
 
-// iOS only (returns a native NSFetchedResultsController instance)
+// iOS: returns a native NSFetchedResultsController class instance
+// OS X: returns a NSFetchedResultsController equivalent class (ALCFetchedResultsController) instance
 let fetchedResultsController = dataContext.people.toNativeFetchedResultsController()
 
 ```
