@@ -52,7 +52,7 @@ extension Table {
         }
     }
 
-    public func deleteEntity(entity: T) -> (Bool, NSError?) {
+    public func deleteEntity(entity: T) -> (success: Bool, error: NSError?) {
         var retrieveExistingObjectError: NSError? = nil
         
         if let managedObjectInContext = self.context.managedObjectContext.existingObjectWithID(entity.objectID, error: &retrieveExistingObjectError) {
@@ -74,7 +74,7 @@ extension Table {
 
 extension Table {
     
-    public func delete() -> (Bool, [NSError]?) {
+    public func delete() -> (success: Bool, errors: [NSError]?) {
         let fetchRequest = self.toFetchRequest()
         fetchRequest.resultType = .ManagedObjectIDResultType
 
@@ -139,16 +139,7 @@ extension Table {
 extension Table {
     
     public func first() -> T? {
-        let fetchRequest = self.toFetchRequest()
-        fetchRequest.fetchLimit = 1
-        
-        var results = [T]()
-        
-        if let objects = self.executeFetchRequest(fetchRequest) as? [T] {
-            results += objects
-        }
-        
-        return (results.isEmpty ? nil : results[0])
+        return self.take(1).toArray().first
     }
     
 }

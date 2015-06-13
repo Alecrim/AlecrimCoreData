@@ -28,7 +28,7 @@ public class Query {
     public func toFetchRequest() -> NSFetchRequest {
         let fetchRequest = NSFetchRequest(entityName: self.entityName)
         
-        fetchRequest.fetchBatchSize = self.context.contextOptions.fetchBatchSize
+        fetchRequest.fetchBatchSize = (self.limit > 0 && self.context.contextOptions.fetchBatchSize > self.limit ? 0 : self.context.contextOptions.fetchBatchSize)
         fetchRequest.fetchOffset = self.offset
         fetchRequest.fetchLimit = self.limit
         
@@ -236,17 +236,15 @@ extension Query {
 extension Query {
     
     public func any() -> Bool {
-        let fetchRequest = self.toFetchRequest()
-        fetchRequest.fetchLimit = 1
-
-        var c = 0
-        
-        self.context.managedObjectContext.performBlockAndWait {
-            var error: NSError? = nil
-            c += self.context.managedObjectContext.countForFetchRequest(fetchRequest, error: &error)
-        }
-        
-        return c > 0
+        return self.take(1).count() == 1
+    }
+    
+    public func some() -> Bool {
+        return self.any()
+    }
+    
+    public func none() -> Bool {
+        return !self.any()
     }
     
 }
