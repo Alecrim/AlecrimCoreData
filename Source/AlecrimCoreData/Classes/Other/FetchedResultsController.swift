@@ -60,17 +60,17 @@ public final class FetchedResultsController<T: NSManagedObject> {
 
     private var needsReloadDataClosure: (() -> Void)?
     
-    private lazy var willChangeContentClosures = Array<(() -> Void)>()
-    private lazy var didChangeContentClosures = Array<(() -> Void)>()
+    private lazy var willChangeContentClosures = Array<() -> Void>()
+    private lazy var didChangeContentClosures = Array<() -> Void>()
     
-    private lazy var didInsertSectionClosures = Array<((FetchedResultsSectionInfo<T>, Int) -> Void)>()
-    private lazy var didDeleteSectionClosures = Array<((FetchedResultsSectionInfo<T>, Int) -> Void)>()
-    private lazy var didUpdateSectionClosures = Array<((FetchedResultsSectionInfo<T>, Int) -> Void)>()
+    private lazy var didInsertSectionClosures = Array<(FetchedResultsSectionInfo<T>, Int) -> Void>()
+    private lazy var didDeleteSectionClosures = Array<(FetchedResultsSectionInfo<T>, Int) -> Void>()
+    private lazy var didUpdateSectionClosures = Array<(FetchedResultsSectionInfo<T>, Int) -> Void>()
     
-    private lazy var didInsertEntityClosures = Array<((T, NSIndexPath) -> Void)>()
-    private lazy var didDeleteEntityClosures = Array<((T, NSIndexPath) -> Void)>()
-    private lazy var didUpdateEntityClosures = Array<((T, NSIndexPath) -> Void)>()
-    private lazy var didMoveEntityClosures = Array<((T, NSIndexPath, NSIndexPath) -> Void)>()
+    private lazy var didInsertEntityClosures = Array<(T, NSIndexPath) -> Void>()
+    private lazy var didDeleteEntityClosures = Array<(T, NSIndexPath) -> Void>()
+    private lazy var didUpdateEntityClosures = Array<(T, NSIndexPath) -> Void>()
+    private lazy var didMoveEntityClosures = Array<(T, NSIndexPath, NSIndexPath) -> Void>()
     
     private var sectionIndexTitleClosure: ((String) -> String!)?
 
@@ -472,15 +472,8 @@ extension FetchedResultsController {
         return self
     }
 
-    public func bindToCollectionView(collectionView: UICollectionView, reloadItemsAtIndexPaths: (([NSIndexPath]) -> Void)? = nil) -> Self {
-        var insertedSectionIndexes = NSMutableIndexSet()
-        var deletedSectionIndexes = NSMutableIndexSet()
-        var updatedSectionIndexes = NSMutableIndexSet()
-        
-        var insertedItemIndexPaths = [NSIndexPath]()
-        var deletedItemIndexPaths = [NSIndexPath]()
-        var updatedItemIndexPaths = [NSIndexPath]()
-        
+    public func bindToCollectionView(collectionView: UICollectionView, reloadItemAtIndexPath reloadItemAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
+        var updateClosures = Array<() -> Void>()
         var reloadData = false
         
         self
@@ -488,90 +481,81 @@ extension FetchedResultsController {
                 reloadData = true
             }
             .willChangeContent {
-                insertedSectionIndexes.removeAllIndexes()
-                deletedSectionIndexes.removeAllIndexes()
-                updatedSectionIndexes.removeAllIndexes()
-                
-                insertedItemIndexPaths.removeAll(keepCapacity: false)
-                deletedItemIndexPaths.removeAll(keepCapacity: false)
-                updatedItemIndexPaths.removeAll(keepCapacity: false)
+                updateClosures.removeAll(keepCapacity: false)
             }
             .didInsertSection { sectionInfo, sectionIndex in
-                insertedSectionIndexes.addIndex(sectionIndex)
+                if !reloadData {
+                    updateClosures.append({ [unowned collectionView] in
+                        collectionView.insertSections(NSIndexSet(index: sectionIndex))
+                    })
+                }
             }
             .didDeleteSection { sectionInfo, sectionIndex in
-                deletedSectionIndexes.addIndex(sectionIndex)
+                if !reloadData {
+                    updateClosures.append({ [unowned collectionView] in
+                        collectionView.deleteSections(NSIndexSet(index: sectionIndex))
+                    })
+                }
             }
             .didUpdateSection { sectionInfo, sectionIndex in
-                updatedSectionIndexes.addIndex(sectionIndex)
+                if !reloadData {
+                    updateClosures.append({ [unowned collectionView] in
+                        collectionView.reloadSections(NSIndexSet(index: sectionIndex))
+                    })
+                }
             }
             .didInsertEntity { entity, newIndexPath in
-                insertedItemIndexPaths.append(newIndexPath)
+                if !reloadData {
+                    updateClosures.append({ [unowned collectionView] in
+                        collectionView.insertItemsAtIndexPaths([newIndexPath])
+                    })
+                }
             }
             .didDeleteEntity { entity, indexPath in
-                deletedItemIndexPaths.append(indexPath)
+                if !reloadData {
+                    updateClosures.append({ [unowned collectionView] in
+                        collectionView.deleteItemsAtIndexPaths([indexPath])
+                    })
+                }
             }
             .didUpdateEntity { entity, indexPath in
-                updatedItemIndexPaths.append(indexPath)
+                if !reloadData {
+                    if let reloadItemAtIndexPathClosure = reloadItemAtIndexPathClosure {
+                        updateClosures.append({
+                            reloadItemAtIndexPathClosure(indexPath)
+                        })
+                    }
+                    else {
+                        updateClosures.append({ [unowned collectionView] in
+                            collectionView.reloadItemsAtIndexPaths([indexPath])
+                        })
+                    }
+                }
             }
             .didMoveEntity { entity, indexPath, newIndexPath in
-                reloadData = true
+                if !reloadData {
+                    updateClosures.append({ [unowned collectionView] in
+                        collectionView.deleteItemsAtIndexPaths([indexPath])
+                        collectionView.insertItemsAtIndexPaths([newIndexPath])
+                    })
+                }
             }
             .didChangeContent { [unowned collectionView] in
                 if reloadData {
-                    collectionView.reloadData()
-
-                    insertedSectionIndexes.removeAllIndexes()
-                    deletedSectionIndexes.removeAllIndexes()
-                    updatedSectionIndexes.removeAllIndexes()
-                    
-                    insertedItemIndexPaths.removeAll(keepCapacity: false)
-                    deletedItemIndexPaths.removeAll(keepCapacity: false)
-                    updatedItemIndexPaths.removeAll(keepCapacity: false)
-                    
+                    updateClosures.removeAll(keepCapacity: false)
                     reloadData = false
+
+                    collectionView.reloadData()
                 }
                 else {
                     collectionView.performBatchUpdates({
-                        if deletedSectionIndexes.count > 0 {
-                            collectionView.deleteSections(deletedSectionIndexes)
-                        }
-                        
-                        if insertedSectionIndexes.count > 0 {
-                            collectionView.insertSections(insertedSectionIndexes)
-                        }
-                        
-                        if updatedSectionIndexes.count > 0 {
-                            collectionView.reloadSections(updatedSectionIndexes)
-                        }
-                        
-                        if deletedItemIndexPaths.count > 0 {
-                            collectionView.deleteItemsAtIndexPaths(deletedItemIndexPaths)
-                        }
-                        
-                        if insertedItemIndexPaths.count > 0 {
-                            collectionView.insertItemsAtIndexPaths(insertedItemIndexPaths)
-                        }
-                        
-                        if updatedItemIndexPaths.count > 0 {
-                            if let reloadItemsAtIndexPaths = reloadItemsAtIndexPaths {
-                                reloadItemsAtIndexPaths(updatedItemIndexPaths)
-                            }
-                            else {
-                                collectionView.reloadItemsAtIndexPaths(updatedItemIndexPaths)
-                            }
+                        for updateClosure in updateClosures {
+                            updateClosure()
                         }
                     },
                         completion: { finished in
                             if finished {
-                                insertedSectionIndexes.removeAllIndexes()
-                                deletedSectionIndexes.removeAllIndexes()
-                                updatedSectionIndexes.removeAllIndexes()
-                                
-                                insertedItemIndexPaths.removeAll(keepCapacity: false)
-                                deletedItemIndexPaths.removeAll(keepCapacity: false)
-                                updatedItemIndexPaths.removeAll(keepCapacity: false)
-                                
+                                updateClosures.removeAll(keepCapacity: false)
                                 reloadData = false
                             }
                     })
