@@ -60,17 +60,17 @@ public final class FetchedResultsController<T: NSManagedObject> {
 
     private var needsReloadDataClosure: (() -> Void)?
     
-    private var willChangeContentClosure: (() -> Void)?
-    private var didChangeContentClosure: (() -> Void)?
+    private lazy var willChangeContentClosures = Array<(() -> Void)>()
+    private lazy var didChangeContentClosures = Array<(() -> Void)>()
     
-    private var didInsertSectionClosure: ((FetchedResultsSectionInfo<T>, Int) -> Void)?
-    private var didDeleteSectionClosure: ((FetchedResultsSectionInfo<T>, Int) -> Void)?
-    private var didUpdateSectionClosure: ((FetchedResultsSectionInfo<T>, Int) -> Void)?
+    private lazy var didInsertSectionClosures = Array<((FetchedResultsSectionInfo<T>, Int) -> Void)>()
+    private lazy var didDeleteSectionClosures = Array<((FetchedResultsSectionInfo<T>, Int) -> Void)>()
+    private lazy var didUpdateSectionClosures = Array<((FetchedResultsSectionInfo<T>, Int) -> Void)>()
     
-    private var didInsertEntityClosure: ((T, NSIndexPath) -> Void)?
-    private var didDeleteEntityClosure: ((T, NSIndexPath) -> Void)?
-    private var didUpdateEntityClosure: ((T, NSIndexPath) -> Void)?
-    private var didMoveEntityClosure: ((T, NSIndexPath, NSIndexPath) -> Void)?
+    private lazy var didInsertEntityClosures = Array<((T, NSIndexPath) -> Void)>()
+    private lazy var didDeleteEntityClosures = Array<((T, NSIndexPath) -> Void)>()
+    private lazy var didUpdateEntityClosures = Array<((T, NSIndexPath) -> Void)>()
+    private lazy var didMoveEntityClosures = Array<((T, NSIndexPath, NSIndexPath) -> Void)>()
     
     private var sectionIndexTitleClosure: ((String) -> String!)?
 
@@ -80,47 +80,47 @@ public final class FetchedResultsController<T: NSManagedObject> {
     }
 
     public func willChangeContent(closure: () -> Void) -> Self {
-        self.willChangeContentClosure = closure
+        self.willChangeContentClosures.append(closure)
         return self
     }
     
     public func didChangeContent(closure: () -> Void) -> Self {
-        self.didChangeContentClosure = closure
+        self.didChangeContentClosures.append(closure)
         return self
     }
     
     public func didInsertSection(closure: (FetchedResultsSectionInfo<T>, Int) -> Void) -> Self {
-        self.didInsertSectionClosure = closure
+        self.didInsertSectionClosures.append(closure)
         return self
     }
     
     public func didDeleteSection(closure: (FetchedResultsSectionInfo<T>, Int) -> Void) -> Self {
-        self.didDeleteSectionClosure = closure
+        self.didDeleteSectionClosures.append(closure)
         return self
     }
 
     public func didUpdateSection(closure: (FetchedResultsSectionInfo<T>, Int) -> Void) -> Self {
-        self.didUpdateSectionClosure = closure
+        self.didUpdateSectionClosures.append(closure)
         return self
     }
 
     public func didInsertEntity(closure: (T, NSIndexPath) -> Void) -> Self {
-        self.didInsertEntityClosure = closure
+        self.didInsertEntityClosures.append(closure)
         return self
     }
     
     public func didDeleteEntity(closure: (T, NSIndexPath) -> Void) -> Self {
-        self.didDeleteEntityClosure = closure
+        self.didDeleteEntityClosures.append(closure)
         return self
     }
     
     public func didUpdateEntity(closure: (T, NSIndexPath) -> Void) -> Self {
-        self.didUpdateEntityClosure = closure
+        self.didUpdateEntityClosures.append(closure)
         return self
     }
     
     public func didMoveEntity(closure: (T, NSIndexPath, NSIndexPath) -> Void) -> Self {
-        self.didMoveEntityClosure = closure
+        self.didMoveEntityClosures.append(closure)
         return self
     }
     
@@ -156,12 +156,16 @@ extension FetchedResultsController {
     public func refresh() -> (success: Bool, error: NSError?) {
         self.needsReloadDataClosure?()
         
-        self.willChangeContentClosure?()
+        for closure in self.willChangeContentClosures {
+            closure()
+        }
         
         var error: NSError? = nil
         let success = self.performFetch(&error)
-        
-        self.didChangeContentClosure?()
+
+        for closure in self.didChangeContentClosures {
+            closure()
+        }
         
         return (success, error)
     }
@@ -333,16 +337,24 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
     @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch type {
         case .Insert:
-            self.fetchedResultsController.didInsertEntityClosure?(anObject as! NSManagedObject, newIndexPath!)
+            for closure in self.fetchedResultsController.didInsertEntityClosures {
+                closure(anObject as! NSManagedObject, newIndexPath!)
+            }
             
         case .Delete:
-            self.fetchedResultsController.didDeleteEntityClosure?(anObject as! NSManagedObject, indexPath!)
+            for closure in self.fetchedResultsController.didDeleteEntityClosures {
+                closure(anObject as! NSManagedObject, indexPath!)
+            }
             
         case .Update:
-            self.fetchedResultsController.didUpdateEntityClosure?(anObject as! NSManagedObject, indexPath!)
+            for closure in self.fetchedResultsController.didUpdateEntityClosures {
+                closure(anObject as! NSManagedObject, indexPath!)
+            }
             
         case .Move:
-            self.fetchedResultsController.didMoveEntityClosure?(anObject as! NSManagedObject, indexPath!, newIndexPath!)
+            for closure in self.fetchedResultsController.didMoveEntityClosures {
+                closure(anObject as! NSManagedObject, indexPath!, newIndexPath!)
+            }
             
         default:
             break
@@ -352,13 +364,19 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
     @objc func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         switch type {
         case .Insert:
-            self.fetchedResultsController.didInsertSectionClosure?(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            for closure in self.fetchedResultsController.didInsertSectionClosures {
+                closure(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            }
             
         case .Delete:
-            self.fetchedResultsController.didDeleteSectionClosure?(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            for closure in self.fetchedResultsController.didDeleteSectionClosures {
+                closure(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            }
             
         case .Update:
-            self.fetchedResultsController.didUpdateSectionClosure?(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            for closure in self.fetchedResultsController.didUpdateSectionClosures {
+                closure(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            }
             
         default:
             break
@@ -366,11 +384,15 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
     }
     
     @objc func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        self.fetchedResultsController.willChangeContentClosure?()
+        for closure in self.fetchedResultsController.willChangeContentClosures {
+            closure()
+        }
     }
     
     @objc func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        self.fetchedResultsController.didChangeContentClosure?()
+        for closure in self.fetchedResultsController.didChangeContentClosures {
+            closure()
+        }
     }
     
     @objc func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
