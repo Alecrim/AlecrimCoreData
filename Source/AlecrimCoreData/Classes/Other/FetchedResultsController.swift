@@ -407,7 +407,7 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
     
 extension FetchedResultsController {
     
-    public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, reloadRowsAtIndexPathsClosure: (([NSIndexPath]) -> Void)? = nil) -> Self {
+    public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, reloadRowAtIndexPath reloadRowAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
         var reloadData = false
 
         self
@@ -446,8 +446,8 @@ extension FetchedResultsController {
             }
             .didUpdateEntity { [unowned tableView] entity, indexPath in
                 if !reloadData {
-                    if let reloadRowsAtIndexPathsClosure = reloadRowsAtIndexPathsClosure {
-                        reloadRowsAtIndexPathsClosure([indexPath])
+                    if let reloadRowAtIndexPathClosure = reloadRowAtIndexPathClosure {
+                        reloadRowAtIndexPathClosure(indexPath)
                     }
                     else {
                         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
