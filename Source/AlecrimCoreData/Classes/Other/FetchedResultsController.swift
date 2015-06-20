@@ -408,56 +408,81 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
 extension FetchedResultsController {
     
     public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, reloadRowAtIndexPath reloadRowAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
+        var insertedSectionIndexes = NSMutableIndexSet()
+        var deletedSectionIndexes = NSMutableIndexSet()
+        var updatedSectionIndexes = NSMutableIndexSet()
+        
+        var insertedItemIndexPaths = [NSIndexPath]()
+        var deletedItemIndexPaths = [NSIndexPath]()
+        var updatedItemIndexPaths = [NSIndexPath]()
+        
         var reloadData = false
-
+        
         self
             .needsReloadData {
                 reloadData = true
             }
-            .willChangeContent { [unowned tableView] in
+            .willChangeContent {
                 if !reloadData {
+                    insertedSectionIndexes.removeAllIndexes()
+                    deletedSectionIndexes.removeAllIndexes()
+                    updatedSectionIndexes.removeAllIndexes()
+                    
+                    insertedItemIndexPaths.removeAll(keepCapacity: false)
+                    deletedItemIndexPaths.removeAll(keepCapacity: false)
+                    updatedItemIndexPaths.removeAll(keepCapacity: false)
+
+                    //
                     tableView.beginUpdates()
                 }
             }
-            .didInsertSection { [unowned tableView] sectionInfo, sectionIndex in
+            .didInsertSection { sectionInfo, sectionIndex in
                 if !reloadData {
-                    tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
+                    insertedSectionIndexes.addIndex(sectionIndex)
                 }
             }
-            .didDeleteSection { [unowned tableView] sectionInfo, sectionIndex in
+            .didDeleteSection { sectionInfo, sectionIndex in
                 if !reloadData {
-                    tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
+                    deletedSectionIndexes.addIndex(sectionIndex)
+                    deletedItemIndexPaths = deletedItemIndexPaths.filter { $0.section != sectionIndex }
+                    updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex }
                 }
             }
-            .didUpdateSection { [unowned tableView] sectionInfo, sectionIndex in
+            .didUpdateSection { sectionInfo, sectionIndex in
                 if !reloadData {
-                    tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
+                    updatedSectionIndexes.addIndex(sectionIndex)
                 }
             }
-            .didInsertEntity { [unowned tableView] entity, newIndexPath in
+            .didInsertEntity { entity, newIndexPath in
                 if !reloadData {
-                    tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: rowAnimation)
-                }
-            }
-            .didDeleteEntity { [unowned tableView] entity, indexPath in
-                if !reloadData {
-                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
-                }
-            }
-            .didUpdateEntity { [unowned tableView] entity, indexPath in
-                if !reloadData {
-                    if let reloadRowAtIndexPathClosure = reloadRowAtIndexPathClosure {
-                        reloadRowAtIndexPathClosure(indexPath)
-                    }
-                    else {
-                        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
+                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                        insertedItemIndexPaths.append(newIndexPath)
                     }
                 }
             }
-            .didMoveEntity { [unowned tableView] entity, indexPath, newIndexPath in
+            .didDeleteEntity { entity, indexPath in
                 if !reloadData {
-                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
-                    tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: rowAnimation)
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                        deletedItemIndexPaths.append(indexPath)
+                    }
+                }
+            }
+            .didUpdateEntity { entity, indexPath in
+                if !reloadData {
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) && find(deletedItemIndexPaths, indexPath) == nil && find(updatedItemIndexPaths, indexPath) == nil {
+                        updatedItemIndexPaths.append(indexPath)
+                    }
+                }
+            }
+            .didMoveEntity { entity, indexPath, newIndexPath in
+                if !reloadData {
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                        deletedItemIndexPaths.append(indexPath)
+                    }
+                    
+                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                        insertedItemIndexPaths.append(newIndexPath)
+                    }
                 }
             }
             .didChangeContent { [unowned tableView] in
@@ -465,8 +490,50 @@ extension FetchedResultsController {
                     tableView.reloadData()
                 }
                 else {
+                    if deletedSectionIndexes.count > 0 {
+                        tableView.deleteSections(deletedSectionIndexes, withRowAnimation: rowAnimation)
+                    }
+                    
+                    if insertedSectionIndexes.count > 0 {
+                        tableView.insertSections(insertedSectionIndexes, withRowAnimation: rowAnimation)
+                    }
+                    
+                    if updatedSectionIndexes.count > 0 {
+                        tableView.reloadSections(updatedSectionIndexes, withRowAnimation: rowAnimation)
+                    }
+                    
+                    if deletedItemIndexPaths.count > 0 {
+                        tableView.deleteRowsAtIndexPaths(deletedItemIndexPaths, withRowAnimation: rowAnimation)
+                    }
+                    
+                    if insertedItemIndexPaths.count > 0 {
+                        tableView.insertRowsAtIndexPaths(insertedItemIndexPaths, withRowAnimation: rowAnimation)
+                    }
+                    
+                    if updatedItemIndexPaths.count > 0 {
+                        if let reloadRowAtIndexPathClosure = reloadRowAtIndexPathClosure {
+                            for updatedItemIndexPath in updatedItemIndexPaths {
+                                reloadRowAtIndexPathClosure(updatedItemIndexPath)
+                            }
+                        }
+                        else {
+                            tableView.reloadRowsAtIndexPaths(updatedItemIndexPaths, withRowAnimation: rowAnimation)
+                        }
+                    }
+                    
                     tableView.endUpdates()
                 }
+
+                //
+                insertedSectionIndexes.removeAllIndexes()
+                deletedSectionIndexes.removeAllIndexes()
+                updatedSectionIndexes.removeAllIndexes()
+                
+                insertedItemIndexPaths.removeAll(keepCapacity: false)
+                deletedItemIndexPaths.removeAll(keepCapacity: false)
+                updatedItemIndexPaths.removeAll(keepCapacity: false)
+                
+                reloadData = false
             }
         
         return self
@@ -488,13 +555,15 @@ extension FetchedResultsController {
                 reloadData = true
             }
             .willChangeContent {
-                insertedSectionIndexes.removeAllIndexes()
-                deletedSectionIndexes.removeAllIndexes()
-                updatedSectionIndexes.removeAllIndexes()
-                
-                insertedItemIndexPaths.removeAll(keepCapacity: false)
-                deletedItemIndexPaths.removeAll(keepCapacity: false)
-                updatedItemIndexPaths.removeAll(keepCapacity: false)
+                if !reloadData {
+                    insertedSectionIndexes.removeAllIndexes()
+                    deletedSectionIndexes.removeAllIndexes()
+                    updatedSectionIndexes.removeAllIndexes()
+                    
+                    insertedItemIndexPaths.removeAll(keepCapacity: false)
+                    deletedItemIndexPaths.removeAll(keepCapacity: false)
+                    updatedItemIndexPaths.removeAll(keepCapacity: false)
+                }
             }
             .didInsertSection { sectionInfo, sectionIndex in
                 if !reloadData {
@@ -502,9 +571,14 @@ extension FetchedResultsController {
                 }
             }
             .didDeleteSection { sectionInfo, sectionIndex in
-                if !reloadData {
-                    deletedSectionIndexes.addIndex(sectionIndex)
-                }
+                // TODO: find out more info about the UICollectionView issue about section deletions
+                reloadData = true
+
+//                if !reloadData {
+//                    deletedSectionIndexes.addIndex(sectionIndex)
+//                    deletedItemIndexPaths = deletedItemIndexPaths.filter { $0.section != sectionIndex }
+//                    updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex }
+//                }
             }
             .didUpdateSection { sectionInfo, sectionIndex in
                 if !reloadData {
@@ -513,21 +587,35 @@ extension FetchedResultsController {
             }
             .didInsertEntity { entity, newIndexPath in
                 if !reloadData {
-                    insertedItemIndexPaths.append(newIndexPath)
+                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                        insertedItemIndexPaths.append(newIndexPath)
+                    }
                 }
             }
             .didDeleteEntity { entity, indexPath in
                 if !reloadData {
-                    deletedItemIndexPaths.append(indexPath)
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                        deletedItemIndexPaths.append(indexPath)
+                    }
                 }
             }
             .didUpdateEntity { entity, indexPath in
                 if !reloadData {
-                    updatedItemIndexPaths.append(indexPath)
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) && find(deletedItemIndexPaths, indexPath) == nil && find(updatedItemIndexPaths, indexPath) == nil {
+                        updatedItemIndexPaths.append(indexPath)
+                    }
                 }
             }
             .didMoveEntity { entity, indexPath, newIndexPath in
-                reloadData = true
+                if !reloadData {
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                        deletedItemIndexPaths.append(indexPath)
+                    }
+                    
+                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                        insertedItemIndexPaths.append(newIndexPath)
+                    }
+                }
             }
             .didChangeContent { [unowned collectionView] in
                 if reloadData {
@@ -590,7 +678,7 @@ extension FetchedResultsController {
                             }
                     })
                 }
-        }
+            }
         
         return self
     }
