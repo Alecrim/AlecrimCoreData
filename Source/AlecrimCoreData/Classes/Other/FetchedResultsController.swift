@@ -510,18 +510,17 @@ extension FetchedResultsController {
                         tableView.insertRowsAtIndexPaths(insertedItemIndexPaths, withRowAnimation: rowAnimation)
                     }
                     
-                    if updatedItemIndexPaths.count > 0 {
-                        if let reloadRowAtIndexPathClosure = reloadRowAtIndexPathClosure {
-                            for updatedItemIndexPath in updatedItemIndexPaths {
-                                reloadRowAtIndexPathClosure(updatedItemIndexPath)
-                            }
-                        }
-                        else {
-                            tableView.reloadRowsAtIndexPaths(updatedItemIndexPaths, withRowAnimation: rowAnimation)
-                        }
+                    if updatedItemIndexPaths.count > 0 && reloadRowAtIndexPathClosure == nil {
+                        tableView.reloadRowsAtIndexPaths(updatedItemIndexPaths, withRowAnimation: rowAnimation)
                     }
                     
                     tableView.endUpdates()
+                    
+                    if let reloadRowAtIndexPathClosure = reloadRowAtIndexPathClosure {
+                        for updatedItemIndexPath in updatedItemIndexPaths {
+                            reloadRowAtIndexPathClosure(updatedItemIndexPath)
+                        }
+                    }
                 }
 
                 //
@@ -653,19 +652,18 @@ extension FetchedResultsController {
                             collectionView.insertItemsAtIndexPaths(insertedItemIndexPaths)
                         }
                         
-                        if updatedItemIndexPaths.count > 0 {
-                            if let reloadItemAtIndexPathClosure = reloadItemAtIndexPathClosure {
-                                for updatedItemIndexPath in updatedItemIndexPaths {
-                                    reloadItemAtIndexPathClosure(updatedItemIndexPath)
-                                }
-                            }
-                            else {
-                                collectionView.reloadItemsAtIndexPaths(updatedItemIndexPaths)
-                            }
+                        if updatedItemIndexPaths.count > 0 && reloadItemAtIndexPathClosure == nil {
+                            collectionView.reloadItemsAtIndexPaths(updatedItemIndexPaths)
                         }
                         },
                         completion: { finished in
                             if finished {
+                                if let reloadItemAtIndexPathClosure = reloadItemAtIndexPathClosure {
+                                    for updatedItemIndexPath in updatedItemIndexPaths {
+                                        reloadItemAtIndexPathClosure(updatedItemIndexPath)
+                                    }
+                                }
+                                
                                 insertedSectionIndexes.removeAllIndexes()
                                 deletedSectionIndexes.removeAllIndexes()
                                 updatedSectionIndexes.removeAllIndexes()
