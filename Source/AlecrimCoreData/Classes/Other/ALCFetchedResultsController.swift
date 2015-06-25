@@ -265,38 +265,84 @@ extension ALCFetchedResultsController {
         self.sections = nil
         self.fetchedObjects = nil
         self._sectionIndexTitles = nil
-
+        
         //
+        //
+        var error: NSError? = nil
+        self.fetchedObjects = self.managedObjectContext.executeFetchRequest(self.fetchRequest, error: &error)
+        if error != nil {
+            errorPointer.memory = error
+            return (false, oldSections, oldFetchedObjects, self.sections, self.fetchedObjects)
+        }
+        
+        //
+        var results: [AnyObject]? = nil
+        
         if let sectionNameKeyPath = self.sectionNameKeyPath {
             //
             var calculatedSections = [ALCSectionInfo]()
             
             //
-            let countFetchRequest = self.fetchRequest.copy() as! NSFetchRequest
-            countFetchRequest.fetchOffset = 0
-            countFetchRequest.fetchLimit = 0
-            countFetchRequest.fetchBatchSize = 0
-            
-            countFetchRequest.propertiesToFetch = nil
-            countFetchRequest.resultType = .DictionaryResultType
-            countFetchRequest.relationshipKeyPathsForPrefetching = nil
-            
-            let countDescription = NSExpressionDescription()
-            countDescription.name = "count"
-            countDescription.expression = NSExpression(forFunction: "count:", arguments: [NSExpression.expressionForEvaluatedObject()])
-            countDescription.expressionResultType = .Integer32AttributeType
-            
-            countFetchRequest.propertiesToFetch = [self.sectionNameKeyPath!, countDescription]
-            countFetchRequest.propertiesToGroupBy = [self.sectionNameKeyPath!]
-            
-            var countFetchRequestError: NSError? = nil
-            var results: [AnyObject]? = self.managedObjectContext.executeFetchRequest(countFetchRequest, error: &countFetchRequestError)
-            
-            if countFetchRequestError != nil {
-                errorPointer.memory = countFetchRequestError
-                return (false, oldSections, oldFetchedObjects, self.sections, self.fetchedObjects)
+            if find((self.fetchRequest.entity!.properties as! [NSPropertyDescription]).map({ $0.name }), sectionNameKeyPath.componentsSeparatedByString(".").first!) != nil {
+                let countFetchRequest = self.fetchRequest.copy() as! NSFetchRequest
+                countFetchRequest.fetchOffset = 0
+                countFetchRequest.fetchLimit = 0
+                countFetchRequest.fetchBatchSize = 0
+                
+                countFetchRequest.propertiesToFetch = nil
+                countFetchRequest.resultType = .DictionaryResultType
+                countFetchRequest.relationshipKeyPathsForPrefetching = nil
+                
+                let countDescription = NSExpressionDescription()
+                countDescription.name = "count"
+                countDescription.expression = NSExpression(forFunction: "count:", arguments: [NSExpression.expressionForEvaluatedObject()])
+                countDescription.expressionResultType = .Integer32AttributeType
+                
+                countFetchRequest.propertiesToFetch = [self.sectionNameKeyPath!, countDescription]
+                countFetchRequest.propertiesToGroupBy = [self.sectionNameKeyPath!]
+                
+                var countFetchRequestError: NSError? = nil
+                results = self.managedObjectContext.executeFetchRequest(countFetchRequest, error: &countFetchRequestError)
+                
+                if countFetchRequestError != nil {
+                    errorPointer.memory = countFetchRequestError
+                    return (false, oldSections, oldFetchedObjects, self.sections, self.fetchedObjects)
+                }
             }
-            
+            else {
+                // sectionNameKeyPath is a transient property, count manually
+                let countedSet = NSCountedSet(capacity: 0)
+                let array = (self.fetchedObjects! as NSArray).valueForKey(sectionNameKeyPath)! as! [AnyObject]
+                countedSet.addObjectsFromArray(array)
+                
+                var dicts = NSMutableArray()
+                for object in countedSet {
+                    let count = countedSet.countForObject(object)
+                    let dict = NSDictionary(objects: [object, count], forKeys: [sectionNameKeyPath, "count"])
+                    dicts.addObject(dict)
+                }
+
+                // we have to assume that the first sort descriptor exists and that it defines the order
+                let ascending = (self.fetchRequest.sortDescriptors!.first as! NSSortDescriptor).ascending
+                let sortedDicts = dicts.sortedArrayUsingComparator { obj1, obj2 in
+                    let dict1 = obj1 as! NSDictionary
+                    let dict2 = obj2 as! NSDictionary
+                    
+                    let sectionIdentifier1 = dict1[sectionNameKeyPath] as! String
+                    let sectionIdentifier2 = dict2[sectionNameKeyPath] as! String
+                    
+                    if ascending {
+                        return sectionIdentifier1.compare(sectionIdentifier2 as String)
+                    }
+                    else {
+                        return sectionIdentifier2.compare(sectionIdentifier1 as String)
+                    }
+                }
+                
+                //
+                results = sortedDicts
+            }
+
             //
             var fetchedObjectsCount = 0
             var offset = self.fetchRequest.fetchOffset
@@ -313,29 +359,13 @@ extension ALCFetchedResultsController {
                         }
                         
                         let _value: AnyObject? = dict[sectionNameKeyPath]
-                        let sectionFetchRequest = self.fetchRequest.copy() as! NSFetchRequest
-                        
-                        let sectionPredicate: NSPredicate
-                        if let value: AnyObject = _value {
-                            sectionPredicate = NSPredicate(format: "%K == %@", argumentArray: [sectionNameKeyPath, value])
-                        }
-                        else {
-                            sectionPredicate = NSPredicate(format: "%K == nil", argumentArray: [sectionNameKeyPath])
-                        }
-                        
-                        if let predicate = sectionFetchRequest.predicate {
-                            sectionFetchRequest.predicate = NSCompoundPredicate(type: .AndPredicateType, subpredicates: [sectionPredicate, predicate])
-                        }
-                        else {
-                            sectionFetchRequest.predicate = sectionPredicate
-                        }
                         
                         //
                         count -= offset
                         if limit > 0 {
                             count = min(count, limit - fetchedObjectsCount)
                         }
-
+                        
                         //
                         let sectionName: String
                         if let string = _value as? String {
@@ -347,7 +377,7 @@ extension ALCFetchedResultsController {
                         else {
                             sectionName = "\(_value)"
                         }
-
+                        
                         let sectionIndexTitle = (self.delegate?.controller?(self, sectionIndexTitleForSectionName: sectionName) ?? self.sectionIndexTitleForSectionName(sectionName)) ?? ""
                         
                         let section = ALCSectionInfo(fetchedResultsController: self, range: NSMakeRange(fetchedObjectsCount, count), name: sectionName, indexTitle: sectionIndexTitle)
@@ -366,25 +396,9 @@ extension ALCFetchedResultsController {
             }
             
             //
-            var error: NSError? = nil
-            self.fetchedObjects = self.managedObjectContext.executeFetchRequest(self.fetchRequest, error: &error)
-            if error != nil {
-                errorPointer.memory = error
-                return (false, oldSections, oldFetchedObjects, self.sections, self.fetchedObjects)
-            }
-
-            //
             self.sections = calculatedSections
         }
         else {
-            var error: NSError? = nil
-            self.fetchedObjects = self.managedObjectContext.executeFetchRequest(self.fetchRequest, error: &error)
-            
-            if error != nil {
-                errorPointer.memory = error
-                return (false, oldSections, oldFetchedObjects, self.sections, self.fetchedObjects)
-            }
-
             //
             let section = ALCSectionInfo(fetchedResultsController: self, range: NSMakeRange(0, self.fetchedObjects?.count ?? 0), name: nil, indexTitle: "")
             self.sections = [section]
