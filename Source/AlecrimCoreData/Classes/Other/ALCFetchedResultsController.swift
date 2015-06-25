@@ -332,10 +332,10 @@ extension ALCFetchedResultsController {
                     let sectionIdentifier2 = dict2[sectionNameKeyPath] as! String
                     
                     if ascending {
-                        return sectionIdentifier1.compare(sectionIdentifier2 as String)
+                        return sectionIdentifier1.compare(sectionIdentifier2)
                     }
                     else {
-                        return sectionIdentifier2.compare(sectionIdentifier1 as String)
+                        return sectionIdentifier2.compare(sectionIdentifier1)
                     }
                 }
                 
