@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 Alecrim. All rights reserved.
 //
 
-#if os(iOS)
-    
 import Foundation
 import CoreData
 
@@ -62,17 +60,17 @@ public final class FetchedResultsController<T: NSManagedObject> {
 
     private var needsReloadDataClosure: (() -> Void)?
     
-    private var willChangeContentClosure: (() -> Void)?
-    private var didChangeContentClosure: (() -> Void)?
+    private lazy var willChangeContentClosures = Array<() -> Void>()
+    private lazy var didChangeContentClosures = Array<() -> Void>()
     
-    private var didInsertSectionClosure: ((FetchedResultsSectionInfo<T>, Int) -> Void)?
-    private var didDeleteSectionClosure: ((FetchedResultsSectionInfo<T>, Int) -> Void)?
-    private var didUpdateSectionClosure: ((FetchedResultsSectionInfo<T>, Int) -> Void)?
+    private lazy var didInsertSectionClosures = Array<(FetchedResultsSectionInfo<T>, Int) -> Void>()
+    private lazy var didDeleteSectionClosures = Array<(FetchedResultsSectionInfo<T>, Int) -> Void>()
+    private lazy var didUpdateSectionClosures = Array<(FetchedResultsSectionInfo<T>, Int) -> Void>()
     
-    private var didInsertEntityClosure: ((T, NSIndexPath) -> Void)?
-    private var didDeleteEntityClosure: ((T, NSIndexPath) -> Void)?
-    private var didUpdateEntityClosure: ((T, NSIndexPath) -> Void)?
-    private var didMoveEntityClosure: ((T, NSIndexPath, NSIndexPath) -> Void)?
+    private lazy var didInsertEntityClosures = Array<(T, NSIndexPath) -> Void>()
+    private lazy var didDeleteEntityClosures = Array<(T, NSIndexPath) -> Void>()
+    private lazy var didUpdateEntityClosures = Array<(T, NSIndexPath) -> Void>()
+    private lazy var didMoveEntityClosures = Array<(T, NSIndexPath, NSIndexPath) -> Void>()
     
     private var sectionIndexTitleClosure: ((String) -> String!)?
 
@@ -82,47 +80,47 @@ public final class FetchedResultsController<T: NSManagedObject> {
     }
 
     public func willChangeContent(closure: () -> Void) -> Self {
-        self.willChangeContentClosure = closure
+        self.willChangeContentClosures.append(closure)
         return self
     }
     
     public func didChangeContent(closure: () -> Void) -> Self {
-        self.didChangeContentClosure = closure
+        self.didChangeContentClosures.append(closure)
         return self
     }
     
     public func didInsertSection(closure: (FetchedResultsSectionInfo<T>, Int) -> Void) -> Self {
-        self.didInsertSectionClosure = closure
+        self.didInsertSectionClosures.append(closure)
         return self
     }
     
     public func didDeleteSection(closure: (FetchedResultsSectionInfo<T>, Int) -> Void) -> Self {
-        self.didDeleteSectionClosure = closure
+        self.didDeleteSectionClosures.append(closure)
         return self
     }
 
     public func didUpdateSection(closure: (FetchedResultsSectionInfo<T>, Int) -> Void) -> Self {
-        self.didUpdateSectionClosure = closure
+        self.didUpdateSectionClosures.append(closure)
         return self
     }
 
     public func didInsertEntity(closure: (T, NSIndexPath) -> Void) -> Self {
-        self.didInsertEntityClosure = closure
+        self.didInsertEntityClosures.append(closure)
         return self
     }
     
     public func didDeleteEntity(closure: (T, NSIndexPath) -> Void) -> Self {
-        self.didDeleteEntityClosure = closure
+        self.didDeleteEntityClosures.append(closure)
         return self
     }
     
     public func didUpdateEntity(closure: (T, NSIndexPath) -> Void) -> Self {
-        self.didUpdateEntityClosure = closure
+        self.didUpdateEntityClosures.append(closure)
         return self
     }
     
     public func didMoveEntity(closure: (T, NSIndexPath, NSIndexPath) -> Void) -> Self {
-        self.didMoveEntityClosure = closure
+        self.didMoveEntityClosures.append(closure)
         return self
     }
     
@@ -158,12 +156,16 @@ extension FetchedResultsController {
     public func refresh() -> (success: Bool, error: NSError?) {
         self.needsReloadDataClosure?()
         
-        self.willChangeContentClosure?()
+        for closure in self.willChangeContentClosures {
+            closure()
+        }
         
         var error: NSError? = nil
         let success = self.performFetch(&error)
-        
-        self.didChangeContentClosure?()
+
+        for closure in self.didChangeContentClosures {
+            closure()
+        }
         
         return (success, error)
     }
@@ -335,16 +337,24 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
     @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch type {
         case .Insert:
-            self.fetchedResultsController.didInsertEntityClosure?(anObject as! NSManagedObject, newIndexPath!)
+            for closure in self.fetchedResultsController.didInsertEntityClosures {
+                closure(anObject as! NSManagedObject, newIndexPath!)
+            }
             
         case .Delete:
-            self.fetchedResultsController.didDeleteEntityClosure?(anObject as! NSManagedObject, indexPath!)
+            for closure in self.fetchedResultsController.didDeleteEntityClosures {
+                closure(anObject as! NSManagedObject, indexPath!)
+            }
             
         case .Update:
-            self.fetchedResultsController.didUpdateEntityClosure?(anObject as! NSManagedObject, indexPath!)
+            for closure in self.fetchedResultsController.didUpdateEntityClosures {
+                closure(anObject as! NSManagedObject, indexPath!)
+            }
             
         case .Move:
-            self.fetchedResultsController.didMoveEntityClosure?(anObject as! NSManagedObject, indexPath!, newIndexPath!)
+            for closure in self.fetchedResultsController.didMoveEntityClosures {
+                closure(anObject as! NSManagedObject, indexPath!, newIndexPath!)
+            }
             
         default:
             break
@@ -354,13 +364,19 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
     @objc func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
         switch type {
         case .Insert:
-            self.fetchedResultsController.didInsertSectionClosure?(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            for closure in self.fetchedResultsController.didInsertSectionClosures {
+                closure(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            }
             
         case .Delete:
-            self.fetchedResultsController.didDeleteSectionClosure?(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            for closure in self.fetchedResultsController.didDeleteSectionClosures {
+                closure(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            }
             
         case .Update:
-            self.fetchedResultsController.didUpdateSectionClosure?(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            for closure in self.fetchedResultsController.didUpdateSectionClosures {
+                closure(FetchedResultsSectionInfo(underlyingSectionInfo: sectionInfo), sectionIndex)
+            }
             
         default:
             break
@@ -368,11 +384,15 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
     }
     
     @objc func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        self.fetchedResultsController.willChangeContentClosure?()
+        for closure in self.fetchedResultsController.willChangeContentClosures {
+            closure()
+        }
     }
     
     @objc func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        self.fetchedResultsController.didChangeContentClosure?()
+        for closure in self.fetchedResultsController.didChangeContentClosures {
+            closure()
+        }
     }
     
     @objc func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String?) -> String? {
@@ -381,76 +401,13 @@ private class FecthedResultsControllerDelegate: NSObject, NSFetchedResultsContro
 
 }
 
-// MARK: - Helper Extensions
+// MARK: - Helper Extensions - iOS
+
+#if os(iOS)
     
 extension FetchedResultsController {
     
-    public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, reloadRowsAtIndexPathsClosure: (([NSIndexPath]) -> Void)? = nil) -> Self {
-        var reloadData = false
-
-        self
-            .needsReloadData {
-                reloadData = true
-            }
-            .willChangeContent { [unowned tableView] in
-                if !reloadData {
-                    tableView.beginUpdates()
-                }
-            }
-            .didInsertSection { [unowned tableView] sectionInfo, sectionIndex in
-                if !reloadData {
-                    tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
-                }
-            }
-            .didDeleteSection { [unowned tableView] sectionInfo, sectionIndex in
-                if !reloadData {
-                    tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
-                }
-            }
-            .didUpdateSection { [unowned tableView] sectionInfo, sectionIndex in
-                if !reloadData {
-                    tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: rowAnimation)
-                }
-            }
-            .didInsertEntity { [unowned tableView] entity, newIndexPath in
-                if !reloadData {
-                    tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: rowAnimation)
-                }
-            }
-            .didDeleteEntity { [unowned tableView] entity, indexPath in
-                if !reloadData {
-                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
-                }
-            }
-            .didUpdateEntity { [unowned tableView] entity, indexPath in
-                if !reloadData {
-                    if let reloadRowsAtIndexPathsClosure = reloadRowsAtIndexPathsClosure {
-                        reloadRowsAtIndexPathsClosure([indexPath])
-                    }
-                    else {
-                        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
-                    }
-                }
-            }
-            .didMoveEntity { [unowned tableView] entity, indexPath, newIndexPath in
-                if !reloadData {
-                    tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: rowAnimation)
-                    tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: rowAnimation)
-                }
-            }
-            .didChangeContent { [unowned tableView] in
-                if reloadData {
-                    tableView.reloadData()
-                }
-                else {
-                    tableView.endUpdates()
-                }
-            }
-        
-        return self
-    }
-
-    public func bindToCollectionView(collectionView: UICollectionView, reloadItemsAtIndexPaths: (([NSIndexPath]) -> Void)? = nil) -> Self {
+    public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, reloadRowAtIndexPath reloadRowAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
         var insertedSectionIndexes = NSMutableIndexSet()
         var deletedSectionIndexes = NSMutableIndexSet()
         var updatedSectionIndexes = NSMutableIndexSet()
@@ -466,6 +423,107 @@ extension FetchedResultsController {
                 reloadData = true
             }
             .willChangeContent {
+                if !reloadData {
+                    insertedSectionIndexes.removeAllIndexes()
+                    deletedSectionIndexes.removeAllIndexes()
+                    updatedSectionIndexes.removeAllIndexes()
+                    
+                    insertedItemIndexPaths.removeAll(keepCapacity: false)
+                    deletedItemIndexPaths.removeAll(keepCapacity: false)
+                    updatedItemIndexPaths.removeAll(keepCapacity: false)
+
+                    //
+                    tableView.beginUpdates()
+                }
+            }
+            .didInsertSection { sectionInfo, sectionIndex in
+                if !reloadData {
+                    insertedSectionIndexes.addIndex(sectionIndex)
+                }
+            }
+            .didDeleteSection { sectionInfo, sectionIndex in
+                if !reloadData {
+                    deletedSectionIndexes.addIndex(sectionIndex)
+                    deletedItemIndexPaths = deletedItemIndexPaths.filter { $0.section != sectionIndex }
+                    updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex }
+                }
+            }
+            .didUpdateSection { sectionInfo, sectionIndex in
+                if !reloadData {
+                    updatedSectionIndexes.addIndex(sectionIndex)
+                }
+            }
+            .didInsertEntity { entity, newIndexPath in
+                if !reloadData {
+                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                        insertedItemIndexPaths.append(newIndexPath)
+                    }
+                }
+            }
+            .didDeleteEntity { entity, indexPath in
+                if !reloadData {
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                        deletedItemIndexPaths.append(indexPath)
+                    }
+                }
+            }
+            .didUpdateEntity { entity, indexPath in
+                if !reloadData {
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) && find(deletedItemIndexPaths, indexPath) == nil && find(updatedItemIndexPaths, indexPath) == nil {
+                        updatedItemIndexPaths.append(indexPath)
+                    }
+                }
+            }
+            .didMoveEntity { entity, indexPath, newIndexPath in
+                if !reloadData {
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                        deletedItemIndexPaths.append(indexPath)
+                    }
+                    
+                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                        insertedItemIndexPaths.append(newIndexPath)
+                    }
+                }
+            }
+            .didChangeContent { [unowned tableView] in
+                if reloadData {
+                    tableView.reloadData()
+                }
+                else {
+                    if deletedSectionIndexes.count > 0 {
+                        tableView.deleteSections(deletedSectionIndexes, withRowAnimation: rowAnimation)
+                    }
+                    
+                    if insertedSectionIndexes.count > 0 {
+                        tableView.insertSections(insertedSectionIndexes, withRowAnimation: rowAnimation)
+                    }
+                    
+                    if updatedSectionIndexes.count > 0 {
+                        tableView.reloadSections(updatedSectionIndexes, withRowAnimation: rowAnimation)
+                    }
+                    
+                    if deletedItemIndexPaths.count > 0 {
+                        tableView.deleteRowsAtIndexPaths(deletedItemIndexPaths, withRowAnimation: rowAnimation)
+                    }
+                    
+                    if insertedItemIndexPaths.count > 0 {
+                        tableView.insertRowsAtIndexPaths(insertedItemIndexPaths, withRowAnimation: rowAnimation)
+                    }
+                    
+                    if updatedItemIndexPaths.count > 0 && reloadRowAtIndexPathClosure == nil {
+                        tableView.reloadRowsAtIndexPaths(updatedItemIndexPaths, withRowAnimation: rowAnimation)
+                    }
+                    
+                    tableView.endUpdates()
+                    
+                    if let reloadRowAtIndexPathClosure = reloadRowAtIndexPathClosure {
+                        for updatedItemIndexPath in updatedItemIndexPaths {
+                            reloadRowAtIndexPathClosure(updatedItemIndexPath)
+                        }
+                    }
+                }
+
+                //
                 insertedSectionIndexes.removeAllIndexes()
                 deletedSectionIndexes.removeAllIndexes()
                 updatedSectionIndexes.removeAllIndexes()
@@ -473,32 +531,95 @@ extension FetchedResultsController {
                 insertedItemIndexPaths.removeAll(keepCapacity: false)
                 deletedItemIndexPaths.removeAll(keepCapacity: false)
                 updatedItemIndexPaths.removeAll(keepCapacity: false)
+                
+                reloadData = false
+            }
+        
+        return self
+    }
+
+    public func bindToCollectionView(collectionView: UICollectionView, reloadItemAtIndexPath reloadItemAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
+        var insertedSectionIndexes = NSMutableIndexSet()
+        var deletedSectionIndexes = NSMutableIndexSet()
+        var updatedSectionIndexes = NSMutableIndexSet()
+        
+        var insertedItemIndexPaths = [NSIndexPath]()
+        var deletedItemIndexPaths = [NSIndexPath]()
+        var updatedItemIndexPaths = [NSIndexPath]()
+        
+        var reloadData = false
+        
+        self
+            .needsReloadData {
+                reloadData = true
+            }
+            .willChangeContent {
+                if !reloadData {
+                    insertedSectionIndexes.removeAllIndexes()
+                    deletedSectionIndexes.removeAllIndexes()
+                    updatedSectionIndexes.removeAllIndexes()
+                    
+                    insertedItemIndexPaths.removeAll(keepCapacity: false)
+                    deletedItemIndexPaths.removeAll(keepCapacity: false)
+                    updatedItemIndexPaths.removeAll(keepCapacity: false)
+                }
             }
             .didInsertSection { sectionInfo, sectionIndex in
-                insertedSectionIndexes.addIndex(sectionIndex)
+                if !reloadData {
+                    insertedSectionIndexes.addIndex(sectionIndex)
+                }
             }
             .didDeleteSection { sectionInfo, sectionIndex in
-                deletedSectionIndexes.addIndex(sectionIndex)
+                // TODO: find out more info about the UICollectionView issue about section deletions
+                reloadData = true
+
+//                if !reloadData {
+//                    deletedSectionIndexes.addIndex(sectionIndex)
+//                    deletedItemIndexPaths = deletedItemIndexPaths.filter { $0.section != sectionIndex }
+//                    updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex }
+//                }
             }
             .didUpdateSection { sectionInfo, sectionIndex in
-                updatedSectionIndexes.addIndex(sectionIndex)
+                if !reloadData {
+                    updatedSectionIndexes.addIndex(sectionIndex)
+                }
             }
             .didInsertEntity { entity, newIndexPath in
-                insertedItemIndexPaths.append(newIndexPath)
+                if !reloadData {
+                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                        insertedItemIndexPaths.append(newIndexPath)
+                    }
+                }
             }
             .didDeleteEntity { entity, indexPath in
-                deletedItemIndexPaths.append(indexPath)
+                if !reloadData {
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                        deletedItemIndexPaths.append(indexPath)
+                    }
+                }
             }
             .didUpdateEntity { entity, indexPath in
-                updatedItemIndexPaths.append(indexPath)
+                if !reloadData {
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) && find(deletedItemIndexPaths, indexPath) == nil && find(updatedItemIndexPaths, indexPath) == nil {
+                        updatedItemIndexPaths.append(indexPath)
+                    }
+                }
             }
             .didMoveEntity { entity, indexPath, newIndexPath in
-                reloadData = true
+                if !reloadData {
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                        deletedItemIndexPaths.append(indexPath)
+                    }
+                    
+                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                        insertedItemIndexPaths.append(newIndexPath)
+                    }
+                }
             }
             .didChangeContent { [unowned collectionView] in
                 if reloadData {
                     collectionView.reloadData()
-
+                    
                     insertedSectionIndexes.removeAllIndexes()
                     deletedSectionIndexes.removeAllIndexes()
                     updatedSectionIndexes.removeAllIndexes()
@@ -531,17 +652,18 @@ extension FetchedResultsController {
                             collectionView.insertItemsAtIndexPaths(insertedItemIndexPaths)
                         }
                         
-                        if updatedItemIndexPaths.count > 0 {
-                            if let reloadItemsAtIndexPaths = reloadItemsAtIndexPaths {
-                                reloadItemsAtIndexPaths(updatedItemIndexPaths)
-                            }
-                            else {
-                                collectionView.reloadItemsAtIndexPaths(updatedItemIndexPaths)
-                            }
+                        if updatedItemIndexPaths.count > 0 && reloadItemAtIndexPathClosure == nil {
+                            collectionView.reloadItemsAtIndexPaths(updatedItemIndexPaths)
                         }
-                    },
+                        },
                         completion: { finished in
                             if finished {
+                                if let reloadItemAtIndexPathClosure = reloadItemAtIndexPathClosure {
+                                    for updatedItemIndexPath in updatedItemIndexPaths {
+                                        reloadItemAtIndexPathClosure(updatedItemIndexPath)
+                                    }
+                                }
+                                
                                 insertedSectionIndexes.removeAllIndexes()
                                 deletedSectionIndexes.removeAllIndexes()
                                 updatedSectionIndexes.removeAllIndexes()
@@ -560,5 +682,5 @@ extension FetchedResultsController {
     }
 
 }
-    
+
 #endif

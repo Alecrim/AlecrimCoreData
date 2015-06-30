@@ -244,20 +244,22 @@ extension Context {
 
 // MARK: - public global functions - background contexts
 
+public func createBackgroundContext<T: Context>(parentContext: T, usingNewBackgroundManagedObjectContext: Bool) -> T! {
+    parentContext.contextOptions.___stack = parentContext.stack
+    parentContext.contextOptions.___stackUsesNewBackgroundManagedObjectContext = usingNewBackgroundManagedObjectContext
+    let backgroundContext = T(contextOptions: parentContext.contextOptions)
+    
+    return backgroundContext
+}
+
 public func performInBackground<T: Context>(parentContext: T, closure: (T) -> Void) {
     performInBackground(parentContext, false, closure)
 }
 
-public func performInBackground<T: Context>(parentContext: T, createNewBackgroundManagedObjectContext: Bool, closure: (T) -> Void) {
-    parentContext.contextOptions.___stack = parentContext.stack
-    parentContext.contextOptions.___stackUsesNewBackgroundManagedObjectContext = createNewBackgroundManagedObjectContext
-    let backgroundContext = T(contextOptions: parentContext.contextOptions)!
+public func performInBackground<T: Context>(parentContext: T, usingNewBackgroundManagedObjectContext: Bool, closure: (T) -> Void) {
+    let backgroundContext = createBackgroundContext(parentContext, usingNewBackgroundManagedObjectContext)
     
     backgroundContext.perform {
-        if !createNewBackgroundManagedObjectContext {
-            backgroundContext.managedObjectContext.reset()
-        }
-        
         closure(backgroundContext)
     }
 }
@@ -266,15 +268,13 @@ public func performInBackground<T: Context>(parentContext: T, createNewBackgroun
 
 internal func alecrimCoreDataHandleError(error: NSError?, filename: String = __FILE__, line: Int = __LINE__, funcname: String = __FUNCTION__) {
     if let error = error where error.code != NSUserCancelledError {
-        //    #if DEBUG
         var dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss:SSS"
-
-        var process = NSProcessInfo.processInfo()
-        var threadId = NSThread.isMainThread() ? "main" : "background"
+        
+        let process = NSProcessInfo.processInfo()
+        let threadId = NSThread.isMainThread() ? "main" : "background"
         
         let string = "\(dateFormatter.stringFromDate(NSDate())) \(process.processName) [\(process.processIdentifier):\(threadId)] \(filename.lastPathComponent)(\(line)) \(funcname):\r\t\(error)\n"
-        println(error)
-        //    #endif
+        println(string)
     }
 }

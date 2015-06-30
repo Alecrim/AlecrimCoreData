@@ -20,8 +20,8 @@ internal final class Stack {
     private let coordinator: NSPersistentStoreCoordinator!
     private let store: NSPersistentStore!
     
-    internal let rootManagedObjectContext: NSManagedObjectContext!
-    internal let mainManagedObjectContext: NSManagedObjectContext!
+    private var rootManagedObjectContext: NSManagedObjectContext!
+    internal private(set) var mainManagedObjectContext: NSManagedObjectContext!
     internal lazy var backgroundManagedObjectContext: NSManagedObjectContext = { self.createBackgroundManagedObjectContext() }()
     
     // MARK: - constructors
@@ -32,8 +32,6 @@ internal final class Stack {
         if contextOptions.managedObjectModel == nil {
             self.coordinator = nil
             self.store = nil
-            self.rootManagedObjectContext = nil
-            self.mainManagedObjectContext = nil
 
             return nil
         }
@@ -51,29 +49,16 @@ internal final class Stack {
         }
         
         if self.store == nil {
-            self.rootManagedObjectContext = nil
-            self.mainManagedObjectContext = nil
-            
             return nil
         }
         
         // root (saving) managed object context
-        let rmoc = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        rmoc.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        rmoc.persistentStoreCoordinator = self.coordinator
-        rmoc.undoManager = nil
-
-        self.rootManagedObjectContext = rmoc
+        self.rootManagedObjectContext = ManagedObjectContext(stack: self, type: .Root)
+        self.rootManagedObjectContext.persistentStoreCoordinator = self.coordinator
         
         // main thread managed object context
-        let mmoc = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
-        mmoc.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        mmoc.parentContext = self.rootManagedObjectContext
-        
-        self.mainManagedObjectContext = mmoc
-        
-        //
-        self.addObservers()
+        self.mainManagedObjectContext = ManagedObjectContext(stack: self, type: .Main)
+        self.mainManagedObjectContext.parentContext = self.rootManagedObjectContext
     }
     
     internal init?(rootManagedObjectContext: NSManagedObjectContext, mainManagedObjectContext: NSManagedObjectContext, contextOptions: ContextOptions) {
@@ -82,47 +67,8 @@ internal final class Stack {
         self.store = self.coordinator.persistentStores.first as! NSPersistentStore
         self.rootManagedObjectContext = rootManagedObjectContext
         self.mainManagedObjectContext = mainManagedObjectContext
-        
-        self.addObservers()
     }
     
-    deinit {
-        self.removeObservers()
-    }
-    
-    private func addObservers() {
-        if self.contextOptions.stackType == .SQLite && self.contextOptions.ubiquityEnabled {
-            NSNotificationCenter.defaultCenter().addObserver(
-                self,
-                selector: Selector("persistentStoreCoordinatorStoresWillChange:"),
-                name: NSPersistentStoreCoordinatorStoresWillChangeNotification,
-                object: self.coordinator
-            )
-            
-            NSNotificationCenter.defaultCenter().addObserver(
-                self,
-                selector: Selector("persistentStoreCoordinatorStoresDidChange:"),
-                name: NSPersistentStoreCoordinatorStoresDidChangeNotification,
-                object: self.coordinator
-            )
-            
-            NSNotificationCenter.defaultCenter().addObserver(
-                self,
-                selector: Selector("persistentStoreDidImportUbiquitousContentChanges:"),
-                name: NSPersistentStoreDidImportUbiquitousContentChangesNotification,
-                object: self.coordinator
-            )
-        }
-    }
-    
-    private func removeObservers() {
-        if self.contextOptions.stackType == .SQLite && self.contextOptions.ubiquityEnabled {
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresWillChangeNotification, object: self.coordinator)
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresDidChangeNotification, object: self.coordinator)
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreDidImportUbiquitousContentChangesNotification, object: coordinator)
-        }
-    }
-
 }
 
 // MARK: - internal methods
@@ -130,79 +76,36 @@ internal final class Stack {
 extension Stack {
 
     internal func createBackgroundManagedObjectContext() -> NSManagedObjectContext {
-        let backgroundContext = StackBackgroundManagedObjectContext(stack: self)
+        let backgroundContext = ManagedObjectContext(stack: self, type: .Background)
+        backgroundContext.parentContext = self.rootManagedObjectContext
         
         return backgroundContext
     }
 
     internal func saveManagedObjectContext(context: NSManagedObjectContext) -> (Bool, NSError?) {
-        var currentContext: NSManagedObjectContext? = context
-        
         var success = false
         var error: NSError? = nil
         
-        while let c = currentContext {
-            if c.hasChanges {
+        if context.hasChanges {
+            var currentContext: NSManagedObjectContext? = context
+
+            while let c = currentContext {
                 c.performBlockAndWait {
                     success = c.save(&error)
                 }
+                
+                if (!success) {
+                    break
+                }
+                
+                currentContext = currentContext?.parentContext
             }
-            else {
-                success = true
-            }
-            
-            if (!success) {
-                break
-            }
-            
-            currentContext = currentContext?.parentContext
+        }
+        else {
+            success = true // context does not have changes
         }
         
         return (success, error)
-    }
-    
-}
-
-// MARK: - private notification handler methods
-
-extension Stack {
-    
-    @objc private func persistentStoreCoordinatorStoresWillChange(notification: NSNotification) {
-        var currentContext: NSManagedObjectContext? = self.mainManagedObjectContext
-        
-        while let c = currentContext {
-            c.performBlockAndWait {
-                var error: NSError? = nil
-                c.save(&error)
-                c.reset()
-            }
-            
-            currentContext = currentContext?.parentContext
-        }
-    }
-    
-    @objc private func persistentStoreCoordinatorStoresDidChange(notification: NSNotification) {
-        var currentContext: NSManagedObjectContext? = self.mainManagedObjectContext
-        
-        while let c = currentContext {
-            c.performBlockAndWait {
-                c.reset()
-            }
-            
-            currentContext = currentContext?.parentContext
-        }
-    }
-    
-    @objc private func persistentStoreDidImportUbiquitousContentChanges(notification: NSNotification) {
-        var currentContext: NSManagedObjectContext? = self.mainManagedObjectContext
-        
-        while let c = currentContext {
-            c.performBlockAndWait {
-                c.mergeChangesFromContextDidSaveNotification(notification)
-            }
-            
-            currentContext = currentContext?.parentContext
-        }
     }
     
 }
@@ -262,18 +165,36 @@ extension Stack {
 
 // MARK: - private classes
 
-private final class StackBackgroundManagedObjectContext: NSManagedObjectContext {
+private enum ManagedObjectContextType {
+    case Root
+    case Main
+    case Background
+}
+
+private final class ManagedObjectContext: NSManagedObjectContext {
     
     private unowned let stack: Stack
+    private let type: ManagedObjectContextType
     
-    private init(stack: Stack) {
+    private init(stack: Stack, type: ManagedObjectContextType) {
         self.stack = stack
-        super.init(concurrencyType: .PrivateQueueConcurrencyType)
+        self.type = type
+        
+        let concurrencyType: NSManagedObjectContextConcurrencyType
+        switch self.type {
+        case .Main:
+            concurrencyType = .MainQueueConcurrencyType
+        default:
+            concurrencyType = .PrivateQueueConcurrencyType
+        }
+        
+        super.init(concurrencyType: concurrencyType)
         
         self.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        self.undoManager = nil
-        self.parentContext = self.stack.rootManagedObjectContext
         
+        if type != .Main {
+            self.undoManager = nil
+        }
 
         self.addObservers()
     }
@@ -287,105 +208,87 @@ private final class StackBackgroundManagedObjectContext: NSManagedObjectContext 
     }
     
     private func addObservers() {
+        let notificationCenter = NSNotificationCenter.defaultCenter()
+        
         if self.stack.contextOptions.stackType == .SQLite && self.stack.contextOptions.ubiquityEnabled {
-            NSNotificationCenter.defaultCenter().addObserver(
-                self,
-                selector: Selector("persistentStoreCoordinatorStoresWillChange:"),
-                name: NSPersistentStoreCoordinatorStoresWillChangeNotification,
-                object: self.stack.coordinator
-            )
-            
-            NSNotificationCenter.defaultCenter().addObserver(
-                self,
-                selector: Selector("persistentStoreCoordinatorStoresDidChange:"),
-                name: NSPersistentStoreCoordinatorStoresDidChangeNotification,
-                object: self.stack.coordinator
-            )
-            
-            NSNotificationCenter.defaultCenter().addObserver(
-                self,
-                selector: Selector("persistentStoreDidImportUbiquitousContentChanges:"),
-                name: NSPersistentStoreDidImportUbiquitousContentChangesNotification,
-                object: self.stack.coordinator
-            )
+            notificationCenter.addObserver(self, selector: Selector("persistentStoreCoordinatorStoresWillChange:"), name: NSPersistentStoreCoordinatorStoresWillChangeNotification, object: self.stack.coordinator)
+            notificationCenter.addObserver(self, selector: Selector("persistentStoreCoordinatorStoresDidChange:"), name: NSPersistentStoreCoordinatorStoresDidChangeNotification, object: self.stack.coordinator)
+            notificationCenter.addObserver(self, selector: Selector("persistentStoreDidImportUbiquitousContentChanges:"), name: NSPersistentStoreDidImportUbiquitousContentChangesNotification, object: self.stack.coordinator)
         }
 
-        NSNotificationCenter.defaultCenter().addObserver(
-            self,
-            selector: Selector("backgroundManagedObjectContextWillSave:"),
-            name: NSManagedObjectContextWillSaveNotification,
-            object: self
-        )
-
-        NSNotificationCenter.defaultCenter().addObserver(
-            self,
-            selector: Selector("backgroundManagedObjectContextDidSave:"),
-            name: NSManagedObjectContextDidSaveNotification,
-            object: self
-        )
+        notificationCenter.addObserver(self, selector: Selector("managedObjectContextWillSave:"), name: NSManagedObjectContextWillSaveNotification, object: self)
+        
+        if self.type != .Root {
+            notificationCenter.addObserver(self, selector: Selector("rootManagedObjectContextDidSave:"), name: NSManagedObjectContextDidSaveNotification, object: self.stack.rootManagedObjectContext)
+        }
     }
     
     private func removeObservers() {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: NSManagedObjectContextWillSaveNotification, object: self)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: NSManagedObjectContextDidSaveNotification, object: self)
+        let notificationCenter = NSNotificationCenter.defaultCenter()
+        
+        notificationCenter.removeObserver(self, name: NSManagedObjectContextWillSaveNotification, object: self)
+        
+        if self.type != .Root {
+            notificationCenter.removeObserver(self, name: NSManagedObjectContextDidSaveNotification, object: self.stack.rootManagedObjectContext)
+        }
 
         if self.stack.contextOptions.stackType == .SQLite && self.stack.contextOptions.ubiquityEnabled {
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresWillChangeNotification, object: self.stack.coordinator)
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreCoordinatorStoresDidChangeNotification, object: self.stack.coordinator)
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: NSPersistentStoreDidImportUbiquitousContentChangesNotification, object: self.stack.coordinator)
+            notificationCenter.removeObserver(self, name: NSPersistentStoreCoordinatorStoresWillChangeNotification, object: self.stack.coordinator)
+            notificationCenter.removeObserver(self, name: NSPersistentStoreCoordinatorStoresDidChangeNotification, object: self.stack.coordinator)
+            notificationCenter.removeObserver(self, name: NSPersistentStoreDidImportUbiquitousContentChangesNotification, object: self.stack.coordinator)
         }
         
     }
 
-    @objc private func backgroundManagedObjectContextWillSave(notification: NSNotification) {
-        if let context = notification.object as? NSManagedObjectContext {
-            if let insertedObjects = context.insertedObjects as? Set<NSManagedObject> {
-                if insertedObjects.count > 0 {
-                    var error: NSError? = nil
-                    if !context.obtainPermanentIDsForObjects((insertedObjects as NSSet).allObjects, error: &error) {
-                        alecrimCoreDataHandleError(error)
-                    }
-                }
+    @objc private func managedObjectContextWillSave(notification: NSNotification) {
+        if let context = notification.object as? NSManagedObjectContext, let insertedObjects = context.insertedObjects as? Set<NSManagedObject> where !insertedObjects.isEmpty {
+            var error: NSError? = nil
+            if !context.obtainPermanentIDsForObjects(Array(insertedObjects), error: &error) {
+                alecrimCoreDataHandleError(error)
             }
         }
     }
 
-    @objc private func backgroundManagedObjectContextDidSave(notification: NSNotification) {
-        if let mainContext = self.stack.mainManagedObjectContext {
-            mainContext.performBlockAndWait {
-                if let userInfo = notification.userInfo {
-                    let dict = userInfo as NSDictionary
-                    if let updatedObjects = dict[NSUpdatedObjectsKey] as? Set<NSManagedObject> {
-                        if updatedObjects.count > 0 {
-                            for object in updatedObjects {
-                                mainContext.objectWithID(object.objectID).willAccessValueForKey(nil) // ensure that a fault has been fired
-                            }
-                        }
-                    }
-                }
-                
-                mainContext.mergeChangesFromContextDidSaveNotification(notification)
-            }
+    @objc private func rootManagedObjectContextDidSave(notification: NSNotification) {
+        if self.type != .Root {
+            ManagedObjectContext.mergeChangesFromContextDidSaveNotification(notification, intoContext: self)
         }
     }
     
     @objc private func persistentStoreCoordinatorStoresWillChange(notification: NSNotification) {
-        self.performBlockAndWait {
+        self.performBlock {
             var error: NSError? = nil
             self.save(&error)
+            if error != nil {
+                alecrimCoreDataHandleError(error)
+            }
+            
             self.reset()
         }
     }
     
     @objc private func persistentStoreCoordinatorStoresDidChange(notification: NSNotification) {
-        self.performBlockAndWait {
+        self.performBlock {
             self.reset()
         }
     }
     
     @objc private func persistentStoreDidImportUbiquitousContentChanges(notification: NSNotification) {
-        self.performBlockAndWait {
-            self.mergeChangesFromContextDidSaveNotification(notification)
+        ManagedObjectContext.mergeChangesFromContextDidSaveNotification(notification, intoContext: self)
+    }
+    
+    private class func mergeChangesFromContextDidSaveNotification(notification: NSNotification, intoContext context: NSManagedObjectContext) {
+        context.performBlock {
+            if let userInfo = notification.userInfo {
+                let dict = userInfo as NSDictionary
+                if let updatedObjects = dict[NSUpdatedObjectsKey] as? Set<NSManagedObject> where !updatedObjects.isEmpty {
+                    for objectObject in updatedObjects {
+                        context.objectWithID(objectObject.objectID).willAccessValueForKey(nil) // ensures that a fault has been fired
+                    }
+                }
+            }
+            
+            context.mergeChangesFromContextDidSaveNotification(notification)
         }
     }
 }

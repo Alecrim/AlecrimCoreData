@@ -48,137 +48,6 @@ public class Attribute<T> {
         return NSExpression(forKeyPath: self.___name)
     }
     
-    private func expressionForValue(value: T) -> NSExpression {
-        // TODO: Find a cleaner implementation
-        let mirror = reflect(value)
-        
-        if mirror.disposition == .Optional {
-            let dt = value.dynamicType
-
-            // here we have to test the optional object type, one by one
-            if dt is NSObject?.Type {
-                let o = unsafeBitCast(value, Optional<NSObject>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: v)
-                }
-            }
-            else if dt is NSString?.Type {
-                let o = unsafeBitCast(value, Optional<NSString>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: v)
-                }
-            }
-            else if dt is NSDate?.Type {
-                let o = unsafeBitCast(value, Optional<NSDate>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: v)
-                }
-            }
-            else if dt is NSDecimalNumber?.Type {
-                let o = unsafeBitCast(value, Optional<NSDecimalNumber>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: v)
-                }
-            }
-            else if dt is NSNumber?.Type {
-                let o = unsafeBitCast(value, Optional<NSNumber>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: v)
-                }
-            }
-            else if dt is NSData?.Type {
-                let o = unsafeBitCast(value, Optional<NSData>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: v)
-                }
-            }
-
-            //
-            if dt is String?.Type {
-                let o = unsafeBitCast(value, Optional<String>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: v as NSString)
-                }
-            }
-            else if dt is Int?.Type {
-                let o = unsafeBitCast(value, Optional<Int>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: NSNumber(integer: v))
-                }
-            }
-            else if dt is Int64?.Type {
-                let o = unsafeBitCast(value, Optional<Int64>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: NSNumber(longLong: v))
-                }
-            }
-            else if dt is Int32?.Type {
-                let o = unsafeBitCast(value, Optional<Int32>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: NSNumber(int: v))
-                }
-            }
-            else if dt is Int16?.Type {
-                let o = unsafeBitCast(value, Optional<Int16>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: NSNumber(short: v))
-                }
-            }
-            else if dt is Double?.Type {
-                let o = unsafeBitCast(value, Optional<Double>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: NSNumber(double: v))
-                }
-            }
-            else if dt is Float?.Type {
-                let o = unsafeBitCast(value, Optional<Float>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: NSNumber(float: v))
-                }
-            }
-            else if dt is Bool?.Type {
-                let o = unsafeBitCast(value, Optional<Bool>.self)
-                if let v = o.0 {
-                    return NSExpression(forConstantValue: NSNumber(bool: v))
-                }
-            }
-        }
-        else {
-            //
-            if let v = value as? NSObject {
-                return NSExpression(forConstantValue: v)
-            }
-            
-            //
-            if let v = value as? String {
-                return NSExpression(forConstantValue: v as NSString)
-            }
-            else if let v = value as? Int {
-                return NSExpression(forConstantValue: NSNumber(integer: v))
-            }
-            else if let v = value as? Int64 {
-                return NSExpression(forConstantValue: NSNumber(longLong: v))
-            }
-            else if let v = value as? Int32 {
-                return NSExpression(forConstantValue: NSNumber(int: v))
-            }
-            else if let v = value as? Int16 {
-                return NSExpression(forConstantValue: NSNumber(short: v))
-            }
-            else if let v = value as? Double {
-                return NSExpression(forConstantValue: NSNumber(double: v))
-            }
-            else if let v = value as? Float {
-                return NSExpression(forConstantValue: NSNumber(float: v))
-            }
-            else if let v = value as? Bool {
-                return NSExpression(forConstantValue: NSNumber(bool: v))
-            }
-        }
-        
-        return NSExpression(forConstantValue: NSNull())
-    }
-    
     private func comparisonPredicateOptions() -> NSComparisonPredicateOptions {
         if T.self is String.Type || T.self is String?.Type || T.self is NSString.Type || T.self is NSString?.Type {
             return ContextOptions.stringComparisonPredicateOptions
@@ -225,7 +94,7 @@ extension Attribute {
     public func contains(value: T) -> NSComparisonPredicate {
         return NSComparisonPredicate(
             leftExpression: self.expression,
-            rightExpression: self.expressionForValue(value),
+            rightExpression: expressionForValue(value),
             modifier: .DirectPredicateModifier,
             type: .ContainsPredicateOperatorType,
             options: self.comparisonPredicateOptions()
@@ -245,7 +114,7 @@ extension Attribute {
     public func beginsWith(value: T) -> NSComparisonPredicate {
         return NSComparisonPredicate(
             leftExpression: self.expression,
-            rightExpression: self.expressionForValue(value),
+            rightExpression: expressionForValue(value),
             modifier: .DirectPredicateModifier,
             type: .BeginsWithPredicateOperatorType,
             options: self.comparisonPredicateOptions()
@@ -265,7 +134,7 @@ extension Attribute {
     public func endsWith(value: T) -> NSComparisonPredicate {
         return NSComparisonPredicate(
             leftExpression: self.expression,
-            rightExpression: self.expressionForValue(value),
+            rightExpression: expressionForValue(value),
             modifier: .DirectPredicateModifier,
             type: .EndsWithPredicateOperatorType,
             options: self.comparisonPredicateOptions()
@@ -290,7 +159,7 @@ extension Attribute {
 public func ==<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return NSComparisonPredicate(
         leftExpression: left.expression,
-        rightExpression: left.expressionForValue(right),
+        rightExpression: expressionForValue(right),
         modifier: .DirectPredicateModifier,
         type: .EqualToPredicateOperatorType,
         options: left.comparisonPredicateOptions()
@@ -310,7 +179,7 @@ public func ==<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredic
 public func !=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return NSComparisonPredicate(
         leftExpression: left.expression,
-        rightExpression: left.expressionForValue(right),
+        rightExpression: expressionForValue(right),
         modifier: .DirectPredicateModifier,
         type: .NotEqualToPredicateOperatorType,
         options: left.comparisonPredicateOptions()
@@ -330,7 +199,7 @@ public func !=<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredic
 public func ><T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return NSComparisonPredicate(
         leftExpression: left.expression,
-        rightExpression: left.expressionForValue(right),
+        rightExpression: expressionForValue(right),
         modifier: .DirectPredicateModifier,
         type: .GreaterThanPredicateOperatorType,
         options: left.comparisonPredicateOptions()
@@ -350,7 +219,7 @@ public func ><T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredica
 public func >=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return NSComparisonPredicate(
         leftExpression: left.expression,
-        rightExpression: left.expressionForValue(right),
+        rightExpression: expressionForValue(right),
         modifier: .DirectPredicateModifier,
         type: .GreaterThanOrEqualToPredicateOperatorType,
         options: left.comparisonPredicateOptions()
@@ -370,7 +239,7 @@ public func >=<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredic
 public func <<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return NSComparisonPredicate(
         leftExpression: left.expression,
-        rightExpression: left.expressionForValue(right),
+        rightExpression: expressionForValue(right),
         modifier: .DirectPredicateModifier,
         type: .LessThanPredicateOperatorType,
         options: left.comparisonPredicateOptions()
@@ -390,7 +259,7 @@ public func <<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredica
 public func <=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return NSComparisonPredicate(
         leftExpression: left.expression,
-        rightExpression: left.expressionForValue(right),
+        rightExpression: expressionForValue(right),
         modifier: .DirectPredicateModifier,
         type: .LessThanOrEqualToPredicateOperatorType,
         options: left.comparisonPredicateOptions()
@@ -410,7 +279,7 @@ public func <=<T>(left: Attribute<T>, right: Attribute<T>) -> NSComparisonPredic
 public func ~=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
     return NSComparisonPredicate(
         leftExpression: left.expression,
-        rightExpression: left.expressionForValue(right),
+        rightExpression: expressionForValue(right),
         modifier: .DirectPredicateModifier,
         type: .LikePredicateOperatorType,
         options: left.comparisonPredicateOptions()
@@ -418,7 +287,7 @@ public func ~=<T>(left: Attribute<T>, right: T) -> NSComparisonPredicate {
 }
 
 public func <<<T>(left: Attribute<T>, right: [T]) -> NSComparisonPredicate {
-    let rightValue = map(right) { $0 as! AnyObject }
+    let rightValue = map(right) { toAnyObject($0) }
     let rightExpression = NSExpression(forConstantValue: rightValue)
     
     return NSComparisonPredicate(
@@ -431,7 +300,7 @@ public func <<<T>(left: Attribute<T>, right: [T]) -> NSComparisonPredicate {
 }
 
 public func <<<T>(left: Attribute<T>, right: Range<T>) -> NSComparisonPredicate {
-    let rightValue = [right.startIndex as! AnyObject, right.endIndex as! AnyObject] as NSArray
+    let rightValue = [toAnyObject(right.startIndex), toAnyObject(right.endIndex)] as NSArray
     let rightExpression = NSExpression(forConstantValue: rightValue)
     
     return NSComparisonPredicate(
@@ -446,3 +315,143 @@ public func <<<T>(left: Attribute<T>, right: Range<T>) -> NSComparisonPredicate 
 prefix public func !(left: Attribute<Bool>) -> NSComparisonPredicate {
     return left == false
 }
+
+
+// MARK: - private functions
+
+private func expressionForValue<T>(value: T) -> NSExpression {
+    let v: AnyObject = toAnyObject(value)
+    return NSExpression(forConstantValue: v)
+}
+
+private func toAnyObject<T>(value: T) -> AnyObject {
+    // TODO: Find a cleaner implementation
+    let mirror = reflect(value)
+    
+    if mirror.disposition == .Optional {
+        let dt = value.dynamicType
+        
+        // here we have to test the optional object type, one by one
+        if dt is NSObject?.Type {
+            let o = unsafeBitCast(value, Optional<NSObject>.self)
+            if let v = o.0 {
+                return v
+            }
+        }
+        else if dt is NSString?.Type {
+            let o = unsafeBitCast(value, Optional<NSString>.self)
+            if let v = o.0 {
+                return v
+            }
+        }
+        else if dt is NSDate?.Type {
+            let o = unsafeBitCast(value, Optional<NSDate>.self)
+            if let v = o.0 {
+                return v
+            }
+        }
+        else if dt is NSDecimalNumber?.Type {
+            let o = unsafeBitCast(value, Optional<NSDecimalNumber>.self)
+            if let v = o.0 {
+                return v
+            }
+        }
+        else if dt is NSNumber?.Type {
+            let o = unsafeBitCast(value, Optional<NSNumber>.self)
+            if let v = o.0 {
+                return v
+            }
+        }
+        else if dt is NSData?.Type {
+            let o = unsafeBitCast(value, Optional<NSData>.self)
+            if let v = o.0 {
+                return v
+            }
+        }
+        
+        //
+        if dt is String?.Type {
+            let o = unsafeBitCast(value, Optional<String>.self)
+            if let v = o.0 {
+                return v as NSString
+            }
+        }
+        else if dt is Int?.Type {
+            let o = unsafeBitCast(value, Optional<Int>.self)
+            if let v = o.0 {
+                return NSNumber(integer: v)
+            }
+        }
+        else if dt is Int64?.Type {
+            let o = unsafeBitCast(value, Optional<Int64>.self)
+            if let v = o.0 {
+                return NSNumber(longLong: v)
+            }
+        }
+        else if dt is Int32?.Type {
+            let o = unsafeBitCast(value, Optional<Int32>.self)
+            if let v = o.0 {
+                return NSNumber(int: v)
+            }
+        }
+        else if dt is Int16?.Type {
+            let o = unsafeBitCast(value, Optional<Int16>.self)
+            if let v = o.0 {
+                return NSNumber(short: v)
+            }
+        }
+        else if dt is Double?.Type {
+            let o = unsafeBitCast(value, Optional<Double>.self)
+            if let v = o.0 {
+                return NSNumber(double: v)
+            }
+        }
+        else if dt is Float?.Type {
+            let o = unsafeBitCast(value, Optional<Float>.self)
+            if let v = o.0 {
+                return NSNumber(float: v)
+            }
+        }
+        else if dt is Bool?.Type {
+            let o = unsafeBitCast(value, Optional<Bool>.self)
+            if let v = o.0 {
+                return NSNumber(bool: v)
+            }
+        }
+    }
+    else {
+        //
+        if let v = value as? NSObject {
+            return v
+        }
+        
+        //
+        if let v = value as? String {
+            return v as NSString
+        }
+        else if let v = value as? Int {
+            return NSNumber(integer: v)
+        }
+        else if let v = value as? Int64 {
+            return NSNumber(longLong: v)
+        }
+        else if let v = value as? Int32 {
+            return NSNumber(int: v)
+        }
+        else if let v = value as? Int16 {
+            return NSNumber(short: v)
+        }
+        else if let v = value as? Double {
+            return NSNumber(double: v)
+        }
+        else if let v = value as? Float {
+            return NSNumber(float: v)
+        }
+        else if let v = value as? Bool {
+            return NSNumber(bool: v)
+        }
+    }
+    
+    return NSNull()
+}
+
