@@ -72,16 +72,43 @@ public class Query {
                 effectiveAscending = (sortComponents[1] as NSString).boolValue
                 
                 if (sortComponents.count > 2) {
-                    effectiveOptionalParameter = sortComponents[2]
+                    effectiveOptionalParameter = sortComponents[2].stringByReplacingOccurrencesOfString("[", withString: "").stringByReplacingOccurrencesOfString("]", withString: "")
                 }
             }
             
-            if let eop = effectiveOptionalParameter where eop.rangeOfString("cd").location != NSNotFound {
-                sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending, selector: Selector("localizedCaseInsensitiveCompare:")))
+            //
+            if effectiveOptionalParameter == nil {
+                if (ContextOptions.stringComparisonPredicateOptions & .CaseInsensitivePredicateOption) == .CaseInsensitivePredicateOption {
+                    effectiveOptionalParameter = ((effectiveOptionalParameter ?? "") as String) + "c"
+                }
+
+                if (ContextOptions.stringComparisonPredicateOptions & .DiacriticInsensitivePredicateOption) == .DiacriticInsensitivePredicateOption {
+                    // assuming that the localized comparison will be diacritic insensitive... it will be?
+                    effectiveOptionalParameter = ((effectiveOptionalParameter ?? "") as String) + "d"
+                }
             }
-            else {
+            
+            var eopHandled = false
+            if let eop = effectiveOptionalParameter?.lowercaseString {
+                if eop == "cd" {
+                    sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending, selector: Selector("localizedCaseInsensitiveCompare:")))
+                    eopHandled = true
+                }
+                else if eop == "c" {
+                    sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending, selector: Selector("caseInsensitiveCompare:")))
+                    eopHandled = true
+                }
+                else if eop == "d" {
+                    sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending, selector: Selector("localizedCompare:")))
+                    eopHandled = true
+                }
+            }
+            
+            //
+            if !eopHandled {
                 sortDescriptors.append(NSSortDescriptor(key: effectiveSortKey, ascending: effectiveAscending))
             }
+            
         }
         
         return sortDescriptors
