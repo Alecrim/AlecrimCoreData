@@ -224,19 +224,18 @@ extension Context {
         let batchUpdateRequest = NSBatchUpdateRequest(entity: entityDescription)
         batchUpdateRequest.propertiesToUpdate = propertiesToUpdate
         batchUpdateRequest.predicate = predicate
-        batchUpdateRequest.resultType = .UpdatedObjectsCountResultType
+        batchUpdateRequest.resultType = .UpdatedObjectIDsResultType
         
-        let moc = self.stack.backgroundManagedObjectContext
+        let moc = self.stack.createBackgroundManagedObjectContext()
         moc.performBlock {
             var error: NSError? = nil
-            let batchUpdateResult = moc.executeRequest(batchUpdateRequest, error: &error) as! NSBatchUpdateResult
+            if let batchUpdateResult = moc.executeRequest(batchUpdateRequest, error: &error) as? NSBatchUpdateResult {
+                if let count = batchUpdateResult.result as? Int {
+                    completionClosure(count, nil)
+                }
+            }
             
-            if error != nil {
-                completionClosure(0, error)
-            }
-            else {
-                completionClosure(batchUpdateResult.result as! Int, nil)
-            }
+            completionClosure(0, error ?? alecrimCoreDataError())
         }
     }
     
@@ -266,6 +265,10 @@ public func performInBackground<T: Context>(parentContext: T, usingNewBackground
 
 // MARK: - internal global functions - error handling
 
+internal func alecrimCoreDataError(code: Int = NSCoreDataError, userInfo: [NSObject : AnyObject]? = nil) -> NSError {
+    return NSError(domain: "com.alecrim.AlecrimCoreData", code: code, userInfo: userInfo)
+}
+
 internal func alecrimCoreDataHandleError(error: NSError?, filename: String = __FILE__, line: Int = __LINE__, funcname: String = __FUNCTION__) {
     if let error = error where error.code != NSUserCancelledError {
         var dateFormatter = NSDateFormatter()
@@ -278,3 +281,4 @@ internal func alecrimCoreDataHandleError(error: NSError?, filename: String = __F
         println(string)
     }
 }
+
