@@ -224,7 +224,7 @@ extension Context {
         let batchUpdateRequest = NSBatchUpdateRequest(entity: entityDescription)
         batchUpdateRequest.propertiesToUpdate = propertiesToUpdate
         batchUpdateRequest.predicate = predicate
-        batchUpdateRequest.resultType = .UpdatedObjectIDsResultType
+        batchUpdateRequest.resultType = .UpdatedObjectsCountResultType
         
         let moc = self.stack.createBackgroundManagedObjectContext()
         moc.performBlock {
