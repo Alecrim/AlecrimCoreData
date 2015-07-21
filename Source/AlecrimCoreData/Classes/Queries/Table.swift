@@ -125,13 +125,18 @@ extension Table {
         let fetchRequest = self.toFetchRequest()
         var results = [T]()
         
-        if let objects = self.executeFetchRequest(fetchRequest) as? [T] {
-            results += objects
+        let fetchedObjects : NSArray? = self.executeFetchRequest(fetchRequest)
+        
+        if let objects = fetchedObjects {
+            for object in objects {
+                if let castedObject = object as? T {
+                    results.append(castedObject)
+                }
+            }
         }
         
         return results
     }
-    
 }
 
 // MARK: - element
