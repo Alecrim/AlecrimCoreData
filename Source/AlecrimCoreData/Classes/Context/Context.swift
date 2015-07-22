@@ -226,16 +226,26 @@ extension Context {
         batchUpdateRequest.predicate = predicate
         batchUpdateRequest.resultType = .UpdatedObjectsCountResultType
         
-        let moc = self.stack.createBackgroundManagedObjectContext()
+        //
+        // HAX:
+        // The `executeRequest:` method for a batch update only works in the root saving context.
+        // If called in a context that has a parent context, both the `batchUpdateResult` and the `error` will be quietly set to `nil` by Core Data.
+        //
+        
+        var moc: NSManagedObjectContext = self.managedObjectContext
+        while moc.parentContext != nil {
+            moc = moc.parentContext!
+        }
+        
         moc.performBlock {
             var error: NSError? = nil
-            if let batchUpdateResult = moc.executeRequest(batchUpdateRequest, error: &error) as? NSBatchUpdateResult {
-                if let count = batchUpdateResult.result as? Int {
-                    completionClosure(count, nil)
-                }
+
+            if let batchUpdateResult = moc.executeRequest(batchUpdateRequest, error: &error) as? NSBatchUpdateResult, let count = batchUpdateResult.result as? Int {
+                completionClosure(count, nil)
             }
-            
-            completionClosure(0, error ?? alecrimCoreDataError())
+            else {
+                completionClosure(0, error ?? alecrimCoreDataError())
+            }
         }
     }
     
