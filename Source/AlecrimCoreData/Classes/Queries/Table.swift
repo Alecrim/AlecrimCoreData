@@ -125,14 +125,10 @@ extension Table {
         let fetchRequest = self.toFetchRequest()
         var results = [T]()
         
-        let fetchedObjects : NSArray? = self.executeFetchRequest(fetchRequest)
-        
-        if let objects = fetchedObjects {
-            for object in objects {
-                if let castedObject = object as? T {
-                    results.append(castedObject)
-                }
-            }
+        if let objects = self.executeFetchRequest(fetchRequest) {
+            /// HAX: using `map:` because `self.executeFetchRequest(fetchRequest) as? [T]`
+            // will not work in Swift 1.x in some circumstances
+            results += objects.map { $0 as! T }
         }
         
         return results
