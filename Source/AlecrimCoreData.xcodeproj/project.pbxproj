@@ -11,7 +11,6 @@
 		1464BD1D1B20F973007CD240 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD0F1B20F973007CD240 /* Attribute.swift */; };
 		1464BD1E1B20F973007CD240 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD111B20F973007CD240 /* Context.swift */; };
 		1464BD1F1B20F973007CD240 /* ContextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD121B20F973007CD240 /* ContextOptions.swift */; };
-		1464BD201B20F973007CD240 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD131B20F973007CD240 /* Stack.swift */; };
 		1464BD211B20F973007CD240 /* NSManagedObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD151B20F973007CD240 /* NSManagedObjectExtensions.swift */; };
 		1464BD221B20F973007CD240 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD171B20F973007CD240 /* FetchedResultsController.swift */; };
 		1464BD231B20F973007CD240 /* FetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD181B20F973007CD240 /* FetchedResultsSectionInfo.swift */; };
@@ -31,7 +30,6 @@
 		1464BD0F1B20F973007CD240 /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		1464BD111B20F973007CD240 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		1464BD121B20F973007CD240 /* ContextOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextOptions.swift; sourceTree = "<group>"; };
-		1464BD131B20F973007CD240 /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		1464BD151B20F973007CD240 /* NSManagedObjectExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSManagedObjectExtensions.swift; sourceTree = "<group>"; };
 		1464BD171B20F973007CD240 /* FetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
 		1464BD181B20F973007CD240 /* FetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
@@ -87,7 +85,6 @@
 			children = (
 				1464BD111B20F973007CD240 /* Context.swift */,
 				1464BD121B20F973007CD240 /* ContextOptions.swift */,
-				1464BD131B20F973007CD240 /* Stack.swift */,
 				149733731B21F716000A0EDE /* FetchAsyncHandler.swift */,
 			);
 			path = Context;
@@ -239,7 +236,6 @@
 				1464BD251B20F973007CD240 /* Query.swift in Sources */,
 				1464BD241B20F973007CD240 /* AttributeQuery.swift in Sources */,
 				1464BD2A1B20FA29007CD240 /* EntitySetAttribute.swift in Sources */,
-				1464BD201B20F973007CD240 /* Stack.swift in Sources */,
 				1464BD1D1B20F973007CD240 /* Attribute.swift in Sources */,
 				1464BD1E1B20F973007CD240 /* Context.swift in Sources */,
 				1464BD261B20F973007CD240 /* Table.swift in Sources */,
@@ -368,7 +364,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
 			};
 			name = Debug;
 		};
@@ -389,7 +385,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_INSTALL_OBJC_HEADER = YES;
 			};
 			name = Release;
 		};

@@ -25,15 +25,7 @@ class EnsemblesDataContext: AlecrimCoreData.Context {
     // MARK - custom init
     
     convenience init?() {
-        let contextOptions = ContextOptions(stackType: .SQLite)
-        
-        // only needed if entity class names are different from entity names
-        contextOptions.entityClassNameSuffix = "Entity"
-        
-        // only needed if model is not in main bundle
-        contextOptions.modelBundle = NSBundle(forClass: EnsemblesDataContext.self)
-        
-        // call designated initializer
+        let contextOptions = ContextOptions()
         self.init(contextOptions: contextOptions)
         
         // configure Ensembles
@@ -46,7 +38,7 @@ class EnsemblesDataContext: AlecrimCoreData.Context {
         )
         
         // assign delegate
-        self.ensembleDelegate = EnsembleDelegate(managedObjectContext: self.managedObjectContext)
+        self.ensembleDelegate = EnsembleDelegate(managedObjectContext: self)
         self.ensemble.delegate = self.ensembleDelegate
         
         // set observers

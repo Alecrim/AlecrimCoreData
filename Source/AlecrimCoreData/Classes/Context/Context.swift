@@ -9,184 +9,165 @@
 import Foundation
 import CoreData
 
-public class Context {
+@objc(ALCDataContext)
+public class Context: NSManagedObjectContext {
     
-    private let stack: Stack!
-    public let managedObjectContext: NSManagedObjectContext!    // the underlying managed object context
+    // MARK: -
     
-    private var ___background: Bool = false                     // background context machinery (you did not see it)
+    // This will be removed in the next major version.
     
-    internal var contextOptions: ContextOptions { return self.stack.contextOptions }
-
-    public required init?(contextOptions: ContextOptions? = nil) {
-        let stackContextOptions = (contextOptions == nil ? ContextOptions() : contextOptions!)
-        stackContextOptions.fillEmptyOptions()
-        
-        var stack = stackContextOptions.___stack
-        if stack == nil {
-            stack = Stack(contextOptions: stackContextOptions)
-            self.managedObjectContext = stack?.mainManagedObjectContext
-        }
-        else {
-            if stackContextOptions.___stackUsesNewBackgroundManagedObjectContext {
-                self.managedObjectContext = stack?.createBackgroundManagedObjectContext()
-                stackContextOptions.___stackUsesNewBackgroundManagedObjectContext = false
-            }
-            else {
-                self.managedObjectContext = stack?.backgroundManagedObjectContext
-            }
-            
-            self.___background = true
-            stackContextOptions.___stack = nil
+    private var _defaultBackgroundContext: Context?
+    private func defaultCreatedBackgroundContext() -> Self? {
+        if let defaultBackgroundContext = self._defaultBackgroundContext {
+            return unsafeBitCast(defaultBackgroundContext, self.dynamicType)
         }
         
-        self.stack = stack
+        return nil
     }
     
-    public init?(rootManagedObjectContext: NSManagedObjectContext, mainManagedObjectContext: NSManagedObjectContext) {
-        if let coordinator = rootManagedObjectContext.persistentStoreCoordinator, let store = coordinator.persistentStores.first as? NSPersistentStore {
-            var stackType: StackType! = nil
-            if store.type == NSSQLiteStoreType {
-                stackType = .SQLite
-            }
-            else if store.type == NSInMemoryStoreType {
-                stackType = .InMemory
-            }
-
-            if stackType != nil {
-                let stackContextOptions = ContextOptions(stackType: stackType, managedObjectModelName: nil, storeOptions: store.options)
-                stackContextOptions.fillEmptyOptions(customConfiguration: true)
-                
-                if let stack = Stack(rootManagedObjectContext: rootManagedObjectContext, mainManagedObjectContext: mainManagedObjectContext, contextOptions: stackContextOptions) {
-                    self.stack = stack
-                    self.managedObjectContext = stack.mainManagedObjectContext
-                }
-                else {
-                    self.stack = nil
-                    self.managedObjectContext = nil
-                    
-                    return nil
-                }
-            }
-            else {
-                self.stack = nil
-                self.managedObjectContext = nil
-                
-                return nil
-            }
-        }
-        else {
-            self.stack = nil
-            self.managedObjectContext = nil
-            
-            return nil
+    // MARK: -
+    
+    private var observers = [NSObjectProtocol]()
+    
+    private var rootSavingDataContext: RootSavingDataContext? {
+        var context: NSManagedObjectContext = self
+        
+        while context.parentContext != nil {
+            context = context.parentContext!
         }
         
+        return context as? RootSavingDataContext
     }
-}
-
-extension Context {
+    
+    public override var parentContext: NSManagedObjectContext? {
+        willSet {
+            if let oldValue = self.parentContext as? RootSavingDataContext {
+                oldValue.childDataContextHashTable.removeObject(self)
+            }
+        }
+        didSet {
+            if let newValue = self.parentContext as? RootSavingDataContext {
+                newValue.childDataContextHashTable.addObject(self)
+            }
+        }
+    }
+    
+    // any context
+    
+    public override init(concurrencyType: NSManagedObjectContextConcurrencyType) {
+        super.init(concurrencyType: concurrencyType)
+        self.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        
+        self.addObservers()
+    }
+    
+    deinit {
+        self.removeObservers()
+    }
+    
+    // main thread context
+    
+    public convenience init() {
+        self.init(contextOptions: ContextOptions())
+    }
+    
+    public convenience init(contextOptions: ContextOptions) {
+        self.init(concurrencyType: .MainQueueConcurrencyType)
+        
+        self.name = "Main Thread Context"
+        self.parentContext = RootSavingDataContext(rootSavingDataContextOptions: contextOptions)
+    }
+    
+    // background context
+    
+    public convenience init(parentContext: NSManagedObjectContext) {
+        self.init(concurrencyType: .PrivateQueueConcurrencyType)
+        
+        if let parentDataContext = parentContext as? Context, let rootSavingDataContext = parentDataContext.rootSavingDataContext {
+            self.name = "Background Context " + String(rootSavingDataContext.childDataContexts.count)
+            self.parentContext = rootSavingDataContext
+        }
+        else {
+            self.parentContext = parentContext
+        }
+        
+        self.undoManager = nil
+    }
+    
+    public required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    public override func save(error: NSErrorPointer) -> Bool {
+        if !self.hasChanges {
+            return true
+        }
+        
+        self.rootSavingDataContext?.savedChildContext = self
+        
+        var success = super.save(error)
+        
+        if success {
+            if let parentContext = self.parentContext {
+                parentContext.performBlockAndWait {
+                    success = parentContext.save(error)
+                }
+            }
+        }
+        
+        return success
+    }
     
     public func save() -> (success: Bool, error: NSError?) {
-        return self.stack.saveManagedObjectContext(self.managedObjectContext)
+        var error: NSError? = nil
+        let success = self.save(&error)
+        
+        return (success, error)
     }
-    
-}
-
-extension Context {
-    
-    public func undo() {
-        self.managedObjectContext.undo()
-    }
-    
-    public func redo() {
-        self.managedObjectContext.redo()
-    }
-    
-    public func reset() {
-        self.managedObjectContext.reset()
-    }
-    
-    public func rollback() {
-        self.managedObjectContext.rollback()
-    }
-    
-}
-
-extension Context {
     
     public func perform(closure: () -> Void) {
-        self.managedObjectContext.performBlock(closure)
+        self.performBlock(closure)
     }
     
     public func performAndWait(closure: () -> Void) {
-        self.managedObjectContext.performBlockAndWait(closure)
+        self.performBlockAndWait(closure)
     }
     
-}
-
-extension Context {
-
-    public var hasChanges: Bool { return self.managedObjectContext.hasChanges }
-    
-    public var undoManager: NSUndoManager? {
-        get {
-            return self.managedObjectContext.undoManager
-        }
-        set {
-            self.managedObjectContext.undoManager = newValue
-        }
-    }
-
-}
-
-#if os(OSX)
-
-extension Context {
-
-    public func commitEditing() -> Bool {
-        return self.managedObjectContext.commitEditing()
-    }
-    
-    public func discardEditing() {
-        self.managedObjectContext.discardEditing()
-    }
-
-}
-    
-#endif
-
-
-extension Context {
-    
-    internal func executeFetchRequest(fetchRequest: NSFetchRequest, error: NSErrorPointer) -> [AnyObject]? {
-        var objects: [AnyObject]?
-        
-        if self.___background {
-            // already in "performBlock"
-            objects = self.managedObjectContext.executeFetchRequest(fetchRequest, error: error)
-        }
-        else {
-            self.managedObjectContext.performBlockAndWait {
-                objects = self.managedObjectContext.executeFetchRequest(fetchRequest, error: error)
+    private func addObservers() {
+        // this context will save
+        self.addObserverForName(NSManagedObjectContextWillSaveNotification) { notification in
+            if let notificationContext = notification.object as? NSManagedObjectContext where !notificationContext.insertedObjects.isEmpty {
+                notificationContext.obtainPermanentIDsForObjects(Array(notificationContext.insertedObjects), error: nil)
             }
         }
-        
-        return objects
     }
     
-    internal func executeAsynchronousFetchRequestWithFetchRequest(fetchRequest: NSFetchRequest, completionClosure: ([AnyObject]?, NSError?) -> Void) -> FetchAsyncHandler {
-        //
-        let moc = self.managedObjectContext
+    private func removeObservers() {
+        let notificationCenter = NSNotificationCenter.defaultCenter()
         
+        for observer in self.observers {
+            notificationCenter.removeObserver(observer)
+        }
+    }
+    
+    private func addObserverForName(name: String, object: AnyObject? = nil, closure: (NSNotification!) -> Void) {
+        let observer = NSNotificationCenter.defaultCenter().addObserverForName(name, object: object ?? self, queue: nil, usingBlock: closure)
+        self.observers.append(observer)
+    }
+    
+}
+
+extension Context {
+    
+    internal func executeAsynchronousFetchRequestWithFetchRequest(fetchRequest: NSFetchRequest, completionHandler: ([AnyObject]?, NSError?) -> Void) -> FetchAsyncHandler {
         //
-        var completionClosureCalled = false
+        var completionHandlerCalled = false
         
         //
         let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { asynchronousFetchResult in
-            if !completionClosureCalled {
-                completionClosureCalled = true
-                completionClosure(asynchronousFetchResult.finalResult, asynchronousFetchResult.operationError)
+            if !completionHandlerCalled {
+                completionHandlerCalled = true
+                completionHandler(asynchronousFetchResult.finalResult, asynchronousFetchResult.operationError)
             }
         }
         
@@ -194,25 +175,23 @@ extension Context {
         let handler = FetchAsyncHandler(asynchronousFetchRequest: asynchronousFetchRequest)
         
         //
-        moc.performBlock {
-            var error: NSError? = nil
-            if handler.cancelled {
-                completionClosureCalled = true
-                completionClosure(nil, NSError(domain: "com.alecrim.AlecrimCoreData", code: NSUserCancelledError, userInfo: nil))
+        var error: NSError? = nil
+        if handler.cancelled {
+            completionHandlerCalled = true
+            completionHandler(nil, NSError(domain: "com.alecrim.AlecrimCoreData", code: NSUserCancelledError, userInfo: nil))
+        }
+        else {
+            handler.foolProgress.becomeCurrentWithPendingUnitCount(1)
+            handler.asynchronousFetchResult = self.executeRequest(asynchronousFetchRequest, error: &error) as? NSAsynchronousFetchResult
+            handler.foolProgress.resignCurrent()
+            
+            if error != nil {
+                completionHandlerCalled = true
+                completionHandler(nil, error)
             }
-            else {
-                handler.foolProgress.becomeCurrentWithPendingUnitCount(1)
-                handler.asynchronousFetchResult = moc.executeRequest(asynchronousFetchRequest, error: &error) as? NSAsynchronousFetchResult
-                handler.foolProgress.resignCurrent()
-                
-                if error != nil {
-                    completionClosureCalled = true
-                    completionClosure(nil, error)
-                }
-                else if handler.asynchronousFetchResult?.operationError != nil {
-                    completionClosureCalled = true
-                    completionClosure(nil, handler.asynchronousFetchResult!.operationError)
-                }
+            else if handler.asynchronousFetchResult?.operationError != nil {
+                completionHandlerCalled = true
+                completionHandler(nil, handler.asynchronousFetchResult!.operationError)
             }
         }
         
@@ -220,7 +199,7 @@ extension Context {
         return handler
     }
     
-    internal func executeBatchUpdateRequestWithEntityDescription(entityDescription: NSEntityDescription, propertiesToUpdate: [NSObject : AnyObject], predicate: NSPredicate, completionClosure: (Int, NSError?) -> Void) {
+    internal func executeBatchUpdateRequestWithEntityDescription(entityDescription: NSEntityDescription, propertiesToUpdate: [NSObject : AnyObject], predicate: NSPredicate, completionHandler: (Int, NSError?) -> Void) {
         let batchUpdateRequest = NSBatchUpdateRequest(entity: entityDescription)
         batchUpdateRequest.propertiesToUpdate = propertiesToUpdate
         batchUpdateRequest.predicate = predicate
@@ -232,31 +211,178 @@ extension Context {
         // If called in a context that has a parent context, both the `batchUpdateResult` and the `error` will be quietly set to `nil` by Core Data.
         //
         
-        var moc: NSManagedObjectContext = self.managedObjectContext
+        var moc: NSManagedObjectContext = self
         while moc.parentContext != nil {
             moc = moc.parentContext!
         }
         
         moc.performBlock {
             var error: NSError? = nil
-
+            
             if let batchUpdateResult = moc.executeRequest(batchUpdateRequest, error: &error) as? NSBatchUpdateResult, let count = batchUpdateResult.result as? Int {
-                completionClosure(count, nil)
+                completionHandler(count, nil)
             }
             else {
-                completionClosure(0, error ?? alecrimCoreDataError())
+                completionHandler(0, error ?? alecrimCoreDataError())
             }
         }
     }
     
 }
 
+private class RootSavingDataContext: Context {
+    
+    private static let genericError = alecrimCoreDataError()
+    private static let savedChildContextUserInfoKey = "com.alecrim.AlecrimCoreData.DataContext.SavedChildContext"
+    
+    private let rootSavingDataContextOptions: ContextOptions
+    
+    private let childDataContextHashTable = NSHashTable.weakObjectsHashTable()
+    private var childDataContexts: [NSManagedObjectContext] { return self.childDataContextHashTable.allObjects as! [Context] }
+    
+    private var savedChildContext: NSManagedObjectContext? {
+        get {
+            return self.userInfo![RootSavingDataContext.savedChildContextUserInfoKey] as? NSManagedObjectContext
+        }
+        set {
+            if newValue == nil {
+                self.userInfo!.removeObjectForKey(RootSavingDataContext.savedChildContextUserInfoKey)
+            }
+            else if self.savedChildContext == nil { // do not assign if previous value is not nil
+                self.userInfo![RootSavingDataContext.savedChildContextUserInfoKey] = newValue
+            }
+        }
+    }
+    
+    private init(rootSavingDataContextOptions: ContextOptions) {
+        self.rootSavingDataContextOptions = rootSavingDataContextOptions
+        super.init(concurrencyType: .PrivateQueueConcurrencyType)
+        
+        self.name = "Root Saving Context"
+        self.undoManager = nil
+        
+        // only the root data context has a direct assigned persistent store coordinator
+        self.assignPersistentStoreCoordinator()
+    }
+    
+    private required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private override func addObservers() {
+        super.addObservers()
+        
+        // the root data context did save
+        self.addObserverForName(NSManagedObjectContextDidSaveNotification) { notification in
+            if let notificationRootSavingDataContext = notification.object as? RootSavingDataContext where notificationRootSavingDataContext.childDataContexts.count > 0,
+                let changeNotificationData = notification.userInfo {
+                    var excludedChildContextFromMerge: NSManagedObjectContext? = nil
+                    if let savedChildContext = notificationRootSavingDataContext.savedChildContext {
+                        excludedChildContextFromMerge = savedChildContext
+                        notificationRootSavingDataContext.savedChildContext = nil
+                    }
+                    
+                    let contextsToMerge = notificationRootSavingDataContext.childDataContexts.filter({ $0 != excludedChildContextFromMerge })
+                    let updatedObjects = changeNotificationData[NSUpdatedObjectsKey] as? Set<NSManagedObject>
+                    
+                    for contextToMerge in contextsToMerge {
+                        contextToMerge.performBlock {
+                            if let updatedObjects = updatedObjects where !updatedObjects.isEmpty {
+                                for objectObject in updatedObjects {
+                                    contextToMerge.objectWithID(objectObject.objectID).willAccessValueForKey(nil) // ensures that a fault has been fired
+                                }
+                            }
+                            
+                            contextToMerge.mergeChangesFromContextDidSaveNotification(notification)
+                        }
+                    }
+            }
+        }
+    }
+    
+    private func assignPersistentStoreCoordinator() {
+        // managed object model
+        if let managedObjectModelURL = self.rootSavingDataContextOptions.managedObjectModelURL, let managedObjectModel = NSManagedObjectModel(contentsOfURL: managedObjectModelURL) {
+            // persistent store coordinator
+            let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
+            
+            // persistent store
+            switch self.rootSavingDataContextOptions.storeType {
+            case .SQLite:
+                if let persistentStoreURL = self.rootSavingDataContextOptions.persistentStoreURL,
+                    let containerURL = persistentStoreURL.URLByDeletingLastPathComponent {
+                        // if the directory does not exist, it will be created
+                        var fileManagerError: NSError? = nil
+                        if NSFileManager.defaultManager().createDirectoryAtURL(containerURL, withIntermediateDirectories: true, attributes: nil, error: &fileManagerError) {
+                            var error: NSError? = nil
+                            persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: self.rootSavingDataContextOptions.configuration, URL: persistentStoreURL, options: self.rootSavingDataContextOptions.options as [NSObject : AnyObject], error: &error)
+                            
+                            if let error = error {
+                                var handled = false
+                                
+                                if error.domain == NSCocoaErrorDomain {
+                                    let migrationErrorCodes = [NSPersistentStoreIncompatibleVersionHashError, NSMigrationMissingSourceModelError, NSMigrationError]
+                                    
+                                    if contains(migrationErrorCodes, error.code) {
+                                        handled = self.handleMigrationError(error)
+                                    }
+                                }
+                                
+                                if !handled {
+                                    return
+                                }
+                            }
+                        }
+                        else {
+                            return
+                        }
+                        
+                }
+                else {
+                    // throws RootSavingDataContext.genericError
+                    return
+                }
+                
+            case .InMemory:
+                var error: NSError? = nil
+                persistentStoreCoordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: self.rootSavingDataContextOptions.configuration, URL: nil, options: self.rootSavingDataContextOptions.options as [NSObject : AnyObject], error: &error)
+                
+                if error != nil {
+                    return
+                }
+            }
+            
+            //
+            self.persistentStoreCoordinator = persistentStoreCoordinator
+        }
+        else {
+            // throws RootSavingDataContext.genericError
+            return
+        }
+    }
+    
+    private func handleMigrationError(error: NSError) -> Bool {
+        return false
+    }
+    
+}
+
 // MARK: - public global functions - background contexts
 
-public func createBackgroundContext<T: Context>(parentContext: T, usingNewBackgroundManagedObjectContext: Bool) -> T! {
-    parentContext.contextOptions.___stack = parentContext.stack
-    parentContext.contextOptions.___stackUsesNewBackgroundManagedObjectContext = usingNewBackgroundManagedObjectContext
-    let backgroundContext = T(contextOptions: parentContext.contextOptions)
+// This functions will be removed in the next major version.
+
+public func createBackgroundContext<T: Context>(parentContext: T, usingNewBackgroundManagedObjectContext: Bool) -> T {
+    if !usingNewBackgroundManagedObjectContext {
+        if let defaultBackgroundContext = parentContext.defaultCreatedBackgroundContext() {
+            return defaultBackgroundContext
+        }
+    }
+    
+    let backgroundContext = T(parentContext: parentContext)
+    
+    if !usingNewBackgroundManagedObjectContext {
+        parentContext._defaultBackgroundContext = backgroundContext
+    }
     
     return backgroundContext
 }
@@ -273,6 +399,7 @@ public func performInBackground<T: Context>(parentContext: T, usingNewBackground
     }
 }
 
+
 // MARK: - internal global functions - error handling
 
 internal func alecrimCoreDataError(code: Int = NSCoreDataError, userInfo: [NSObject : AnyObject]? = nil) -> NSError {
@@ -281,7 +408,7 @@ internal func alecrimCoreDataError(code: Int = NSCoreDataError, userInfo: [NSObj
 
 internal func alecrimCoreDataHandleError(error: NSError?, filename: String = __FILE__, line: Int = __LINE__, funcname: String = __FUNCTION__) {
     if let error = error where error.code != NSUserCancelledError {
-        var dateFormatter = NSDateFormatter()
+        let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss:SSS"
         
         let process = NSProcessInfo.processInfo()

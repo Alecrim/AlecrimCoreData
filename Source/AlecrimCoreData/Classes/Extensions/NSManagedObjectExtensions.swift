@@ -12,7 +12,7 @@ import CoreData
 extension NSManagedObject {
     
     public func inContext(context: Context) -> Self? {
-        return self.inManagedObjectContext(context.managedObjectContext)
+        return self.inManagedObjectContext(context)
     }
     
     public func inManagedObjectContext(otherManagedObjectContext: NSManagedObjectContext) -> Self? {
