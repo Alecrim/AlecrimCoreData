@@ -125,13 +125,14 @@ extension Table {
         let fetchRequest = self.toFetchRequest()
         var results = [T]()
         
-        if let objects = self.executeFetchRequest(fetchRequest) as? [T] {
-            results += objects
+        if let objects = self.executeFetchRequest(fetchRequest) {
+            /// HAX: using `map:` because `self.executeFetchRequest(fetchRequest) as? [T]`
+            // will not work in Swift 1.x in some circumstances
+            results += objects.map { $0 as! T }
         }
         
         return results
     }
-    
 }
 
 // MARK: - element
