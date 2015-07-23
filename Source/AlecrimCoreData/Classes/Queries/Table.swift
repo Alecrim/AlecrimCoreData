@@ -122,13 +122,16 @@ extension Table: SequenceType {
 extension Table {
     
     public func toArray() -> [T] {
-        let fetchRequest = self.toFetchRequest()
         var results = [T]()
         
-        if let objects = self.executeFetchRequest(fetchRequest) {
-            /// HAX: using `map:` because `self.executeFetchRequest(fetchRequest) as? [T]`
-            // will not work in Swift 1.x in some circumstances
-            results += objects.map { $0 as! T }
+        if let objects = self.executeFetchRequest(self.toFetchRequest()) {
+            if let entities = objects as? [T] {
+                results += entities
+            }
+            else {
+                // HAX: `self.executeFetchRequest(fetchRequest) as? [T]` may not work in Swift 1.x in some circumstances
+                results += objects.map { $0 as! T }
+            }
         }
         
         return results
