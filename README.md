@@ -17,7 +17,7 @@ To use AlecrimCoreData you will need to create an inherited class from `AlecrimC
 ```swift
 import AlecrimCoreData
 
-let dataContext = DataContext()!
+let dataContext = DataContext()
 
 class DataContext: Context {
 	var people:      Table<Person>     { return Table<Person>(context: self) }
