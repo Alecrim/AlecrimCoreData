@@ -555,6 +555,30 @@ private func toAnyObject<T>(value: T) -> AnyObject {
     if let v = value as? AnyObject {
         return v
     }
+    else if let v = value as? String {
+        return v as NSString
+    }
+    else if let v = value as? Int {
+        return NSNumber(integer: v)
+    }
+    else if let v = value as? Int64 {
+        return NSNumber(longLong: v)
+    }
+    else if let v = value as? Int32 {
+        return NSNumber(int: v)
+    }
+    else if let v = value as? Int16 {
+        return NSNumber(short: v)
+    }
+    else if let v = value as? Double {
+        return NSNumber(double: v)
+    }
+    else if let v = value as? Float {
+        return NSNumber(float: v)
+    }
+    else if let v = value as? Bool {
+        return NSNumber(bool: v)
+    }
     else {
         // HAX: the value may be an optional, so we have to test the optional object type, one by one
         let mirror = _reflect(value)
