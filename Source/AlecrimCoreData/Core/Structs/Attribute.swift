@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - non nullable attribute
+
 public struct Attribute<T>: AttributeType {
     
     public typealias ValueType = T
@@ -23,6 +25,8 @@ public struct Attribute<T>: AttributeType {
     }
 
 }
+
+// MARK: nullable (comparable to nil) attribute
 
 public struct NullableAttribute<T>: NullableAttributeType {
 
@@ -40,10 +44,32 @@ public struct NullableAttribute<T>: NullableAttributeType {
     
 }
 
+// MARK: - Attribute extensions - CollectionType
+
 extension Attribute where T: CollectionType {
     
-    public var count: Attribute<Int> {
-        return Attribute<Int>(self.___name + ".@count")
+    public func count() -> Attribute<Int> {
+        return Attribute<Int>("@count", self)
     }
     
+    public func max<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
+        let innerAttribute = closure(T.Generator.Element.self)
+        return Attribute<U>("@max." + innerAttribute.___name, self)
+    }
+
+    public func min<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
+        let innerAttribute = closure(T.Generator.Element.self)
+        return Attribute<U>("@min." + innerAttribute.___name, self)
+    }
+    
+    public func avg<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
+        let innerAttribute = closure(T.Generator.Element.self)
+        return Attribute<U>("@avg." + innerAttribute.___name, self)
+    }
+    public func sum<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
+        let innerAttribute = closure(T.Generator.Element.self)
+        return Attribute<U>("@sum." + innerAttribute.___name, self)
+    }
+
 }
+
