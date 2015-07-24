@@ -3,7 +3,7 @@
 //  AlecrimCoreData
 //
 //  Created by Vanderlei Martinelli on 2014-06-24.
-//  Copyright (c) 2014 Alecrim. All rights reserved.
+//  Copyright (c) 2014, 2015 Alecrim. All rights reserved.
 //
 
 #import <TargetConditionals.h>
@@ -21,5 +21,3 @@ FOUNDATION_EXPORT double AlecrimCoreDataVersionNumber;
 FOUNDATION_EXPORT const unsigned char AlecrimCoreDataVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <AlecrimCoreData/PublicHeader.h>
-
-
