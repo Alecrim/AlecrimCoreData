@@ -39,8 +39,9 @@ import Foundation
 /// An attribute that has a name.
 public protocol NamedAttributeType {
     
-    /// This property has underscores as prefix to not conflict with entity property names.
+    /// These properties have underscores as prefix to not conflict with entity property names.
     var ___name: String { get }
+    var ___expression: NSExpression { get }
     
 }
 
@@ -57,14 +58,20 @@ public protocol NullableAttributeType: AttributeType {
     
 }
 
-// MARK: - protocol extensions
+// MARK: - public protocol extensions - default implementations
 
 extension AttributeType {
     
-    private var ___expression: NSExpression {
+    public var ___expression: NSExpression {
         return NSExpression(forKeyPath: self.___name)
     }
     
+}
+
+// MARK: - internal protocol extensions
+
+extension AttributeType {
+
     internal var ___comparisonPredicateOptions: NSComparisonPredicateOptions {
         if Self.ValueType.self is AlecrimCoreData.StringType.Type {
             return [.CaseInsensitivePredicateOption, .DiacriticInsensitivePredicateOption]
@@ -76,7 +83,7 @@ extension AttributeType {
     
 }
 
-// MARK: - protocol extensions
+// MARK: - public protocol extensions
 
 extension AttributeType where Self.ValueType: Equatable {
     
