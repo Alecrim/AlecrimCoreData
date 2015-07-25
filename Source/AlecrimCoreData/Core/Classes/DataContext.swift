@@ -159,7 +159,6 @@ public class DataContext: NSManagedObjectContext {
 
 private class RootSavingDataContext: DataContext {
     
-    private static let genericError = NSError(domain: "com.alecrim.AlecrimCoreData", code: NSCoreDataError, userInfo: nil)
     private static let savedChildContextUserInfoKey = "com.alecrim.AlecrimCoreData.DataContext.SavedChildContext"
     
     private let rootSavingDataContextOptions: DataContextOptions
@@ -237,7 +236,7 @@ private class RootSavingDataContext: DataContext {
             let managedObjectModelURL = self.rootSavingDataContextOptions.managedObjectModelURL,
             let managedObjectModel = NSManagedObjectModel(contentsOfURL: managedObjectModelURL)
         else {
-            throw RootSavingDataContext.genericError
+            throw AlecrimCoreDataError.InvalidManagedObjectModelURL
         }
         
         // persistent store coordinator
@@ -250,7 +249,7 @@ private class RootSavingDataContext: DataContext {
                 let persistentStoreURL = self.rootSavingDataContextOptions.persistentStoreURL,
                 let containerURL = persistentStoreURL.URLByDeletingLastPathComponent
             else {
-                throw RootSavingDataContext.genericError
+                throw AlecrimCoreDataError.InvalidPersistentStoreURL
             }
             
             // if the directory does not exist, it will be created

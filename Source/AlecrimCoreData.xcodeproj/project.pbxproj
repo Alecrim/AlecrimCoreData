@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1410FEF81B64033300F45A58 /* GenericQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1410FEF71B64033300F45A58 /* GenericQueryable.swift */; };
+		1412424E1B641AA600FFC670 /* AlecrimCoreDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1412424D1B641AA600FFC670 /* AlecrimCoreDataError.swift */; };
 		143D67241B60D5F1001B6ED3 /* DataContextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143D67231B60D5F1001B6ED3 /* DataContextOptions.swift */; };
 		1447ADD01B52B2F000ADEAED /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 1447ADCF1B52B2F000ADEAED /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		145D972C1B5DA55C00995795 /* DataContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D971F1B5DA55C00995795 /* DataContext.swift */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		1410FEF71B64033300F45A58 /* GenericQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericQueryable.swift; sourceTree = "<group>"; };
+		1412424D1B641AA600FFC670 /* AlecrimCoreDataError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlecrimCoreDataError.swift; sourceTree = "<group>"; };
 		143D67231B60D5F1001B6ED3 /* DataContextOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataContextOptions.swift; sourceTree = "<group>"; };
 		1447ADCC1B52B2F000ADEAED /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1447ADCF1B52B2F000ADEAED /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
@@ -49,6 +51,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1412424C1B641A8B00FFC670 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				1412424D1B641AA600FFC670 /* AlecrimCoreDataError.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
 		1447ADC21B52B2F000ADEAED = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +88,7 @@
 		145D971D1B5DA55C00995795 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				1412424C1B641A8B00FFC670 /* Enums */,
 				145D97241B5DA55C00995795 /* Protocols */,
 				145D97291B5DA55C00995795 /* Structs */,
 				145D971E1B5DA55C00995795 /* Classes */,
@@ -219,6 +230,7 @@
 				145D97341B5DA55C00995795 /* Attribute.swift in Sources */,
 				145D97311B5DA55C00995795 /* Enumerable.swift in Sources */,
 				145D97331B5DA55C00995795 /* TableType.swift in Sources */,
+				1412424E1B641AA600FFC670 /* AlecrimCoreDataError.swift in Sources */,
 				145D97351B5DA55C00995795 /* Table.swift in Sources */,
 				145D972C1B5DA55C00995795 /* DataContext.swift in Sources */,
 				145D97321B5DA55C00995795 /* Queryable.swift in Sources */,

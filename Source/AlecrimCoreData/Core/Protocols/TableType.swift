@@ -40,6 +40,26 @@ extension TableType {
 
 extension TableType {
     
+    public func delete() throws {
+        let fetchRequest = self.toFetchRequest()
+        fetchRequest.resultType = .ManagedObjectIDResultType
+        
+        let result = try self.dataContext.executeFetchRequest(fetchRequest)
+        if let objectIDs = result as? [NSManagedObjectID] {
+            for objectID in objectIDs {
+                let object = try self.dataContext.existingObjectWithID(objectID)
+                self.dataContext.deleteObject(object)
+            }
+        }
+        else {
+            throw AlecrimCoreDataError.UnexpectedValue(value: result)
+        }
+    }
+
+}
+
+extension TableType {
+    
     public func firstOrCreated(@noescape predicateClosure: (Entity.Type) -> NSComparisonPredicate) -> Entity {
         let predicate = predicateClosure(Entity.self)
         
