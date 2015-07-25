@@ -26,9 +26,9 @@ public struct Table<T: NSManagedObject>: TableType {
     public var sortDescriptors: [NSSortDescriptor]? = nil
     
     public init(dataContext: NSManagedObjectContext) {
-        let managedObjectClassName = NSStringFromClass(T.self)
-
         //
+        let managedObjectClassName = NSStringFromClass(T.self)
+        
         let entityDescription: NSEntityDescription
         if let cachedEntityDescription = cachedEntityDescriptions[managedObjectClassName] {
             entityDescription = cachedEntityDescription

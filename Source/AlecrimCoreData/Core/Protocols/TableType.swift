@@ -9,97 +9,13 @@
 import Foundation
 import CoreData
 
-public protocol TableType: Queryable {
+public protocol TableType: GenericQueryable {
     
     typealias Entity: NSManagedObject
 
     var dataContext: NSManagedObjectContext { get }
     var entityDescription: NSEntityDescription { get }
 
-}
-
-// MARK: - ordering
-
-extension TableType {
-    
-    public func orderByAscending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Entity.Type) -> A) -> Self {
-        return self.sortByAttribute(orderingClosure(Entity.self), ascending: true)
-    }
-
-    public func orderByDescending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Entity.Type) -> A) -> Self {
-        return self.sortByAttribute(orderingClosure(Entity.self), ascending: false)
-    }
-
-}
-
-extension TableType {
-
-    public func orderBy<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Entity.Type) -> A) -> Self {
-        return self.orderByAscending(orderingClosure)
-    }
-
-    public func thenBy<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Entity.Type) -> A) -> Self {
-        return self.orderByAscending(orderingClosure)
-    }
-    
-    public func thenByAscending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Entity.Type) -> A) -> Self {
-        return self.orderByAscending(orderingClosure)
-    }
-    
-    public func thenByDescending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Entity.Type) -> A) -> Self {
-        return self.orderByDescending(orderingClosure)
-    }
-    
-}
-
-// MARK: - filtering
-
-extension TableType {
-
-    public func filter(@noescape predicateClosure: (Entity.Type) -> NSPredicate) -> Self {
-        return self.filterUsingPredicate(predicateClosure(Entity.self))
-    }
-    
-}
-
-// MARK: -
-
-extension TableType {
-
-    public func count(@noescape predicateClosure: (Entity.Type) -> NSPredicate) -> Int {
-        return self.filterUsingPredicate(predicateClosure(Entity.self)).count()
-    }
-
-}
-
-extension TableType {
-    
-    public func any(@noescape predicateClosure: (Entity.Type) -> NSPredicate) -> Bool {
-        return self.filterUsingPredicate(predicateClosure(Entity.self)).any()
-    }
-
-    public func none(@noescape predicateClosure: (Entity.Type) -> NSPredicate) -> Bool {
-        return self.filterUsingPredicate(predicateClosure(Entity.self)).none()
-    }
-
-}
-
-extension TableType {
-
-    public func first(@noescape predicateClosure: (Entity.Type) -> NSPredicate) -> Entity? {
-        return self.filterUsingPredicate(predicateClosure(Entity.self)).first()
-    }
-    
-}
-
-// MARK: - entity
-
-extension TableType {
-    
-    public func first() -> Entity? {
-        return self.take(1).toArray().first
-    }
-    
 }
 
 // MARK: - create, delete and refresh entities
@@ -163,7 +79,7 @@ extension TableType {
 }
 
 
-// MARK: - conversion
+// MARK: - GenericQueryable
 
 extension TableType {
     
@@ -185,6 +101,8 @@ extension TableType {
     
 }
 
+// MARK: - conversion
+
 extension TableType {
     
     public func toFetchRequest() -> NSFetchRequest {
@@ -203,5 +121,4 @@ extension TableType {
     }
     
 }
-
 

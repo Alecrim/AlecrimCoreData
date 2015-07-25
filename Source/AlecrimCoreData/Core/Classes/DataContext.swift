@@ -11,6 +11,8 @@ import CoreData
 
 public class DataContext: NSManagedObjectContext {
     
+    // MARK: - private properties
+    
     private var observers = [NSObjectProtocol]()
 
     private var rootSavingDataContext: RootSavingDataContext? {
@@ -22,6 +24,8 @@ public class DataContext: NSManagedObjectContext {
         
         return context as? RootSavingDataContext
     }
+    
+    // MARK: - public overrided properties
     
     public override var parentContext: NSManagedObjectContext? {
         willSet {
@@ -35,6 +39,8 @@ public class DataContext: NSManagedObjectContext {
             }
         }
     }
+    
+    // MARK: - init and deinit
 
     // any context
     
@@ -48,6 +54,8 @@ public class DataContext: NSManagedObjectContext {
     deinit {
         self.removeObservers()
     }
+    
+    // MARK: - convenience initializers
     
     // main thread context
     
@@ -82,6 +90,8 @@ public class DataContext: NSManagedObjectContext {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - public overrided methods
+    
     public override func save() throws {
         guard self.hasChanges else { return }
         
@@ -106,6 +116,8 @@ public class DataContext: NSManagedObjectContext {
         }
     }
     
+    // MARK: - public convenience methods
+    
     public func perform(closure: () -> Void) {
         self.performBlock(closure)
     }
@@ -113,7 +125,9 @@ public class DataContext: NSManagedObjectContext {
     public func performAndWait(closure: () -> Void) {
         self.performBlockAndWait(closure)
     }
-    
+
+    // MARK: - private methods
+
     private func addObservers() {
         // this context will save
         self.addObserverForName(NSManagedObjectContextWillSaveNotification) { notification in

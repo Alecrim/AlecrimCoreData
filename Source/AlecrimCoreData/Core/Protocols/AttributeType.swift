@@ -39,7 +39,8 @@ import Foundation
 /// An attribute that has a name.
 public protocol NamedAttributeType {
     
-    /// These properties have underscores as prefix to not conflict with entity property names.
+    // These properties have underscores as prefix to not conflict with entity property names.
+    
     var ___name: String { get }
     var ___expression: NSExpression { get }
     
