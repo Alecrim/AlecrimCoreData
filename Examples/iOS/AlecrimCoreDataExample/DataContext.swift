@@ -12,7 +12,7 @@ import AlecrimCoreData
 
 let dataContext = DataContext()
 
-final class DataContext: AlecrimCoreData.Context {
+class DataContext: AlecrimCoreData.Context {
 
     var events: AlecrimCoreData.Table<Event> { return AlecrimCoreData.Table<Event>(context: self) }
     var subEvents: AlecrimCoreData.Table<SubEvent> { return AlecrimCoreData.Table<SubEvent>(context: self) }
