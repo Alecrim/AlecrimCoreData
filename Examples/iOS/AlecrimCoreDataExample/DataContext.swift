@@ -10,7 +10,7 @@
 import Foundation
 import AlecrimCoreData
 
-let dataContext = DataContext()!
+let dataContext = DataContext()
 
 final class DataContext: AlecrimCoreData.Context {
 

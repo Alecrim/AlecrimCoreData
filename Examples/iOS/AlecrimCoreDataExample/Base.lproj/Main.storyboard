@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F6a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="H1p-Uh-vWS">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Master-->
@@ -33,27 +32,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" text="Detail view content goes here" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="0XM-y9-sOw">
-                                <rect key="frame" x="20" y="292" width="560" height="17"/>
+                                <rect key="frame" x="205" y="253" width="191" height="17"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" size="system"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Children content goes here" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="66S-YJ-bQN">
-                                <rect key="frame" x="196" y="373" width="208" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="208" id="jKM-yD-d27"/>
-                                </constraints>
+                                <rect key="frame" x="213" y="331" width="175" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Child content goes here" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LNO-jV-0RZ">
-                                <rect key="frame" x="209" y="331" width="183" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="0Ga-eQ-HyH"/>
-                                    <constraint firstAttribute="width" constant="183" id="NWF-CC-ovh"/>
-                                </constraints>
+                                <rect key="frame" x="224" y="292" width="154" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -61,15 +53,12 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="LNO-jV-0RZ" firstAttribute="centerX" secondItem="0XM-y9-sOw" secondAttribute="centerX" id="3P9-dl-Y90"/>
-                            <constraint firstItem="LNO-jV-0RZ" firstAttribute="centerX" secondItem="svH-Pt-448" secondAttribute="centerX" id="5da-01-OcE"/>
-                            <constraint firstItem="0XM-y9-sOw" firstAttribute="top" secondItem="SYR-Wa-9uf" secondAttribute="bottom" constant="228" id="6p4-Fe-vqU"/>
-                            <constraint firstItem="LNO-jV-0RZ" firstAttribute="top" secondItem="0XM-y9-sOw" secondAttribute="bottom" constant="22" id="Fb2-bJ-IaO"/>
-                            <constraint firstItem="66S-YJ-bQN" firstAttribute="centerX" secondItem="LNO-jV-0RZ" secondAttribute="centerX" id="OLT-aG-Tc2"/>
-                            <constraint firstItem="66S-YJ-bQN" firstAttribute="top" secondItem="LNO-jV-0RZ" secondAttribute="bottom" constant="21" id="dZh-Sq-ipU"/>
-                            <constraint firstItem="0XM-y9-sOw" firstAttribute="centerY" secondItem="svH-Pt-448" secondAttribute="centerY" id="nmx-Cc-ykl"/>
-                            <constraint firstItem="0XM-y9-sOw" firstAttribute="leading" secondItem="svH-Pt-448" secondAttribute="leadingMargin" constant="4" id="pde-cu-Xph"/>
-                            <constraint firstItem="GAO-Cl-Wes" firstAttribute="top" secondItem="66S-YJ-bQN" secondAttribute="bottom" constant="206" id="z8x-dz-KH7"/>
+                            <constraint firstItem="66S-YJ-bQN" firstAttribute="centerX" secondItem="LNO-jV-0RZ" secondAttribute="centerX" constant="-0.5" id="4eV-8G-PlB"/>
+                            <constraint firstAttribute="centerY" secondItem="LNO-jV-0RZ" secondAttribute="centerY" id="Aad-MI-uim"/>
+                            <constraint firstItem="66S-YJ-bQN" firstAttribute="top" secondItem="LNO-jV-0RZ" secondAttribute="bottom" constant="22" id="PTG-ET-XwW"/>
+                            <constraint firstAttribute="centerX" secondItem="LNO-jV-0RZ" secondAttribute="centerX" constant="-0.5" id="c09-T1-OOD"/>
+                            <constraint firstItem="LNO-jV-0RZ" firstAttribute="centerX" secondItem="0XM-y9-sOw" secondAttribute="centerX" constant="0.5" id="rcl-f0-6dJ"/>
+                            <constraint firstItem="LNO-jV-0RZ" firstAttribute="top" secondItem="0XM-y9-sOw" secondAttribute="bottom" constant="22" id="w0Q-kW-WwP"/>
                         </constraints>
                     </view>
                     <toolbarItems/>

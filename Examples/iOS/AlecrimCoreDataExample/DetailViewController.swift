@@ -24,22 +24,18 @@ class DetailViewController: UIViewController {
 
     func configureView() {
         // Update the user interface for the detail item.
-        if let label = self.detailDescriptionLabel, let event = self.detailItem {
-            label.text = event.timeStamp.description
-        }
-        
-        if let label = self.detailChildLabel, let child = self.detailItem?.child {
-            detailChildLabel.text = child.title
-        }
-        
-        if let label = self.detailChildrenLabel, let event = self.detailItem where event.children.count > 0 {
-            var text = ""
-            
-            for child in event.children {
-                text += child.title! + ", "
+        if let event = self.detailItem {
+            if let label = self.detailDescriptionLabel {
+                label.text = event.timeStamp.description
             }
             
-            detailChildrenLabel.text = text
+            if let label = self.detailChildLabel, let child = self.detailItem?.child {
+                detailChildLabel.text = child.title
+            }
+            
+            if let label = self.detailChildrenLabel where event.children.count > 0 {
+                detailChildrenLabel.text = (map(event.children, { $0.title! }) as NSArray).componentsJoinedByString(", ")
+            }
         }
     }
 
