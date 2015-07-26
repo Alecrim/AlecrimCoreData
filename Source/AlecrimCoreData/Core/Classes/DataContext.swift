@@ -9,7 +9,8 @@
 import Foundation
 import CoreData
 
-/// A `NSManagedObjectContext` subclass with the expected default behaviors for use with **AlecrimCoreData** (**ACD**).
+/// A `NSManagedObjectContext` subclass with the default behaviors for use in conjunction with other **AlecrimCoreData**
+/// (**ACD**) framework types.
 ///
 /// - important: This class can be subclassed or used as is. The preferred way to add `Table` properties to a `DataContext`,
 ///              however, is writing an extension for it or using the generated extensions by **ACDGen** utility app
@@ -17,7 +18,7 @@ import CoreData
 ///
 /// - note: Virtually all other **ACD** types (like `Table` or `Attribute`, for example) can be used with "vanilla"
 ///         `NSManagedObjectContext` instances too. If so, the framework user will have to write all the custom handling
-///         for the managed object contexts (i.e., *stack*), losing the conveniences provided by this class but achieving
+///         for the managed object contexts (i.e., "stack"), losing the conveniences provided by this class but achieving
 ///         greater control and flexibility about the behaviors she/he wants while also keeping the functionality from other
 ///         **ACD** types.
 ///
@@ -128,10 +129,10 @@ public class DataContext: NSManagedObjectContext {
     
     /// Attempts to commit unsaved changes to registered entities (objects) to the receiver’s parent store.
     ///
-    /// - discussion: Unlike the default behavior of `NSManagedObjectContext`, this method actually propagates
-    ///               the changes to the parent context that will try to do the same until the root saving context is reached.
-    ///               When and if the root saving context is reached the changes will be merged into its child contexts
-    ///               with the exception of the context that originated the saving process.
+    /// - important: Unlike the default behavior of `NSManagedObjectContext`, this method actually propagates
+    ///              the changes to the parent context that will try to do the same until the root saving context is reached.
+    ///              When and if the root saving context is reached the changes will be merged into its child contexts
+    ///              with the exception of the context that originated the saving process.
     ///
     /// - note: If the context does not have changes this method does nothing.
     public override func save() throws {
@@ -165,6 +166,7 @@ public class DataContext: NSManagedObjectContext {
     /// - parameter closure: The closure to perform.
     ///
     /// - note: Calling this method is the same as calling `performBlock:` method.
+    ///
     /// - seealso: `performBlock:`
     public func perform(closure: () -> Void) {
         self.performBlock(closure)
@@ -175,6 +177,7 @@ public class DataContext: NSManagedObjectContext {
     /// - parameter closure: The closure to perform
     ///
     /// - note: Calling this method is the same as calling `performBlockAndWait:` method.
+    ///
     /// - seealso: `performBlockAndWait:`
     public func performAndWait(closure: () -> Void) {
         self.performBlockAndWait(closure)
