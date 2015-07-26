@@ -29,7 +29,7 @@ class DetailViewController: UIViewController {
                 label.text = event.timeStamp.description
             }
             
-            if let label = self.detailChildLabel, let child = self.detailItem?.child {
+            if let label = self.detailChildLabel, let child = event.child {
                 detailChildLabel.text = child.title
             }
             
