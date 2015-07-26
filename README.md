@@ -351,9 +351,9 @@ See `Samples` folder for a configuration example for iCloud Core Data sync.
 
 See `Samples` folder for a configuration example for [Ensembles](http://www.ensembles.io).
 
-### Notes
+#### Additional Notes
 
-AlecrimCoreData determines the name of the `.xcdatamodeld` automatically using the project name. Please ensure the names match.
+When using the default options, AlecrimCoreData determines the name of the `.xcdatamodeld` automatically using the project name. Please ensure the names match.
 
 ## Using
 
