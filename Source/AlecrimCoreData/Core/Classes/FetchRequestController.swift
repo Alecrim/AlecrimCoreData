@@ -26,8 +26,13 @@ public final class FetchRequestController<T: NSManagedObject> {
     /// The name of the file used to cache section information.
     public let cacheName: String?
     
+    internal lazy var delegate = FetchRequestControllerDelegate<T>()
+    
     private lazy var underlyingFetchedResultsController: NSFetchedResultsController = {
-        return NSFetchedResultsController(fetchRequest: self.fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: self.sectionNameKeyPath, cacheName: self.cacheName)
+        let frc = NSFetchedResultsController(fetchRequest: self.fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: self.sectionNameKeyPath, cacheName: self.cacheName)
+        frc.delegate = self.delegate
+        
+        return frc
     }()
     
     /// Returns a fetch request controller initialized using the given arguments.
@@ -165,7 +170,7 @@ public struct FetchRequestControllerSection<T: NSManagedObject> {
     /// The array of entities in the section.
     public var entities: [T]? { return self.underlyingSectionInfo.objects as? [T] }
     
-    private init(underlyingSectionInfo: NSFetchedResultsSectionInfo) {
+    internal init(underlyingSectionInfo: NSFetchedResultsSectionInfo) {
         self.underlyingSectionInfo = underlyingSectionInfo
     }
     
