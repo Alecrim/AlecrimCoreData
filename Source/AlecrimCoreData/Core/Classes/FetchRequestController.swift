@@ -42,15 +42,29 @@ public final class FetchRequestController<T: NSManagedObject> {
     /// - parameter sectionNameKeyPath:   A key path on result objects that returns the section name. Pass `nil` to indicate that the controller should generate a single section.
     /// - parameter cacheName:            The name of the cache file the receiver should use. Pass `nil` to prevent caching.
     ///
-    /// - returns: The receiver initialized with the specified fetch request, context, key path, and cache name.
+    /// - returns: The receiver initialized with the specified fetch request, context, section name key path, and cache name.
     ///
     /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
-    ///            a call to `performFetch:` method is made. This is the same behavior `NSFetchedResultsController` has.
-    public init(fetchRequest: NSFetchRequest, managedObjectContext: NSManagedObjectContext, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
+    ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
+    private init(fetchRequest: NSFetchRequest, managedObjectContext: NSManagedObjectContext, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
         self.fetchRequest = fetchRequest
         self.managedObjectContext = managedObjectContext
         self.sectionNameKeyPath = sectionNameKeyPath
         self.cacheName = cacheName
+    }
+
+    /// Returns a fetch request controller initialized using the given arguments.
+    ///
+    /// - parameter table:              A `Table` instance from where the fetch request and managed object context will be provided.
+    /// - parameter sectionNameKeyPath: A key path on result objects that returns the section name. Pass `nil` to indicate that the controller should generate a single section.
+    /// - parameter cacheName:          The name of the cache file the receiver should use. Pass `nil` to prevent caching.
+    ///
+    /// - returns: The receiver initialized with the specified `Table` fetch request and context, the section name key path and cache name.
+    ///
+    /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
+    ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
+    private convenience init(table: Table<T>, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
+        self.init(fetchRequest: table.toFetchRequest(), managedObjectContext: table.dataContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
     
 }
@@ -186,8 +200,11 @@ extension Table {
     /// - parameter cacheName:          The name of the cache file the receiver should use. Pass `nil` to prevent caching.
     ///
     /// - returns: The initialized fetch request controller from `Table` with the specified section name key path and cache name.
+    ///
+    /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
+    ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
     public func toFetchRequestController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchRequestController<T> {
-        return FetchRequestController<T>(fetchRequest: self.toFetchRequest(), managedObjectContext: self.dataContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+        return FetchRequestController<T>(table: self, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
     
     /// Returns a fetch request controller initialized using the given arguments.
@@ -195,8 +212,11 @@ extension Table {
     /// - parameter sectionAttributeClosure: A closure returning an `Attribute` that will provide the `sectionNameKeyPath` value.
     ///
     /// - returns: The initialized fetch request controller from `Table` with the specified section name key path and cache name.
+    ///
+    /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
+    ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
     public func toFetchRequestController<A>(@noescape sectionAttributeClosure: (T.Type) -> Attribute<A>) -> FetchRequestController<T> {
-        return FetchRequestController<T>(fetchRequest: self.toFetchRequest(), managedObjectContext: self.dataContext, sectionNameKeyPath: sectionAttributeClosure(T.self).___name)
+        return FetchRequestController<T>(table: self, sectionNameKeyPath: sectionAttributeClosure(T.self).___name)
     }
     
 }
