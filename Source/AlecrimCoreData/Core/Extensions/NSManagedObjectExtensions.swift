@@ -11,11 +11,11 @@ import CoreData
 
 extension NSManagedObject {
 
-    public func inDataContext(dataContext otherDataContext: DataContext) throws -> Self? {
-        return try self.inManagedObjectContext(managedObjectContext: otherDataContext)
+    public func inDataContext(otherDataContext: DataContext) throws -> Self? {
+        return try self.inManagedObjectContext(otherDataContext)
     }
     
-    public func inManagedObjectContext(managedObjectContext otherManagedObjectContext: NSManagedObjectContext) throws -> Self? {
+    public func inManagedObjectContext(otherManagedObjectContext: NSManagedObjectContext) throws -> Self? {
         guard let managedObjectContext = self.managedObjectContext else { return nil }
         
         if managedObjectContext == otherManagedObjectContext {

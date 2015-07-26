@@ -21,6 +21,7 @@
 		145D97331B5DA55C00995795 /* TableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D97281B5DA55C00995795 /* TableType.swift */; };
 		145D97341B5DA55C00995795 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D972A1B5DA55C00995795 /* Attribute.swift */; };
 		145D97351B5DA55C00995795 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D972B1B5DA55C00995795 /* Table.swift */; };
+		1468BE281B6581F700547C54 /* ALCFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1468BE271B6581F700547C54 /* ALCFetchedResultsController.swift */; };
 		14D565AD1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 		145D97281B5DA55C00995795 /* TableType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableType.swift; sourceTree = "<group>"; };
 		145D972A1B5DA55C00995795 /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
 		145D972B1B5DA55C00995795 /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
+		1468BE271B6581F700547C54 /* ALCFetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALCFetchedResultsController.swift; sourceTree = "<group>"; };
 		14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequestControllerDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,6 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				145D971F1B5DA55C00995795 /* DataContext.swift */,
+				1468BE271B6581F700547C54 /* ALCFetchedResultsController.swift */,
 				141242541B6461F700FFC670 /* FetchRequestController.swift */,
 				14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */,
 			);
@@ -233,6 +236,7 @@
 				145D972F1B5DA55C00995795 /* NSPredicateExtensions.swift in Sources */,
 				145D972E1B5DA55C00995795 /* NSManagedObjectExtensions.swift in Sources */,
 				145D97301B5DA55C00995795 /* AttributeType.swift in Sources */,
+				1468BE281B6581F700547C54 /* ALCFetchedResultsController.swift in Sources */,
 				145D97341B5DA55C00995795 /* Attribute.swift in Sources */,
 				14D565AD1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift in Sources */,
 				145D97311B5DA55C00995795 /* Enumerable.swift in Sources */,
