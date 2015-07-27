@@ -12,7 +12,9 @@ public class EntitySetAttribute<T: CollectionType>: Attribute<T> {
     
     public override init(_ name: String) { super.init(name) }
     
-    public lazy var count: EntitySetCollectionOperatorAttribute<Int> = EntitySetCollectionOperatorAttribute<Int>(collectionOperator: "@count", entitySetAttributeName: self.___name)
+    public lazy var count: EntitySetCollectionOperatorAttribute<Int> = { [unowned self] in
+        return EntitySetCollectionOperatorAttribute<Int>(collectionOperator: "@count", entitySetAttributeName: self.___name)
+        }()
     
     public func any(predicateClosure: (T.Generator.Element.Type) -> NSComparisonPredicate) -> NSComparisonPredicate {
         let p = predicateClosure(T.Generator.Element.self)
