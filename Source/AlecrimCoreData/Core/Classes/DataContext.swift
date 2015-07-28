@@ -79,6 +79,13 @@ public class RootSavingDataContext: ManagedObjectContext {
     
     // MARK: - init and deinit
     
+    /// Initializes a root saving context with the given options.
+    ///
+    /// - parameter dataContextOptions: The options that will be applied.
+    ///
+    /// - returns: An initialized root saving context with the given options.
+    ///
+    /// - seealso: `DataContextOptions`
     public init(dataContextOptions: DataContextOptions) throws {
         self.dataContextOptions = dataContextOptions
         super.init(concurrencyType: .PrivateQueueConcurrencyType)
@@ -163,10 +170,17 @@ public class ChildDataContext: ManagedObjectContext {
     
     // MARK: - public properties
     
+    /// The root saving data context (and parent context) of this context.
     public let rootSavingDataContext: RootSavingDataContext
     
     // MARK: - init and dealloc
     
+    //// Initializes a child data context with a given concurrency type and parent root saving data context.
+    ///
+    /// - parameter concurrencyType:       The concurrency pattern with which context will be used.
+    /// - parameter rootSavingDataContext: The root saving data context (and parent context) of this context.
+    ///
+    /// - returns: A child data context initialized to use the given concurrency type and parent root saving data context.
     public init(concurrencyType: NSManagedObjectContextConcurrencyType, rootSavingDataContext: RootSavingDataContext) {
         self.rootSavingDataContext = rootSavingDataContext
         super.init(concurrencyType: concurrencyType)
