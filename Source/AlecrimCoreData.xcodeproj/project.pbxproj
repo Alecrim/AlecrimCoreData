@@ -27,6 +27,7 @@
 		14A501741B6733890057DD8B /* UICollectionViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501731B6733890057DD8B /* UICollectionViewExtensions.swift */; };
 		14A501761B6736700057DD8B /* NSCollectionViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501751B6736700057DD8B /* NSCollectionViewExtensions.swift */; };
 		14A501781B6737560057DD8B /* NSArrayControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501771B6737560057DD8B /* NSArrayControllerExtensions.swift */; };
+		14A5017C1B6739F40057DD8B /* NSFetchedResultsControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A5017B1B6739F40057DD8B /* NSFetchedResultsControllerExtensions.swift */; };
 		14D565AD1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,7 @@
 		14A501731B6733890057DD8B /* UICollectionViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewExtensions.swift; sourceTree = "<group>"; };
 		14A501751B6736700057DD8B /* NSCollectionViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCollectionViewExtensions.swift; sourceTree = "<group>"; };
 		14A501771B6737560057DD8B /* NSArrayControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSArrayControllerExtensions.swift; sourceTree = "<group>"; };
+		14A5017B1B6739F40057DD8B /* NSFetchedResultsControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSFetchedResultsControllerExtensions.swift; sourceTree = "<group>"; };
 		14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequestControllerDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -161,6 +163,7 @@
 		14A501791B6737600057DD8B /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				14A5017B1B6739F40057DD8B /* NSFetchedResultsControllerExtensions.swift */,
 				14A501711B6732820057DD8B /* UITableViewExtensions.swift */,
 				14A501731B6733890057DD8B /* UICollectionViewExtensions.swift */,
 			);
@@ -272,6 +275,7 @@
 				1468BE281B6581F700547C54 /* ALCFetchedResultsController.swift in Sources */,
 				145D97341B5DA55C00995795 /* Attribute.swift in Sources */,
 				14A501781B6737560057DD8B /* NSArrayControllerExtensions.swift in Sources */,
+				14A5017C1B6739F40057DD8B /* NSFetchedResultsControllerExtensions.swift in Sources */,
 				14A501721B6732820057DD8B /* UITableViewExtensions.swift in Sources */,
 				14D565AD1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift in Sources */,
 				145D97311B5DA55C00995795 /* Enumerable.swift in Sources */,
@@ -326,8 +330,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+                MACOSX_DEPLOYMENT_TARGET = 10.9;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+                WATCHOS_DEPLOYMENT_TARGET = 2.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -336,7 +341,6 @@
 				VALID_ARCHS = "x86_64 arm64 armv7 armv7s armv7k";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
@@ -371,15 +375,15 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+                MACOSX_DEPLOYMENT_TARGET = 10.9;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+                WATCHOS_DEPLOYMENT_TARGET = 2.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator watchos";
 				VALID_ARCHS = "x86_64 arm64 armv7 armv7s armv7k";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};

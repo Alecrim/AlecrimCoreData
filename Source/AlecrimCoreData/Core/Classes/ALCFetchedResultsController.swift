@@ -676,7 +676,7 @@ private class ALCSectionInfo: NSObject, ALCFetchedResultsSectionInfo {
     
 }
 
-// MARK: -
+// MARK: - NSIndexPath extensions
 
 extension NSIndexPath {
     
@@ -699,6 +699,22 @@ extension NSIndexPath {
     @objc(alecrimCoreDataRow)
     public var row: Int { return self.indexAtPosition(1) }
     
+}
+    
+// MARK: - Table extensions
+    
+extension Table {
+
+    public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil, performFetch: Bool = true) throws -> ALCFetchedResultsController {
+        let frc = ALCFetchedResultsController(fetchRequest: self.toFetchRequest(), managedObjectContext: self.dataContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+        
+        if performFetch {
+            try frc.performFetch()
+        }
+        
+        return frc
+    }
+
 }
 
 #endif
