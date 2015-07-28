@@ -23,6 +23,10 @@
 		145D97351B5DA55C00995795 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D972B1B5DA55C00995795 /* Table.swift */; };
 		1468BE281B6581F700547C54 /* ALCFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1468BE271B6581F700547C54 /* ALCFetchedResultsController.swift */; };
 		14A501701B671A400057DD8B /* NSManagedObjectContextExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A5016F1B671A400057DD8B /* NSManagedObjectContextExtensions.swift */; };
+		14A501721B6732820057DD8B /* UITableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501711B6732820057DD8B /* UITableViewExtensions.swift */; };
+		14A501741B6733890057DD8B /* UICollectionViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501731B6733890057DD8B /* UICollectionViewExtensions.swift */; };
+		14A501761B6736700057DD8B /* NSCollectionViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501751B6736700057DD8B /* NSCollectionViewExtensions.swift */; };
+		14A501781B6737560057DD8B /* NSArrayControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501771B6737560057DD8B /* NSArrayControllerExtensions.swift */; };
 		14D565AD1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -45,6 +49,10 @@
 		145D972B1B5DA55C00995795 /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
 		1468BE271B6581F700547C54 /* ALCFetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALCFetchedResultsController.swift; sourceTree = "<group>"; };
 		14A5016F1B671A400057DD8B /* NSManagedObjectContextExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContextExtensions.swift; sourceTree = "<group>"; };
+		14A501711B6732820057DD8B /* UITableViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtensions.swift; sourceTree = "<group>"; };
+		14A501731B6733890057DD8B /* UICollectionViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewExtensions.swift; sourceTree = "<group>"; };
+		14A501751B6736700057DD8B /* NSCollectionViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCollectionViewExtensions.swift; sourceTree = "<group>"; };
+		14A501771B6737560057DD8B /* NSArrayControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSArrayControllerExtensions.swift; sourceTree = "<group>"; };
 		14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequestControllerDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +130,8 @@
 				14A5016F1B671A400057DD8B /* NSManagedObjectContextExtensions.swift */,
 				145D97221B5DA55C00995795 /* NSManagedObjectExtensions.swift */,
 				145D97231B5DA55C00995795 /* NSPredicateExtensions.swift */,
+				14A5017A1B6737710057DD8B /* OS X */,
+				14A501791B6737600057DD8B /* iOS */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -146,6 +156,24 @@
 				143D67231B60D5F1001B6ED3 /* DataContextOptions.swift */,
 			);
 			path = Structs;
+			sourceTree = "<group>";
+		};
+		14A501791B6737600057DD8B /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				14A501711B6732820057DD8B /* UITableViewExtensions.swift */,
+				14A501731B6733890057DD8B /* UICollectionViewExtensions.swift */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		14A5017A1B6737710057DD8B /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				14A501771B6737560057DD8B /* NSArrayControllerExtensions.swift */,
+				14A501751B6736700057DD8B /* NSCollectionViewExtensions.swift */,
+			);
+			name = "OS X";
 			sourceTree = "<group>";
 		};
 		14F3C1D01B5972AA008484AB /* Supporting Files */ = {
@@ -237,10 +265,14 @@
 			files = (
 				143D67241B60D5F1001B6ED3 /* DataContextOptions.swift in Sources */,
 				145D972F1B5DA55C00995795 /* NSPredicateExtensions.swift in Sources */,
+				14A501761B6736700057DD8B /* NSCollectionViewExtensions.swift in Sources */,
 				145D972E1B5DA55C00995795 /* NSManagedObjectExtensions.swift in Sources */,
 				145D97301B5DA55C00995795 /* AttributeType.swift in Sources */,
+				14A501741B6733890057DD8B /* UICollectionViewExtensions.swift in Sources */,
 				1468BE281B6581F700547C54 /* ALCFetchedResultsController.swift in Sources */,
 				145D97341B5DA55C00995795 /* Attribute.swift in Sources */,
+				14A501781B6737560057DD8B /* NSArrayControllerExtensions.swift in Sources */,
+				14A501721B6732820057DD8B /* UITableViewExtensions.swift in Sources */,
 				14D565AD1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift in Sources */,
 				145D97311B5DA55C00995795 /* Enumerable.swift in Sources */,
 				145D97331B5DA55C00995795 /* TableType.swift in Sources */,
@@ -294,8 +326,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -339,8 +371,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator watchos";

@@ -26,14 +26,20 @@ public final class FetchRequestController<T: NSManagedObject> {
     /// The name of the file used to cache section information.
     public let cacheName: String?
     
+    //
     internal lazy var delegate = FetchRequestControllerDelegate<T>()
     
+    //
     private lazy var underlyingFetchedResultsController: NSFetchedResultsController = {
         let frc = NSFetchedResultsController(fetchRequest: self.fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: self.sectionNameKeyPath, cacheName: self.cacheName)
         frc.delegate = self.delegate
         
         return frc
     }()
+
+    //
+    private let initialPredicate: NSPredicate?
+    private let initialSortDescriptors: [NSSortDescriptor]?
     
     /// Returns a fetch request controller initialized using the given arguments.
     ///
@@ -47,10 +53,15 @@ public final class FetchRequestController<T: NSManagedObject> {
     /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
     ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
     private init(fetchRequest: NSFetchRequest, managedObjectContext: NSManagedObjectContext, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
+        //
         self.fetchRequest = fetchRequest
         self.managedObjectContext = managedObjectContext
         self.sectionNameKeyPath = sectionNameKeyPath
         self.cacheName = cacheName
+        
+        //
+        self.initialPredicate = fetchRequest.predicate?.copy() as? NSPredicate
+        self.initialSortDescriptors = fetchRequest.sortDescriptors
     }
 
     /// Returns a fetch request controller initialized using the given arguments.
@@ -163,6 +174,113 @@ extension FetchRequestController {
         return self.underlyingFetchedResultsController.sectionIndexTitles
     }
 
+}
+
+// MARK: - Reloading Data
+
+extension FetchRequestController {
+    
+    public func refreshWithPredicate(predicate: NSPredicate?, keepOriginalPredicate: Bool = false) throws {
+        self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
+        
+        try self.refresh()
+    }
+    
+    public func refreshWithSortDescriptors(sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool = false) throws {
+        self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
+        
+        try self.refresh()
+    }
+    
+    public func refreshWithPredicate(predicate: NSPredicate?, andSortDescriptors sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool = true, keepOriginalSortDescriptors: Bool = true) throws {
+        self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
+        self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
+        
+        try self.refresh()
+    }
+    
+    public func resetPredicate() throws {
+        try self.refreshWithPredicate(self.initialPredicate, keepOriginalPredicate: false)
+    }
+    
+    public func resetSortDescriptors() throws {
+        try self.refreshWithSortDescriptors(self.initialSortDescriptors, keepOriginalSortDescriptors: false)
+    }
+    
+    public func resetPredicateAndSortDescriptors() throws {
+        try self.refreshWithPredicate(self.initialPredicate, andSortDescriptors: self.initialSortDescriptors, keepOriginalPredicate: false, keepOriginalSortDescriptors: false)
+    }
+    
+}
+
+extension FetchRequestController {
+    
+    public func filter(predicateClosure: (T.Type) -> NSPredicate) throws {
+        let predicate = predicateClosure(T.self)
+        try self.refreshWithPredicate(predicate, keepOriginalPredicate: true)
+    }
+    
+    public func resetFilter() throws {
+        try self.resetPredicate()
+    }
+    
+    public func reset() throws {
+        try self.resetPredicateAndSortDescriptors()
+    }
+    
+}
+
+extension FetchRequestController {
+ 
+    private func assignPredicate(predicate: NSPredicate?, keepOriginalPredicate: Bool) {
+        let newPredicate: NSPredicate?
+        
+        if keepOriginalPredicate {
+            if let initialPredicate = self.initialPredicate {
+                if let predicate = predicate {
+                    newPredicate = NSCompoundPredicate(type: .AndPredicateType, subpredicates: [initialPredicate, predicate])
+                }
+                else {
+                    newPredicate = initialPredicate
+                }
+            }
+            else {
+                newPredicate = predicate
+            }
+        }
+        else {
+            newPredicate = predicate
+        }
+        
+        self.fetchRequest.predicate = newPredicate
+    }
+    
+    private func assignSortDescriptors(sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool) {
+        let newSortDescriptors: [NSSortDescriptor]?
+        
+        if keepOriginalSortDescriptors {
+            if let initialSortDescriptors = self.initialSortDescriptors {
+                if let sortDescriptors = sortDescriptors {
+                    var tempSortDescriptors = initialSortDescriptors
+                    tempSortDescriptors += sortDescriptors
+                    
+                    newSortDescriptors = tempSortDescriptors
+                }
+                else {
+                    newSortDescriptors = initialSortDescriptors
+                }
+            }
+            else {
+                newSortDescriptors = sortDescriptors
+            }
+        }
+        else {
+            newSortDescriptors = sortDescriptors
+        }
+        
+        self.fetchRequest.sortDescriptors = newSortDescriptors
+    }
+    
 }
 
 // MARK: - FetchRequestControllerSection

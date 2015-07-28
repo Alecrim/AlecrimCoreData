@@ -11,6 +11,8 @@ import CoreData
 
 internal final class FetchRequestControllerDelegate<T: NSManagedObject>: NSObject, NSFetchedResultsControllerDelegate {
     
+    private var needsReloadDataClosure: (() -> Void)?
+    
     private lazy var willChangeContentClosures = Array<() -> Void>()
     private lazy var didChangeContentClosures = Array<() -> Void>()
     
@@ -91,6 +93,37 @@ internal final class FetchRequestControllerDelegate<T: NSManagedObject>: NSObjec
 }
 
 // MARK: - FetchRequestController extensions
+
+extension FetchRequestController {
+    
+    public func refresh() throws {
+        self.delegate.needsReloadDataClosure?()
+        
+        for closure in self.delegate.willChangeContentClosures {
+            closure()
+        }
+        
+        if let cacheName = self.cacheName {
+            FetchRequestController.deleteCacheWithName(cacheName)
+        }
+        
+        try self.performFetch()
+        
+        for closure in self.delegate.didChangeContentClosures {
+            closure()
+        }
+    }
+    
+}
+
+extension FetchRequestController {
+ 
+    internal func needsReloadData(closure: () -> Void) -> Self {
+        self.delegate.needsReloadDataClosure = closure
+        return self
+    }
+
+}
 
 extension FetchRequestController {
     

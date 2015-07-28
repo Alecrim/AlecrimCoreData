@@ -241,9 +241,9 @@ extension ALCFetchedResultsController {
         let contextDeletedObjects = userInfo[NSDeletedObjectsKey] as? Set<NSManagedObject> ?? Set<NSManagedObject>()
         
         self.managedObjectContext.performBlock {
-            var insertedObjects = contextInsertedObjects.filter({ $0.entity.name == entityName }).map({ try! $0.inManagedObjectContext(self.managedObjectContext)! })
-            let updatedObjects = contextUpdatedObjects.filter({ $0.entity.name == entityName }).map({ try! $0.inManagedObjectContext(self.managedObjectContext)! })
-            var deletedObjects = contextDeletedObjects.filter({ $0.entity.name == entityName }).map({ try! $0.inManagedObjectContext(self.managedObjectContext)! })
+            var insertedObjects = contextInsertedObjects.filter({ $0.entity.name == entityName }).map({ try! $0.inContext(self.managedObjectContext)! })
+            let updatedObjects = contextUpdatedObjects.filter({ $0.entity.name == entityName }).map({ try! $0.inContext(self.managedObjectContext)! })
+            var deletedObjects = contextDeletedObjects.filter({ $0.entity.name == entityName }).map({ try! $0.inContext(self.managedObjectContext)! })
             
             if let predicate = self.fetchRequest.predicate {
                 insertedObjects = (insertedObjects as NSArray).filteredArrayUsingPredicate(predicate) as! [NSManagedObject]

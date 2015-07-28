@@ -50,7 +50,10 @@ public class DataContext: ChildDataContext {
     public init(dataContextOptions: DataContextOptions) {
         let rootSavingDataContext = try! RootSavingDataContext(dataContextOptions: dataContextOptions)
         super.init(concurrencyType: .MainQueueConcurrencyType, rootSavingDataContext: rootSavingDataContext)
-        self.name = "Main Thread Context"
+        
+        if #available(OSX 10.10, iOS 8.0, *) {
+            self.name = "Main Thread Context"
+        }
     }
     
     /// Initializes a background context that has as parent the given context or the root context of the given context.
@@ -60,7 +63,11 @@ public class DataContext: ChildDataContext {
     /// - returns: An initialized background context.
     public init(parentDataContext: DataContext) {
         super.init(concurrencyType: .PrivateQueueConcurrencyType, rootSavingDataContext: parentDataContext.rootSavingDataContext)
-        self.name = "Background Context"
+        
+        if #available(OSX 10.10, iOS 8.0, *) {
+            self.name = "Background Context"
+        }
+        
         self.undoManager = nil
     }
     
@@ -75,22 +82,26 @@ public class RootSavingDataContext: ManagedObjectContext {
     
     // MARK: - public properties
     
+    /// The options applied to this data context.
     public let dataContextOptions: DataContextOptions
     
     // MARK: - init and deinit
     
-    /// Initializes a root saving context with the given options.
+    /// Initializes a root saving data context with the given options.
     ///
     /// - parameter dataContextOptions: The options that will be applied.
     ///
-    /// - returns: An initialized root saving context with the given options.
+    /// - returns: An initialized root saving data context with the given options.
     ///
     /// - seealso: `DataContextOptions`
     public init(dataContextOptions: DataContextOptions) throws {
         self.dataContextOptions = dataContextOptions
         super.init(concurrencyType: .PrivateQueueConcurrencyType)
         
-        self.name = "Root Saving Context"
+        if #available(OSX 10.10, iOS 8.0, *) {
+            self.name = "Root Saving Context"
+        }
+        
         self.undoManager = nil
         
         // only the root data context has a direct assigned persistent store coordinator
