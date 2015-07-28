@@ -9,50 +9,55 @@
 import Foundation
 import CoreData
 
-@objc(ALCDataContext)
-public class Context: NSManagedObjectContext {
+@objc(ALCContext)
+public class Context: ChildContext {
     
-    // MARK: -
-    
+    // MARK: - public properties
+
     // This will be removed in the next major version.
+
+    private lazy var _defaultBackgroundContext: NSManagedObjectContext = {
+        return self.dynamicType(parentContext: self)
+    }()
     
-    private var _defaultBackgroundContext: Context?
-    private func defaultCreatedBackgroundContext() -> Self? {
-        if let defaultBackgroundContext = self._defaultBackgroundContext {
-            return unsafeBitCast(defaultBackgroundContext, self.dynamicType)
-        }
-        
-        return nil
+    private func defaultCreatedBackgroundContext() -> Self {
+        return unsafeBitCast(self._defaultBackgroundContext, self.dynamicType)
     }
     
-    // MARK: -
+    // MARK: - init and dealloc
+    
+    public convenience init() {
+        self.init(contextOptions: ContextOptions())
+    }
+    
+    public init(contextOptions: ContextOptions) {
+        let rootSavingContext = RootSavingContext(contextOptions: contextOptions)
+        super.init(concurrencyType: .MainQueueConcurrencyType, rootSavingContext: rootSavingContext)
+        self.name = "Main Thread Context"
+    }
+
+    public required init(parentContext: Context) {
+        super.init(concurrencyType: .PrivateQueueConcurrencyType, rootSavingContext: parentContext.rootSavingContext)
+        self.name = "Background Context"
+        self.undoManager = nil
+    }
+
+    public required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+// MARK: - BaseContext
+
+public class BaseContext: NSManagedObjectContext {
+    
+    // MARK: - private properties
     
     private var observers = [NSObjectProtocol]()
     
-    private var rootSavingDataContext: RootSavingDataContext? {
-        var context: NSManagedObjectContext = self
-        
-        while context.parentContext != nil {
-            context = context.parentContext!
-        }
-        
-        return context as? RootSavingDataContext
-    }
     
-    public override var parentContext: NSManagedObjectContext? {
-        willSet {
-            if let oldValue = self.parentContext as? RootSavingDataContext {
-                oldValue.childDataContextHashTable.removeObject(self)
-            }
-        }
-        didSet {
-            if let newValue = self.parentContext as? RootSavingDataContext {
-                newValue.childDataContextHashTable.addObject(self)
-            }
-        }
-    }
-    
-    // any context
+    // MARK: - init and dealloc
     
     public override init(concurrencyType: NSManagedObjectContextConcurrencyType) {
         super.init(concurrencyType: concurrencyType)
@@ -60,63 +65,16 @@ public class Context: NSManagedObjectContext {
         
         self.addObservers()
     }
+
+    public required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     deinit {
         self.removeObservers()
     }
     
-    // main thread context
-    
-    public convenience init() {
-        self.init(contextOptions: ContextOptions())
-    }
-    
-    public convenience init(contextOptions: ContextOptions) {
-        self.init(concurrencyType: .MainQueueConcurrencyType)
-        
-        self.name = "Main Thread Context"
-        self.parentContext = RootSavingDataContext(rootSavingDataContextOptions: contextOptions)
-    }
-    
-    // background context
-    
-    public convenience init(parentContext: NSManagedObjectContext) {
-        self.init(concurrencyType: .PrivateQueueConcurrencyType)
-        
-        if let parentDataContext = parentContext as? Context, let rootSavingDataContext = parentDataContext.rootSavingDataContext {
-            self.name = "Background Context " + String(rootSavingDataContext.childDataContexts.count)
-            self.parentContext = rootSavingDataContext
-        }
-        else {
-            self.parentContext = parentContext
-        }
-        
-        self.undoManager = nil
-    }
-    
-    public required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    public override func save(error: NSErrorPointer) -> Bool {
-        if !self.hasChanges {
-            return true
-        }
-        
-        self.rootSavingDataContext?.savedChildContext = self
-        
-        var success = super.save(error)
-        
-        if success {
-            if let parentContext = self.parentContext {
-                parentContext.performBlockAndWait {
-                    success = parentContext.save(error)
-                }
-            }
-        }
-        
-        return success
-    }
+    // MARK: - public methods
     
     public func save() -> (success: Bool, error: NSError?) {
         var error: NSError? = nil
@@ -133,9 +91,11 @@ public class Context: NSManagedObjectContext {
         self.performBlockAndWait(closure)
     }
     
+    // MARK: - private methods
+    
     private func addObservers() {
         // this context will save
-        self.addObserverForName(NSManagedObjectContextWillSaveNotification) { notification in
+        self.addObserverForName(NSManagedObjectContextWillSaveNotification, object: self) { notification in
             if let notificationContext = notification.object as? NSManagedObjectContext where !notificationContext.insertedObjects.isEmpty {
                 notificationContext.obtainPermanentIDsForObjects(Array(notificationContext.insertedObjects), error: nil)
             }
@@ -150,14 +110,179 @@ public class Context: NSManagedObjectContext {
         }
     }
     
-    private func addObserverForName(name: String, object: AnyObject? = nil, closure: (NSNotification!) -> Void) {
-        let observer = NSNotificationCenter.defaultCenter().addObserverForName(name, object: object ?? self, queue: nil, usingBlock: closure)
+    private func addObserverForName(name: String, object: AnyObject, closure: (NSNotification!) -> Void) {
+        let observer = NSNotificationCenter.defaultCenter().addObserverForName(name, object: object, queue: nil, usingBlock: closure)
         self.observers.append(observer)
     }
     
 }
 
-extension Context {
+// MARK: - root saving data context
+
+public class RootSavingContext: BaseContext {
+    
+    private let contextOptions: ContextOptions
+    
+    public init(contextOptions: ContextOptions) {
+        self.contextOptions = contextOptions
+        super.init(concurrencyType: .PrivateQueueConcurrencyType)
+        
+        self.name = "Root Saving Context"
+        self.undoManager = nil
+        
+        // only the root data context has a direct assigned persistent store coordinator
+        self.assignPersistentStoreCoordinator()
+    }
+
+    public required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func assignPersistentStoreCoordinator() {
+        // managed object model
+        if let managedObjectModelURL = self.contextOptions.managedObjectModelURL, let managedObjectModel = NSManagedObjectModel(contentsOfURL: managedObjectModelURL) {
+            // persistent store coordinator
+            let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
+            
+            // persistent store
+            switch self.contextOptions.storeType {
+            case .SQLite:
+                if let persistentStoreURL = self.contextOptions.persistentStoreURL,
+                    let containerURL = persistentStoreURL.URLByDeletingLastPathComponent {
+                        // if the directory does not exist, it will be created
+                        var fileManagerError: NSError? = nil
+                        if NSFileManager.defaultManager().createDirectoryAtURL(containerURL, withIntermediateDirectories: true, attributes: nil, error: &fileManagerError) {
+                            var error: NSError? = nil
+                            persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: self.contextOptions.configuration, URL: persistentStoreURL, options: self.contextOptions.options as [NSObject : AnyObject], error: &error)
+                            
+                            if let error = error {
+                                var handled = false
+                                
+                                if error.domain == NSCocoaErrorDomain {
+                                    let migrationErrorCodes = [NSPersistentStoreIncompatibleVersionHashError, NSMigrationMissingSourceModelError, NSMigrationError]
+                                    
+                                    if contains(migrationErrorCodes, error.code) {
+                                        handled = self.handleMigrationError(error)
+                                    }
+                                }
+                                
+                                if !handled {
+                                    return
+                                }
+                            }
+                        }
+                        else {
+                            return
+                        }
+                        
+                }
+                else {
+                    // throws RootSavingDataContext.genericError
+                    return
+                }
+                
+            case .InMemory:
+                var error: NSError? = nil
+                persistentStoreCoordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: self.contextOptions.configuration, URL: nil, options: self.contextOptions.options as [NSObject : AnyObject], error: &error)
+                
+                if error != nil {
+                    return
+                }
+            }
+            
+            //
+            self.persistentStoreCoordinator = persistentStoreCoordinator
+        }
+        else {
+            // throws RootSavingDataContext.genericError
+            return
+        }
+    }
+    
+    private func handleMigrationError(error: NSError) -> Bool {
+        return false
+    }
+    
+}
+
+// MARK: - ChildContext
+
+public class ChildContext: BaseContext {
+
+    // MARK: - private properties
+    
+    private var enableMergeFromRootSavingContext = true
+    
+    // MARK: - public properties
+    
+    public let rootSavingContext: RootSavingContext
+    
+    // MARK: - init and dealloc
+    
+    public init(concurrencyType: NSManagedObjectContextConcurrencyType, rootSavingContext: RootSavingContext) {
+        self.rootSavingContext = rootSavingContext
+        super.init(concurrencyType: concurrencyType)
+        
+        self.parentContext = self.rootSavingContext
+    }
+
+    public required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - public overrided methods
+
+    public override func save(error: NSErrorPointer) -> Bool {
+        if !self.hasChanges { return true }
+        
+        var success = super.save(error)
+        
+        if success {
+            self.rootSavingContext.performBlockAndWait {
+                self.enableMergeFromRootSavingContext = false
+                success = self.rootSavingContext.save(error)
+                self.enableMergeFromRootSavingContext = true
+            }
+        }
+        
+        return success
+    }
+    
+    // MARK: - private overrided methods
+    
+    private override func addObservers() {
+        //
+        super.addObservers()
+        
+        //
+        // the root data context did save
+        self.addObserverForName(NSManagedObjectContextDidSaveNotification, object: self.rootSavingContext) { [unowned self] notification in
+            if !self.enableMergeFromRootSavingContext {
+                return
+            }
+            
+            if let savedContext = notification.object as? RootSavingContext, let changeNotificationData = notification.userInfo {
+                self.performBlock {
+                    //
+                    let updatedObjects = changeNotificationData[NSUpdatedObjectsKey] as? Set<NSManagedObject>
+                    if let updatedObjects = updatedObjects where !updatedObjects.isEmpty {
+                        for objectObject in updatedObjects {
+                            self.objectWithID(objectObject.objectID).willAccessValueForKey(nil) // ensures that a fault has been fired
+                        }
+                    }
+                    
+                    //
+                    self.mergeChangesFromContextDidSaveNotification(notification)
+                }
+            }
+        }
+    }
+    
+}
+
+// MARK: - BaseContext extensions
+
+extension BaseContext {
     
     internal func executeAsynchronousFetchRequestWithFetchRequest(fetchRequest: NSFetchRequest, completionHandler: ([AnyObject]?, NSError?) -> Void) -> FetchAsyncHandler {
         //
@@ -230,161 +355,17 @@ extension Context {
     
 }
 
-private class RootSavingDataContext: Context {
-    
-    private static let genericError = alecrimCoreDataError()
-    private static let savedChildContextUserInfoKey = "com.alecrim.AlecrimCoreData.DataContext.SavedChildContext"
-    
-    private let rootSavingDataContextOptions: ContextOptions
-    
-    private let childDataContextHashTable = NSHashTable.weakObjectsHashTable()
-    private var childDataContexts: [NSManagedObjectContext] { return self.childDataContextHashTable.allObjects as! [Context] }
-    
-    private var savedChildContext: NSManagedObjectContext? {
-        get {
-            return self.userInfo![RootSavingDataContext.savedChildContextUserInfoKey] as? NSManagedObjectContext
-        }
-        set {
-            if newValue == nil {
-                self.userInfo!.removeObjectForKey(RootSavingDataContext.savedChildContextUserInfoKey)
-            }
-            else if self.savedChildContext == nil { // do not assign if previous value is not nil
-                self.userInfo![RootSavingDataContext.savedChildContextUserInfoKey] = newValue
-            }
-        }
-    }
-    
-    private init(rootSavingDataContextOptions: ContextOptions) {
-        self.rootSavingDataContextOptions = rootSavingDataContextOptions
-        super.init(concurrencyType: .PrivateQueueConcurrencyType)
-        
-        self.name = "Root Saving Context"
-        self.undoManager = nil
-        
-        // only the root data context has a direct assigned persistent store coordinator
-        self.assignPersistentStoreCoordinator()
-    }
-    
-    private required init(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private override func addObservers() {
-        super.addObservers()
-        
-        // the root data context did save
-        self.addObserverForName(NSManagedObjectContextDidSaveNotification) { notification in
-            if let notificationRootSavingDataContext = notification.object as? RootSavingDataContext where notificationRootSavingDataContext.childDataContexts.count > 0,
-                let changeNotificationData = notification.userInfo {
-                    var excludedChildContextFromMerge: NSManagedObjectContext? = nil
-                    if let savedChildContext = notificationRootSavingDataContext.savedChildContext {
-                        excludedChildContextFromMerge = savedChildContext
-                        notificationRootSavingDataContext.savedChildContext = nil
-                    }
-                    
-                    let contextsToMerge = notificationRootSavingDataContext.childDataContexts.filter({ $0 != excludedChildContextFromMerge })
-                    let updatedObjects = changeNotificationData[NSUpdatedObjectsKey] as? Set<NSManagedObject>
-                    
-                    for contextToMerge in contextsToMerge {
-                        contextToMerge.performBlock {
-                            if let updatedObjects = updatedObjects where !updatedObjects.isEmpty {
-                                for objectObject in updatedObjects {
-                                    contextToMerge.objectWithID(objectObject.objectID).willAccessValueForKey(nil) // ensures that a fault has been fired
-                                }
-                            }
-                            
-                            contextToMerge.mergeChangesFromContextDidSaveNotification(notification)
-                        }
-                    }
-            }
-        }
-    }
-    
-    private func assignPersistentStoreCoordinator() {
-        // managed object model
-        if let managedObjectModelURL = self.rootSavingDataContextOptions.managedObjectModelURL, let managedObjectModel = NSManagedObjectModel(contentsOfURL: managedObjectModelURL) {
-            // persistent store coordinator
-            let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
-            
-            // persistent store
-            switch self.rootSavingDataContextOptions.storeType {
-            case .SQLite:
-                if let persistentStoreURL = self.rootSavingDataContextOptions.persistentStoreURL,
-                    let containerURL = persistentStoreURL.URLByDeletingLastPathComponent {
-                        // if the directory does not exist, it will be created
-                        var fileManagerError: NSError? = nil
-                        if NSFileManager.defaultManager().createDirectoryAtURL(containerURL, withIntermediateDirectories: true, attributes: nil, error: &fileManagerError) {
-                            var error: NSError? = nil
-                            persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: self.rootSavingDataContextOptions.configuration, URL: persistentStoreURL, options: self.rootSavingDataContextOptions.options as [NSObject : AnyObject], error: &error)
-                            
-                            if let error = error {
-                                var handled = false
-                                
-                                if error.domain == NSCocoaErrorDomain {
-                                    let migrationErrorCodes = [NSPersistentStoreIncompatibleVersionHashError, NSMigrationMissingSourceModelError, NSMigrationError]
-                                    
-                                    if contains(migrationErrorCodes, error.code) {
-                                        handled = self.handleMigrationError(error)
-                                    }
-                                }
-                                
-                                if !handled {
-                                    return
-                                }
-                            }
-                        }
-                        else {
-                            return
-                        }
-                        
-                }
-                else {
-                    // throws RootSavingDataContext.genericError
-                    return
-                }
-                
-            case .InMemory:
-                var error: NSError? = nil
-                persistentStoreCoordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: self.rootSavingDataContextOptions.configuration, URL: nil, options: self.rootSavingDataContextOptions.options as [NSObject : AnyObject], error: &error)
-                
-                if error != nil {
-                    return
-                }
-            }
-            
-            //
-            self.persistentStoreCoordinator = persistentStoreCoordinator
-        }
-        else {
-            // throws RootSavingDataContext.genericError
-            return
-        }
-    }
-    
-    private func handleMigrationError(error: NSError) -> Bool {
-        return false
-    }
-    
-}
-
 // MARK: - public global functions - background contexts
 
 // This functions will be removed in the next major version.
 
 public func createBackgroundContext<T: Context>(parentContext: T, usingNewBackgroundManagedObjectContext: Bool) -> T {
-    if !usingNewBackgroundManagedObjectContext {
-        if let defaultBackgroundContext = parentContext.defaultCreatedBackgroundContext() {
-            return defaultBackgroundContext
-        }
+    if usingNewBackgroundManagedObjectContext {
+        return T(parentContext: parentContext)
     }
-    
-    let backgroundContext = T(parentContext: parentContext)
-    
-    if !usingNewBackgroundManagedObjectContext {
-        parentContext._defaultBackgroundContext = backgroundContext
+    else {
+        return parentContext.defaultCreatedBackgroundContext()
     }
-    
-    return backgroundContext
 }
 
 public func performInBackground<T: Context>(parentContext: T, closure: (T) -> Void) {
@@ -394,7 +375,7 @@ public func performInBackground<T: Context>(parentContext: T, closure: (T) -> Vo
 public func performInBackground<T: Context>(parentContext: T, usingNewBackgroundManagedObjectContext: Bool, closure: (T) -> Void) {
     let backgroundContext = createBackgroundContext(parentContext, usingNewBackgroundManagedObjectContext)
     
-    backgroundContext.perform {
+    backgroundContext.performBlock {
         closure(backgroundContext)
     }
 }
