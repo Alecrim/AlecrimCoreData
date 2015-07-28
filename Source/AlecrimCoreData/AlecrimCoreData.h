@@ -8,7 +8,9 @@
 
 #import <TargetConditionals.h>
 
-#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
+#if TARGET_OS_WATCH
+    #import <WatchKit/WatchKit.h>
+#elif TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
     #import <UIKit/UIKit.h>
 #elif TARGET_OS_MAC
     #import <Cocoa/Cocoa.h>
