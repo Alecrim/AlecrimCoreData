@@ -49,18 +49,18 @@ public struct ContextOptions {
     
     public init(persistentStoreURL: NSURL) {
         let mainBundle = NSBundle.mainBundle()
-
+        
         self.managedObjectModelURL = mainBundle.defaultManagedObjectModelURL()
         self.persistentStoreURL = persistentStoreURL
     }
     
     public init() {
         let mainBundle = NSBundle.mainBundle()
-
+        
         self.managedObjectModelURL = mainBundle.defaultManagedObjectModelURL()
         self.persistentStoreURL = mainBundle.defaultPersistentStoreURL()
     }
-
+    
     // MARK: -
     
     public init(managedObjectModelBundle: NSBundle, managedObjectModelName: String, bundleIdentifier: String) {
@@ -96,7 +96,7 @@ extension ContextOptions {
         self.options[NSPersistentStoreUbiquitousContainerIdentifierKey] = ubiquitousContainerIdentifier
         self.options[NSPersistentStoreUbiquitousContentURLKey] = ubiquitousContentURL
         self.options[NSPersistentStoreUbiquitousContentNameKey] = ubiquitousContentName
-
+        
         self.options[NSMigratePersistentStoresAutomaticallyOption] = true
         self.options[NSInferMappingModelAutomaticallyOption] = true
     }
@@ -112,7 +112,7 @@ extension NSBundle {
 }
 
 extension NSBundle {
-
+    
     private func defaultManagedObjectModelURL() -> NSURL? {
         if let managedObjectModelName = self.bundleName {
             return self.managedObjectModelURLForManagedObjectModelName(managedObjectModelName)
@@ -120,7 +120,7 @@ extension NSBundle {
         
         return nil
     }
-
+    
     private func defaultPersistentStoreURL() -> NSURL? {
         if let managedObjectModelName = self.bundleName, let bundleIdentifier = self.bundleIdentifier {
             return self.persistentStoreURLForManagedObjectModelName(managedObjectModelName, bundleIdentifier: bundleIdentifier)
@@ -128,38 +128,38 @@ extension NSBundle {
         
         return nil
     }
-
+    
 }
 
 extension NSBundle {
-
+    
     private func managedObjectModelURLForManagedObjectModelName(managedObjectModelName: String) -> NSURL? {
         return self.URLForResource(managedObjectModelName, withExtension: "momd")
     }
-
+    
     private func persistentStoreURLForManagedObjectModelName(managedObjectModelName: String, bundleIdentifier: String) -> NSURL? {
         if let applicationSupportURL = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).last as? NSURL {
-                let url = applicationSupportURL
-                    .URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
-                    .URLByAppendingPathComponent("CoreData", isDirectory: true)
-                    .URLByAppendingPathComponent(managedObjectModelName.stringByAppendingPathExtension("sqlite")!, isDirectory: false)
-                
-                return url
+            let url = applicationSupportURL
+                .URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
+                .URLByAppendingPathComponent("CoreData", isDirectory: true)
+                .URLByAppendingPathComponent(managedObjectModelName.stringByAppendingPathExtension("sqlite")!, isDirectory: false)
+            
+            return url
         }
         
         return nil
     }
-
+    
     private func persistentStoreURLForManagedObjectModelName(managedObjectModelName: String, bundleIdentifier: String, applicationGroupIdentifier: String) -> NSURL? {
         if let containerURL = NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier(applicationGroupIdentifier) {
-                let url = containerURL
-                    .URLByAppendingPathComponent("Library", isDirectory: true)
-                    .URLByAppendingPathComponent("Application Support", isDirectory: true)
-                    .URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
-                    .URLByAppendingPathComponent("CoreData", isDirectory: true)
-                    .URLByAppendingPathComponent(managedObjectModelName.stringByAppendingPathExtension("sqlite")!, isDirectory: false)
-                
-                return url
+            let url = containerURL
+                .URLByAppendingPathComponent("Library", isDirectory: true)
+                .URLByAppendingPathComponent("Application Support", isDirectory: true)
+                .URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
+                .URLByAppendingPathComponent("CoreData", isDirectory: true)
+                .URLByAppendingPathComponent(managedObjectModelName.stringByAppendingPathExtension("sqlite")!, isDirectory: false)
+            
+            return url
         }
         
         return nil
