@@ -41,35 +41,44 @@ public struct ContextOptions {
     // MARK: - "convenience" initializers
     
     public init(managedObjectModelURL: NSURL) {
+        let mainBundle = NSBundle.mainBundle()
+        
         self.managedObjectModelURL = managedObjectModelURL
-        self.persistentStoreURL = ContextOptions.inferredPersistentStoreURL()
+        self.persistentStoreURL = mainBundle.defaultPersistentStoreURL()
     }
     
     public init(persistentStoreURL: NSURL) {
-        self.managedObjectModelURL = ContextOptions.inferredManagedObjectModelURL()
+        let mainBundle = NSBundle.mainBundle()
+
+        self.managedObjectModelURL = mainBundle.defaultManagedObjectModelURL()
         self.persistentStoreURL = persistentStoreURL
     }
     
     public init() {
-        self.managedObjectModelURL = ContextOptions.inferredManagedObjectModelURL()
-        self.persistentStoreURL = ContextOptions.inferredPersistentStoreURL()
+        let mainBundle = NSBundle.mainBundle()
+
+        self.managedObjectModelURL = mainBundle.defaultManagedObjectModelURL()
+        self.persistentStoreURL = mainBundle.defaultPersistentStoreURL()
+    }
+
+    // MARK: -
+    
+    public init(managedObjectModelBundle: NSBundle, managedObjectModelName: String, bundleIdentifier: String) {
+        self.managedObjectModelURL = managedObjectModelBundle.managedObjectModelURLForManagedObjectModelName(managedObjectModelName)
+        self.persistentStoreURL = managedObjectModelBundle.persistentStoreURLForManagedObjectModelName(managedObjectModelName, bundleIdentifier: bundleIdentifier)
     }
     
-    // MARK: - app extension convenience constructors
-    
-    public init(managedObjectModelBundle: NSBundle, applicationGroupIdentifier: String) {
-        self.managedObjectModelURL = ContextOptions.inferredManagedObjectModelURLForBundle(managedObjectModelBundle)
-        self.persistentStoreURL = ContextOptions.inferredPersistentStoreURLForApplicationGroupIdentifier(applicationGroupIdentifier)
-    }
-    
-    public init(managedObjectModelBundle: NSBundle) {
-        self.managedObjectModelURL = ContextOptions.inferredManagedObjectModelURLForBundle(managedObjectModelBundle)
-        self.persistentStoreURL = ContextOptions.inferredPersistentStoreURL()
-    }
-    
-    public init(applicationGroupIdentifier: String) {
-        self.managedObjectModelURL = ContextOptions.inferredManagedObjectModelURL()
-        self.persistentStoreURL = ContextOptions.inferredPersistentStoreURLForApplicationGroupIdentifier(applicationGroupIdentifier)
+    /// Initializes ContextOptions with properties filled for use by main app and its extensions.
+    ///
+    /// :param: managedObjectModelBundle   The managed object model bundle. You can use `NSBundle(forClass: MyModule.MyDataContext.self)`, for example.
+    /// :param: managedObjectModelName     The managed object model name without the extension. Example: `"MyGreatApp"`.
+    /// :param: bundleIdentifier           The bundle identifier for use when creating the directory for the persisent store. Example: `"com.mycompany.MyGreatApp"`.
+    /// :param: applicationGroupIdentifier The application group identifier (see Xcode target settings). Example: `"group.com.mycompany.MyGreatApp"` for iOS or `"12ABCD3EF4.com.mycompany.MyGreatApp"` for OS X where `12ABCD3EF4` is your team identifier.
+    ///
+    /// :returns: An initialized ContextOptions with properties filled for use by main app and its extensions.
+    public init(managedObjectModelBundle: NSBundle, managedObjectModelName: String, bundleIdentifier: String, applicationGroupIdentifier: String) {
+        self.managedObjectModelURL = managedObjectModelBundle.managedObjectModelURLForManagedObjectModelName(managedObjectModelName)
+        self.persistentStoreURL = managedObjectModelBundle.persistentStoreURLForManagedObjectModelName(managedObjectModelName, bundleIdentifier: bundleIdentifier, applicationGroupIdentifier: applicationGroupIdentifier)
     }
     
 }
@@ -94,32 +103,42 @@ extension ContextOptions {
     
 }
 
-extension ContextOptions {
+extension NSBundle {
     
-    private static func inferredManagedObjectModelName() -> String? {
-        return NSBundle.mainBundle().infoDictionary?[String(kCFBundleNameKey)] as? String
-    }
-    
-    private static func inferredManagedObjectModelURLForBundle(bundle: NSBundle) -> NSURL? {
-        if let managedObjectModelName = ContextOptions.inferredManagedObjectModelName() {
-            return bundle.URLForResource(managedObjectModelName, withExtension: "momd")
-        }
-        
-        return nil
-    }
-    
-    private static func inferredManagedObjectModelURL() -> NSURL? {
-        return ContextOptions.inferredManagedObjectModelURLForBundle(NSBundle.mainBundle())
+    private var bundleName: String? {
+        return self.infoDictionary?[String(kCFBundleNameKey)] as? String
     }
     
 }
 
-extension ContextOptions {
-    
-    private static func inferredPersistentStoreURL() -> NSURL? {
-        if let applicationSupportURL = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).last as? NSURL,
-            let bundleIdentifier = NSBundle.mainBundle().bundleIdentifier,
-            let managedObjectModelName = ContextOptions.inferredManagedObjectModelName() {
+extension NSBundle {
+
+    private func defaultManagedObjectModelURL() -> NSURL? {
+        if let managedObjectModelName = self.bundleName {
+            return self.managedObjectModelURLForManagedObjectModelName(managedObjectModelName)
+        }
+        
+        return nil
+    }
+
+    private func defaultPersistentStoreURL() -> NSURL? {
+        if let managedObjectModelName = self.bundleName, let bundleIdentifier = self.bundleIdentifier {
+            return self.persistentStoreURLForManagedObjectModelName(managedObjectModelName, bundleIdentifier: bundleIdentifier)
+        }
+        
+        return nil
+    }
+
+}
+
+extension NSBundle {
+
+    private func managedObjectModelURLForManagedObjectModelName(managedObjectModelName: String) -> NSURL? {
+        return self.URLForResource(managedObjectModelName, withExtension: "momd")
+    }
+
+    private func persistentStoreURLForManagedObjectModelName(managedObjectModelName: String, bundleIdentifier: String) -> NSURL? {
+        if let applicationSupportURL = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).last as? NSURL {
                 let url = applicationSupportURL
                     .URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
                     .URLByAppendingPathComponent("CoreData", isDirectory: true)
@@ -128,14 +147,11 @@ extension ContextOptions {
                 return url
         }
         
-        
         return nil
     }
-    
-    private static func inferredPersistentStoreURLForApplicationGroupIdentifier(applicationGroupIdentifier: String) -> NSURL? {
-        if let containerURL = NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier(applicationGroupIdentifier),
-            let bundleIdentifier = NSBundle.mainBundle().bundleIdentifier,
-            let managedObjectModelName = ContextOptions.inferredManagedObjectModelName() {
+
+    private func persistentStoreURLForManagedObjectModelName(managedObjectModelName: String, bundleIdentifier: String, applicationGroupIdentifier: String) -> NSURL? {
+        if let containerURL = NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier(applicationGroupIdentifier) {
                 let url = containerURL
                     .URLByAppendingPathComponent("Library", isDirectory: true)
                     .URLByAppendingPathComponent("Application Support", isDirectory: true)
@@ -150,5 +166,4 @@ extension ContextOptions {
     }
     
 }
-
 
