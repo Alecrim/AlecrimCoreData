@@ -51,7 +51,7 @@ public class DataContext: ChildDataContext {
         let rootSavingDataContext = try! RootSavingDataContext(dataContextOptions: dataContextOptions)
         super.init(concurrencyType: .MainQueueConcurrencyType, rootSavingDataContext: rootSavingDataContext)
         
-        if #available(OSX 10.10, iOS 8.0, *) {
+        if #available(OSX 10.10, *) {
             self.name = "Main Thread Context"
         }
     }
@@ -64,7 +64,7 @@ public class DataContext: ChildDataContext {
     public init(parentDataContext: DataContext) {
         super.init(concurrencyType: .PrivateQueueConcurrencyType, rootSavingDataContext: parentDataContext.rootSavingDataContext)
         
-        if #available(OSX 10.10, iOS 8.0, *) {
+        if #available(OSX 10.10, *) {
             self.name = "Background Context"
         }
         

@@ -12,7 +12,7 @@ import Foundation
     
 extension Table {
 
-    public func toArrayController(performFetch: Bool = true) throws -> NSArrayController {
+    public func toArrayController() throws -> NSArrayController {
         let fetchRequest = self.toFetchRequest()
         
         let arrayController = NSArrayController(content: nil)
@@ -26,10 +26,6 @@ extension Table {
         arrayController.automaticallyPreparesContent = true
         arrayController.automaticallyRearrangesObjects = true
         arrayController.usesLazyFetching = true
-        
-        if performFetch {
-            try arrayController.fetchWithRequest(fetchRequest, merge: false)
-        }
         
         return arrayController
     }

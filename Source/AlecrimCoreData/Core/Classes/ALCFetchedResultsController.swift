@@ -705,14 +705,8 @@ extension NSIndexPath {
     
 extension Table {
 
-    public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil, performFetch: Bool = true) throws -> ALCFetchedResultsController {
-        let frc = ALCFetchedResultsController(fetchRequest: self.toFetchRequest(), managedObjectContext: self.dataContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
-        
-        if performFetch {
-            try frc.performFetch()
-        }
-        
-        return frc
+    public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> ALCFetchedResultsController {
+        return ALCFetchedResultsController(fetchRequest: self.toFetchRequest(), managedObjectContext: self.dataContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
 
 }
