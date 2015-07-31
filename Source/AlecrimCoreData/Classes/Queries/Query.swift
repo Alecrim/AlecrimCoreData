@@ -198,11 +198,6 @@ extension Query {
         if clone.predicate == nil {
             clone.predicate = predicate
         }
-        else if let compoundPredicate = clone.predicate as? NSCompoundPredicate {
-            var subpredicates = compoundPredicate.subpredicates as! [NSPredicate]
-            subpredicates.append(predicate)
-            clone.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
-        }
         else {
             let subpredicates = [clone.predicate!, predicate]
             clone.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
