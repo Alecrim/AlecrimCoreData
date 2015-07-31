@@ -254,20 +254,19 @@ public class ChildContext: BaseContext {
         //
         super.addObservers()
         
-        //
         // the root data context did save
         self.addObserverForName(NSManagedObjectContextDidSaveNotification, object: self.rootSavingContext) { [unowned self] notification in
             if !self.enableMergeFromRootSavingContext {
                 return
             }
             
-            if let savedContext = notification.object as? RootSavingContext, let changeNotificationData = notification.userInfo {
+            if let changeNotificationData = notification.userInfo {
                 self.performBlock {
                     //
                     let updatedObjects = changeNotificationData[NSUpdatedObjectsKey] as? Set<NSManagedObject>
                     if let updatedObjects = updatedObjects where !updatedObjects.isEmpty {
-                        for objectObject in updatedObjects {
-                            self.objectWithID(objectObject.objectID).willAccessValueForKey(nil) // ensures that a fault has been fired
+                        for updatedObject in updatedObjects {
+                            self.objectWithID(updatedObject.objectID).willAccessValueForKey(nil) // ensures that a fault has been fired
                         }
                     }
                     
