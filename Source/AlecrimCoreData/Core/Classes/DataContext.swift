@@ -119,8 +119,8 @@ public class RootSavingDataContext: ManagedObjectContext {
         guard
             let managedObjectModelURL = self.dataContextOptions.managedObjectModelURL,
             let managedObjectModel = NSManagedObjectModel(contentsOfURL: managedObjectModelURL)
-            else {
-                throw AlecrimCoreDataError.InvalidManagedObjectModelURL
+        else {
+            throw AlecrimCoreDataError.InvalidManagedObjectModelURL
         }
         
         // persistent store coordinator
@@ -132,8 +132,8 @@ public class RootSavingDataContext: ManagedObjectContext {
             guard
                 let persistentStoreURL = self.dataContextOptions.persistentStoreURL,
                 let containerURL = persistentStoreURL.URLByDeletingLastPathComponent
-                else {
-                    throw AlecrimCoreDataError.InvalidPersistentStoreURL
+            else {
+                throw AlecrimCoreDataError.InvalidPersistentStoreURL
             }
             
             // if the directory does not exist, it will be created
@@ -254,8 +254,8 @@ public class ChildDataContext: ManagedObjectContext {
             self.performBlock {
                 //
                 if let updatedObjects = changeNotificationData[NSUpdatedObjectsKey] as? Set<NSManagedObject> where !updatedObjects.isEmpty {
-                    for objectObject in updatedObjects {
-                        self.objectWithID(objectObject.objectID).willAccessValueForKey(nil) // ensures that a fault has been fired
+                    for updatedObject in updatedObjects {
+                        self.objectWithID(updatedObject.objectID).willAccessValueForKey(nil) // ensures that a fault has been fired
                     }
                 }
                 
