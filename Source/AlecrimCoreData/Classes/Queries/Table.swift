@@ -9,13 +9,45 @@
 import Foundation
 import CoreData
 
+private var cachedEntityDescriptions = [String : NSEntityDescription]()
+
+private func entityDescriptionFromClass(aClass: AnyClass, context: NSManagedObjectContext) -> NSEntityDescription {
+    let managedObjectClassName = NSStringFromClass(aClass)
+    
+    //
+    let ed: NSEntityDescription
+    if let cachedEntityDescription = cachedEntityDescriptions[managedObjectClassName] {
+        ed = cachedEntityDescription
+    }
+    else {
+        let persistentStoreCoordinator = context.persistentStoreCoordinator!
+        let managedObjectModel = persistentStoreCoordinator.managedObjectModel
+        
+        ed = Swift.filter(managedObjectModel.entities, { $0.managedObjectClassName == managedObjectClassName }).first! as! NSEntityDescription
+        cachedEntityDescriptions[managedObjectClassName] = ed
+    }
+    
+    return ed
+}
+
+
+// MARK: -
+
 public final class Table<T: NSManagedObject>: Query {
     
-    private lazy var entityDescription: NSEntityDescription = { return NSEntityDescription.entityForName(self.entityName, inManagedObjectContext: self.context.managedObjectContext)! }()
+    private var _entityDescription: NSEntityDescription!
+    private var entityDescription: NSEntityDescription {
+        if self._entityDescription == nil {
+            self._entityDescription = entityDescriptionFromClass(T.self, self.context)
+        }
+        
+        return self._entityDescription
+    }
     
     public convenience init(context: Context) {
-        let entityName = context.contextOptions.entityNameFromClass(T.self)
-        self.init(context: context, entityName: entityName)
+        let entityDescription = entityDescriptionFromClass(T.self, context)
+        self.init(context: context, entityName: entityDescription.name!)
+        self._entityDescription = entityDescription
     }
     
     public required init(context: Context, entityName: String) {
@@ -36,7 +68,7 @@ public final class Table<T: NSManagedObject>: Query {
 extension Table {
     
     public func createEntity() -> T {
-        let entity = T(entity: self.entityDescription, insertIntoManagedObjectContext: self.context.managedObjectContext)
+        let entity = T(entity: self.entityDescription, insertIntoManagedObjectContext: self.context)
         return entity
     }
 
@@ -55,8 +87,8 @@ extension Table {
     public func deleteEntity(entity: T) -> (success: Bool, error: NSError?) {
         var retrieveExistingObjectError: NSError? = nil
         
-        if let managedObjectInContext = self.context.managedObjectContext.existingObjectWithID(entity.objectID, error: &retrieveExistingObjectError) {
-            self.context.managedObjectContext.deleteObject(managedObjectInContext)
+        if let managedObjectInContext = self.context.existingObjectWithID(entity.objectID, error: &retrieveExistingObjectError) {
+            self.context.deleteObject(managedObjectInContext)
             return (entity.deleted || entity.managedObjectContext == nil, nil)
         }
         else {
@@ -84,8 +116,8 @@ extension Table {
             for objectID in objectIDs {
                 var retrieveExistingObjectError: NSError? = nil
 
-                if let object = self.context.managedObjectContext.existingObjectWithID(objectID, error: &retrieveExistingObjectError) {
-                    self.context.managedObjectContext.deleteObject(object)
+                if let object = self.context.existingObjectWithID(objectID, error: &retrieveExistingObjectError) {
+                    self.context.deleteObject(object)
                 }
                 
                 if let retrieveExistingObjectError = retrieveExistingObjectError {
@@ -122,16 +154,20 @@ extension Table: SequenceType {
 extension Table {
     
     public func toArray() -> [T] {
-        let fetchRequest = self.toFetchRequest()
         var results = [T]()
         
-        if let objects = self.executeFetchRequest(fetchRequest) as? [T] {
-            results += objects
+        if let objects = self.executeFetchRequest(self.toFetchRequest()) {
+            if let entities = objects as? [T] {
+                results += entities
+            }
+            else {
+                // HAX: `self.executeFetchRequest(fetchRequest) as? [T]` may not work in Swift 1.x in some circumstances
+                results += objects.map { $0 as! T }
+            }
         }
         
         return results
     }
-    
 }
 
 // MARK: - element
@@ -153,7 +189,7 @@ extension Table {
     /// :param: predicateClosure A closure with a simple equality comparison between an attribute and a value.
     ///
     /// :returns: The found entity or a new entity from the same type (with the attribute filled with the specified value).
-    public func firstOrCreated(predicateClosure: (T.Type) -> NSComparisonPredicate) -> T {
+    public func firstOrCreated(@noescape predicateClosure: (T.Type) -> NSComparisonPredicate) -> T {
         let predicate = predicateClosure(T.self)
         if let entity = self.filterBy(predicate: predicate).first() {
             return entity
@@ -177,19 +213,19 @@ extension Table {
 
 extension Table {
     
-    public func any(predicateClosure: (T.Type) -> NSPredicate) -> Bool {
+    public func any(@noescape predicateClosure: (T.Type) -> NSPredicate) -> Bool {
         return self.filterBy(predicate: predicateClosure(T.self)).any()
     }
     
-    public func count(predicateClosure: (T.Type) -> NSPredicate) -> Int {
+    public func count(@noescape predicateClosure: (T.Type) -> NSPredicate) -> Int {
         return self.filterBy(predicate: predicateClosure(T.self)).count()
     }
     
-    public func filter(predicateClosure: (T.Type) -> NSPredicate) -> Self {
+    public func filter(@noescape predicateClosure: (T.Type) -> NSPredicate) -> Self {
         return self.filterBy(predicate: predicateClosure(T.self))
     }
     
-    public func first(predicateClosure: (T.Type) -> NSPredicate) -> T? {
+    public func first(@noescape predicateClosure: (T.Type) -> NSPredicate) -> T? {
         return self.filterBy(predicate: predicateClosure(T.self)).first()
     }
     
@@ -199,34 +235,28 @@ extension Table {
 
 extension Table {
     
-    public func orderBy<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).___name
-        return self.sortBy(attributeName, ascending: true)
+    public func orderBy<U>(@noescape orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        return self.sortBy(orderingClosure(T.self).___name, ascending: true)
     }
     
-    public func orderByAscending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).___name
-        return self.sortBy(attributeName, ascending: true)
+    public func orderByAscending<U>(@noescape orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        return self.sortBy(orderingClosure(T.self).___name, ascending: true)
     }
     
-    public func orderByDescending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).___name
-        return self.sortBy(attributeName, ascending: false)
+    public func orderByDescending<U>(@noescape orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        return self.sortBy(orderingClosure(T.self).___name, ascending: false)
     }
     
-    public func thenBy<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).___name
-        return self.sortBy(attributeName, ascending: true)
+    public func thenBy<U>(@noescape orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        return self.sortBy(orderingClosure(T.self).___name, ascending: true)
     }
     
-    public func thenByAscending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).___name
-        return self.sortBy(attributeName, ascending: true)
+    public func thenByAscending<U>(@noescape orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        return self.sortBy(orderingClosure(T.self).___name, ascending: true)
     }
     
-    public func thenByDescending<U>(orderingClosure: (T.Type) -> Attribute<U>) -> Self {
-        let attributeName = orderingClosure(T.self).___name
-        return self.sortBy(attributeName, ascending: false)
+    public func thenByDescending<U>(@noescape orderingClosure: (T.Type) -> Attribute<U>) -> Self {
+        return self.sortBy(orderingClosure(T.self).___name, ascending: false)
     }
     
 }
@@ -251,7 +281,7 @@ extension Table {
         return self.aggregateWithFunctionName("average", attributeClosure: attributeClosure)
     }
 
-    private func aggregateWithFunctionName<U>(functionName: String, attributeClosure: (T.Type) -> Attribute<U>) -> U {
+    private func aggregateWithFunctionName<U>(functionName: String, @noescape attributeClosure: (T.Type) -> Attribute<U>) -> U {
         let attribute = attributeClosure(T.self)
         let attributeDescription = self.entityDescription.attributesByName[attribute.___name] as! NSAttributeDescription
         
@@ -288,9 +318,9 @@ extension Table {
 
 extension Table {
     
-    public func fetchAsync(completionClosure: ([T]!, NSError?) -> Void) -> FetchAsyncHandler {
+    public func fetchAsync(completionHandler: ([T]!, NSError?) -> Void) -> FetchAsyncHandler {
         return self.context.executeAsynchronousFetchRequestWithFetchRequest(self.toFetchRequest()) { objects, error in
-            completionClosure(objects as? [T], error)
+            completionHandler(objects as? [T], error)
         }
     }
 
@@ -300,7 +330,7 @@ extension Table {
 
 extension Table {
 
-    public func batchUpdate(propertiesToUpdate: [NSString : AnyObject], completionClosure: (Int, NSError?) -> Void) {
+    public func batchUpdate(propertiesToUpdate: [NSString : AnyObject], completionHandler: (Int, NSError?) -> Void) {
         let batchUpdatePredicate = self.predicate ?? NSPredicate(value: true)
         
         self.context.executeBatchUpdateRequestWithEntityDescription(
@@ -309,18 +339,18 @@ extension Table {
             predicate: batchUpdatePredicate
         ) { updatedObjectsCount, error in
             dispatch_async(dispatch_get_main_queue()) {
-                completionClosure(updatedObjectsCount, error)
+                completionHandler(updatedObjectsCount, error)
             }
         }
     }
 
-    public func batchUpdate<U>(attributeToUpdateClosure: (T.Type) -> (Attribute<U>, U), completionClosure: (Int, NSError?) -> Void) {
+    public func batchUpdate<U>(@noescape attributeToUpdateClosure: (T.Type) -> (Attribute<U>, U), completionHandler: (Int, NSError?) -> Void) {
         let attributeAndValue = attributeToUpdateClosure(T.self)
         var propertiesToUpdate = [NSString : AnyObject]()
 
         propertiesToUpdate[attributeAndValue.0.___name as NSString] = attributeAndValue.1 as? AnyObject
         
-        self.batchUpdate(propertiesToUpdate, completionClosure: completionClosure)
+        self.batchUpdate(propertiesToUpdate, completionHandler: completionHandler)
     }
     
 }
@@ -334,7 +364,7 @@ extension Table {
         return attributeQuery
     }
 
-    public func select<U>(attributeToSelectClosure: (T.Type) -> Attribute<U>) -> AttributeQuery {
+    public func select<U>(@noescape attributeToSelectClosure: (T.Type) -> Attribute<U>) -> AttributeQuery {
         return self.select([attributeToSelectClosure(T.self).___name])
     }
     
@@ -353,18 +383,18 @@ extension Table {
 
 extension Table {
 
-    public func toFetchedResultsController<U>(sectionNameKeyPathClosure: (T.Type) -> Attribute<U>) -> FetchedResultsController<T> {
+    public func toFetchedResultsController<U>(@noescape sectionNameKeyPathClosure: (T.Type) -> Attribute<U>) -> FetchedResultsController<T> {
         let sectionNameKeyPath = sectionNameKeyPathClosure(T.self).___name
         return self.toFetchedResultsController(sectionNameKeyPath: sectionNameKeyPath, cacheName:
             nil)
     }
     
     public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchedResultsController<T> {
-        return FetchedResultsController<T>(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context.managedObjectContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+        return FetchedResultsController<T>(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
 
     public func toNativeFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil, performFetch: Bool = true) -> NSFetchedResultsController {
-        let frc = NSFetchedResultsController(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context.managedObjectContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+        let frc = NSFetchedResultsController(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
         
         if performFetch {
             var error: NSError? = nil
@@ -387,7 +417,7 @@ extension Table {
         
         let arrayController = NSArrayController(content: nil)
         
-        arrayController.managedObjectContext = self.context.managedObjectContext
+        arrayController.managedObjectContext = self.context
         arrayController.entityName = fetchRequest.entityName
         
         arrayController.fetchPredicate = fetchRequest.predicate

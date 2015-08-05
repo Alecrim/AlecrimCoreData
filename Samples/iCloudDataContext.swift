@@ -15,22 +15,20 @@ class iCloudDataContext: AlecrimCoreData.Context {
     // MARK - custom init
     
     convenience init?() {
-        let contextOptions = ContextOptions(stackType: .SQLite)
+        //
+        let contextOptions = ContextOptions()
         
-        // only needed if entity class names are different from entity names
-        contextOptions.entityClassNameSuffix = "Entity"
+        //
+        let ubiquitousContainerIdentifier = "iCloud.com.company.MyAppName"
+        let ubiquitousContentURL = NSFileManager.defaultManager().URLForUbiquityContainerIdentifier(ubiquitousContainerIdentifier)!.URLByAppendingPathComponent("CoreData", isDirectory: true)
+        let ubiquitousContentName = "UbiquityStore"
         
-        // only needed if model is not in main bundle
-        contextOptions.modelBundle = NSBundle(forClass: iCloudDataContext.self)
-
-        // only needed if the identifier is different from default identifier
-        contextOptions.ubiquitousContainerIdentifier = "iCloud.com.company.MyAppName"
-
-        // enable iCloud Core Data sync
-        contextOptions.ubiquityEnabled = true
+        contextOptions.configureUbiquityOptionsWithUbiquitousContainerIdentifier(ubiquitousContainerIdentifier, ubiquitousContentURL: ubiquitousContentURL, ubiquitousContentName: ubiquitousContentName)
         
         // call designated initializer
         self.init(contextOptions: contextOptions)
+        
+        // here you can add observers for ubiquity notifications (AlecrimCoreData.Context is a subclass of NSManagedObjectContext)
     }
     
 }

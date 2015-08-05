@@ -11,6 +11,8 @@ import UIKit
 class DetailViewController: UIViewController {
 
     @IBOutlet weak var detailDescriptionLabel: UILabel!
+    @IBOutlet var detailChildLabel: UILabel!
+    @IBOutlet var detailChildrenLabel: UILabel!
 
 
     var detailItem: Event? {
@@ -22,8 +24,18 @@ class DetailViewController: UIViewController {
 
     func configureView() {
         // Update the user interface for the detail item.
-        if let label = self.detailDescriptionLabel, let event = self.detailItem {
-            label.text = event.timeStamp.description
+        if let event = self.detailItem {
+            if let label = self.detailDescriptionLabel {
+                label.text = event.timeStamp.description
+            }
+            
+            if let label = self.detailChildLabel, let child = event.child {
+                detailChildLabel.text = child.title
+            }
+            
+            if let label = self.detailChildrenLabel where event.children.count > 0 {
+                detailChildrenLabel.text = (map(event.children, { $0.title! }) as NSArray).componentsJoinedByString(", ")
+            }
         }
     }
 

@@ -17,7 +17,7 @@ To use AlecrimCoreData you will need to create an inherited class from `AlecrimC
 ```swift
 import AlecrimCoreData
 
-let dataContext = DataContext()!
+let dataContext = DataContext()
 
 class DataContext: Context {
 	var people:      Table<Person>     { return Table<Person>(context: self) }
@@ -350,6 +350,10 @@ See `Samples` folder for a configuration example for iCloud Core Data sync.
 #### Ensembles
 
 See `Samples` folder for a configuration example for [Ensembles](http://www.ensembles.io).
+
+#### Additional Notes
+
+When using the default options, AlecrimCoreData determines the name of the `.xcdatamodeld` automatically using the project name. Please ensure the names match.
 
 ## Using
 

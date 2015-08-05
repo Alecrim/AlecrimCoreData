@@ -28,7 +28,7 @@ public class Query {
     public func toFetchRequest() -> NSFetchRequest {
         let fetchRequest = NSFetchRequest(entityName: self.entityName)
         
-        fetchRequest.fetchBatchSize = (self.limit > 0 && self.context.contextOptions.fetchBatchSize > self.limit ? 0 : self.context.contextOptions.fetchBatchSize)
+        fetchRequest.fetchBatchSize = (self.limit > 0 && ContextOptions.fetchBatchSize > self.limit ? 0 : ContextOptions.fetchBatchSize)
         fetchRequest.fetchOffset = self.offset
         fetchRequest.fetchLimit = self.limit
         
@@ -198,11 +198,6 @@ extension Query {
         if clone.predicate == nil {
             clone.predicate = predicate
         }
-        else if let compoundPredicate = clone.predicate as? NSCompoundPredicate {
-            var subpredicates = compoundPredicate.subpredicates as! [NSPredicate]
-            subpredicates.append(predicate)
-            clone.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
-        }
         else {
             let subpredicates = [clone.predicate!, predicate]
             clone.predicate = NSCompoundPredicate.andPredicateWithSubpredicates(subpredicates)
@@ -218,15 +213,15 @@ extension Query {
 extension Query {
     
     public func count() -> Int {
-        let fetchRequest = self.toFetchRequest()
-        var c = 0
+        var error: NSError? = nil
+        let c = self.context.countForFetchRequest(self.toFetchRequest(), error: &error)
         
-        self.context.managedObjectContext.performBlockAndWait {
-            var error: NSError? = nil
-            c += self.context.managedObjectContext.countForFetchRequest(fetchRequest, error: &error)
+        if error == nil && c != NSNotFound {
+            return c
         }
-        
-        return c
+        else {
+            return 0
+        }
     }
     
 }

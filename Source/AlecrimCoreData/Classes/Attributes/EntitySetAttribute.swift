@@ -12,7 +12,9 @@ public class EntitySetAttribute<T: CollectionType>: Attribute<T> {
     
     public override init(_ name: String) { super.init(name) }
     
-    public lazy var count: EntitySetCollectionOperatorAttribute<Int> = EntitySetCollectionOperatorAttribute<Int>(collectionOperator: "@count", entitySetAttributeName: self.___name)
+    public lazy var count: EntitySetCollectionOperatorAttribute<Int> = { [unowned self] in
+        return EntitySetCollectionOperatorAttribute<Int>(collectionOperator: "@count", entitySetAttributeName: self.___name)
+        }()
     
     public func any(predicateClosure: (T.Generator.Element.Type) -> NSComparisonPredicate) -> NSComparisonPredicate {
         let p = predicateClosure(T.Generator.Element.self)
@@ -63,13 +65,29 @@ public class EntitySetAttribute<T: CollectionType>: Attribute<T> {
     }
     
     public func none(predicateClosure: (T.Generator.Element.Type) -> NSComparisonPredicate) -> NSPredicate {
+        // *** METHOD 1 *** //
+        // Doesn't work because Core Data bug with NONE (Filled out Apple bug # 21994962)
+        // http://stackoverflow.com/a/14473445/235334
+        //let p = self.all(predicateClosure)
+        //let format = "NONE" + (p.description as NSString).substringFromIndex(3)
+        //return NSPredicate(format: format)
+        
+        // *** METHOD 2 *** //
+        // Doesn't work probably because same Core Data bug with NONE above
+        // http://stackoverflow.com/questions/6866950
+        // Although close, where is the NSComparisonPredicateModifier.NonePredicateModifier?
+        //let p = self.any(predicateClosure)
+        //return NSCompoundPredicate.notPredicateWithSubpredicate(p)
+        
+        // *** METHOD 3 *** //
+        // This is really super ugly but works
         let p = self.all(predicateClosure)
+        let pFormat = (p.description as NSString).substringFromIndex(3)
+            .stringByReplacingOccurrencesOfString(
+                self.___name, withString: "$o", options: .LiteralSearch, range: nil)
         
-        // this is really ugly! (where is the NSComparisonPredicateModifier.NonePredicateModifier?)
-        // TODO: find a better way to do this
-        let format = "NONE" + (p.description as NSString).substringFromIndex(3)
+        let format = "SUBQUERY(\(self.___name), $o, \(pFormat)).@count == 0"
         
-        //
         return NSPredicate(format: format)
     }
     

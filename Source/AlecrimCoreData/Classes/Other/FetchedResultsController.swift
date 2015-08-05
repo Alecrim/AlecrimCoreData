@@ -24,7 +24,7 @@ public final class FetchedResultsController<T: NSManagedObject> {
     private var hasUnderlyingFetchedResultsController = false
     private var underlyingFecthedResultsControllerDelegate: FecthedResultsControllerDelegate! = nil
     
-    private lazy var underlyingFetchedResultsController: NSFetchedResultsController = {
+    private lazy var underlyingFetchedResultsController: NSFetchedResultsController = { [unowned self] in
         let frc = NSFetchedResultsController(fetchRequest: self.initialFetchRequest, managedObjectContext: self.initialManagedObjectContext, sectionNameKeyPath: self.initialSectionNameKeyPath, cacheName: self.initialCacheName)
         
         // we have to retain the delegate first

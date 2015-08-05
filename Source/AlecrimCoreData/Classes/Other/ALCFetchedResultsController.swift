@@ -151,7 +151,7 @@ public class ALCFetchedResultsController: NSObject {
         var success = false
         
         self.managedObjectContext.performBlockAndWait {
-            self.calculateSections(error: error).success
+            success = self.calculateSections(error: error).success
         }
         
         return success
