@@ -51,9 +51,7 @@ public class DataContext: ChildDataContext {
         let rootSavingDataContext = try! RootSavingDataContext(dataContextOptions: dataContextOptions)
         super.init(concurrencyType: .MainQueueConcurrencyType, rootSavingDataContext: rootSavingDataContext)
         
-        if #available(OSX 10.10, *) {
-            self.name = "Main Thread Context"
-        }
+        self.name = "Main Thread Context"
     }
     
     /// Initializes a background context that has as parent the given context or the root context of the given context.
@@ -64,10 +62,7 @@ public class DataContext: ChildDataContext {
     public init(parentDataContext: DataContext) {
         super.init(concurrencyType: .PrivateQueueConcurrencyType, rootSavingDataContext: parentDataContext.rootSavingDataContext)
         
-        if #available(OSX 10.10, *) {
-            self.name = "Background Context"
-        }
-        
+        self.name = "Background Context"
         self.undoManager = nil
     }
     
@@ -98,10 +93,7 @@ public class RootSavingDataContext: ManagedObjectContext {
         self.dataContextOptions = dataContextOptions
         super.init(concurrencyType: .PrivateQueueConcurrencyType)
         
-        if #available(OSX 10.10, iOS 8.0, *) {
-            self.name = "Root Saving Context"
-        }
-        
+        self.name = "Root Saving Context"
         self.undoManager = nil
         
         // only the root data context has a direct assigned persistent store coordinator
