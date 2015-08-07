@@ -11,10 +11,8 @@ import CoreData
 
 extension NSManagedObject {
 
-    public func inContext(otherContext: NSManagedObjectContext) throws -> Self? {
-        guard let context = self.managedObjectContext else { return nil }
-        
-        if context == otherContext {
+    public func inContext(otherContext: NSManagedObjectContext) throws -> Self {
+        if self.managedObjectContext === otherContext {
             return self
         }
         
@@ -22,12 +20,12 @@ extension NSManagedObject {
             try otherContext.obtainPermanentIDsForObjects([self])
         }
         
-        //let otherManagedObject = try otherContext.existingObjectWithID(self.objectID)
         
+        // TODO:
+        //let otherManagedObject = try otherContext.existingObjectWithID(self.objectID)
         //return unsafeBitCast(otherManagedObject, self.dynamicType)
         
-        // TODO: compiler and environment crashes if the above lines are not commented
-        return nil
+        return self
     }
     
 }

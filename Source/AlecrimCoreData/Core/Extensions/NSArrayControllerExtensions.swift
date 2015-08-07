@@ -21,7 +21,9 @@ extension Table {
         arrayController.entityName = fetchRequest.entityName
         
         arrayController.fetchPredicate = fetchRequest.predicate
-        arrayController.sortDescriptors = fetchRequest.sortDescriptors
+        if let sortDescriptors = fetchRequest.sortDescriptors {
+            arrayController.sortDescriptors = sortDescriptors
+        }
         
         arrayController.automaticallyPreparesContent = true
         arrayController.automaticallyRearrangesObjects = true

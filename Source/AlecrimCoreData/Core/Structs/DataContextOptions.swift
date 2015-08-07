@@ -143,7 +143,7 @@ extension NSBundle {
             let url = applicationSupportURL
                 .URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
                 .URLByAppendingPathComponent("CoreData", isDirectory: true)
-                .URLByAppendingPathComponent(managedObjectModelName.stringByAppendingPathExtension("sqlite")!, isDirectory: false)
+                .URLByAppendingPathComponent((managedObjectModelName as NSString).stringByAppendingPathExtension("sqlite")!, isDirectory: false)
             
             return url
         }
@@ -158,7 +158,7 @@ extension NSBundle {
                 .URLByAppendingPathComponent("Application Support", isDirectory: true)
                 .URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
                 .URLByAppendingPathComponent("CoreData", isDirectory: true)
-                .URLByAppendingPathComponent(managedObjectModelName.stringByAppendingPathExtension("sqlite")!, isDirectory: false)
+                .URLByAppendingPathComponent((managedObjectModelName as NSString).stringByAppendingPathExtension("sqlite")!, isDirectory: false)
             
             return url
         }

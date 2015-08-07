@@ -29,7 +29,7 @@ internal final class FetchRequestControllerDelegate<T: NSManagedObject>: NSObjec
 
     // MARK: - NSFetchedResultsControllerDelegate methods
     
-    @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: NSManagedObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch type {
         case .Insert:
             for closure in self.didInsertEntityClosures {
