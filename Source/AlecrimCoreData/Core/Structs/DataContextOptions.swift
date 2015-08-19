@@ -89,10 +89,10 @@ extension DataContextOptions {
         return self.storeType == .SQLite && self.options[NSPersistentStoreUbiquitousContainerIdentifierKey] != nil
     }
     
-    public mutating func configureUbiquityOptionsWithUbiquitousContainerIdentifier(ubiquitousContainerIdentifier: String, ubiquitousContentURL: NSURL, ubiquitousContentName: String) {
-        self.options[NSPersistentStoreUbiquitousContainerIdentifierKey] = ubiquitousContainerIdentifier
-        self.options[NSPersistentStoreUbiquitousContentURLKey] = ubiquitousContentURL
-        self.options[NSPersistentStoreUbiquitousContentNameKey] = ubiquitousContentName
+    public mutating func configureUbiquityWithContainerIdentifier(containerIdentifier: String, contentRelativePath: String = "Data/TransactionLogs", contentName: String = "UbiquityStore") {
+        self.options[NSPersistentStoreUbiquitousContainerIdentifierKey] = containerIdentifier
+        self.options[NSPersistentStoreUbiquitousContentURLKey] = contentRelativePath
+        self.options[NSPersistentStoreUbiquitousContentNameKey] = contentName
         
         self.options[NSMigratePersistentStoresAutomaticallyOption] = true
         self.options[NSInferMappingModelAutomaticallyOption] = true

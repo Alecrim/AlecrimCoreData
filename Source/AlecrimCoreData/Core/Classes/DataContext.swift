@@ -228,9 +228,9 @@ public class ChildDataContext: ManagedObjectContext {
         }
     }
     
-    // MARK: - private overrided methods
+    // MARK: - overrided methods
     
-    private override func addObservers() {
+    public override func addObservers() {
         //
         super.addObservers()
         
@@ -283,9 +283,10 @@ public class ManagedObjectContext: NSManagedObjectContext {
         self.removeObservers()
     }
 
-    // MARK: - private methods
+    // MARK: - observers methods
     
-    private func addObservers() {
+    /// Requires super.
+    public func addObservers() {
         // this context will save
         self.addObserverForName(NSManagedObjectContextWillSaveNotification, object: self) { notification in
             guard let notificationContext = notification.object as? NSManagedObjectContext where !notificationContext.insertedObjects.isEmpty else { return }
@@ -307,7 +308,7 @@ public class ManagedObjectContext: NSManagedObjectContext {
         }
     }
     
-    private func addObserverForName(name: String, object: AnyObject, closure: (NSNotification) -> Void) {
+    public final func addObserverForName(name: String, object: AnyObject, closure: (NSNotification) -> Void) {
         let observer = NSNotificationCenter.defaultCenter().addObserverForName(name, object: object, queue: nil, usingBlock: closure)
         self.observers.append(observer)
     }
