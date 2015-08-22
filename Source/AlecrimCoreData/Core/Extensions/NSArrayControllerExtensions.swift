@@ -12,7 +12,7 @@ import Foundation
     
 extension Table {
 
-    public func toArrayController() throws -> NSArrayController {
+    public func toArrayController() -> NSArrayController {
         let fetchRequest = self.toFetchRequest()
         
         let arrayController = NSArrayController(content: nil)
