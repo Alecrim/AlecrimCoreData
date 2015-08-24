@@ -20,12 +20,8 @@ extension NSManagedObject {
             try otherContext.obtainPermanentIDsForObjects([self])
         }
         
-        
-        // TODO:
-        //let otherManagedObject = try otherContext.existingObjectWithID(self.objectID)
-        //return unsafeBitCast(otherManagedObject, self.dynamicType)
-        
-        return self
+        let otherManagedObject = try otherContext.existingObjectWithID(self.objectID)
+        return unsafeBitCast(otherManagedObject, self.dynamicType)
     }
     
 }
