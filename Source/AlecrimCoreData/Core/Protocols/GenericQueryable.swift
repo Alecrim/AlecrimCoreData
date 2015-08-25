@@ -100,7 +100,7 @@ extension GenericQueryable {
     
 }
 
-// TODO: this crashes the environment and the compiler (Xcode 7.0 beta 6)
+// TODO: this crashes the compiler (Xcode 7.0 beta 6)
 //// MARK: - SequenceType
 //
 //extension GenericQueryable {
@@ -115,25 +115,35 @@ extension GenericQueryable {
 //
 //
 
-extension Table {
+extension Table: SequenceType {
 
     public typealias Generator = AnyGenerator<T>
 
     public func generate() -> Generator {
         return anyGenerator(self.toArray().generate())
     }
-
+    
+    // turns the SequenceType implementation unavailable
+    @available(*, unavailable)
+    public func filter(@noescape includeElement: (Table.Generator.Element) throws -> Bool) rethrows -> [Table.Generator.Element] {
+        return []
+    }
+    
 }
 
-extension AttributeQuery {
+extension AttributeQuery: SequenceType {
     
     public typealias Generator = AnyGenerator<T>
     
     public func generate() -> Generator {
         return anyGenerator(self.toArray().generate())
     }
-    
+
+    // turns the SequenceType implementation unavailable
+    @available(*, unavailable)
+    public func filter(@noescape includeElement: (AttributeQuery.Generator.Element) throws -> Bool) rethrows -> [AttributeQuery.Generator.Element] {
+        return []
+    }
+
 }
-
-
 
