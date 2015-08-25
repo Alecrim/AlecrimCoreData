@@ -10,7 +10,7 @@
     
 import Foundation
     
-extension Table {
+extension CoreDataQueryable {
 
     public func toArrayController() -> NSArrayController {
         let fetchRequest = self.toFetchRequest()

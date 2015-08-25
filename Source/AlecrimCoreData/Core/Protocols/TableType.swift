@@ -9,12 +9,9 @@
 import Foundation
 import CoreData
 
-public protocol TableType: GenericQueryable {
+public protocol TableType: CoreDataQueryable {
     
-    typealias Entity: NSManagedObject
-
-    var dataContext: NSManagedObjectContext { get }
-    var entityDescription: NSEntityDescription { get }
+    typealias Item: NSManagedObject
 
 }
 
@@ -22,17 +19,17 @@ public protocol TableType: GenericQueryable {
 
 extension TableType {
     
-    public func createEntity() -> Entity {
-        let entity = Entity(entity: self.entityDescription, insertIntoManagedObjectContext: self.dataContext)
+    public func createEntity() -> Self.Item {
+        let entity = Self.Item(entity: self.entityDescription, insertIntoManagedObjectContext: self.dataContext)
 
         return entity
     }
 
-    public func deleteEntity(entity: Entity) {
+    public func deleteEntity(entity: Self.Item) {
         self.dataContext.deleteObject(entity)
     }
     
-    public func refreshEntity(entity: Entity, mergeChanges: Bool = true) {
+    public func refreshEntity(entity: Self.Item, mergeChanges: Bool = true) {
         self.dataContext.refreshObject(entity, mergeChanges: mergeChanges)
     }
 
@@ -60,8 +57,8 @@ extension TableType {
 
 extension TableType {
     
-    public func firstOrCreated(@noescape predicateClosure: (Entity.Type) -> NSComparisonPredicate) -> Entity {
-        let predicate = predicateClosure(Entity.self)
+    public func firstOrCreated(@noescape predicateClosure: (Self.Item.Type) -> NSComparisonPredicate) -> Self.Item {
+        let predicate = predicateClosure(Self.Item.self)
         
         if let entity = self.filterUsingPredicate(predicate).first() {
             return entity
@@ -80,40 +77,34 @@ extension TableType {
 
 }
 
-// MARK: - Enumerable
-
-extension TableType {
-    
-    public func count() -> Int {
-        var error: NSError? = nil
-        let c = self.dataContext.countForFetchRequest(self.toFetchRequest(), error: &error)
-        
-        if error == nil && c != NSNotFound {
-            return c
-        }
-        else {
-            return 0
-        }
-    }
-    
-}
-
 
 // MARK: - GenericQueryable
 
 extension TableType {
     
-    public func toArray() -> [Entity] {
-        var results: [Entity] = []
+    public func toArray() -> [Self.Item] {
+        var results: [Self.Item] = []
 
-        let objects = try! self.dataContext.executeFetchRequest(self.toFetchRequest())
-
-        if let entities = objects as? [Entity] {
-            results += entities
+        do {
+            let objects = try self.dataContext.executeFetchRequest(self.toFetchRequest())
+            
+            if let entities = objects as? [Self.Item] {
+                results += entities
+            }
+            else {
+                // HAX: `self.dataContext.executeFetchRequest(self.toFetchRequest()) as? [T]` may not work in certain circumstances
+                for object in objects {
+                    if let entity = object as? Self.Item {
+                        results.append(entity)
+                    }
+                    else {
+                        throw AlecrimCoreDataError.UnexpectedValue(value: object)
+                    }
+                }
+            }
         }
-        else {
-            // HAX: `self.dataContext.executeFetchRequest(self.toFetchRequest()) as? [T]` may not work in certain circumstances
-            results += objects.map { $0 as! Entity }
+        catch {
+            // TODO: throw error?
         }
         
         return results
@@ -121,7 +112,7 @@ extension TableType {
     
 }
 
-// MARK: - conversion
+// MARK: - CoreDataQueryable
 
 extension TableType {
     

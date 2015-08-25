@@ -13,14 +13,14 @@ private var cachedEntityDescriptions = [String : NSEntityDescription]()
 
 public struct Table<T: NSManagedObject>: TableType {
     
-    public typealias Entity = T
+    public typealias Item = T
     
     public let dataContext: NSManagedObjectContext
     public let entityDescription: NSEntityDescription
 
     public var offset: Int = 0
     public var limit: Int = 0
-    public var batchSize: Int = 20
+    public var batchSize: Int = DataContextOptions.defaultBatchSize
 
     public var predicate: NSPredicate? = nil
     public var sortDescriptors: [NSSortDescriptor]? = nil
@@ -47,16 +47,3 @@ public struct Table<T: NSManagedObject>: TableType {
     }
     
 }
-
-// MARK: - SequenceType
-
-extension Table: SequenceType {
-    
-    public typealias Generator = IndexingGenerator<[T]>
-    
-    public func generate() -> Generator {
-        return self.toArray().generate()
-    }
-    
-}
-

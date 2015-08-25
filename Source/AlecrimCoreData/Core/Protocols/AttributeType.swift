@@ -75,7 +75,7 @@ extension AttributeType {
 
     internal var ___comparisonPredicateOptions: NSComparisonPredicateOptions {
         if Self.ValueType.self is AlecrimCoreData.StringType.Type {
-            return [.CaseInsensitivePredicateOption, .DiacriticInsensitivePredicateOption]
+            return DataContextOptions.defaultComparisonPredicateOptions
         }
         else {
             return NSComparisonPredicateOptions()

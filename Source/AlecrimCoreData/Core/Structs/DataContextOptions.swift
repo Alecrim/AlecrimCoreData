@@ -15,6 +15,11 @@ public enum StoreType {
 }
 
 public struct DataContextOptions {
+    
+    // MARK: - options valid for all instances
+    
+    public static var defaultBatchSize: Int = 20
+    public static var defaultComparisonPredicateOptions: NSComparisonPredicateOptions = [.CaseInsensitivePredicateOption, .DiacriticInsensitivePredicateOption]
 
     // MARK: -
 

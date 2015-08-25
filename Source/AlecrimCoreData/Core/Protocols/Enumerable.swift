@@ -10,14 +10,32 @@ import Foundation
 
 public protocol Enumerable: SequenceType {
     
-    func skip(count: Int) -> Self
-    func take(count: Int) -> Self
-    
+    var offset: Int { get set }
+    var limit: Int { get set }
+
     func count() -> Int
 
 }
 
 // MARK: -
+
+extension Enumerable {
+    
+    public func skip(count: Int) -> Self {
+        var clone = self
+        clone.offset = count
+        
+        return clone
+    }
+    
+    public func take(count: Int) -> Self {
+        var clone = self
+        clone.limit = count
+        
+        return clone
+    }
+    
+}
 
 extension Enumerable {
     

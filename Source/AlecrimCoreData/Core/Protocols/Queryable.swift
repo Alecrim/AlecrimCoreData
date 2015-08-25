@@ -11,10 +11,6 @@ import CoreData
 
 public protocol Queryable: Enumerable {
     
-    var offset: Int { get set }
-    var limit: Int { get set }
-    var batchSize: Int { get set }
-    
     var predicate: NSPredicate? { get set }
     var sortDescriptors: [NSSortDescriptor]? { get set }
     
@@ -76,27 +72,6 @@ extension Queryable {
         else {
             clone.predicate = predicate
         }
-        
-        return clone
-    }
-    
-}
-
-
-// MARK: - Enumerable
-
-extension Queryable {
-    
-    public func skip(count: Int) -> Self {
-        var clone = self
-        clone.offset = count
-        
-        return clone
-    }
-    
-    public func take(count: Int) -> Self {
-        var clone = self
-        clone.limit = count
         
         return clone
     }

@@ -11,7 +11,7 @@
 import Foundation
 import CoreData
 
-extension Table {
+extension CoreDataQueryable {
     
     public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> NSFetchedResultsController {
         return NSFetchedResultsController(fetchRequest: self.toFetchRequest(), managedObjectContext: self.dataContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)

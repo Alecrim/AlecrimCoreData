@@ -74,7 +74,7 @@ public final class FetchRequestController<T: NSManagedObject> {
     ///
     /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
     ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
-    private convenience init(table: Table<T>, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
+    private convenience init<T: TableType>(table: T, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
         self.init(fetchRequest: table.toFetchRequest(), managedObjectContext: table.dataContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
     
@@ -308,9 +308,9 @@ public struct FetchRequestControllerSection<T: NSManagedObject> {
     
 }
 
-// MARK: - Table extensions
+// MARK: - TableType extensions
 
-extension Table {
+extension TableType {
     
     /// Returns a fetch request controller initialized using the given arguments.
     ///
@@ -321,8 +321,8 @@ extension Table {
     ///
     /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
     ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
-    public func toFetchRequestController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchRequestController<T> {
-        return FetchRequestController<T>(table: self, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+    public func toFetchRequestController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchRequestController<Self.Item> {
+        return FetchRequestController(table: self, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
     
     /// Returns a fetch request controller initialized using the given arguments.
@@ -333,8 +333,8 @@ extension Table {
     ///
     /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
     ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
-    public func toFetchRequestController<A>(@noescape sectionAttributeClosure: (T.Type) -> Attribute<A>) -> FetchRequestController<T> {
-        return FetchRequestController<T>(table: self, sectionNameKeyPath: sectionAttributeClosure(T.self).___name)
+    public func toFetchRequestController<A>(@noescape sectionAttributeClosure: (Self.Item.Type) -> Attribute<A>) -> FetchRequestController<Self.Item> {
+        return FetchRequestController(table: self, sectionNameKeyPath: sectionAttributeClosure(Self.Item.self).___name)
     }
     
 }
