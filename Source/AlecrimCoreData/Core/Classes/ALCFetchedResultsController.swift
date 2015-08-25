@@ -39,10 +39,10 @@ import CoreData
 
 // MARK: -
 
-internal typealias NSFetchedResultsChangeType = ALCFetchedResultsChangeType
-internal typealias NSFetchedResultsSectionInfo = ALCFetchedResultsSectionInfo
-internal typealias NSFetchedResultsControllerDelegate = ALCFetchedResultsControllerDelegate
-internal typealias NSFetchedResultsController = ALCFetchedResultsController
+public typealias NSFetchedResultsChangeType = ALCFetchedResultsChangeType
+public typealias NSFetchedResultsSectionInfo = ALCFetchedResultsSectionInfo
+public typealias NSFetchedResultsControllerDelegate = ALCFetchedResultsControllerDelegate
+public typealias NSFetchedResultsController = ALCFetchedResultsController
 
 
 // MARK: -

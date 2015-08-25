@@ -321,7 +321,7 @@ extension TableType {
     ///
     /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
     ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
-    public func toFetchRequestController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchRequestController<Self.Item> {
+    public func toFetchRequestController(sectionNameKeyPath sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchRequestController<Self.Item> {
         return FetchRequestController(table: self, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
     
