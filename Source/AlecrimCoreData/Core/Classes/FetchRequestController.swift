@@ -337,4 +337,29 @@ extension TableType {
         return FetchRequestController(table: self, sectionNameKeyPath: sectionAttributeClosure(Self.Item.self).___name)
     }
     
+    // MARK: -
+    
+    @available(*, unavailable, renamed="toFetchRequestController")
+    public func toFetchedResultsController(sectionNameKeyPath sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchRequestController<Self.Item> {
+        return FetchRequestController(table: self, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+    }
+
+    @available(*, unavailable, renamed="toFetchRequestController")
+    public func toFetchedResultsController<A>(@noescape sectionAttributeClosure: (Self.Item.Type) -> Attribute<A>) -> FetchRequestController<Self.Item> {
+        return FetchRequestController(table: self, sectionNameKeyPath: sectionAttributeClosure(Self.Item.self).___name)
+    }
+
+}
+
+
+// MARK: - 
+
+@available(*, unavailable, renamed="FetchRequestController")
+public final class FetchedResultsController<T: NSManagedObject> {
+    
+}
+
+@available(*, unavailable, renamed="FetchRequestControllerSection")
+public struct FetchedRequestControllerSectionInfo<T: NSManagedObject> {
+    
 }

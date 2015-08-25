@@ -314,3 +314,11 @@ public class ManagedObjectContext: NSManagedObjectContext {
     }
 
 }
+
+
+// MARK: -
+
+@available(*, unavailable, renamed="DataContext")
+public class Context {
+    
+}
