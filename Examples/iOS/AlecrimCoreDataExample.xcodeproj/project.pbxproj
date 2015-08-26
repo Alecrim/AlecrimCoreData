@@ -18,7 +18,6 @@
 		1448270F1A2BE7B000DA53F5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1448270D1A2BE7B000DA53F5 /* LaunchScreen.xib */; };
 		1448272F1A2BE98A00DA53F5 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1448272E1A2BE98A00DA53F5 /* Event.swift */; };
 		144827311A2BE9A400DA53F5 /* DataContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144827301A2BE9A400DA53F5 /* DataContext.swift */; };
-		8B5131621B1CE3A1007001C0 /* SubEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5131611B1CE3A1007001C0 /* SubEvent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -48,7 +47,6 @@
 		1448270E1A2BE7B000DA53F5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		1448272E1A2BE98A00DA53F5 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		144827301A2BE9A400DA53F5 /* DataContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataContext.swift; sourceTree = "<group>"; };
-		8B5131611B1CE3A1007001C0 /* SubEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubEvent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,7 +90,6 @@
 				144827011A2BE7B000DA53F5 /* AlecrimCoreDataExample.xcdatamodeld */,
 				144827301A2BE9A400DA53F5 /* DataContext.swift */,
 				1448272E1A2BE98A00DA53F5 /* Event.swift */,
-				8B5131611B1CE3A1007001C0 /* SubEvent.swift */,
 				144826FD1A2BE7B000DA53F5 /* Supporting Files */,
 			);
 			path = AlecrimCoreDataExample;
@@ -186,7 +183,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				144827001A2BE7B000DA53F5 /* AppDelegate.swift in Sources */,
-				8B5131621B1CE3A1007001C0 /* SubEvent.swift in Sources */,
 				144827311A2BE9A400DA53F5 /* DataContext.swift in Sources */,
 				1448272F1A2BE98A00DA53F5 /* Event.swift in Sources */,
 				144827031A2BE7B000DA53F5 /* AlecrimCoreDataExample.xcdatamodeld in Sources */,

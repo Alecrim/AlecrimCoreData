@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14D136" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7549" systemVersion="14D131" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Event" representedClassName="AlecrimCoreDataExample.Event">
         <attribute name="timeStamp" attributeType="Date">
             <userInfo/>
         </attribute>
-        <relationship name="child" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SubEvent" inverseName="parent" inverseEntity="SubEvent" syncable="YES"/>
-        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubEvent" inverseName="parents" inverseEntity="SubEvent" syncable="YES"/>
         <userInfo/>
     </entity>
-    <entity name="SubEvent" representedClassName="AlecrimCoreDataExample.SubEvent" syncable="YES">
-        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="child" inverseEntity="Event" syncable="YES"/>
-        <relationship name="parents" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Event" inverseName="children" inverseEntity="Event" syncable="YES"/>
-    </entity>
     <elements>
-        <element name="Event" positionX="261" positionY="189" width="128" height="90"/>
-        <element name="SubEvent" positionX="279" positionY="216" width="128" height="90"/>
+        <element name="Event" positionX="261" positionY="189" width="128" height="60"/>
     </elements>
 </model>

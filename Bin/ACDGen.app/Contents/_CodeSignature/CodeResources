@@ -12,7 +12,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			aafLzhbvFeyAZFt4q2GdIvn42mQ=
+			qGush1F+8xj3+BVk4eHVGZnfMr0=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -21,7 +21,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			iRDK0lLdWU6w1WpjWWkWxVcCtRo=
+			WwZz04JU+fygpZ807gzEmoA6gVI=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -30,7 +30,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			1CaM5HgncGgXzXNg75SO3MfshXQ=
+			wRnFLzahzrvDjzUshcBucFAs30o=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -39,7 +39,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Uo8KT6kGKsN5+b/snwMEWcVyZO0=
+			pWKlcvyL1cNqmJW4SBMSF4qxTgI=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -51,7 +51,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			ovN+eirbZqGi0KECviPKVnUivSk=
+			5x928FmdTZ8NxpFq1v6yaZl2fnE=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftAppKit" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -60,25 +60,43 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			5gdknEt+515QI5xw/kSbgq6Vuws=
+			9jWBC6dg8TuRKUszn+lgxIM9PDI=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftCore" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
+		</dict>
+		<key>Frameworks/libswiftCoreData.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			bm1ljAftoEylCVCGJvB3oqh39o4=
+			</data>
+			<key>requirement</key>
+			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftCoreData" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
 		</dict>
 		<key>Frameworks/libswiftCoreGraphics.dylib</key>
 		<dict>
 			<key>cdhash</key>
 			<data>
-			8s8g4p9zT9KHnFLHHNaJKVb5IbA=
+			IkLKQf4BDq3OBuB7BYdnkKbTtaY=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftCoreGraphics" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
+		</dict>
+		<key>Frameworks/libswiftCoreImage.dylib</key>
+		<dict>
+			<key>cdhash</key>
+			<data>
+			vUposC3nLClfpg4/eSsXQBu8jFI=
+			</data>
+			<key>requirement</key>
+			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftCoreImage" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
 		</dict>
 		<key>Frameworks/libswiftDarwin.dylib</key>
 		<dict>
 			<key>cdhash</key>
 			<data>
-			hO8HbeYaQIs2Lg5+Xglmn7F58GY=
+			HU969VtQyy/+wAFM2knZ7MenAzU=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftDarwin" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -87,7 +105,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			yOZDTamXbl6ynLZp9qnzsE3tHzg=
+			OiWLG3AiX+RG34uXXqBPObRdSXg=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftDispatch" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -96,7 +114,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			ncZ69coM/h8All8+sujyXKVZabE=
+			PtLCGA4SHlvQyZP5TZ9j92aiKEM=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftFoundation" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -105,28 +123,10 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			AVGxQjqZLcqxoXWpdBC83bZu7YU=
+			v/5JOPJ6NON3XmH5J9KXxNHEg4g=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftObjectiveC" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
-		</dict>
-		<key>Frameworks/libswiftQuartzCore.dylib</key>
-		<dict>
-			<key>cdhash</key>
-			<data>
-			RYIPNdIiMVv/KcQrqHbUvjknkjk=
-			</data>
-			<key>requirement</key>
-			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftQuartzCore" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
-		</dict>
-		<key>Frameworks/libswiftSecurity.dylib</key>
-		<dict>
-			<key>cdhash</key>
-			<data>
-			giDIZNjLFTIUKIN7HJ5GxokPK8U=
-			</data>
-			<key>requirement</key>
-			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftSecurity" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
 		</dict>
 		<key>Resources/AppIcon.icns</key>
 		<data>
@@ -136,7 +136,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			aafLzhbvFeyAZFt4q2GdIvn42mQ=
+			qGush1F+8xj3+BVk4eHVGZnfMr0=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -145,7 +145,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			iRDK0lLdWU6w1WpjWWkWxVcCtRo=
+			WwZz04JU+fygpZ807gzEmoA6gVI=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -154,7 +154,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			1CaM5HgncGgXzXNg75SO3MfshXQ=
+			wRnFLzahzrvDjzUshcBucFAs30o=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -163,7 +163,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Uo8KT6kGKsN5+b/snwMEWcVyZO0=
+			pWKlcvyL1cNqmJW4SBMSF4qxTgI=
 			</data>
 			<key>optional</key>
 			<true/>

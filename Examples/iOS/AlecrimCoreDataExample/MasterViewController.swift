@@ -55,19 +55,6 @@ class MasterViewController: UITableViewController {
         // Configure the new managed object.
         newEvent.timeStamp = NSDate()
         
-        // Create child
-        newEvent.child = dataContext.subEvents.createEntity()
-        newEvent.child?.title = "My child"
-        
-        // Create children
-        var child1 = dataContext.subEvents.createEntity()
-        child1.title = "My child 1"
-        newEvent.children.insert(child1)
-        
-        var child2 = dataContext.subEvents.createEntity()
-        child2.title = "My child 2"
-        newEvent.children.insert(child2)
-        
         // Save the background data context.
         let (success, error) = dataContext.save()
         if !success {

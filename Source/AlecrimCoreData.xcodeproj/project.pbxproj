@@ -7,47 +7,65 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1451E0161B29F7BA00689C58 /* ALCFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1451E0151B29F7BA00689C58 /* ALCFetchedResultsController.swift */; };
-		1464BD1D1B20F973007CD240 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD0F1B20F973007CD240 /* Attribute.swift */; };
-		1464BD1E1B20F973007CD240 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD111B20F973007CD240 /* Context.swift */; };
-		1464BD1F1B20F973007CD240 /* ContextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD121B20F973007CD240 /* ContextOptions.swift */; };
-		1464BD211B20F973007CD240 /* NSManagedObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD151B20F973007CD240 /* NSManagedObjectExtensions.swift */; };
-		1464BD221B20F973007CD240 /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD171B20F973007CD240 /* FetchedResultsController.swift */; };
-		1464BD231B20F973007CD240 /* FetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD181B20F973007CD240 /* FetchedResultsSectionInfo.swift */; };
-		1464BD241B20F973007CD240 /* AttributeQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD1A1B20F973007CD240 /* AttributeQuery.swift */; };
-		1464BD251B20F973007CD240 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD1B1B20F973007CD240 /* Query.swift */; };
-		1464BD261B20F973007CD240 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD1C1B20F973007CD240 /* Table.swift */; };
-		1464BD281B20F9C9007CD240 /* SingleEntityAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD271B20F9C9007CD240 /* SingleEntityAttribute.swift */; };
-		1464BD2A1B20FA29007CD240 /* EntitySetAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD291B20FA29007CD240 /* EntitySetAttribute.swift */; };
-		1464BD2C1B20FA81007CD240 /* EntitySetCollectionOperatorAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD2B1B20FA81007CD240 /* EntitySetCollectionOperatorAttribute.swift */; };
-		1464BD2E1B20FAB5007CD240 /* NSPredicateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1464BD2D1B20FAB5007CD240 /* NSPredicateExtensions.swift */; };
-		149733741B21F716000A0EDE /* FetchAsyncHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 149733731B21F716000A0EDE /* FetchAsyncHandler.swift */; };
-		14CCE9261AC114DD00AE47F1 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 14CCE8A61AC10E5500AE47F1 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1412424E1B641AA600FFC670 /* AlecrimCoreDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1412424D1B641AA600FFC670 /* AlecrimCoreDataError.swift */; };
+		1447ADD01B52B2F000ADEAED /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 1447ADCF1B52B2F000ADEAED /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		145D97311B5DA55C00995795 /* Enumerable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D97261B5DA55C00995795 /* Enumerable.swift */; };
+		14CB031B1B778FAE00EB87B8 /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D97271B5DA55C00995795 /* Queryable.swift */; };
+		14CB031C1B778FBA00EB87B8 /* AttributeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D97251B5DA55C00995795 /* AttributeType.swift */; };
+		14CB031D1B778FC400EB87B8 /* DataContextOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143D67231B60D5F1001B6ED3 /* DataContextOptions.swift */; };
+		14CB031F1B7790E900EB87B8 /* GenericQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1410FEF71B64033300F45A58 /* GenericQueryable.swift */; };
+		14CB03201B77915800EB87B8 /* CoreDataQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FBAD6B1B76B23000EB662A /* CoreDataQueryable.swift */; };
+		14CB03211B77916700EB87B8 /* TableType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D97281B5DA55C00995795 /* TableType.swift */; };
+		14CB03221B7791DB00EB87B8 /* AttributeQueryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148C17411B76B5980011BD00 /* AttributeQueryType.swift */; };
+		14CB03231B77959400EB87B8 /* Attribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D972A1B5DA55C00995795 /* Attribute.swift */; };
+		14CB03251B7795AE00EB87B8 /* NSManagedObjectContextExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A5016F1B671A400057DD8B /* NSManagedObjectContextExtensions.swift */; };
+		14CB03261B7795B400EB87B8 /* NSManagedObjectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D97221B5DA55C00995795 /* NSManagedObjectExtensions.swift */; };
+		14CB03271B7795B900EB87B8 /* NSPredicateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D97231B5DA55C00995795 /* NSPredicateExtensions.swift */; };
+		14CB032B1B7795E700EB87B8 /* Table.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D972B1B5DA55C00995795 /* Table.swift */; };
+		14CB032C1B7795ED00EB87B8 /* AttributeQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FBAD691B76AF2100EB662A /* AttributeQuery.swift */; };
+		14CB032F1B7795F600EB87B8 /* DataContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D971F1B5DA55C00995795 /* DataContext.swift */; };
+		14CB03301B7795F600EB87B8 /* ALCFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1468BE271B6581F700547C54 /* ALCFetchedResultsController.swift */; };
+		14CB03311B7795F600EB87B8 /* FetchRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 141242541B6461F700FFC670 /* FetchRequestController.swift */; };
+		14CB03321B7795F600EB87B8 /* FetchRequestControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */; };
+		14CB03331B77960300EB87B8 /* NSArrayControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501771B6737560057DD8B /* NSArrayControllerExtensions.swift */; };
+		14CB03341B77960300EB87B8 /* NSCollectionViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501751B6736700057DD8B /* NSCollectionViewExtensions.swift */; };
+		14CB03361B77960800EB87B8 /* NSFetchedResultsControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A5017B1B6739F40057DD8B /* NSFetchedResultsControllerExtensions.swift */; };
+		14CB03371B77960800EB87B8 /* UITableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501711B6732820057DD8B /* UITableViewExtensions.swift */; };
+		14CB03381B77960800EB87B8 /* UICollectionViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501731B6733890057DD8B /* UICollectionViewExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1451E0151B29F7BA00689C58 /* ALCFetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALCFetchedResultsController.swift; sourceTree = "<group>"; };
-		1464BD0F1B20F973007CD240 /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
-		1464BD111B20F973007CD240 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
-		1464BD121B20F973007CD240 /* ContextOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContextOptions.swift; sourceTree = "<group>"; };
-		1464BD151B20F973007CD240 /* NSManagedObjectExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSManagedObjectExtensions.swift; sourceTree = "<group>"; };
-		1464BD171B20F973007CD240 /* FetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
-		1464BD181B20F973007CD240 /* FetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
-		1464BD1A1B20F973007CD240 /* AttributeQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeQuery.swift; sourceTree = "<group>"; };
-		1464BD1B1B20F973007CD240 /* Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
-		1464BD1C1B20F973007CD240 /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
-		1464BD271B20F9C9007CD240 /* SingleEntityAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleEntityAttribute.swift; sourceTree = "<group>"; };
-		1464BD291B20FA29007CD240 /* EntitySetAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntitySetAttribute.swift; sourceTree = "<group>"; };
-		1464BD2B1B20FA81007CD240 /* EntitySetCollectionOperatorAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntitySetCollectionOperatorAttribute.swift; sourceTree = "<group>"; };
-		1464BD2D1B20FAB5007CD240 /* NSPredicateExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSPredicateExtensions.swift; sourceTree = "<group>"; };
-		149733731B21F716000A0EDE /* FetchAsyncHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchAsyncHandler.swift; sourceTree = "<group>"; };
-		14CCE8A51AC10E5500AE47F1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		14CCE8A61AC10E5500AE47F1 /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
-		14CCE8C21AC10F4600AE47F1 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1410FEF71B64033300F45A58 /* GenericQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericQueryable.swift; sourceTree = "<group>"; };
+		1412424D1B641AA600FFC670 /* AlecrimCoreDataError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlecrimCoreDataError.swift; sourceTree = "<group>"; };
+		141242541B6461F700FFC670 /* FetchRequestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequestController.swift; sourceTree = "<group>"; };
+		143D67231B60D5F1001B6ED3 /* DataContextOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataContextOptions.swift; sourceTree = "<group>"; };
+		1447ADCC1B52B2F000ADEAED /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1447ADCF1B52B2F000ADEAED /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
+		1447ADD11B52B2F000ADEAED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		145D971F1B5DA55C00995795 /* DataContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataContext.swift; sourceTree = "<group>"; };
+		145D97221B5DA55C00995795 /* NSManagedObjectExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSManagedObjectExtensions.swift; sourceTree = "<group>"; };
+		145D97231B5DA55C00995795 /* NSPredicateExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSPredicateExtensions.swift; sourceTree = "<group>"; };
+		145D97251B5DA55C00995795 /* AttributeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeType.swift; sourceTree = "<group>"; };
+		145D97261B5DA55C00995795 /* Enumerable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enumerable.swift; sourceTree = "<group>"; };
+		145D97271B5DA55C00995795 /* Queryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queryable.swift; sourceTree = "<group>"; };
+		145D97281B5DA55C00995795 /* TableType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableType.swift; sourceTree = "<group>"; };
+		145D972A1B5DA55C00995795 /* Attribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attribute.swift; sourceTree = "<group>"; };
+		145D972B1B5DA55C00995795 /* Table.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Table.swift; sourceTree = "<group>"; };
+		1468BE271B6581F700547C54 /* ALCFetchedResultsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ALCFetchedResultsController.swift; sourceTree = "<group>"; };
+		148C17411B76B5980011BD00 /* AttributeQueryType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeQueryType.swift; sourceTree = "<group>"; };
+		14A5016F1B671A400057DD8B /* NSManagedObjectContextExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContextExtensions.swift; sourceTree = "<group>"; };
+		14A501711B6732820057DD8B /* UITableViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableViewExtensions.swift; sourceTree = "<group>"; };
+		14A501731B6733890057DD8B /* UICollectionViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UICollectionViewExtensions.swift; sourceTree = "<group>"; };
+		14A501751B6736700057DD8B /* NSCollectionViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSCollectionViewExtensions.swift; sourceTree = "<group>"; };
+		14A501771B6737560057DD8B /* NSArrayControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSArrayControllerExtensions.swift; sourceTree = "<group>"; };
+		14A5017B1B6739F40057DD8B /* NSFetchedResultsControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSFetchedResultsControllerExtensions.swift; sourceTree = "<group>"; };
+		14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequestControllerDelegate.swift; sourceTree = "<group>"; };
+		14FBAD691B76AF2100EB662A /* AttributeQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeQuery.swift; sourceTree = "<group>"; };
+		14FBAD6B1B76B23000EB662A /* CoreDataQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataQueryable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		14CCE8BE1AC10F4600AE47F1 /* Frameworks */ = {
+		1447ADC81B52B2F000ADEAED /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -57,98 +75,123 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1464BD0D1B20F973007CD240 /* Classes */ = {
+		1412424C1B641A8B00FFC670 /* Enums */ = {
 			isa = PBXGroup;
 			children = (
-				1464BD101B20F973007CD240 /* Context */,
-				1464BD0E1B20F973007CD240 /* Attributes */,
-				1464BD191B20F973007CD240 /* Queries */,
-				1464BD141B20F973007CD240 /* Extensions */,
-				1464BD161B20F973007CD240 /* Other */,
+				1412424D1B641AA600FFC670 /* AlecrimCoreDataError.swift */,
 			);
-			path = Classes;
+			path = Enums;
 			sourceTree = "<group>";
 		};
-		1464BD0E1B20F973007CD240 /* Attributes */ = {
+		1447ADC21B52B2F000ADEAED = {
 			isa = PBXGroup;
 			children = (
-				1464BD0F1B20F973007CD240 /* Attribute.swift */,
-				1464BD271B20F9C9007CD240 /* SingleEntityAttribute.swift */,
-				1464BD291B20FA29007CD240 /* EntitySetAttribute.swift */,
-				1464BD2B1B20FA81007CD240 /* EntitySetCollectionOperatorAttribute.swift */,
-			);
-			path = Attributes;
-			sourceTree = "<group>";
-		};
-		1464BD101B20F973007CD240 /* Context */ = {
-			isa = PBXGroup;
-			children = (
-				1464BD111B20F973007CD240 /* Context.swift */,
-				1464BD121B20F973007CD240 /* ContextOptions.swift */,
-				149733731B21F716000A0EDE /* FetchAsyncHandler.swift */,
-			);
-			path = Context;
-			sourceTree = "<group>";
-		};
-		1464BD141B20F973007CD240 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				1464BD151B20F973007CD240 /* NSManagedObjectExtensions.swift */,
-				1464BD2D1B20FAB5007CD240 /* NSPredicateExtensions.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		1464BD161B20F973007CD240 /* Other */ = {
-			isa = PBXGroup;
-			children = (
-				1451E0151B29F7BA00689C58 /* ALCFetchedResultsController.swift */,
-				1464BD171B20F973007CD240 /* FetchedResultsController.swift */,
-				1464BD181B20F973007CD240 /* FetchedResultsSectionInfo.swift */,
-			);
-			path = Other;
-			sourceTree = "<group>";
-		};
-		1464BD191B20F973007CD240 /* Queries */ = {
-			isa = PBXGroup;
-			children = (
-				1464BD1B1B20F973007CD240 /* Query.swift */,
-				1464BD1A1B20F973007CD240 /* AttributeQuery.swift */,
-				1464BD1C1B20F973007CD240 /* Table.swift */,
-			);
-			path = Queries;
-			sourceTree = "<group>";
-		};
-		14CCE8971AC10E5500AE47F1 = {
-			isa = PBXGroup;
-			children = (
-				14CCE8A31AC10E5500AE47F1 /* AlecrimCoreData */,
-				14CCE8A21AC10E5500AE47F1 /* Products */,
+				1447ADCE1B52B2F000ADEAED /* AlecrimCoreData */,
+				1447ADCD1B52B2F000ADEAED /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		14CCE8A21AC10E5500AE47F1 /* Products */ = {
+		1447ADCD1B52B2F000ADEAED /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				14CCE8C21AC10F4600AE47F1 /* AlecrimCoreData.framework */,
+				1447ADCC1B52B2F000ADEAED /* AlecrimCoreData.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		14CCE8A31AC10E5500AE47F1 /* AlecrimCoreData */ = {
+		1447ADCE1B52B2F000ADEAED /* AlecrimCoreData */ = {
 			isa = PBXGroup;
 			children = (
-				14CCE8A61AC10E5500AE47F1 /* AlecrimCoreData.h */,
-				1464BD0D1B20F973007CD240 /* Classes */,
-				14CCE8A41AC10E5500AE47F1 /* Supporting Files */,
+				1447ADCF1B52B2F000ADEAED /* AlecrimCoreData.h */,
+				145D971D1B5DA55C00995795 /* Core */,
+				14F3C1D01B5972AA008484AB /* Supporting Files */,
 			);
 			path = AlecrimCoreData;
 			sourceTree = "<group>";
 		};
-		14CCE8A41AC10E5500AE47F1 /* Supporting Files */ = {
+		145D971D1B5DA55C00995795 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				14CCE8A51AC10E5500AE47F1 /* Info.plist */,
+				1412424C1B641A8B00FFC670 /* Enums */,
+				145D97241B5DA55C00995795 /* Protocols */,
+				145D97291B5DA55C00995795 /* Structs */,
+				145D971E1B5DA55C00995795 /* Classes */,
+				145D97211B5DA55C00995795 /* Extensions */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		145D971E1B5DA55C00995795 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				145D971F1B5DA55C00995795 /* DataContext.swift */,
+				1468BE271B6581F700547C54 /* ALCFetchedResultsController.swift */,
+				141242541B6461F700FFC670 /* FetchRequestController.swift */,
+				14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		145D97211B5DA55C00995795 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				14A5016F1B671A400057DD8B /* NSManagedObjectContextExtensions.swift */,
+				145D97221B5DA55C00995795 /* NSManagedObjectExtensions.swift */,
+				145D97231B5DA55C00995795 /* NSPredicateExtensions.swift */,
+				14A5017A1B6737710057DD8B /* OS X */,
+				14A501791B6737600057DD8B /* iOS */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		145D97241B5DA55C00995795 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				145D97261B5DA55C00995795 /* Enumerable.swift */,
+				145D97271B5DA55C00995795 /* Queryable.swift */,
+				1410FEF71B64033300F45A58 /* GenericQueryable.swift */,
+				14FBAD6B1B76B23000EB662A /* CoreDataQueryable.swift */,
+				145D97281B5DA55C00995795 /* TableType.swift */,
+				148C17411B76B5980011BD00 /* AttributeQueryType.swift */,
+				145D97251B5DA55C00995795 /* AttributeType.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		145D97291B5DA55C00995795 /* Structs */ = {
+			isa = PBXGroup;
+			children = (
+				145D972A1B5DA55C00995795 /* Attribute.swift */,
+				145D972B1B5DA55C00995795 /* Table.swift */,
+				14FBAD691B76AF2100EB662A /* AttributeQuery.swift */,
+				143D67231B60D5F1001B6ED3 /* DataContextOptions.swift */,
+			);
+			path = Structs;
+			sourceTree = "<group>";
+		};
+		14A501791B6737600057DD8B /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				14A5017B1B6739F40057DD8B /* NSFetchedResultsControllerExtensions.swift */,
+				14A501711B6732820057DD8B /* UITableViewExtensions.swift */,
+				14A501731B6733890057DD8B /* UICollectionViewExtensions.swift */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		14A5017A1B6737710057DD8B /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				14A501771B6737560057DD8B /* NSArrayControllerExtensions.swift */,
+				14A501751B6736700057DD8B /* NSCollectionViewExtensions.swift */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
+		14F3C1D01B5972AA008484AB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1447ADD11B52B2F000ADEAED /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -156,25 +199,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		14CCE8BF1AC10F4600AE47F1 /* Headers */ = {
+		1447ADC91B52B2F000ADEAED /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14CCE9261AC114DD00AE47F1 /* AlecrimCoreData.h in Headers */,
+				1447ADD01B52B2F000ADEAED /* AlecrimCoreData.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		14CCE8C11AC10F4600AE47F1 /* AlecrimCoreData */ = {
+		1447ADCB1B52B2F000ADEAED /* AlecrimCoreData */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 14CCE8D51AC10F4600AE47F1 /* Build configuration list for PBXNativeTarget "AlecrimCoreData" */;
+			buildConfigurationList = 1447ADD41B52B2F000ADEAED /* Build configuration list for PBXNativeTarget "AlecrimCoreData" */;
 			buildPhases = (
-				14CCE8BD1AC10F4600AE47F1 /* Sources */,
-				14CCE8BE1AC10F4600AE47F1 /* Frameworks */,
-				14CCE8BF1AC10F4600AE47F1 /* Headers */,
-				14CCE8C01AC10F4600AE47F1 /* Resources */,
+				1447ADC71B52B2F000ADEAED /* Sources */,
+				1447ADC81B52B2F000ADEAED /* Frameworks */,
+				1447ADC91B52B2F000ADEAED /* Headers */,
+				1447ADCA1B52B2F000ADEAED /* Resources */,
 			);
 			buildRules = (
 			);
@@ -182,42 +225,43 @@
 			);
 			name = AlecrimCoreData;
 			productName = AlecrimCoreData;
-			productReference = 14CCE8C21AC10F4600AE47F1 /* AlecrimCoreData.framework */;
+			productReference = 1447ADCC1B52B2F000ADEAED /* AlecrimCoreData.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		14CCE8981AC10E5500AE47F1 /* Project object */ = {
+		1447ADC31B52B2F000ADEAED /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Alecrim;
 				TargetAttributes = {
-					14CCE8C11AC10F4600AE47F1 = {
-						CreatedOnToolsVersion = 6.3;
+					1447ADCB1B52B2F000ADEAED = {
+						CreatedOnToolsVersion = 7.0;
 					};
 				};
 			};
-			buildConfigurationList = 14CCE89B1AC10E5500AE47F1 /* Build configuration list for PBXProject "AlecrimCoreData" */;
+			buildConfigurationList = 1447ADC61B52B2F000ADEAED /* Build configuration list for PBXProject "AlecrimCoreData" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = 14CCE8971AC10E5500AE47F1;
-			productRefGroup = 14CCE8A21AC10E5500AE47F1 /* Products */;
+			mainGroup = 1447ADC21B52B2F000ADEAED;
+			productRefGroup = 1447ADCD1B52B2F000ADEAED /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				14CCE8C11AC10F4600AE47F1 /* AlecrimCoreData */,
+				1447ADCB1B52B2F000ADEAED /* AlecrimCoreData */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		14CCE8C01AC10F4600AE47F1 /* Resources */ = {
+		1447ADCA1B52B2F000ADEAED /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -227,32 +271,41 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		14CCE8BD1AC10F4600AE47F1 /* Sources */ = {
+		1447ADC71B52B2F000ADEAED /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1464BD281B20F9C9007CD240 /* SingleEntityAttribute.swift in Sources */,
-				1464BD231B20F973007CD240 /* FetchedResultsSectionInfo.swift in Sources */,
-				1464BD251B20F973007CD240 /* Query.swift in Sources */,
-				1464BD241B20F973007CD240 /* AttributeQuery.swift in Sources */,
-				1464BD2A1B20FA29007CD240 /* EntitySetAttribute.swift in Sources */,
-				1464BD1D1B20F973007CD240 /* Attribute.swift in Sources */,
-				1464BD1E1B20F973007CD240 /* Context.swift in Sources */,
-				1464BD261B20F973007CD240 /* Table.swift in Sources */,
-				1464BD1F1B20F973007CD240 /* ContextOptions.swift in Sources */,
-				1464BD221B20F973007CD240 /* FetchedResultsController.swift in Sources */,
-				1464BD211B20F973007CD240 /* NSManagedObjectExtensions.swift in Sources */,
-				1464BD2E1B20FAB5007CD240 /* NSPredicateExtensions.swift in Sources */,
-				1464BD2C1B20FA81007CD240 /* EntitySetCollectionOperatorAttribute.swift in Sources */,
-				149733741B21F716000A0EDE /* FetchAsyncHandler.swift in Sources */,
-				1451E0161B29F7BA00689C58 /* ALCFetchedResultsController.swift in Sources */,
+				14CB03231B77959400EB87B8 /* Attribute.swift in Sources */,
+				14CB032F1B7795F600EB87B8 /* DataContext.swift in Sources */,
+				14CB031D1B778FC400EB87B8 /* DataContextOptions.swift in Sources */,
+				14CB031C1B778FBA00EB87B8 /* AttributeType.swift in Sources */,
+				14CB03321B7795F600EB87B8 /* FetchRequestControllerDelegate.swift in Sources */,
+				14CB03261B7795B400EB87B8 /* NSManagedObjectExtensions.swift in Sources */,
+				14CB03311B7795F600EB87B8 /* FetchRequestController.swift in Sources */,
+				14CB03371B77960800EB87B8 /* UITableViewExtensions.swift in Sources */,
+				14CB03251B7795AE00EB87B8 /* NSManagedObjectContextExtensions.swift in Sources */,
+				14CB03201B77915800EB87B8 /* CoreDataQueryable.swift in Sources */,
+				14CB03221B7791DB00EB87B8 /* AttributeQueryType.swift in Sources */,
+				14CB031F1B7790E900EB87B8 /* GenericQueryable.swift in Sources */,
+				14CB03211B77916700EB87B8 /* TableType.swift in Sources */,
+				14CB032B1B7795E700EB87B8 /* Table.swift in Sources */,
+				14CB03301B7795F600EB87B8 /* ALCFetchedResultsController.swift in Sources */,
+				14CB03341B77960300EB87B8 /* NSCollectionViewExtensions.swift in Sources */,
+				14CB03381B77960800EB87B8 /* UICollectionViewExtensions.swift in Sources */,
+				14CB03331B77960300EB87B8 /* NSArrayControllerExtensions.swift in Sources */,
+				145D97311B5DA55C00995795 /* Enumerable.swift in Sources */,
+				1412424E1B641AA600FFC670 /* AlecrimCoreDataError.swift in Sources */,
+				14CB032C1B7795ED00EB87B8 /* AttributeQuery.swift in Sources */,
+				14CB03361B77960800EB87B8 /* NSFetchedResultsControllerExtensions.swift in Sources */,
+				14CB03271B7795B900EB87B8 /* NSPredicateExtensions.swift in Sources */,
+				14CB031B1B778FAE00EB87B8 /* Queryable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		14CCE8B51AC10E5500AE47F1 /* Debug */ = {
+		1447ADD21B52B2F000ADEAED /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -271,8 +324,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -281,7 +336,6 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -292,17 +346,18 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx10.10;
-				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator watchos";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64 armv7 armv7s x86_64";
+				VALID_ARCHS = "x86_64 arm64 armv7 armv7s armv7k";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
-		14CCE8B61AC10E5500AE47F1 /* Release */ = {
+		1447ADD31B52B2F000ADEAED /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -321,6 +376,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -335,82 +391,79 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = macosx10.10;
-				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "arm64 armv7 armv7s x86_64";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator watchos";
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				VALID_ARCHS = "x86_64 arm64 armv7 armv7s armv7k";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
-		14CCE8D61AC10F4600AE47F1 /* Debug */ = {
+		1447ADD51B52B2F000ADEAED /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 293;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = "$(DYLIB_CURRENT_VERSION)";
-				DYLIB_CURRENT_VERSION = "$(CURRENT_PROJECT_VERSION)";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = AlecrimCoreData/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alecrim.AlecrimCoreData;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		14CCE8D71AC10F4600AE47F1 /* Release */ = {
+		1447ADD61B52B2F000ADEAED /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 293;
 				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = "$(DYLIB_CURRENT_VERSION)";
-				DYLIB_CURRENT_VERSION = "$(CURRENT_PROJECT_VERSION)";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = AlecrimCoreData/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alecrim.AlecrimCoreData;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				SWIFT_INSTALL_OBJC_HEADER = YES;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		14CCE89B1AC10E5500AE47F1 /* Build configuration list for PBXProject "AlecrimCoreData" */ = {
+		1447ADC61B52B2F000ADEAED /* Build configuration list for PBXProject "AlecrimCoreData" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				14CCE8B51AC10E5500AE47F1 /* Debug */,
-				14CCE8B61AC10E5500AE47F1 /* Release */,
+				1447ADD21B52B2F000ADEAED /* Debug */,
+				1447ADD31B52B2F000ADEAED /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		14CCE8D51AC10F4600AE47F1 /* Build configuration list for PBXNativeTarget "AlecrimCoreData" */ = {
+		1447ADD41B52B2F000ADEAED /* Build configuration list for PBXNativeTarget "AlecrimCoreData" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				14CCE8D61AC10F4600AE47F1 /* Debug */,
-				14CCE8D71AC10F4600AE47F1 /* Release */,
+				1447ADD51B52B2F000ADEAED /* Debug */,
+				1447ADD61B52B2F000ADEAED /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = 14CCE8981AC10E5500AE47F1 /* Project object */;
+	rootObject = 1447ADC31B52B2F000ADEAED /* Project object */;
 }
