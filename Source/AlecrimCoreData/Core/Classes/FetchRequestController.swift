@@ -360,6 +360,6 @@ public final class FetchedResultsController<T: NSManagedObject> {
 }
 
 @available(*, unavailable, renamed="FetchRequestControllerSection")
-public struct FetchedRequestControllerSectionInfo<T: NSManagedObject> {
+public struct FetchedResultsControllerSectionInfo<T: NSManagedObject> {
     
 }
