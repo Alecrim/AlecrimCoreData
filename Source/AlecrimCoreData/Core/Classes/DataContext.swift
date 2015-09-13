@@ -37,7 +37,7 @@ public class DataContext: ChildDataContext {
     ///
     /// - seealso: `DataContextOptions`
     public convenience init() {
-        self.init(dataContextOptions: DataContextOptions())
+        self.init(dataContextOptions: try! DataContextOptions())
     }
     
     /// Initializes a main thread context with the given options.
@@ -303,7 +303,6 @@ public class ManagedObjectContext: NSManagedObjectContext {
                 try notificationContext.obtainPermanentIDsForObjects(Array(notificationContext.insertedObjects))
             }
             catch {
-                
             }
         }
     }
