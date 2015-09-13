@@ -137,6 +137,56 @@ let filteredPeopleCount = dataContext.people
     .count()
 ```
 
+#### Create, update, delete and save
+
+##### Creating and updating entities
+
+When you need to create a new instance of an Entity, use:
+
+```swift
+let person = dataContext.people.createEntity()
+```
+
+You can also create or get first existing entity matching the criteria. If the entity does not exist, a new one is created and the specified attribute is assigned from the searched value automatically.
+
+```swift
+let person = dataContext.people.firstOrCreated({ $ 0.identifier == 123 })
+```
+
+##### Deleting entities
+
+To delete a single entity:
+
+```swift
+if let person = dataContext.people.first({ $0.identifier == 123 }) {
+    dataContext.people.deleteEntity(person)
+}
+```
+
+To delete many entities:
+
+```swift
+dataContext.departments.filter({ $0.people.count == 0 }).delete()
+```
+
+#### Saving
+
+You can save the data context in the end, after all changes were made.
+
+```swift
+let person = dataContext.people.firstOrCreated { $0.identifier == 9 }
+person.firstName = "Christopher"
+person.lastName = "Eccleston"
+person.additionalInfo = "The best Doctor ever!"
+
+do {
+    dataContext.save()
+}
+catch let error {
+    // do a nice error handling here
+}
+```
+
 #### Strongly-typed query attributes and ACDGen
 
 Other important part of **AlecrimCoreData** is the use of strongly-typed query attributes. It is a lot of code to write manually to support them, however. Thinking of this, it was created the **ACDGen** tool, where you can point to your managed object model and the source code for the entities is automatically generated, including the **AlecrimCoreData** query attributes if you want.
@@ -146,6 +196,30 @@ Using the generated strongly-typed query attributes is completely optional, but 
 (Since **AlecrimCoreData** version 4 the **ACDGen** tool is a separated project and you can download it from https://github.com/Alecrim/ACDGen.)
 
 ### Advanced use
+
+OK. You can write code like this:
+
+```swift
+let itemsPerPage = 10  
+
+for pageNumber in 0..<5 {
+    println("Page: \(pageNumber)")
+
+    let peopleInCurrentPage = dataContext.people
+        .filter { $0.department << [dept1, dept2] }
+        .orderBy { $0.firstName }
+        .thenBy { $0.lastName }
+        .skip(pageNumber * itemsPerPage)
+        .take(itemsPerPage)
+
+    for person in peopleInCurrentPage {
+        println("\(person.firstName) \(person.lastName) - \(person.department.name)")
+    }
+}
+```
+
+But you can do even more with **AlecrimCoreData**. There is an implementation of `NSFetchedResultsController` for OS X, `FetchRequestController` (a strongly-typed wrapper for `NSFetchedResultsController`), for example. You are invited to read the documentation and the code and discover more possibilities (and to help us to improve them and create new ones as well).
+
 
 #### Advanced methods
 
