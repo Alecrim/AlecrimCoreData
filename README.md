@@ -220,7 +220,7 @@ for pageNumber in 0..<5 {
 
 But you can do even more with **AlecrimCoreData**.
 
-There is an implementation of `NSFetchedResultsController` for OS X and the `FetchRequestController` (a strongly-typed wrapper for `NSFetchedResultsController`), for example.
+There are an implementation of `NSFetchedResultsController` for OS X and the `FetchRequestController` that is a strongly-typed wrapper for `NSFetchedResultsController`, for example.
 
 You are invited to read the code and discover more possibilities (and to help us to improve them and create new ones).
 
