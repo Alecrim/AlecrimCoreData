@@ -150,7 +150,7 @@ let person = dataContext.people.createEntity()
 You can also create or get first existing entity matching the criteria. If the entity does not exist, a new one is created and the specified attribute is assigned from the searched value automatically.
 
 ```swift
-let person = dataContext.people.firstOrCreated({ $ 0.identifier == 123 })
+let person = dataContext.people.firstOrCreated { $ 0.identifier == 123 }
 ```
 
 ##### Deleting entities
@@ -200,15 +200,17 @@ Using the generated strongly-typed query attributes is completely optional, but 
 OK. You can write code like this:
 
 ```swift
+let peopleInDepartments = dataContext.people
+    .filter { $0.department << [dept1, dept2] }
+    .orderBy { $0.firstName }
+    .thenBy { $0.lastName }
+        
 let itemsPerPage = 10  
 
 for pageNumber in 0..<5 {
     println("Page: \(pageNumber)")
 
-    let peopleInCurrentPage = dataContext.people
-        .filter { $0.department << [dept1, dept2] }
-        .orderBy { $0.firstName }
-        .thenBy { $0.lastName }
+    let peopleInCurrentPage = peopleInDepartments
         .skip(pageNumber * itemsPerPage)
         .take(itemsPerPage)
 
