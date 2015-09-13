@@ -200,6 +200,7 @@ Using the generated strongly-typed query attributes is completely optional, but 
 OK. You can write code like this:
 
 ```swift
+// No data access is made here.
 let peopleInDepartments = dataContext.people
     .filter { $0.department << [dept1, dept2] }
     .orderBy { $0.firstName }
@@ -210,10 +211,12 @@ let itemsPerPage = 10
 for pageNumber in 0..<5 {
     println("Page: \(pageNumber)")
 
+    // No data access is made here either.
     let peopleInCurrentPage = peopleInDepartments
         .skip(pageNumber * itemsPerPage)
         .take(itemsPerPage)
 
+    // Now is when the data is read from persistent store.
     for person in peopleInCurrentPage {
         println("\(person.firstName) \(person.lastName) - \(person.department.name)")
     }
