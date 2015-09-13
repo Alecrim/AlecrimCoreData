@@ -169,7 +169,7 @@ To delete many entities:
 dataContext.departments.filter({ $0.people.count == 0 }).delete()
 ```
 
-#### Saving
+##### Saving
 
 You can save the data context in the end, after all changes were made.
 
@@ -218,7 +218,11 @@ for pageNumber in 0..<5 {
 }
 ```
 
-But you can do even more with **AlecrimCoreData**. There is an implementation of `NSFetchedResultsController` for OS X, `FetchRequestController` (a strongly-typed wrapper for `NSFetchedResultsController`), for example. You are invited to read the documentation and the code and discover more possibilities (and to help us to improve them and create new ones as well).
+But you can do even more with **AlecrimCoreData**.
+
+There is an implementation of `NSFetchedResultsController` for OS X and the `FetchRequestController` (a strongly-typed wrapper for `NSFetchedResultsController`), for example.
+
+You are invited to read the code and discover more possibilities (and to help us to improve them and create new ones).
 
 
 #### Advanced methods
