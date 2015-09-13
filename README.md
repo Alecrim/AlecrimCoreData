@@ -139,11 +139,11 @@ let filteredPeopleCount = dataContext.people
 
 #### Strongly-typed query attributes and ACDGen
 
-Another "pillar" of **AlecrimCoreData** are strongly-typed query attributes. It is a lot of code to write manually to support them, however. Thinking of this, it was created the **ACDGen** tool, where you can point to your managed object model and the source code for the entities is automatically generated, including the **AlecrimCoreData** query attributes if you want.
+Other important part of **AlecrimCoreData** is the use of strongly-typed query attributes. It is a lot of code to write manually to support them, however. Thinking of this, it was created the **ACDGen** tool, where you can point to your managed object model and the source code for the entities is automatically generated, including the **AlecrimCoreData** query attributes if you want.
 
 Using the generated strongly-typed query attributes is completely optional, but with them the experience with **AlecrimCoreData** is greatly improved.
 
-(Since **AlecrimCoreData** version 4 the **ACDGen** tool is a separated projetct and you can download it from https://github.com/Alecrim/ACDGen.)
+(Since **AlecrimCoreData** version 4 the **ACDGen** tool is a separated project and you can download it from https://github.com/Alecrim/ACDGen.)
 
 ### Advanced use
 
@@ -153,7 +153,7 @@ There are methods for aggregating, asynchronous fetching in background and many 
 
 #### Ordering and filtering
 
-You can order and filter entities not using the **AlecrimCoreData** query attributes at all. In this case you lose the strong typed attributes, but gain in flexibility. You can even mix the two approaches without any problem.
+You can order and filter entities not using the **AlecrimCoreData** query attributes at all. In this case you lose the strongly-typed attributes, but gain in flexibility. You can even mix the two approaches without any problem.
 
 ##### Ordering
 
