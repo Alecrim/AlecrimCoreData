@@ -15,23 +15,15 @@ public struct Attribute<T>: AttributeType {
     public typealias ValueType = T
     
     public let ___name: String
-//    public let ___expression: NSExpression
     
     public init(_ name: String) {
         self.___name = name
-//        self.___expression = NSExpression(forKeyPath: self.___name)
     }
 
     public init(_ name: String, _ parentAttribute: NamedAttributeType) {
         self.___name = parentAttribute.___name + "." + name
-//        self.___expression = NSExpression(forKeyPath: self.___name)
     }
     
-//    private init(_ name: String, _ expression: NSExpression) {
-//        self.___name = name
-//        self.___expression = expression
-//    }
-
 }
 
 // MARK: nullable (comparable to nil) attribute
@@ -80,20 +72,3 @@ extension Attribute where T: CollectionType {
     }
 
 }
-
-//extension Attribute where T: CollectionType {
-//    
-//    public func count(@noescape closure: (Attribute<T.Generator.Element>) -> NSPredicate) -> Attribute<Int> {
-//        let expression = NSExpression(forKeyPath: self.___name)
-//        let variable = "v"
-//        let predicate = closure(Attribute<T.Generator.Element>("$" + variable))
-//        
-//        let subqueryExpression = NSExpression(forSubquery: expression, usingIteratorVariable: variable, predicate: predicate)
-//        let countExpression = NSExpression(format: "%@.@count", argumentArray: [subqueryExpression])
-//        
-//        print(countExpression.expressionType.rawValue)
-//        
-//        return Attribute<Int>(countExpression.description, countExpression);
-//    }
-//
-//}
