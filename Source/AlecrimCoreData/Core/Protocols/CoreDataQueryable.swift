@@ -48,29 +48,33 @@ extension CoreDataQueryable {
 
 extension CoreDataQueryable {
     
-    public func sum<U>(attributeClosure: (Self.Item.Type) -> Attribute<U>) -> U {
-        return self.aggregateWithFunctionName("sum", attributeClosure: attributeClosure)
+    public func sum<U>(@noescape closure: (Self.Item.Type) -> Attribute<U>) -> U {
+        let attribute = closure(Self.Item.self)
+        return self.aggregateWithFunctionName("sum", attribute: attribute)
     }
     
-    public func min<U>(attributeClosure: (Self.Item.Type) -> Attribute<U>) -> U {
-        return self.aggregateWithFunctionName("min", attributeClosure: attributeClosure)
+    public func min<U>(@noescape closure: (Self.Item.Type) -> Attribute<U>) -> U {
+        let attribute = closure(Self.Item.self)
+        return self.aggregateWithFunctionName("min", attribute: attribute)
     }
     
-    public func max<U>(attributeClosure: (Self.Item.Type) -> Attribute<U>) -> U {
-        return self.aggregateWithFunctionName("max", attributeClosure: attributeClosure)
+    public func max<U>(@noescape closure: (Self.Item.Type) -> Attribute<U>) -> U {
+        let attribute = closure(Self.Item.self)
+        return self.aggregateWithFunctionName("max", attribute: attribute)
     }
 
     // same as average, for convenience
-    public func avg<U>(attributeClosure: (Self.Item.Type) -> Attribute<U>) -> U {
-        return self.aggregateWithFunctionName("average", attributeClosure: attributeClosure)
+    public func avg<U>(@noescape closure: (Self.Item.Type) -> Attribute<U>) -> U {
+        let attribute = closure(Self.Item.self)
+        return self.aggregateWithFunctionName("average", attribute: attribute)
     }
 
-    public func average<U>(attributeClosure: (Self.Item.Type) -> Attribute<U>) -> U {
-        return self.aggregateWithFunctionName("average", attributeClosure: attributeClosure)
+    public func average<U>(@noescape closure: (Self.Item.Type) -> Attribute<U>) -> U {
+        let attribute = closure(Self.Item.self)
+        return self.aggregateWithFunctionName("average", attribute: attribute)
     }
     
-    private func aggregateWithFunctionName<U>(functionName: String, @noescape attributeClosure: (Self.Item.Type) -> Attribute<U>) -> U {
-        let attribute = attributeClosure(Self.Item.self)
+    private func aggregateWithFunctionName<U>(functionName: String, attribute: Attribute<U>) -> U {
         let attributeDescription = self.entityDescription.attributesByName[attribute.___name]!
         
         let keyPathExpression = NSExpression(forKeyPath: attribute.___name)
