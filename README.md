@@ -193,7 +193,7 @@ Other important part of **AlecrimCoreData** is the use of strongly-typed query a
 
 Using the generated strongly-typed query attributes is completely optional, but with them the experience with **AlecrimCoreData** is greatly improved.
 
-(Since **AlecrimCoreData** version 4 the **ACDGen** tool is a separated project and you can download it from https://github.com/Alecrim/ACDGen.)
+(Since **AlecrimCoreData** version 4 the **ACDGen** tool is a separated project and you can download it from https://github.com/Alecrim/ACDGen .)
 
 ### Advanced use
 
