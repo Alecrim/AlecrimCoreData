@@ -171,7 +171,7 @@ public class ALCFetchedResultsController: NSObject {
             }
         }
         
-        fatalError("Object not found and we cannot return nil")
+        AlecrimCoreDataError.fatalError("Object not found and we cannot return nil.")
     }
 
     public func indexPathForObject(object: NSManagedObject) -> NSIndexPath? {

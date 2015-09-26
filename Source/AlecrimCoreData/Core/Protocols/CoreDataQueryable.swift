@@ -28,9 +28,8 @@ extension CoreDataQueryable {
         var error: NSError? = nil
         let c = self.dataContext.countForFetchRequest(self.toFetchRequest(), error: &error) // where is the `throws`?
         
-        if let _ = error {
-            // TODO: throw error?
-            return 0
+        if let error = error {
+            AlecrimCoreDataError.handleError(error)
         }
         
         if c != NSNotFound {
@@ -89,15 +88,17 @@ extension CoreDataQueryable {
         fetchRequest.propertiesToFetch =  [expressionDescription]
         fetchRequest.resultType = NSFetchRequestResultType.DictionaryResultType
         
-        let results = try! self.dataContext.executeFetchRequest(fetchRequest)
-        
-        let value: AnyObject = (results.first as! NSDictionary).valueForKey(expressionDescription.name)!
-        if let safeValue = value as? U {
-            return safeValue
+        do {
+            let results = try self.dataContext.executeFetchRequest(fetchRequest)
+            
+            guard let firstResult = results.first as? NSDictionary else { throw AlecrimCoreDataError.UnexpectedValue(value: results) }
+            guard let anyObjectValue = firstResult.valueForKey(expressionDescription.name) else { throw AlecrimCoreDataError.UnexpectedValue(value: firstResult) }
+            guard let value = anyObjectValue as? U else { throw AlecrimCoreDataError.UnexpectedValue(value: anyObjectValue) }
+            
+            return value
         }
-        else {
-            // HAX: try brute force
-            return unsafeBitCast(value, U.self)
+        catch let error {
+            AlecrimCoreDataError.handleError(error)
         }
     }
     

@@ -37,7 +37,12 @@ public class DataContext: ChildDataContext {
     ///
     /// - seealso: `DataContextOptions`
     public convenience init() {
-        self.init(dataContextOptions: try! DataContextOptions())
+        do {
+            self.init(dataContextOptions: try DataContextOptions())
+        }
+        catch let error {
+            AlecrimCoreDataError.handleError(error)
+        }
     }
     
     /// Initializes a main thread context with the given options.
@@ -48,11 +53,16 @@ public class DataContext: ChildDataContext {
     ///
     /// - seealso: `DataContextOptions`
     public init(dataContextOptions: DataContextOptions) {
-        let rootSavingDataContext = try! RootSavingDataContext(dataContextOptions: dataContextOptions)
-        super.init(concurrencyType: .MainQueueConcurrencyType, rootSavingDataContext: rootSavingDataContext)
-        
-        if #available(OSXApplicationExtension 10.10, *) {
-            self.name = "Main Thread Context"
+        do {
+            let rootSavingDataContext = try RootSavingDataContext(dataContextOptions: dataContextOptions)
+            super.init(concurrencyType: .MainQueueConcurrencyType, rootSavingDataContext: rootSavingDataContext)
+            
+            if #available(OSXApplicationExtension 10.10, *) {
+                self.name = "Main Thread Context"
+            }
+        }
+        catch let error {
+            AlecrimCoreDataError.handleError(error)
         }
     }
     

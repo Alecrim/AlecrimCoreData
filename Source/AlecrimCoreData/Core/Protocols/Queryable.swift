@@ -60,8 +60,11 @@ extension Queryable {
     public func sortUsingSortDescriptors(sortDescriptors: [NSSortDescriptor]) -> Self {
         var clone = self
 
-        sortDescriptors.forEach {
-            clone = clone.sortUsingSortDescriptor($0)
+        if clone.sortDescriptors != nil {
+            clone.sortDescriptors! += sortDescriptors
+        }
+        else {
+            clone.sortDescriptors = sortDescriptors
         }
         
         return clone

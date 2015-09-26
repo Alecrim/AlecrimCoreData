@@ -21,8 +21,20 @@ extension NSManagedObject {
         }
         
         let otherManagedObject = try otherContext.existingObjectWithID(self.objectID)
+        
         return unsafeBitCast(otherManagedObject, self.dynamicType)
     }
     
 }
 
+extension NSManagedObject {
+    
+    public func delete() {
+        self.managedObjectContext!.deleteObject(self)
+    }
+    
+    public func refresh(mergeChanges: Bool = true) {
+        self.managedObjectContext!.refreshObject(self, mergeChanges: mergeChanges)
+    }
+
+}
