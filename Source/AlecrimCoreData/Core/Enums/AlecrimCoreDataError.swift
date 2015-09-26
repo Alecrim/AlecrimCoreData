@@ -19,4 +19,22 @@ public enum AlecrimCoreDataError: ErrorType {
     case InvalidPersistentStoreURL
 
     case UnexpectedValue(value: Any)
+    
+    @noreturn
+    public static func handleError(error: ErrorType, message: String = "Unhandled error. See callstack.") {
+        // TODO:
+        self.fatalError(message)
+    }
+    
+    @noreturn
+    public static func fatalError(message: String? = nil) {
+        // TODO:
+        if let message = message {
+            Swift.fatalError(message)
+        }
+        else {
+            Swift.fatalError()
+        }
+    }
+    
 }

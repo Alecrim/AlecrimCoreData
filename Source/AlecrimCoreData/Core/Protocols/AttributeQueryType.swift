@@ -34,28 +34,25 @@ extension AttributeQueryType {
 extension AttributeQueryType {
     
     public func toArray() -> [Self.Item] {
-        var results: [Self.Item] = []
-        
         do {
+            var results: [Self.Item] = []
+            
             let fetchRequestResult = try self.dataContext.executeFetchRequest(self.toFetchRequest())
-            if let dicts = fetchRequestResult as? [NSDictionary] {
-                for dict in dicts {
-                    guard dict.count == 1, let value = dict.allValues.first as? Self.Item else {
-                        throw AlecrimCoreDataError.UnexpectedValue(value: dict)
-                    }
-                    
-                    results.append(value)
+            guard let dicts = fetchRequestResult as? [NSDictionary] else { throw AlecrimCoreDataError.UnexpectedValue(value: fetchRequestResult) }
+            
+            try dicts.forEach {
+                guard $0.count == 1, let value = $0.allValues.first as? Self.Item else {
+                    throw AlecrimCoreDataError.UnexpectedValue(value: $0)
                 }
+                
+                results.append(value)
             }
-            else {
-                throw AlecrimCoreDataError.UnexpectedValue(value: fetchRequestResult)
-            }
+            
+            return results
         }
-        catch {
-            // TODO: throw error?
+        catch let error {
+            AlecrimCoreDataError.handleError(error)
         }
-        
-        return results
     }
     
 }
@@ -65,16 +62,12 @@ extension AttributeQueryType where Self.Item: NSDictionary {
     public func toArray() -> [NSDictionary] {
         do {
             let fetchRequestResult = try self.dataContext.executeFetchRequest(self.toFetchRequest())
-            if let dicts = fetchRequestResult as? [NSDictionary] {
-                return dicts
-            }
-            else {
-                throw AlecrimCoreDataError.UnexpectedValue(value: fetchRequestResult)
-            }
+            guard let dicts = fetchRequestResult as? [NSDictionary] else { throw AlecrimCoreDataError.UnexpectedValue(value: fetchRequestResult) }
+            
+            return dicts
         }
-        catch {
-            // TODO: throw error?
-            return [NSDictionary]()
+        catch let error {
+            AlecrimCoreDataError.handleError(error)
         }
     }
     

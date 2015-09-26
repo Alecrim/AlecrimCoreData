@@ -57,6 +57,19 @@ extension Queryable {
         return clone
     }
 
+    public func sortUsingSortDescriptors(sortDescriptors: [NSSortDescriptor]) -> Self {
+        var clone = self
+
+        if clone.sortDescriptors != nil {
+            clone.sortDescriptors! += sortDescriptors
+        }
+        else {
+            clone.sortDescriptors = sortDescriptors
+        }
+        
+        return clone
+    }
+
 }
 
 // MARK - filtering

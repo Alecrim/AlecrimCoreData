@@ -37,7 +37,12 @@ public class DataContext: ChildDataContext {
     ///
     /// - seealso: `DataContextOptions`
     public convenience init() {
-        self.init(dataContextOptions: DataContextOptions())
+        do {
+            self.init(dataContextOptions: try DataContextOptions())
+        }
+        catch let error {
+            AlecrimCoreDataError.handleError(error)
+        }
     }
     
     /// Initializes a main thread context with the given options.
@@ -48,10 +53,17 @@ public class DataContext: ChildDataContext {
     ///
     /// - seealso: `DataContextOptions`
     public init(dataContextOptions: DataContextOptions) {
-        let rootSavingDataContext = try! RootSavingDataContext(dataContextOptions: dataContextOptions)
-        super.init(concurrencyType: .MainQueueConcurrencyType, rootSavingDataContext: rootSavingDataContext)
-        
-        self.name = "Main Thread Context"
+        do {
+            let rootSavingDataContext = try RootSavingDataContext(dataContextOptions: dataContextOptions)
+            super.init(concurrencyType: .MainQueueConcurrencyType, rootSavingDataContext: rootSavingDataContext)
+            
+            if #available(OSXApplicationExtension 10.10, *) {
+                self.name = "Main Thread Context"
+            }
+        }
+        catch let error {
+            AlecrimCoreDataError.handleError(error)
+        }
     }
     
     /// Initializes a background context that has as parent the given context or the root context of the given context.
@@ -62,7 +74,10 @@ public class DataContext: ChildDataContext {
     public init(parentDataContext: DataContext) {
         super.init(concurrencyType: .PrivateQueueConcurrencyType, rootSavingDataContext: parentDataContext.rootSavingDataContext)
         
-        self.name = "Background Context"
+        if #available(OSXApplicationExtension 10.10, *) {
+            self.name = "Background Context"
+        }
+        
         self.undoManager = nil
     }
     
@@ -93,7 +108,10 @@ public class RootSavingDataContext: ManagedObjectContext {
         self.dataContextOptions = dataContextOptions
         super.init(concurrencyType: .PrivateQueueConcurrencyType)
         
-        self.name = "Root Saving Context"
+        if #available(OSXApplicationExtension 10.10, *) {
+            self.name = "Root Saving Context"
+        }
+        
         self.undoManager = nil
         
         // only the root data context has a direct assigned persistent store coordinator
@@ -295,7 +313,6 @@ public class ManagedObjectContext: NSManagedObjectContext {
                 try notificationContext.obtainPermanentIDsForObjects(Array(notificationContext.insertedObjects))
             }
             catch {
-                
             }
         }
     }

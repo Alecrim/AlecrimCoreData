@@ -20,9 +20,7 @@ public protocol TableType: CoreDataQueryable {
 extension TableType {
     
     public func createEntity() -> Self.Item {
-        let entity = Self.Item(entity: self.entityDescription, insertIntoManagedObjectContext: self.dataContext)
-
-        return entity
+        return Self.Item(entity: self.entityDescription, insertIntoManagedObjectContext: self.dataContext)
     }
 
     public func deleteEntity(entity: Self.Item) {
@@ -42,14 +40,11 @@ extension TableType {
         fetchRequest.resultType = .ManagedObjectIDResultType
         
         let result = try self.dataContext.executeFetchRequest(fetchRequest)
-        if let objectIDs = result as? [NSManagedObjectID] {
-            for objectID in objectIDs {
-                let object = try self.dataContext.existingObjectWithID(objectID)
-                self.dataContext.deleteObject(object)
-            }
-        }
-        else {
-            throw AlecrimCoreDataError.UnexpectedValue(value: result)
+        guard let objectIDs = result as? [NSManagedObjectID] else { throw AlecrimCoreDataError.UnexpectedValue(value: result) }
+        
+        for objectID in objectIDs {
+            let object = try self.dataContext.existingObjectWithID(objectID)
+            self.dataContext.deleteObject(object)
         }
     }
 
@@ -83,31 +78,27 @@ extension TableType {
 extension TableType {
     
     public func toArray() -> [Self.Item] {
-        var results: [Self.Item] = []
-
         do {
+            var results: [Self.Item] = []
+            
             let objects = try self.dataContext.executeFetchRequest(self.toFetchRequest())
             
             if let entities = objects as? [Self.Item] {
                 results += entities
             }
             else {
-                // HAX: `self.dataContext.executeFetchRequest(self.toFetchRequest()) as? [T]` may not work in certain circumstances
-                for object in objects {
-                    if let entity = object as? Self.Item {
-                        results.append(entity)
-                    }
-                    else {
-                        throw AlecrimCoreDataError.UnexpectedValue(value: object)
-                    }
+                // HAX: the previous cast may not work in certain circumstances
+                try objects.forEach {
+                    guard let entity = $0 as? Self.Item else { throw AlecrimCoreDataError.UnexpectedValue(value: $0) }
+                    results.append(entity)
                 }
             }
+            
+            return results
         }
-        catch {
-            // TODO: throw error?
+        catch let error {
+            AlecrimCoreDataError.handleError(error)
         }
-        
-        return results
     }
     
 }
