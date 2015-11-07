@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "AlecrimCoreData"
-  s.version      = "4.0.1"
+  s.version      = "4.0.2"
   s.summary      = "A powerful and simple Core Data wrapper framework written in Swift."
   s.homepage     = "https://github.com/Alecrim/AlecrimCoreData"
 
@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.social_media_url   = "https://twitter.com/vmartinelli"
 
   s.ios.deployment_target     = "8.0"
-  s.osx.deployment_target     = "10.9"
+  s.osx.deployment_target     = "10.10"
   s.watchos.deployment_target = "2.0"
   
   s.source       = { :git => "https://github.com/Alecrim/AlecrimCoreData.git", :tag => s.version }
