@@ -24,6 +24,8 @@ Mixing `DataContext` and "vanilla" `NSManagedObjextContext` instances is possibl
 // Initializes a `DataContext` instance with default options.
 let dataContext = DataContext()
 ```
+**Note:** The `DataContext()` function provides a *unique* instance of a *dataContext* object on the main thread, so make sure to avoid core data concurrency violations.  
+
 
 #### Table
 
@@ -147,7 +149,7 @@ When you need to create a new instance of an Entity, use:
 let person = dataContext.people.createEntity()
 ```
 
-You can also create or get first existing entity matching the criteria. If the entity does not exist, a new one is created and the specified attribute is assigned from the searched value automatically.
+You can also create or get the first existing entity matching the criteria. If the entity does not exist, a new one is created and the specified attribute is assigned from the searched value automatically.
 
 ```swift
 let person = dataContext.people.firstOrCreated { $ 0.identifier == 123 }
@@ -189,9 +191,9 @@ catch let error {
 
 #### Strongly-typed query attributes and ACDGen
 
-Other important part of **AlecrimCoreData** is the use of strongly-typed query attributes. It is a lot of code to write manually to support them, however. Thinking of this, it was created the **ACDGen** tool, where you can point to your managed object model and the source code for the entities is automatically generated, including the **AlecrimCoreData** query attributes if you want.
+Another important part of **AlecrimCoreData** is the use of strongly-typed query attributes.  A lot of boilerplate code is required to support strongly typed queries. With this in mind, the **ACDGen** tool was created. All you have to do is point `ACDGen` to your managed object model and the source code for the entities is automatically generated, including the **AlecrimCoreData** query attributes if you want.
 
-Using the generated strongly-typed query attributes is completely optional, but with them the experience with **AlecrimCoreData** is greatly improved.
+Using the generated strongly-typed query attributes is completely optional, but with them the experience with **AlecrimCoreData** is greatly improved. *The use of strongly-typed query attributes requires a project that has generated extensions of it's model classes using `ACDGen`.* 
 
 **ACDGen** binary and source code are avaible on "ACDGen/Bin" and "ACDGen/Source" folders respectively.
 
@@ -225,7 +227,7 @@ for pageNumber in 0..<5 {
 
 But you can do even more with **AlecrimCoreData**.
 
-There are an implementation of `NSFetchedResultsController` for OS X and the `FetchRequestController` that is a strongly-typed wrapper for `NSFetchedResultsController`, for example.
+There is a implementation of `NSFetchedResultsController` (for OS X) and `FetchRequestController` that is a strongly-typed wrapper for `NSFetchedResultsController`.
 
 You are invited to read the code and discover more possibilities (and to help us to improve them and create new ones).
 
@@ -273,11 +275,11 @@ let filteredPeople = dataContext.people.filterUsingPredicate(predicate)
 
 #### Data context options
 
-If you want to use the `DataContext` class and initializes its instance without parameters **AlecrimCoreData** will try to infer the managed object model and the persistent store locations, based on most common cases.
+If you want to use the `DataContext` class and initialize it's instance without parameters **AlecrimCoreData** will try to infer the managed object model and the persistent store locations, based on most common cases.
 
 You can however create and configure a `DataContextOptions` struct and pass it as parameter to `DataContext` initializer.
 
-There are helper initializers on `DataContextOptions`, but if you know the URLs or know how to construct them maybe it will be better to pass these locations yourself to the `DataContextOptions` initializer directly.
+There are helper initializers on `DataContextOptions`, but if you know the URLs or know how to construct them it may be better to pass these locations yourself to the `DataContextOptions` initializer directly.
 
 Other options can be configured using `DataContextOptions` (the `defaultBatchSize` and `defaultComparisonPredicateOptions` properties). Unlike the managed object model and persistent store locations, these options are global and static for the entire framework (and your project).
 
