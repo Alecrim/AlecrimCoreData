@@ -261,7 +261,7 @@ public class ChildDataContext: ManagedObjectContext {
                 return
             }
             
-            self.performBlock {
+            self.performBlockAndWait {
                 //
                 if let updatedObjects = changeNotificationData[NSUpdatedObjectsKey] as? Set<NSManagedObject> where !updatedObjects.isEmpty {
                     for updatedObject in updatedObjects {
