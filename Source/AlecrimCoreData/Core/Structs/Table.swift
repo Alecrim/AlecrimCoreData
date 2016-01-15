@@ -28,26 +28,17 @@ public struct Table<T: NSManagedObject>: TableType {
     
     public init(dataContext: NSManagedObjectContext) {
         //
-        let managedObjectClassName = NSStringFromClass(T.self)
+        let managedObjectClassName = String(T.self)
         
-        var entityDescription: NSEntityDescription
-        let cacheKey = Duplet(managedObjectClassName,dataContext)
+        let cacheKey = Duplet(managedObjectClassName, dataContext)
+        let entityDescription: NSEntityDescription
         
         if let cachedEntityDescription = cachedEntityDescriptions[cacheKey] {
             entityDescription = cachedEntityDescription
         } else {
-            let persistentStoreCoordinator = dataContext.persistentStoreCoordinator!
-            let managedObjectModel = persistentStoreCoordinator.managedObjectModel
-            
-            
-            entityDescription = managedObjectModel.entities.filter({ $0.managedObjectClassName == managedObjectClassName }).first!
-            
-            
-            entityDescription = NSEntityDescription.entityForName(entityDescription.name!, inManagedObjectContext: dataContext)!
-            
+            entityDescription = NSEntityDescription.entityForName(managedObjectClassName.componentsSeparatedByString(".").last!, inManagedObjectContext: dataContext)!
             cachedEntityDescriptions[cacheKey] = entityDescription
         }
-        
         
         self.dataContext = dataContext
         self.entityDescription = entityDescription
