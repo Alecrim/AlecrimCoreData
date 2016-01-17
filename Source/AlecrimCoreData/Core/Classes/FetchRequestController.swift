@@ -30,7 +30,7 @@ public final class FetchRequestController<T: NSManagedObject> {
     internal lazy var delegate = FetchRequestControllerDelegate<T>()
     
     //
-    private lazy var underlyingFetchedResultsController: NSFetchedResultsController = {
+    public private(set) lazy var underlyingFetchedResultsController: NSFetchedResultsController = {
         let frc = NSFetchedResultsController(fetchRequest: self.fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: self.sectionNameKeyPath, cacheName: self.cacheName)
         frc.delegate = self.delegate
         
