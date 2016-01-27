@@ -469,79 +469,79 @@ extension AttributeType where Self.ValueType: CollectionType {
 
 // MARK: - convenience operators
 
-public func == <A: AttributeType, V where A.ValueType: Equatable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
+public func ==<A: AttributeType, V where A.ValueType: Equatable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
     return left.isEqualTo(right)
 }
 
-public func == <L: AttributeType, R: AttributeType where L.ValueType: Equatable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
+public func ==<L: AttributeType, R: AttributeType where L.ValueType: Equatable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
     return left.isEqualTo(right)
 }
 
-public func == <A: NullableAttributeType, V where A.ValueType: Equatable, A.ValueType == V>(left: A, right: V?) -> NSComparisonPredicate {
+public func ==<A: NullableAttributeType, V where A.ValueType: Equatable, A.ValueType == V>(left: A, right: V?) -> NSComparisonPredicate {
     return left.isEqualTo(right)
 }
 
-public func != <A: AttributeType, V where A.ValueType: Equatable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
+public func !=<A: AttributeType, V where A.ValueType: Equatable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
     return left.isNotEqualTo(right)
 }
 
-public func != <L: AttributeType, R: AttributeType where L.ValueType: Equatable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
+public func !=<L: AttributeType, R: AttributeType where L.ValueType: Equatable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
     return left.isNotEqualTo(right)
 }
 
-public func != <A: NullableAttributeType, V where A.ValueType: Equatable, A.ValueType == V>(left: A, right: V?) -> NSComparisonPredicate {
+public func !=<A: NullableAttributeType, V where A.ValueType: Equatable, A.ValueType == V>(left: A, right: V?) -> NSComparisonPredicate {
     return left.isNotEqualTo(right)
 }
 
-public func > <A: AttributeType, V where A.ValueType: Comparable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
+public func ><A: AttributeType, V where A.ValueType: Comparable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
     return left.isGreaterThan(right)
 }
 
-public func > <L: AttributeType, R: AttributeType where L.ValueType: Comparable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
+public func ><L: AttributeType, R: AttributeType where L.ValueType: Comparable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
     return left.isGreaterThan(right)
 }
 
-public func >= <A: AttributeType, V where A.ValueType: Comparable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
+public func >=<A: AttributeType, V where A.ValueType: Comparable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
     return left.isGreaterThanOrEqual(right)
 }
 
-public func >= <L: AttributeType, R: AttributeType where L.ValueType: Comparable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
+public func >=<L: AttributeType, R: AttributeType where L.ValueType: Comparable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
     return left.isGreaterThanOrEqual(right)
 }
 
-public func < <A: AttributeType, V where A.ValueType: Comparable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
+public func <<A: AttributeType, V where A.ValueType: Comparable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
     return left.isLessThan(right)
 }
 
-public func < <L: AttributeType, R: AttributeType where L.ValueType: Comparable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
+public func <<L: AttributeType, R: AttributeType where L.ValueType: Comparable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
     return left.isLessThan(right)
 }
 
-public func <= <A: AttributeType, V where A.ValueType: Comparable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
+public func <=<A: AttributeType, V where A.ValueType: Comparable, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
     return left.isLessThanOrEqual(right)
 }
 
-public func <= <L: AttributeType, R: AttributeType where L.ValueType: Comparable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
+public func <=<L: AttributeType, R: AttributeType where L.ValueType: Comparable, L.ValueType == R.ValueType>(left: L, right: R) -> NSComparisonPredicate {
     return left.isLessThanOrEqual(right)
 }
 
-public func ~= <A: AttributeType, V where A.ValueType: AlecrimCoreData.StringType, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
+public func ~=<A: AttributeType, V where A.ValueType: AlecrimCoreData.StringType, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
     return left.isLike(right)
 }
 
-public func << <A: AttributeType, V where A.ValueType: AlecrimCoreData.StringType, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
+public func <<<A: AttributeType, V where A.ValueType: AlecrimCoreData.StringType, A.ValueType == V>(left: A, right: V) -> NSComparisonPredicate {
     return left.isIn(right)
 }
 
-public func << <A: AttributeType, V where A.ValueType == V>(left: A, right: [V]) -> NSComparisonPredicate {
+public func <<<A: AttributeType, V where A.ValueType == V>(left: A, right: [V]) -> NSComparisonPredicate {
     return left.isIn(right)
 }
 
-public func << <A: AttributeType, V: ForwardIndexType where A.ValueType == V>(left: A, right: Range<V>) -> NSComparisonPredicate {
+public func <<<A: AttributeType, V: ForwardIndexType where A.ValueType == V>(left: A, right: Range<V>) -> NSComparisonPredicate {
     return left.isBetween(right)
 }
 
-prefix public func ! <A: AttributeType where A.ValueType: BooleanType>(left: A) -> NSComparisonPredicate {
+prefix public func !<A: AttributeType where A.ValueType: BooleanType>(left: A) -> NSComparisonPredicate {
     return left.not()
 }
 

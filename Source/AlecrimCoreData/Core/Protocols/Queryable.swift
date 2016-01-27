@@ -20,16 +20,11 @@ public protocol Queryable: Enumerable {
 
 extension Queryable {
     
-    public func sort<A: AttributeType>(attribute attribute: A, ascending: Bool = true) -> Self {
-        return self.sort(attributeName: attribute.___name, ascending: ascending, options: attribute.___comparisonPredicateOptions)
-    }
-    
-    @available(*, unavailable, renamed="sort")
     public func sortByAttribute<A: AttributeType>(attribute: A, ascending: Bool = true) -> Self {
-        fatalError()
+        return self.sortByAttributeName(attribute.___name, ascending: ascending, options: attribute.___comparisonPredicateOptions)
     }
 
-    public func sort(attributeName attributeName: String, ascending: Bool = true, options: NSComparisonPredicateOptions = NSComparisonPredicateOptions()) -> Self {
+    public func sortByAttributeName(attributeName: String, ascending: Bool = true, options: NSComparisonPredicateOptions = NSComparisonPredicateOptions()) -> Self {
         let sortDescriptor: NSSortDescriptor
         
         if options.contains(.CaseInsensitivePredicateOption) && options.contains(.DiacriticInsensitivePredicateOption) {
@@ -45,15 +40,11 @@ extension Queryable {
             sortDescriptor = NSSortDescriptor(key: attributeName, ascending: ascending)
         }
         
-        return self.sort(sortDescriptor: sortDescriptor)
-    }
-    
-    @available(*, unavailable, renamed="sort")
-    public func sortByAttributeName(attributeName: String, ascending: Bool = true, options: NSComparisonPredicateOptions = NSComparisonPredicateOptions()) -> Self {
-        fatalError()
+        
+        return self.sortUsingSortDescriptor(sortDescriptor)
     }
 
-    public func sort(sortDescriptor sortDescriptor: NSSortDescriptor) -> Self {
+    public func sortUsingSortDescriptor(sortDescriptor: NSSortDescriptor) -> Self {
         var clone = self
         
         if clone.sortDescriptors != nil {
@@ -65,13 +56,8 @@ extension Queryable {
         
         return clone
     }
-    
-    @available(*, unavailable, renamed="sort")
-    public func sortUsingSortDescriptor(sortDescriptor: NSSortDescriptor) -> Self {
-        fatalError()
-    }
 
-    public func sort(sortDescriptors sortDescriptors: [NSSortDescriptor]) -> Self {
+    public func sortUsingSortDescriptors(sortDescriptors: [NSSortDescriptor]) -> Self {
         var clone = self
 
         if clone.sortDescriptors != nil {
@@ -83,11 +69,6 @@ extension Queryable {
         
         return clone
     }
-    
-    @available(*, unavailable, renamed="sort")
-    public func sortUsingSortDescriptors(sortDescriptors: [NSSortDescriptor]) -> Self {
-        fatalError()
-    }
 
 }
 
@@ -95,7 +76,7 @@ extension Queryable {
 
 extension Queryable {
     
-    public func filter(predicate predicate: NSPredicate) -> Self {
+    public func filterUsingPredicate(predicate: NSPredicate) -> Self {
         var clone = self
         
         if let existingPredicate = clone.predicate {
@@ -106,11 +87,6 @@ extension Queryable {
         }
         
         return clone
-    }
-    
-    @available(*, unavailable, renamed="filter")
-    public func filterUsingPredicate(predicate: NSPredicate) -> Self {
-        fatalError()
     }
     
 }
