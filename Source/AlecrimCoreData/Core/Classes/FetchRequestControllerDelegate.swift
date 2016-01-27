@@ -104,7 +104,7 @@ extension FetchRequestController {
         }
         
         if let cacheName = self.cacheName {
-            FetchRequestController.deleteCacheWithName(cacheName)
+            FetchRequestController.deleteCache(name: cacheName)
         }
         
         try self.performFetch()
