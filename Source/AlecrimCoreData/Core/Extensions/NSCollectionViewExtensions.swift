@@ -13,6 +13,7 @@ import AppKit
     
 extension FetchRequestController {
 
+    @available(OSX 10.11, *)
     @available(*, unavailable, renamed="bind")
     public func bindToCollectionView(collectionView: NSCollectionView, reloadItemAtIndexPath reloadItemAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
         fatalError()
