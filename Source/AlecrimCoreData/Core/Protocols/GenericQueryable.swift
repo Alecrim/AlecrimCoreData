@@ -120,7 +120,7 @@ extension Table: SequenceType {
     public typealias Generator = AnyGenerator<T>
 
     public func generate() -> Generator {
-        return anyGenerator(self.toArray().generate())
+        return AnyGenerator(self.toArray().generate())
     }
     
     // turns the SequenceType implementation unavailable
@@ -136,7 +136,7 @@ extension AttributeQuery: SequenceType {
     public typealias Generator = AnyGenerator<T>
     
     public func generate() -> Generator {
-        return anyGenerator(self.toArray().generate())
+        return AnyGenerator(self.toArray().generate())
     }
 
     // turns the SequenceType implementation unavailable
