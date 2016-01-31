@@ -57,9 +57,7 @@ public class DataContext: ChildDataContext {
             let rootSavingDataContext = try RootSavingDataContext(dataContextOptions: dataContextOptions)
             super.init(concurrencyType: .MainQueueConcurrencyType, rootSavingDataContext: rootSavingDataContext)
             
-            if #available(OSXApplicationExtension 10.10, *) {
-                self.name = "Main Thread Context"
-            }
+            self.name = "Main Thread Context"
         }
         catch let error {
             AlecrimCoreDataError.handleError(error)
@@ -74,10 +72,7 @@ public class DataContext: ChildDataContext {
     public init(parentDataContext: DataContext) {
         super.init(concurrencyType: .PrivateQueueConcurrencyType, rootSavingDataContext: parentDataContext.rootSavingDataContext)
         
-        if #available(OSXApplicationExtension 10.10, *) {
-            self.name = "Background Context"
-        }
-        
+        self.name = "Background Context"
         self.undoManager = nil
     }
     
@@ -108,10 +103,7 @@ public class RootSavingDataContext: ManagedObjectContext {
         self.dataContextOptions = dataContextOptions
         super.init(concurrencyType: .PrivateQueueConcurrencyType)
         
-        if #available(OSXApplicationExtension 10.10, *) {
-            self.name = "Root Saving Context"
-        }
-        
+        self.name = "Root Saving Context"
         self.undoManager = nil
         
         // only the root data context has a direct assigned persistent store coordinator
@@ -261,7 +253,7 @@ public class ChildDataContext: ManagedObjectContext {
                 return
             }
             
-            self.performBlockAndWait {
+            self.performBlock {
                 //
                 if let updatedObjects = changeNotificationData[NSUpdatedObjectsKey] as? Set<NSManagedObject> where !updatedObjects.isEmpty {
                     for updatedObject in updatedObjects {

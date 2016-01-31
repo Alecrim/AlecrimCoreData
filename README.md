@@ -45,7 +45,7 @@ Say you have an `NSManagedObject` subclass type called `Person`, related to a `D
 
 ```swift
 for person in dataContext.people {
-    println(person.firstName)
+    print(person.firstName)
 }
 ```
 
@@ -86,7 +86,7 @@ If you have a unique way of retrieving a single entity from your data store (suc
 
 ```swift
 if let person = dataContext.people.first({ $0.identifier == 123 }) {
-    println(person.name)
+    print(person.name)
 }
 ```
 
@@ -211,7 +211,7 @@ let peopleInDepartments = dataContext.people
 let itemsPerPage = 10  
 
 for pageNumber in 0..<5 {
-    println("Page: \(pageNumber)")
+    print("Page: \(pageNumber)")
 
     // No data access is made here either.
     let peopleInCurrentPage = peopleInDepartments
@@ -220,7 +220,7 @@ for pageNumber in 0..<5 {
 
     // Now is when the data is read from persistent store.
     for person in peopleInCurrentPage {
-        println("\(person.firstName) \(person.lastName) - \(person.department.name)")
+        print("\(person.firstName) \(person.lastName) - \(person.department.name)")
     }
 }
 ```
