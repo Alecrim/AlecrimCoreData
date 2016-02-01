@@ -20,12 +20,12 @@ public protocol GenericQueryable: Queryable {
 
 extension GenericQueryable {
     
-    @available(*, unavailable, renamed="order")
+    @available(*, unavailable, renamed="orderBy")
     public func orderByAscending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
         fatalError()
     }
     
-    @available(*, unavailable, renamed="order")
+    @available(*, unavailable, renamed="orderBy")
     public func orderByDescending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
         fatalError()
     }
@@ -34,26 +34,26 @@ extension GenericQueryable {
 
 extension GenericQueryable {
     
-    public func order<A: AttributeType, V where A.ValueType == V>(ascending: Bool = true, @noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
+    public func orderBy<A: AttributeType, V where A.ValueType == V>(ascending: Bool = true, @noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
         return self.sort(attribute: orderingClosure(Self.Item.self), ascending: ascending)
     }
     
-    @available(*, unavailable, renamed="order")
+    @available(*, unavailable, renamed="orderBy")
     public func orderBy<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
         fatalError()
     }
     
-    @available(*, unavailable, renamed="order")
+    @available(*, unavailable, renamed="orderBy")
     public func thenBy<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
         fatalError()
     }
     
-    @available(*, unavailable, renamed="order")
+    @available(*, unavailable, renamed="orderBy")
     public func thenByAscending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
         fatalError()
     }
     
-    @available(*, unavailable, renamed="order")
+    @available(*, unavailable, renamed="orderBy")
     public func thenByDescending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
         fatalError()
     }
@@ -110,7 +110,8 @@ extension GenericQueryable {
     
 }
 
-// TODO: this crashes the compiler (Xcode 7.0 beta 6)
+
+//// TODO: this crashes the compiler (Xcode 7.3 beta 2)
 //// MARK: - SequenceType
 //
 //extension GenericQueryable {
@@ -122,8 +123,6 @@ extension GenericQueryable {
 //    }
 //    
 //}
-//
-//
 
 extension Table: SequenceType {
 
