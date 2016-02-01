@@ -75,7 +75,7 @@ public typealias NSFetchedResultsController = ALCFetchedResultsController
 
 // MARK: -
 
-public class ALCFetchedResultsController: NSObject {
+public final class ALCFetchedResultsController: NSObject {
     
     public let observedManagedObjectContext: NSManagedObjectContext
 
@@ -188,7 +188,7 @@ public class ALCFetchedResultsController: NSObject {
                         break
                     }
                     
-                    sectionIndex++
+                    sectionIndex += 1
                 }
             }
         }
@@ -705,7 +705,7 @@ extension NSIndexPath {
     
 extension Table {
 
-    public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> ALCFetchedResultsController {
+    public func toFetchedResultsController(sectionNameKeyPath sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> ALCFetchedResultsController {
         return ALCFetchedResultsController(fetchRequest: self.toFetchRequest(), managedObjectContext: self.dataContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
 
