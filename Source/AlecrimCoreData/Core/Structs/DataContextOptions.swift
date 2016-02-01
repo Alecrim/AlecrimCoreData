@@ -21,12 +21,6 @@ public struct DataContextOptions {
     public static var defaultBatchSize: Int = 20
     public static var defaultComparisonPredicateOptions: NSComparisonPredicateOptions = [.CaseInsensitivePredicateOption, .DiacriticInsensitivePredicateOption]
 
-    @available(*, unavailable, renamed="defaultBatchSize")
-    public static var batchSize: Int = 20
-    
-    @available(*, unavailable, renamed="defaultComparisonPredicateOptions")
-    public static var stringComparisonPredicateOptions: NSComparisonPredicateOptions = [.CaseInsensitivePredicateOption, .DiacriticInsensitivePredicateOption]
-
     // MARK: -
 
     public let managedObjectModelURL: NSURL?
@@ -185,12 +179,5 @@ extension NSBundle {
         
         return url
     }
-    
-}
-
-// MARK: -
-
-@available(*, unavailable, renamed="DataContextOptions")
-public struct ContextOptions {
     
 }
