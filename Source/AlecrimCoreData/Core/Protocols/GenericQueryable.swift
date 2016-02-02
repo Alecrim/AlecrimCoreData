@@ -34,7 +34,7 @@ extension GenericQueryable {
 
 extension GenericQueryable {
     
-    public func orderBy<A: AttributeType, V where A.ValueType == V>(ascending: Bool = true, @noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
+    public func orderBy<A: AttributeType, V where A.ValueType == V>(ascending ascending: Bool = true, @noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
         return self.sort(attribute: orderingClosure(Self.Item.self), ascending: ascending)
     }
     
