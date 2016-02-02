@@ -28,7 +28,7 @@ public struct Table<T: NSManagedObject>: TableType {
     
     public init(dataContext: NSManagedObjectContext) {
         //
-        let managedObjectClassName = String(T.self)
+        let managedObjectClassName = NSStringFromClass(T.self)
         
         let cacheKey = Duplet(managedObjectClassName, dataContext)
         let entityDescription: NSEntityDescription
@@ -36,7 +36,10 @@ public struct Table<T: NSManagedObject>: TableType {
         if let cachedEntityDescription = cachedEntityDescriptions[cacheKey] {
             entityDescription = cachedEntityDescription
         } else {
-            entityDescription = NSEntityDescription.entityForName(managedObjectClassName.componentsSeparatedByString(".").last!, inManagedObjectContext: dataContext)!
+            let persistentStoreCoordinator = dataContext.persistentStoreCoordinator!
+            let managedObjectModel = persistentStoreCoordinator.managedObjectModel
+            
+            entityDescription = managedObjectModel.entities.filter({ $0.managedObjectClassName == managedObjectClassName }).first!
             cachedEntityDescriptions[cacheKey] = entityDescription
         }
         
