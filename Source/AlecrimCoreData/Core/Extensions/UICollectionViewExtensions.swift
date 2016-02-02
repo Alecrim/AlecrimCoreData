@@ -18,7 +18,7 @@ extension FetchRequestController {
         fatalError()
     }
     
-    public func bindTo(collectionView collectionView: UICollectionView, reloadItemAtIndexPath reloadItemAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
+    public func bindTo<CellType: UICollectionViewCell>(collectionView collectionView: UICollectionView, configureCell configureCellClosure: ((CellType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()
@@ -132,15 +132,17 @@ extension FetchRequestController {
                             collectionView.insertItemsAtIndexPaths(insertedItemIndexPaths)
                         }
                         
-                        if updatedItemIndexPaths.count > 0 && reloadItemAtIndexPathClosure == nil {
+                        if updatedItemIndexPaths.count > 0 && configureCellClosure == nil {
                             collectionView.reloadItemsAtIndexPaths(updatedItemIndexPaths)
                         }
                         },
                         completion: { finished in
                             if finished {
-                                if let reloadItemAtIndexPathClosure = reloadItemAtIndexPathClosure {
+                                if let configureCellClosure = configureCellClosure {
                                     for updatedItemIndexPath in updatedItemIndexPaths {
-                                        reloadItemAtIndexPathClosure(updatedItemIndexPath)
+                                        if let cell = collectionView.cellForItemAtIndexPath(updatedItemIndexPath) as? CellType {
+                                            configureCellClosure(cell, updatedItemIndexPath)
+                                        }
                                     }
                                 }
                                 

@@ -19,7 +19,7 @@ extension FetchRequestController {
     }
     
     @available(OSX 10.11, *)
-    public func bindTo(collectionView collectionView: NSCollectionView, reloadItemAtIndexPath reloadItemAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
+    public func bindTo<ItemType: NSCollectionViewItem>(collectionView collectionView: NSCollectionView, configureItem configureItemClosure: ((ItemType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()
@@ -133,15 +133,17 @@ extension FetchRequestController {
                             collectionView.insertItemsAtIndexPaths(Set(insertedItemIndexPaths))
                         }
                         
-                        if updatedItemIndexPaths.count > 0 && reloadItemAtIndexPathClosure == nil {
+                        if updatedItemIndexPaths.count > 0 && configureItemClosure == nil {
                             collectionView.reloadItemsAtIndexPaths(Set(updatedItemIndexPaths))
                         }
                         },
                         completionHandler: { finished in
                             if finished {
-                                if let reloadItemAtIndexPathClosure = reloadItemAtIndexPathClosure {
+                                if let configureItemClosure = configureItemClosure {
                                     for updatedItemIndexPath in updatedItemIndexPaths {
-                                        reloadItemAtIndexPathClosure(updatedItemIndexPath)
+                                        if let item = collectionView.itemAtIndexPath(updatedItemIndexPath) as? ItemType {
+                                            configureItemClosure(item, updatedItemIndexPath)
+                                        }
                                     }
                                 }
                                 
