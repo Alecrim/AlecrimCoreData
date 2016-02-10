@@ -88,12 +88,19 @@ extension FetchRequestController {
             }
             .didMoveEntity { entity, indexPath, newIndexPath in
                 if !reloadData {
-                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
-                        deletedItemIndexPaths.append(indexPath)
+                    if newIndexPath == indexPath {
+                        if !deletedSectionIndexes.containsIndex(indexPath.section) && deletedItemIndexPaths.indexOf(indexPath) == nil && updatedItemIndexPaths.indexOf(indexPath) == nil {
+                            updatedItemIndexPaths.append(indexPath)
+                        }
                     }
-                    
-                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
-                        insertedItemIndexPaths.append(newIndexPath)
+                    else {
+                        if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                            deletedItemIndexPaths.append(indexPath)
+                        }
+                        
+                        if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                            insertedItemIndexPaths.append(newIndexPath)
+                        }
                     }
                 }
             }
