@@ -116,6 +116,7 @@ extension ViewController {
                     targetFolderURL: url,
                     dataContextName: self.dataContextNameTextField.stringValue.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()),
                     useScalarProperties: self.useScalarPropertiesCheckBox.state == NSOnState,
+                    useSwiftString: self.useSwiftStringCheckBox.state == NSOnState,
                     generateQueryAttributes: self.generateQueryAttributesCheckBox.state == NSOnState,
                     addPublicAccessModifier: self.addPublicAccessModifierCheckBox.state == NSOnState
                 )
