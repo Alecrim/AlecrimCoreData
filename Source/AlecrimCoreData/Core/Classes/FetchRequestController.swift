@@ -118,8 +118,12 @@ extension FetchRequestController {
 extension FetchRequestController {
 
     /// The results of the fetch.
-    public var fetchedEntities: [T]? {
-        return self.underlyingFetchedResultsController.fetchedObjects as? [T]
+    public var fetchedEntities: [T] {
+        guard let result = self.underlyingFetchedResultsController.fetchedObjects as? [T] else {
+            fatalError("performFetch: hasn't been called.")
+        }
+        
+        return result
     }
     
     /// Returns the entity at the given index path in the fetch results.
@@ -128,7 +132,11 @@ extension FetchRequestController {
     ///
     /// - returns: The entity at a given index path in the fetch results.
     public func entityAt(indexPath indexPath: NSIndexPath) -> T {
-        return self.underlyingFetchedResultsController.objectAtIndexPath(indexPath) as! T
+        guard let result = self.underlyingFetchedResultsController.objectAtIndexPath(indexPath) as? T else {
+            fatalError("performFetch: hasn't been called.")
+        }
+        
+        return result
     }
 
     @available(*, unavailable, renamed="entityAt")
@@ -152,8 +160,12 @@ extension FetchRequestController {
 extension FetchRequestController {
     
     /// The sections for the receiver’s fetch results.
-    public var sections: [FetchRequestControllerSection<T>]? {
-        return self.underlyingFetchedResultsController.sections?.map { FetchRequestControllerSection<T>(underlyingSectionInfo: $0) }
+    public var sections: [FetchRequestControllerSection<T>] {
+        guard let result = self.underlyingFetchedResultsController.sections?.map({ FetchRequestControllerSection<T>(underlyingSectionInfo: $0) }) else {
+            fatalError("performFetch: hasn't been called.")
+        }
+        
+        return result
     }
     
     /// Returns the section number for a given section title and index in the section index.
@@ -320,7 +332,7 @@ public struct FetchRequestControllerSection<T: NSManagedObject> {
     private let underlyingSectionInfo: NSFetchedResultsSectionInfo
     
     /// The name of the section.
-    public var name: String? { return self.underlyingSectionInfo.name }
+    public var name: String { return self.underlyingSectionInfo.name }
     
     /// The index title of the section.
     public var indexTitle: String? { return self.underlyingSectionInfo.indexTitle }
@@ -329,7 +341,13 @@ public struct FetchRequestControllerSection<T: NSManagedObject> {
     public var numberOfEntities: Int { return self.underlyingSectionInfo.numberOfObjects }
     
     /// The array of entities in the section.
-    public var entities: [T]? { return self.underlyingSectionInfo.objects as? [T] }
+    public var entities: [T] {
+        guard let result = self.underlyingSectionInfo.objects as? [T] else {
+            fatalError("performFetch: hasn't been called.")
+        }
+        
+        return result
+    }
     
     internal init(underlyingSectionInfo: NSFetchedResultsSectionInfo) {
         self.underlyingSectionInfo = underlyingSectionInfo
