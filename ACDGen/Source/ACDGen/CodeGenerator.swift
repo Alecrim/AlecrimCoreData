@@ -77,7 +77,13 @@ extension CodeGenerator {
         }
         
         if let attributeValueClassName = attributeDescription.attributeValueClassName {
-            return attributeValueClassName
+            // If not using scalar but using Swift String
+            if attributeDescription.attributeType == .StringAttributeType && self.parameters.useSwiftString {
+                return "String"
+            }
+            else {
+                return attributeValueClassName
+            }
         }
         else {
             // If your attribute is of NSTransformableAttributeType, the attributeValueClassName must be set or attribute value class must implement NSCopying.
