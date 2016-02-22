@@ -14,6 +14,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var dataModelLabel: NSTextField!
     @IBOutlet weak var dataContextNameTextField: NSTextField!
     @IBOutlet weak var useScalarPropertiesCheckBox: NSButton!
+    @IBOutlet weak var useSwiftStringCheckBox: NSButton!
     @IBOutlet weak var generateQueryAttributesCheckBox: NSButton!
     @IBOutlet weak var addPublicAccessModifierCheckBox: NSButton!
     @IBOutlet weak var gererateButton: NSButton!
@@ -28,6 +29,8 @@ class ViewController: NSViewController {
         self.dataModelLabel.stringValue = ""
         self.dataContextNameTextField.stringValue = "DataContext"
         self.useScalarPropertiesCheckBox.state = NSOnState
+        self.useSwiftStringCheckBox.state = NSOnState
+        self.useSwiftStringCheckBox.enabled = false
         self.generateQueryAttributesCheckBox.state = NSOnState
         self.addPublicAccessModifierCheckBox.state = NSOffState
         self.gererateButton.enabled = false
@@ -70,6 +73,7 @@ extension ViewController {
         self.dataModelLabel.enabled = enable
         self.dataContextNameTextField.enabled = enable
         self.useScalarPropertiesCheckBox.enabled = enable
+        self.useSwiftStringCheckBox.enabled = self.useScalarPropertiesCheckBox.state == NSOffState
         self.generateQueryAttributesCheckBox.enabled  = enable
         self.addPublicAccessModifierCheckBox.enabled = enable
         self.gererateButton.enabled = enable
@@ -83,6 +87,11 @@ extension ViewController {
         self.openExistingDocument()
     }
     
+    @IBAction func useScalarPropertiesButtonPressed(sender: NSButton) {
+        self.useSwiftStringCheckBox.state = NSOnState
+        self.useSwiftStringCheckBox.enabled = self.useScalarPropertiesCheckBox.state == NSOffState
+    }
+
     @IBAction func generateButtonPressed(sender: NSButton) {
         let panel = NSOpenPanel()
         
@@ -107,6 +116,7 @@ extension ViewController {
                     targetFolderURL: url,
                     dataContextName: self.dataContextNameTextField.stringValue.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()),
                     useScalarProperties: self.useScalarPropertiesCheckBox.state == NSOnState,
+                    useSwiftString: self.useSwiftStringCheckBox.state == NSOnState,
                     generateQueryAttributes: self.generateQueryAttributesCheckBox.state == NSOnState,
                     addPublicAccessModifier: self.addPublicAccessModifierCheckBox.state == NSOnState
                 )

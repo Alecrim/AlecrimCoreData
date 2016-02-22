@@ -17,6 +17,7 @@ public struct CodeGeneratorParameters {
     public let targetFolderURL: NSURL
     public let dataContextName: String
     public let useScalarProperties: Bool
+    public let useSwiftString: Bool
     public let generateQueryAttributes: Bool
     public let addPublicAccessModifier: Bool
     
