@@ -30,7 +30,7 @@ extension NSManagedObject {
 extension NSManagedObject {
     
     public func delete() {
-        self.managedObjectContext!.deleteObject(self)
+        self.managedObjectContext?.deleteObject(self)
     }
     
     public func refresh(mergeChanges: Bool = true) {
