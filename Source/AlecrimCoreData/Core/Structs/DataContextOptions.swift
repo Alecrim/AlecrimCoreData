@@ -119,7 +119,7 @@ extension NSBundle {
     
     /// This variable is used to guess a managedObjectModelName.
     /// The provided kCFBundleNameKey we are using to determine the name will include spaces, whereas managed object model name uses underscores in place of spaces by default - hence why we are replacing " " with "_" here
-    private var bundleName: String? {
+    private var inferredManagedObjectModelName: String? {
         return (self.infoDictionary?[String(kCFBundleNameKey)] as? String)?.stringByReplacingOccurrencesOfString(" ", withString: "_")
     }
     
@@ -128,7 +128,7 @@ extension NSBundle {
 extension NSBundle {
     
     private func defaultManagedObjectModelURL() throws -> NSURL {
-        guard let managedObjectModelName = self.bundleName else {
+        guard let managedObjectModelName = self.inferredManagedObjectModelName else {
             throw AlecrimCoreDataError.InvalidManagedObjectModelURL
         }
         
@@ -136,7 +136,7 @@ extension NSBundle {
     }
     
     private func defaultPersistentStoreURL() throws -> NSURL {
-        guard let managedObjectModelName = self.bundleName, let bundleIdentifier = self.bundleIdentifier else {
+        guard let managedObjectModelName = self.inferredManagedObjectModelName, let bundleIdentifier = self.bundleIdentifier else {
             throw AlecrimCoreDataError.InvalidPersistentStoreURL
         }
         
