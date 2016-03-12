@@ -34,7 +34,7 @@ extension NSManagedObject {
     }
     
     public func refresh(mergeChanges mergeChanges: Bool = true) {
-        self.managedObjectContext!.refreshObject(self, mergeChanges: mergeChanges)
+        self.managedObjectContext?.refreshObject(self, mergeChanges: mergeChanges)
     }
 
 }
