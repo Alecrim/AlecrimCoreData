@@ -31,6 +31,10 @@ internal final class FetchRequestControllerDelegate<T: NSManagedObject>: NSObjec
     
     @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         switch type {
+        case NSFetchedResultsChangeType(rawValue: 0)!:
+            // iOS 8 bug - Do nothing if we get an invalid change type.
+            break
+            
         case .Insert:
             for closure in self.didInsertEntityClosures {
                 closure(anObject as! T, newIndexPath!)
