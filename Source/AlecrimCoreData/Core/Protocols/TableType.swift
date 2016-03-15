@@ -55,7 +55,7 @@ extension TableType {
     public func firstOrCreated(@noescape predicateClosure: (Self.Item.Type) -> NSComparisonPredicate) -> Self.Item {
         let predicate = predicateClosure(Self.Item.self)
         
-        if let entity = self.filterUsingPredicate(predicate).first() {
+        if let entity = self.filter(predicate: predicate).first() {
             return entity
         }
         else {

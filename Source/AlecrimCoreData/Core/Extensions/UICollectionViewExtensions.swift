@@ -13,7 +13,12 @@ import UIKit
     
 extension FetchRequestController {
 
+    @available(*, unavailable, renamed="bindTo")
     public func bindToCollectionView(collectionView: UICollectionView, reloadItemAtIndexPath reloadItemAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
+        fatalError()
+    }
+    
+    public func bindTo<CellType: UICollectionViewCell>(collectionView collectionView: UICollectionView, configureCell configureCellClosure: ((CellType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()
@@ -82,12 +87,19 @@ extension FetchRequestController {
             }
             .didMoveEntity { entity, indexPath, newIndexPath in
                 if !reloadData {
-                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
-                        deletedItemIndexPaths.append(indexPath)
+                    if newIndexPath == indexPath {
+                        if !deletedSectionIndexes.containsIndex(indexPath.section) && deletedItemIndexPaths.indexOf(indexPath) == nil && updatedItemIndexPaths.indexOf(indexPath) == nil {
+                            updatedItemIndexPaths.append(indexPath)
+                        }
                     }
-                    
-                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
-                        insertedItemIndexPaths.append(newIndexPath)
+                    else {
+                        if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                            deletedItemIndexPaths.append(indexPath)
+                        }
+                        
+                        if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                            insertedItemIndexPaths.append(newIndexPath)
+                        }
                     }
                 }
             }
@@ -127,15 +139,17 @@ extension FetchRequestController {
                             collectionView.insertItemsAtIndexPaths(insertedItemIndexPaths)
                         }
                         
-                        if updatedItemIndexPaths.count > 0 && reloadItemAtIndexPathClosure == nil {
+                        if updatedItemIndexPaths.count > 0 && configureCellClosure == nil {
                             collectionView.reloadItemsAtIndexPaths(updatedItemIndexPaths)
                         }
                         },
                         completion: { finished in
                             if finished {
-                                if let reloadItemAtIndexPathClosure = reloadItemAtIndexPathClosure {
+                                if let configureCellClosure = configureCellClosure {
                                     for updatedItemIndexPath in updatedItemIndexPaths {
-                                        reloadItemAtIndexPathClosure(updatedItemIndexPath)
+                                        if let cell = collectionView.cellForItemAtIndexPath(updatedItemIndexPath) as? CellType {
+                                            configureCellClosure(cell, updatedItemIndexPath)
+                                        }
                                     }
                                 }
                                 

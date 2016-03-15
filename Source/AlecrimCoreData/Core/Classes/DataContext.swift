@@ -253,7 +253,7 @@ public class ChildDataContext: ManagedObjectContext {
         super.addObservers()
         
         // the root data context did save
-        self.addObserverForName(NSManagedObjectContextDidSaveNotification, object: self.rootSavingDataContext) { [unowned self] notification in
+        self.addObserver(name: NSManagedObjectContextDidSaveNotification, object: self.rootSavingDataContext) { [unowned self] notification in
             guard
                 self.enableMergeFromRootSavingDataContext && notification.object is RootSavingDataContext,
                 let changeNotificationData = notification.userInfo
@@ -306,7 +306,7 @@ public class ManagedObjectContext: NSManagedObjectContext {
     /// Requires super.
     public func addObservers() {
         // this context will save
-        self.addObserverForName(NSManagedObjectContextWillSaveNotification, object: self) { notification in
+        self.addObserver(name: NSManagedObjectContextWillSaveNotification, object: self) { notification in
             guard let notificationContext = notification.object as? NSManagedObjectContext where !notificationContext.insertedObjects.isEmpty else { return }
             
             do {
@@ -325,17 +325,14 @@ public class ManagedObjectContext: NSManagedObjectContext {
         }
     }
     
-    public final func addObserverForName(name: String, object: AnyObject, closure: (NSNotification) -> Void) {
+    public final func addObserver(name name: String, object: AnyObject, closure: (NSNotification) -> Void) {
         let observer = NSNotificationCenter.defaultCenter().addObserverForName(name, object: object, queue: nil, usingBlock: closure)
         self.observers.append(observer)
     }
-
-}
-
-
-// MARK: -
-
-@available(*, unavailable, renamed="DataContext")
-public class Context {
     
+    @available(*, unavailable, renamed="addObserver")
+    public final func addObserverForName(name: String, object: AnyObject, closure: (NSNotification) -> Void) {
+        fatalError()
+    }
+
 }

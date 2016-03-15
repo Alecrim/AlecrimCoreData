@@ -13,7 +13,12 @@ import UIKit
     
 extension FetchRequestController {
 
+    @available(*, unavailable, renamed="bindTo")
     public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, reloadRowAtIndexPath reloadRowAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
+        fatalError()
+    }
+    
+    public func bindTo<CellType: UITableViewCell>(tableView tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, configureCell configureCellClosure: ((CellType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()
@@ -83,12 +88,19 @@ extension FetchRequestController {
             }
             .didMoveEntity { entity, indexPath, newIndexPath in
                 if !reloadData {
-                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
-                        deletedItemIndexPaths.append(indexPath)
+                    if newIndexPath == indexPath {
+                        if !deletedSectionIndexes.containsIndex(indexPath.section) && deletedItemIndexPaths.indexOf(indexPath) == nil && updatedItemIndexPaths.indexOf(indexPath) == nil {
+                            updatedItemIndexPaths.append(indexPath)
+                        }
                     }
-                    
-                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
-                        insertedItemIndexPaths.append(newIndexPath)
+                    else {
+                        if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                            deletedItemIndexPaths.append(indexPath)
+                        }
+                        
+                        if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                            insertedItemIndexPaths.append(newIndexPath)
+                        }
                     }
                 }
             }
@@ -117,15 +129,17 @@ extension FetchRequestController {
                         tableView.insertRowsAtIndexPaths(insertedItemIndexPaths, withRowAnimation: rowAnimation)
                     }
                     
-                    if updatedItemIndexPaths.count > 0 && reloadRowAtIndexPathClosure == nil {
+                    if updatedItemIndexPaths.count > 0 && configureCellClosure == nil {
                         tableView.reloadRowsAtIndexPaths(updatedItemIndexPaths, withRowAnimation: rowAnimation)
                     }
                     
                     tableView.endUpdates()
                     
-                    if let reloadRowAtIndexPathClosure = reloadRowAtIndexPathClosure {
+                    if let configureCellClosure = configureCellClosure {
                         for updatedItemIndexPath in updatedItemIndexPaths {
-                            reloadRowAtIndexPathClosure(updatedItemIndexPath)
+                            if let cell = tableView.cellForRowAtIndexPath(updatedItemIndexPath) as? CellType {
+                                configureCellClosure(cell, updatedItemIndexPath)
+                            }
                         }
                     }
                 }

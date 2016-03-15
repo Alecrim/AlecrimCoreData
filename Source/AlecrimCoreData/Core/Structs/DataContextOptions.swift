@@ -21,12 +21,6 @@ public struct DataContextOptions {
     public static var defaultBatchSize: Int = 20
     public static var defaultComparisonPredicateOptions: NSComparisonPredicateOptions = [.CaseInsensitivePredicateOption, .DiacriticInsensitivePredicateOption]
 
-    @available(*, unavailable, renamed="defaultBatchSize")
-    public static var batchSize: Int = 20
-    
-    @available(*, unavailable, renamed="defaultComparisonPredicateOptions")
-    public static var stringComparisonPredicateOptions: NSComparisonPredicateOptions = [.CaseInsensitivePredicateOption, .DiacriticInsensitivePredicateOption]
-
     // MARK: -
 
     public let managedObjectModelURL: NSURL?
@@ -100,13 +94,18 @@ extension DataContextOptions {
         return self.storeType == .SQLite && self.options[NSPersistentStoreUbiquitousContainerIdentifierKey] != nil
     }
     
-    public mutating func configureUbiquityWithContainerIdentifier(containerIdentifier: String, contentRelativePath: String = "Data/TransactionLogs", contentName: String = "UbiquityStore") {
+    public mutating func configureUbiquity(containerIdentifier containerIdentifier: String, contentRelativePath: String = "Data/TransactionLogs", contentName: String = "UbiquityStore") {
         self.options[NSPersistentStoreUbiquitousContainerIdentifierKey] = containerIdentifier
         self.options[NSPersistentStoreUbiquitousContentURLKey] = contentRelativePath
         self.options[NSPersistentStoreUbiquitousContentNameKey] = contentName
         
         self.options[NSMigratePersistentStoresAutomaticallyOption] = true
         self.options[NSInferMappingModelAutomaticallyOption] = true
+    }
+    
+    @available(*, unavailable, renamed="configureUbiquity")
+    public mutating func configureUbiquityWithContainerIdentifier(containerIdentifier: String, contentRelativePath: String = "Data/TransactionLogs", contentName: String = "UbiquityStore") {
+        fatalError()
     }
  
     #endif
@@ -181,12 +180,5 @@ extension NSBundle {
         
         return url
     }
-    
-}
-
-// MARK: -
-
-@available(*, unavailable, renamed="DataContextOptions")
-public struct ContextOptions {
     
 }

@@ -102,10 +102,15 @@ extension FetchRequestController {
     /// - parameter name: The name of the cache file to delete.
     ///
     /// If *name* is `nil`, deletes all cache files.
-    public class func deleteCacheWithName(name: String?) {
+    public class func deleteCache(name name: String?) {
         NSFetchedResultsController.deleteCacheWithName(name)
     }
-    
+
+    @available(*, unavailable, renamed="deleteCache")
+    public class func deleteCacheWithName(name: String?) {
+        fatalError()
+    }
+
 }
 
 // MARK: - Accessing Results
@@ -113,8 +118,12 @@ extension FetchRequestController {
 extension FetchRequestController {
 
     /// The results of the fetch.
-    public var fetchedEntities: [T]? {
-        return self.underlyingFetchedResultsController.fetchedObjects as? [T]
+    public var fetchedEntities: [T] {
+        guard let result = self.underlyingFetchedResultsController.fetchedObjects as? [T] else {
+            fatalError("performFetch: hasn't been called.")
+        }
+        
+        return result
     }
     
     /// Returns the entity at the given index path in the fetch results.
@@ -122,8 +131,17 @@ extension FetchRequestController {
     /// - parameter indexPath: An index path in the fetch results.
     ///
     /// - returns: The entity at a given index path in the fetch results.
+    public func entityAt(indexPath indexPath: NSIndexPath) -> T {
+        guard let result = self.underlyingFetchedResultsController.objectAtIndexPath(indexPath) as? T else {
+            fatalError("performFetch: hasn't been called.")
+        }
+        
+        return result
+    }
+
+    @available(*, unavailable, renamed="entityAt")
     public func entityAtIndexPath(indexPath: NSIndexPath) -> T {
-        return self.underlyingFetchedResultsController.objectAtIndexPath(indexPath) as! T
+        fatalError()
     }
 
     /// Returns the index path of a given entity.
@@ -142,8 +160,12 @@ extension FetchRequestController {
 extension FetchRequestController {
     
     /// The sections for the receiver’s fetch results.
-    public var sections: [FetchRequestControllerSection<T>]? {
-        return self.underlyingFetchedResultsController.sections?.map { FetchRequestControllerSection<T>(underlyingSectionInfo: $0) }
+    public var sections: [FetchRequestControllerSection<T>] {
+        guard let result = self.underlyingFetchedResultsController.sections?.map({ FetchRequestControllerSection<T>(underlyingSectionInfo: $0) }) else {
+            fatalError("performFetch: hasn't been called.")
+        }
+        
+        return result
     }
     
     /// Returns the section number for a given section title and index in the section index.
@@ -182,19 +204,19 @@ extension FetchRequestController {
 
 extension FetchRequestController {
     
-    public func refreshWithPredicate(predicate: NSPredicate?, keepOriginalPredicate: Bool = false) throws {
+    public func refresh(predicate predicate: NSPredicate?, keepOriginalPredicate: Bool = false) throws {
         self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
         
         try self.refresh()
     }
-    
-    public func refreshWithSortDescriptors(sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool = false) throws {
+
+    public func refresh(sortDescriptors sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool = false) throws {
         self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
         
         try self.refresh()
     }
     
-    public func refreshWithPredicate(predicate: NSPredicate?, andSortDescriptors sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool = true, keepOriginalSortDescriptors: Bool = true) throws {
+    public func refresh(predicate predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool = true, keepOriginalSortDescriptors: Bool = true) throws {
         self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
         self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
         
@@ -202,24 +224,41 @@ extension FetchRequestController {
     }
     
     public func resetPredicate() throws {
-        try self.refreshWithPredicate(self.initialPredicate, keepOriginalPredicate: false)
+        try self.refresh(predicate: self.initialPredicate, keepOriginalPredicate: false)
     }
     
     public func resetSortDescriptors() throws {
-        try self.refreshWithSortDescriptors(self.initialSortDescriptors, keepOriginalSortDescriptors: false)
+        try self.refresh(sortDescriptors: self.initialSortDescriptors, keepOriginalSortDescriptors: false)
     }
     
     public func resetPredicateAndSortDescriptors() throws {
-        try self.refreshWithPredicate(self.initialPredicate, andSortDescriptors: self.initialSortDescriptors, keepOriginalPredicate: false, keepOriginalSortDescriptors: false)
+        try self.refresh(predicate: self.initialPredicate, sortDescriptors: self.initialSortDescriptors, keepOriginalPredicate: false, keepOriginalSortDescriptors: false)
+    }
+    
+    // MARK: - renamed methods
+    
+    @available(*, unavailable, renamed="refresh")
+    public func refreshWithPredicate(predicate: NSPredicate?, keepOriginalPredicate: Bool = false) throws {
+        fatalError()
+    }
+    
+    @available(*, unavailable, renamed="refresh")
+    public func refreshWithSortDescriptors(sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool = false) throws {
+        fatalError()
+    }
+
+    @available(*, unavailable, renamed="refresh")
+    public func refreshWithPredicate(predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool = true, keepOriginalSortDescriptors: Bool = true) throws {
+        fatalError()
     }
     
 }
 
 extension FetchRequestController {
     
-    public func filter(predicateClosure: (T.Type) -> NSPredicate) throws {
+    public func filter(@noescape predicateClosure: (T.Type) -> NSPredicate) throws {
         let predicate = predicateClosure(T.self)
-        try self.refreshWithPredicate(predicate, keepOriginalPredicate: true)
+        try self.refresh(predicate: predicate, keepOriginalPredicate: true)
     }
     
     public func resetFilter() throws {
@@ -293,7 +332,7 @@ public struct FetchRequestControllerSection<T: NSManagedObject> {
     private let underlyingSectionInfo: NSFetchedResultsSectionInfo
     
     /// The name of the section.
-    public var name: String? { return self.underlyingSectionInfo.name }
+    public var name: String { return self.underlyingSectionInfo.name }
     
     /// The index title of the section.
     public var indexTitle: String? { return self.underlyingSectionInfo.indexTitle }
@@ -302,7 +341,13 @@ public struct FetchRequestControllerSection<T: NSManagedObject> {
     public var numberOfEntities: Int { return self.underlyingSectionInfo.numberOfObjects }
     
     /// The array of entities in the section.
-    public var entities: [T]? { return self.underlyingSectionInfo.objects as? [T] }
+    public var entities: [T] {
+        guard let result = self.underlyingSectionInfo.objects as? [T] else {
+            fatalError("performFetch: hasn't been called.")
+        }
+        
+        return result
+    }
     
     internal init(underlyingSectionInfo: NSFetchedResultsSectionInfo) {
         self.underlyingSectionInfo = underlyingSectionInfo
@@ -338,30 +383,5 @@ extension TableType {
     public func toFetchRequestController<A>(@noescape sectionAttributeClosure: (Self.Item.Type) -> Attribute<A>) -> FetchRequestController<Self.Item> {
         return FetchRequestController(table: self, sectionNameKeyPath: sectionAttributeClosure(Self.Item.self).___name)
     }
-    
-    // MARK: -
-    
-    @available(*, unavailable, renamed="toFetchRequestController")
-    public func toFetchedResultsController(sectionNameKeyPath sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchRequestController<Self.Item> {
-        return FetchRequestController(table: self, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
-    }
-
-    @available(*, unavailable, renamed="toFetchRequestController")
-    public func toFetchedResultsController<A>(@noescape sectionAttributeClosure: (Self.Item.Type) -> Attribute<A>) -> FetchRequestController<Self.Item> {
-        return FetchRequestController(table: self, sectionNameKeyPath: sectionAttributeClosure(Self.Item.self).___name)
-    }
-
-}
-
-
-// MARK: - 
-
-@available(*, unavailable, renamed="FetchRequestController")
-public final class FetchedResultsController<T: NSManagedObject> {
-    
-}
-
-@available(*, unavailable, renamed="FetchRequestControllerSection")
-public struct FetchedResultsControllerSectionInfo<T: NSManagedObject> {
     
 }
