@@ -9,8 +9,7 @@
 import Foundation
 import CoreData
 
-private typealias HashableDuplet = Duplet<String, NSManagedObjectContext>
-private var cachedEntityDescriptions = [HashableDuplet : NSEntityDescription ]()
+private var cachedEntityDescriptions = [String : NSEntityDescription]()
 
 public struct Table<T: NSManagedObject>: TableType {
     
@@ -27,19 +26,20 @@ public struct Table<T: NSManagedObject>: TableType {
     public var sortDescriptors: [NSSortDescriptor]? = nil
     
     public init(dataContext: NSManagedObjectContext) {
-        //
-        let managedObjectClassName = NSStringFromClass(T.self)
+        let dataContextClassName = String(dataContext.dynamicType)
+        let managedObjectClassName = String(T.self)
         
-        let cacheKey = Duplet(managedObjectClassName, dataContext)
+        let cacheKey = "\(dataContextClassName)|\(managedObjectClassName)"
         let entityDescription: NSEntityDescription
         
         if let cachedEntityDescription = cachedEntityDescriptions[cacheKey] {
             entityDescription = cachedEntityDescription
-        } else {
+        }
+        else {
             let persistentStoreCoordinator = dataContext.persistentStoreCoordinator!
             let managedObjectModel = persistentStoreCoordinator.managedObjectModel
             
-            entityDescription = managedObjectModel.entities.filter({ $0.managedObjectClassName == managedObjectClassName }).first!
+            entityDescription = managedObjectModel.entities.filter({ $0.managedObjectClassName.componentsSeparatedByString(".").last! == managedObjectClassName }).first!
             cachedEntityDescriptions[cacheKey] = entityDescription
         }
         
