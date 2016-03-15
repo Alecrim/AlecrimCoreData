@@ -32,7 +32,6 @@
 		14CB03361B77960800EB87B8 /* NSFetchedResultsControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A5017B1B6739F40057DD8B /* NSFetchedResultsControllerExtensions.swift */; };
 		14CB03371B77960800EB87B8 /* UITableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501711B6732820057DD8B /* UITableViewExtensions.swift */; };
 		14CB03381B77960800EB87B8 /* UICollectionViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501731B6733890057DD8B /* UICollectionViewExtensions.swift */; };
-		91C57CC11C2451520020891C /* Duplet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C57CC01C2451520020891C /* Duplet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,7 +62,6 @@
 		14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequestControllerDelegate.swift; sourceTree = "<group>"; };
 		14FBAD691B76AF2100EB662A /* AttributeQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeQuery.swift; sourceTree = "<group>"; };
 		14FBAD6B1B76B23000EB662A /* CoreDataQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataQueryable.swift; sourceTree = "<group>"; };
-		91C57CC01C2451520020891C /* Duplet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Duplet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,7 +165,6 @@
 				145D972B1B5DA55C00995795 /* Table.swift */,
 				14FBAD691B76AF2100EB662A /* AttributeQuery.swift */,
 				143D67231B60D5F1001B6ED3 /* DataContextOptions.swift */,
-				91C57CC01C2451520020891C /* Duplet.swift */,
 			);
 			path = Structs;
 			sourceTree = "<group>";
@@ -281,7 +278,6 @@
 				14CB03231B77959400EB87B8 /* Attribute.swift in Sources */,
 				14CB032F1B7795F600EB87B8 /* DataContext.swift in Sources */,
 				14CB031D1B778FC400EB87B8 /* DataContextOptions.swift in Sources */,
-				91C57CC11C2451520020891C /* Duplet.swift in Sources */,
 				14CB031C1B778FBA00EB87B8 /* AttributeType.swift in Sources */,
 				14CB03321B7795F600EB87B8 /* FetchRequestControllerDelegate.swift in Sources */,
 				14CB03261B7795B400EB87B8 /* NSManagedObjectExtensions.swift in Sources */,
@@ -346,19 +342,19 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-                MACOSX_DEPLOYMENT_TARGET = 10.10;
-                IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-                WATCHOS_DEPLOYMENT_TARGET = 2.0;
-                TVOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator watchos watchsimulator appletvos appletvsimulator";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALID_ARCHS = "x86_64 arm64 armv7 armv7s armv7k";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
@@ -393,17 +389,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-                MACOSX_DEPLOYMENT_TARGET = 10.10;
-                IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-                WATCHOS_DEPLOYMENT_TARGET = 2.0;
-                TVOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator watchos watchsimulator appletvos appletvsimulator";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALID_ARCHS = "x86_64 arm64 armv7 armv7s armv7k";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
