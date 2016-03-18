@@ -20,14 +20,12 @@ public protocol GenericQueryable: Queryable {
 
 extension GenericQueryable {
     
-    @available(*, unavailable, renamed="orderBy")
     public func orderByAscending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        fatalError()
+        return self.sort(attribute: orderingClosure(Self.Item.self), ascending: true)
     }
     
-    @available(*, unavailable, renamed="orderBy")
     public func orderByDescending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        fatalError()
+        return self.sort(attribute: orderingClosure(Self.Item.self), ascending: false)
     }
     
 }
