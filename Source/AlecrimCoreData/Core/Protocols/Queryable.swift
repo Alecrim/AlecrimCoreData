@@ -24,11 +24,6 @@ extension Queryable {
         return self.sort(attributeName: attribute.___name, ascending: ascending, options: attribute.___comparisonPredicateOptions)
     }
     
-    @available(*, unavailable, renamed="sort")
-    public func sortByAttribute<A: AttributeType>(attribute: A, ascending: Bool = true) -> Self {
-        fatalError()
-    }
-
     public func sort(attributeName attributeName: String, ascending: Bool = true, options: NSComparisonPredicateOptions = NSComparisonPredicateOptions()) -> Self {
         let sortDescriptor: NSSortDescriptor
         
@@ -48,11 +43,6 @@ extension Queryable {
         return self.sort(sortDescriptor: sortDescriptor)
     }
     
-    @available(*, unavailable, renamed="sort")
-    public func sortByAttributeName(attributeName: String, ascending: Bool = true, options: NSComparisonPredicateOptions = NSComparisonPredicateOptions()) -> Self {
-        fatalError()
-    }
-
     public func sort(sortDescriptor sortDescriptor: NSSortDescriptor) -> Self {
         var clone = self
         
@@ -66,11 +56,6 @@ extension Queryable {
         return clone
     }
     
-    @available(*, unavailable, renamed="sort")
-    public func sortUsingSortDescriptor(sortDescriptor: NSSortDescriptor) -> Self {
-        fatalError()
-    }
-
     public func sort(sortDescriptors sortDescriptors: [NSSortDescriptor]) -> Self {
         var clone = self
 
@@ -84,11 +69,6 @@ extension Queryable {
         return clone
     }
     
-    @available(*, unavailable, renamed="sort")
-    public func sortUsingSortDescriptors(sortDescriptors: [NSSortDescriptor]) -> Self {
-        fatalError()
-    }
-
 }
 
 // MARK - filtering
@@ -106,11 +86,6 @@ extension Queryable {
         }
         
         return clone
-    }
-    
-    @available(*, unavailable, renamed="filter")
-    public func filterUsingPredicate(predicate: NSPredicate) -> Self {
-        fatalError()
     }
     
 }

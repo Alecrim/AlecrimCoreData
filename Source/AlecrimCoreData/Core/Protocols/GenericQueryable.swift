@@ -36,26 +36,6 @@ extension GenericQueryable {
         return self.sort(attribute: orderingClosure(Self.Item.self), ascending: ascending)
     }
     
-    @available(*, unavailable, renamed="orderBy")
-    public func orderBy<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        fatalError()
-    }
-    
-    @available(*, unavailable, renamed="orderBy")
-    public func thenBy<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        fatalError()
-    }
-    
-    @available(*, unavailable, renamed="orderBy")
-    public func thenByAscending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        fatalError()
-    }
-    
-    @available(*, unavailable, renamed="orderBy")
-    public func thenByDescending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        fatalError()
-    }
-    
 }
 
 // MARK: - filtering

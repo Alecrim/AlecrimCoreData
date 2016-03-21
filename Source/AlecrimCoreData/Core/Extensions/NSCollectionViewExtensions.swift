@@ -13,11 +13,6 @@ import AppKit
     
 extension FetchRequestController {
 
-    @available(*, unavailable, renamed="bindTo")
-    public func bindToCollectionView(collectionView: NSCollectionView, reloadItemAtIndexPath reloadItemAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
-        fatalError()
-    }
-    
     @available(OSX 10.11, *)
     public func bindTo<ItemType: NSCollectionViewItem>(collectionView collectionView: NSCollectionView, configureItem configureItemClosure: ((ItemType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()

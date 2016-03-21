@@ -13,11 +13,6 @@ import UIKit
     
 extension FetchRequestController {
 
-    @available(*, unavailable, renamed="bindTo")
-    public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, reloadRowAtIndexPath reloadRowAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
-        fatalError()
-    }
-    
     public func bindTo<CellType: UITableViewCell>(tableView tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, configureCell configureCellClosure: ((CellType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()

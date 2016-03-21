@@ -330,9 +330,4 @@ public class ManagedObjectContext: NSManagedObjectContext {
         self.observers.append(observer)
     }
     
-    @available(*, unavailable, renamed="addObserver")
-    public final func addObserverForName(name: String, object: AnyObject, closure: (NSNotification) -> Void) {
-        fatalError()
-    }
-
 }

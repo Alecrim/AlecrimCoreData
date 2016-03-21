@@ -103,11 +103,6 @@ extension DataContextOptions {
         self.options[NSInferMappingModelAutomaticallyOption] = true
     }
     
-    @available(*, unavailable, renamed="configureUbiquity")
-    public mutating func configureUbiquityWithContainerIdentifier(containerIdentifier: String, contentRelativePath: String = "Data/TransactionLogs", contentName: String = "UbiquityStore") {
-        fatalError()
-    }
- 
     #endif
 }
 

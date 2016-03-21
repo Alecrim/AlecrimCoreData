@@ -106,11 +106,6 @@ extension FetchRequestController {
         NSFetchedResultsController.deleteCacheWithName(name)
     }
 
-    @available(*, unavailable, renamed="deleteCache")
-    public class func deleteCacheWithName(name: String?) {
-        fatalError()
-    }
-
 }
 
 // MARK: - Accessing Results
@@ -137,11 +132,6 @@ extension FetchRequestController {
         }
         
         return result
-    }
-
-    @available(*, unavailable, renamed="entityAt")
-    public func entityAtIndexPath(indexPath: NSIndexPath) -> T {
-        fatalError()
     }
 
     /// Returns the index path of a given entity.
@@ -233,23 +223,6 @@ extension FetchRequestController {
     
     public func resetPredicateAndSortDescriptors() throws {
         try self.refresh(predicate: self.initialPredicate, sortDescriptors: self.initialSortDescriptors, keepOriginalPredicate: false, keepOriginalSortDescriptors: false)
-    }
-    
-    // MARK: - renamed methods
-    
-    @available(*, unavailable, renamed="refresh")
-    public func refreshWithPredicate(predicate: NSPredicate?, keepOriginalPredicate: Bool = false) throws {
-        fatalError()
-    }
-    
-    @available(*, unavailable, renamed="refresh")
-    public func refreshWithSortDescriptors(sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool = false) throws {
-        fatalError()
-    }
-
-    @available(*, unavailable, renamed="refresh")
-    public func refreshWithPredicate(predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool = true, keepOriginalSortDescriptors: Bool = true) throws {
-        fatalError()
     }
     
 }
