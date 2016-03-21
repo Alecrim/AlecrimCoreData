@@ -89,7 +89,7 @@ extension GenericQueryable {
 }
 
 
-//// TODO: this crashes the compiler (Xcode 7.3 beta 2)
+//// TODO: this still crashes the compiler - Xcode 7.3 (2016-03-21 release version)
 //// MARK: - SequenceType
 //
 //extension GenericQueryable {
