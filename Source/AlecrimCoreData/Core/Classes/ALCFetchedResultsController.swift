@@ -138,7 +138,7 @@ public final class ALCFetchedResultsController: NSObject {
         super.init()
         
         //
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("handleContextChangesWithNotification:"), name: NSManagedObjectContextDidSaveNotification, object: self.observedManagedObjectContext)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.dynamicType.handleContextChangesWithNotification(_:)), name: NSManagedObjectContextDidSaveNotification, object: self.observedManagedObjectContext)
     }
     
     deinit {
@@ -199,7 +199,7 @@ public final class ALCFetchedResultsController: NSObject {
     // MARK: -
     
     public func sectionIndexTitleForSectionName(sectionName: String) -> String? {
-        if let d = self.delegate, let o = d as? NSObject where o.respondsToSelector(Selector("controller:sectionIndexTitleForSectionName:")) {
+        if let d = self.delegate, let o = d as? NSObject where o.respondsToSelector(#selector(ALCFetchedResultsControllerDelegate.controller(_:sectionIndexTitleForSectionName:))) {
             return d.controller!(self, sectionIndexTitleForSectionName: sectionName)
         }
         else {
@@ -414,7 +414,12 @@ extension ALCFetchedResultsController {
         return (oldSections, oldFetchedObjects, self.sections, self.fetchedObjects)
     }
     
-    private func handleCallbacksWithDelegate(delegate: ALCFetchedResultsControllerDelegate, oldSections: [ALCSectionInfo], oldFetchedObjects: [NSManagedObject], newSections: [ALCSectionInfo], newFetchedObjects: [NSManagedObject], var insertedObjects: [NSManagedObject], var updatedObjects: [NSManagedObject], var deletedObjects: [NSManagedObject]) {
+    private func handleCallbacksWithDelegate(delegate: ALCFetchedResultsControllerDelegate, oldSections: [ALCSectionInfo], oldFetchedObjects: [NSManagedObject], newSections: [ALCSectionInfo], newFetchedObjects: [NSManagedObject], insertedObjects: [NSManagedObject], updatedObjects: [NSManagedObject], deletedObjects: [NSManagedObject]) {
+        //
+        var insertedObjects: [NSManagedObject] = insertedObjects
+        var updatedObjects: [NSManagedObject] = updatedObjects
+        var deletedObjects: [NSManagedObject] = deletedObjects
+        
         //
         var controllerWillChangeContentCalled = false
 

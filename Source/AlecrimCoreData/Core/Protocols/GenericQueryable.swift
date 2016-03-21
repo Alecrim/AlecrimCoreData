@@ -10,7 +10,7 @@ import Foundation
 
 public protocol GenericQueryable: Queryable {
     
-    typealias Item
+    associatedtype Item
     
     func toArray() -> [Item]
 

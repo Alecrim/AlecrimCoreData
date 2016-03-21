@@ -33,13 +33,13 @@ extension Queryable {
         let sortDescriptor: NSSortDescriptor
         
         if options.contains(.CaseInsensitivePredicateOption) && options.contains(.DiacriticInsensitivePredicateOption) {
-            sortDescriptor = NSSortDescriptor(key: attributeName, ascending: ascending, selector: Selector("localizedCaseInsensitiveCompare:"))
+            sortDescriptor = NSSortDescriptor(key: attributeName, ascending: ascending, selector: #selector(NSString.localizedCaseInsensitiveCompare(_:)))
         }
         else if options.contains(.CaseInsensitivePredicateOption) {
-            sortDescriptor = NSSortDescriptor(key: attributeName, ascending: ascending, selector: Selector("caseInsensitiveCompare:"))
+            sortDescriptor = NSSortDescriptor(key: attributeName, ascending: ascending, selector: #selector(NSString.caseInsensitiveCompare(_:)))
         }
         else if options.contains(.DiacriticInsensitivePredicateOption) {
-            sortDescriptor = NSSortDescriptor(key: attributeName, ascending: ascending, selector: Selector("localizedCompare:"))
+            sortDescriptor = NSSortDescriptor(key: attributeName, ascending: ascending, selector: #selector(NSString.localizedCompare(_:)))
         }
         else {
             sortDescriptor = NSSortDescriptor(key: attributeName, ascending: ascending)

@@ -11,7 +11,7 @@ import CoreData
 
 public protocol TableType: CoreDataQueryable {
     
-    typealias Item: NSManagedObject
+    associatedtype Item: NSManagedObject
 
 }
 

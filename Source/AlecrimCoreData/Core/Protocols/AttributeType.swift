@@ -50,7 +50,7 @@ public protocol NamedAttributeType {
 public protocol AttributeType: NamedAttributeType {
     
     /// The associated value type.
-    typealias ValueType
+    associatedtype ValueType
     
 }
 
