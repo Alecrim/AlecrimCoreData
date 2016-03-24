@@ -14,7 +14,7 @@ import AppKit
 extension FetchRequestController {
 
     @available(OSX 10.11, *)
-    public func bindTo<ItemType: NSCollectionViewItem>(collectionView collectionView: NSCollectionView, configureItem configureItemClosure: ((ItemType, NSIndexPath) -> Void)? = nil) -> Self {
+    public func bindTo<ItemType: NSCollectionViewItem>(collectionView collectionView: NSCollectionView, sectionOffset: Int = 0, configureItem configureItemClosure: ((ItemType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()
@@ -42,7 +42,7 @@ extension FetchRequestController {
             }
             .didInsertSection { sectionInfo, sectionIndex in
                 if !reloadData {
-                    insertedSectionIndexes.addIndex(sectionIndex)
+                    insertedSectionIndexes.addIndex(sectionIndex + sectionOffset)
                 }
             }
             .didDeleteSection { sectionInfo, sectionIndex in
@@ -50,18 +50,20 @@ extension FetchRequestController {
                 reloadData = true
                 
                 //                if !reloadData {
-                //                    deletedSectionIndexes.addIndex(sectionIndex)
+                //                    deletedSectionIndexes.addIndex(sectionIndex + sectionOffset)
                 //                    deletedItemIndexPaths = deletedItemIndexPaths.filter { $0.section != sectionIndex }
                 //                    updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex }
                 //                }
             }
             .didUpdateSection { sectionInfo, sectionIndex in
                 if !reloadData {
-                    updatedSectionIndexes.addIndex(sectionIndex)
+                    updatedSectionIndexes.addIndex(sectionIndex + sectionOffset)
                 }
             }
             .didInsertEntity { entity, newIndexPath in
                 if !reloadData {
+                    let newIndexPath = sectionOffset > 0 ? NSIndexPath(forItem: newIndexPath.item, inSection: newIndexPath.section + sectionOffset) : newIndexPath
+
                     if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
                         insertedItemIndexPaths.append(newIndexPath)
                     }
@@ -69,6 +71,8 @@ extension FetchRequestController {
             }
             .didDeleteEntity { entity, indexPath in
                 if !reloadData {
+                    let indexPath = sectionOffset > 0 ? NSIndexPath(forItem: indexPath.item, inSection: indexPath.section + sectionOffset) : indexPath
+
                     if !deletedSectionIndexes.containsIndex(indexPath.section) {
                         deletedItemIndexPaths.append(indexPath)
                     }
@@ -76,6 +80,8 @@ extension FetchRequestController {
             }
             .didUpdateEntity { entity, indexPath in
                 if !reloadData {
+                    let indexPath = sectionOffset > 0 ? NSIndexPath(forItem: indexPath.item, inSection: indexPath.section + sectionOffset) : indexPath
+
                     if !deletedSectionIndexes.containsIndex(indexPath.section) && deletedItemIndexPaths.indexOf(indexPath) == nil && updatedItemIndexPaths.indexOf(indexPath) == nil {
                         updatedItemIndexPaths.append(indexPath)
                     }
@@ -83,6 +89,9 @@ extension FetchRequestController {
             }
             .didMoveEntity { entity, indexPath, newIndexPath in
                 if !reloadData {
+                    let newIndexPath = sectionOffset > 0 ? NSIndexPath(forItem: newIndexPath.item, inSection: newIndexPath.section + sectionOffset) : newIndexPath
+                    let indexPath = sectionOffset > 0 ? NSIndexPath(forItem: indexPath.item, inSection: indexPath.section + sectionOffset) : indexPath
+
                     if newIndexPath == indexPath {
                         if !deletedSectionIndexes.containsIndex(indexPath.section) && deletedItemIndexPaths.indexOf(indexPath) == nil && updatedItemIndexPaths.indexOf(indexPath) == nil {
                             updatedItemIndexPaths.append(indexPath)
