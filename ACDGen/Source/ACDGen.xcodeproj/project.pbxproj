@@ -7,13 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		140828A31B56D719008FCD94 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140828A21B56D719008FCD94 /* StringExtensions.swift */; };
-		140828A51B56D76D008FCD94 /* NSMutableStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140828A41B56D76D008FCD94 /* NSMutableStringExtensions.swift */; };
+		140828A31B56D719008FCD94 /* ACDGen+StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140828A21B56D719008FCD94 /* ACDGen+StringExtensions.swift */; };
+		140828A51B56D76D008FCD94 /* ACDGen+NSMutableStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140828A41B56D76D008FCD94 /* ACDGen+NSMutableStringExtensions.swift */; };
 		146F30B61B9E03A900778549 /* EntityExtensionsCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146F30B51B9E03A900778549 /* EntityExtensionsCodeGenerator.swift */; };
 		146F30B81B9E050A00778549 /* CodeGeneratorErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146F30B71B9E050A00778549 /* CodeGeneratorErrors.swift */; };
 		1470290A1B9DFD4500CEF4D9 /* CodeGeneratorParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147029091B9DFD4500CEF4D9 /* CodeGeneratorParameters.swift */; };
 		147C8C531B9DF70C00C2CEDB /* EntityCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C8C521B9DF70C00C2CEDB /* EntityCodeGenerator.swift */; };
 		147C8C551B9DF77500C2CEDB /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C8C541B9DF77500C2CEDB /* CodeGenerator.swift */; };
+		14CF9E5D1CA504B000594115 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9E5C1CA504B000594115 /* main.swift */; };
+		14CF9E661CA5052400594115 /* CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9E621CA5052400594115 /* CommandLine.swift */; };
+		14CF9E671CA5052400594115 /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9E641CA5052400594115 /* Option.swift */; };
+		14CF9E681CA5052400594115 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CF9E651CA5052400594115 /* StringExtensions.swift */; };
+		14CF9E691CA5054C00594115 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C8C541B9DF77500C2CEDB /* CodeGenerator.swift */; };
+		14CF9E6A1CA5054C00594115 /* CodeGeneratorParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147029091B9DFD4500CEF4D9 /* CodeGeneratorParameters.swift */; };
+		14CF9E6B1CA5054C00594115 /* CodeGeneratorErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146F30B71B9E050A00778549 /* CodeGeneratorErrors.swift */; };
+		14CF9E6C1CA5054C00594115 /* ModelCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E7ABE31AA230F300E0AA37 /* ModelCodeGenerator.swift */; };
+		14CF9E6D1CA5054C00594115 /* EntityCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C8C521B9DF70C00C2CEDB /* EntityCodeGenerator.swift */; };
+		14CF9E6E1CA5054C00594115 /* EntityExtensionsCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146F30B51B9E03A900778549 /* EntityExtensionsCodeGenerator.swift */; };
+		14CF9E6F1CA5055100594115 /* ACDGen+NSMutableStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140828A41B56D76D008FCD94 /* ACDGen+NSMutableStringExtensions.swift */; };
+		14CF9E701CA5055100594115 /* ACDGen+StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 140828A21B56D719008FCD94 /* ACDGen+StringExtensions.swift */; };
 		14E7ABC71AA2270100E0AA37 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E7ABC61AA2270100E0AA37 /* AppDelegate.swift */; };
 		14E7ABC91AA2270100E0AA37 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E7ABC81AA2270100E0AA37 /* ViewController.swift */; };
 		14E7ABCB1AA2270100E0AA37 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14E7ABCA1AA2270100E0AA37 /* Images.xcassets */; };
@@ -21,14 +33,31 @@
 		14E7ABE41AA230F300E0AA37 /* ModelCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E7ABE31AA230F300E0AA37 /* ModelCodeGenerator.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		14CF9E581CA504B000594115 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		140828A21B56D719008FCD94 /* StringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
-		140828A41B56D76D008FCD94 /* NSMutableStringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSMutableStringExtensions.swift; sourceTree = "<group>"; };
+		140828A21B56D719008FCD94 /* ACDGen+StringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ACDGen+StringExtensions.swift"; sourceTree = "<group>"; };
+		140828A41B56D76D008FCD94 /* ACDGen+NSMutableStringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ACDGen+NSMutableStringExtensions.swift"; sourceTree = "<group>"; };
 		146F30B51B9E03A900778549 /* EntityExtensionsCodeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityExtensionsCodeGenerator.swift; sourceTree = "<group>"; };
 		146F30B71B9E050A00778549 /* CodeGeneratorErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeGeneratorErrors.swift; sourceTree = "<group>"; };
 		147029091B9DFD4500CEF4D9 /* CodeGeneratorParameters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeGeneratorParameters.swift; sourceTree = "<group>"; };
 		147C8C521B9DF70C00C2CEDB /* EntityCodeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityCodeGenerator.swift; sourceTree = "<group>"; };
 		147C8C541B9DF77500C2CEDB /* CodeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodeGenerator.swift; sourceTree = "<group>"; };
+		14CF9E5A1CA504B000594115 /* acdgenp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = acdgenp; sourceTree = BUILT_PRODUCTS_DIR; };
+		14CF9E5C1CA504B000594115 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		14CF9E621CA5052400594115 /* CommandLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandLine.swift; sourceTree = "<group>"; };
+		14CF9E641CA5052400594115 /* Option.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
+		14CF9E651CA5052400594115 /* StringExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		14E7ABC11AA2270100E0AA37 /* ACDGen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ACDGen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14E7ABC51AA2270100E0AA37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		14E7ABC61AA2270100E0AA37 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -39,6 +68,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		14CF9E571CA504B000594115 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		14E7ABBE1AA2270100E0AA37 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -65,8 +101,8 @@
 		147029071B9DFC4F00CEF4D9 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				140828A41B56D76D008FCD94 /* NSMutableStringExtensions.swift */,
-				140828A21B56D719008FCD94 /* StringExtensions.swift */,
+				140828A41B56D76D008FCD94 /* ACDGen+NSMutableStringExtensions.swift */,
+				140828A21B56D719008FCD94 /* ACDGen+StringExtensions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -80,10 +116,31 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		14CF9E5B1CA504B000594115 /* acdgenp */ = {
+			isa = PBXGroup;
+			children = (
+				14CF9E5C1CA504B000594115 /* main.swift */,
+				14CF9E611CA5052400594115 /* CommandLine */,
+			);
+			path = acdgenp;
+			sourceTree = "<group>";
+		};
+		14CF9E611CA5052400594115 /* CommandLine */ = {
+			isa = PBXGroup;
+			children = (
+				14CF9E621CA5052400594115 /* CommandLine.swift */,
+				14CF9E641CA5052400594115 /* Option.swift */,
+				14CF9E651CA5052400594115 /* StringExtensions.swift */,
+			);
+			name = CommandLine;
+			path = CommandLine/CommandLine;
+			sourceTree = SOURCE_ROOT;
+		};
 		14E7ABB81AA2270100E0AA37 = {
 			isa = PBXGroup;
 			children = (
 				14E7ABC31AA2270100E0AA37 /* ACDGen */,
+				14CF9E5B1CA504B000594115 /* acdgenp */,
 				14E7ABC21AA2270100E0AA37 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -92,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				14E7ABC11AA2270100E0AA37 /* ACDGen.app */,
+				14CF9E5A1CA504B000594115 /* acdgenp */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,6 +178,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		14CF9E591CA504B000594115 /* acdgenp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 14CF9E601CA504B000594115 /* Build configuration list for PBXNativeTarget "acdgenp" */;
+			buildPhases = (
+				14CF9E561CA504B000594115 /* Sources */,
+				14CF9E571CA504B000594115 /* Frameworks */,
+				14CF9E581CA504B000594115 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = acdgenp;
+			productName = acdgenp;
+			productReference = 14CF9E5A1CA504B000594115 /* acdgenp */;
+			productType = "com.apple.product-type.tool";
+		};
 		14E7ABC01AA2270100E0AA37 /* ACDGen */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 14E7ABDD1AA2270200E0AA37 /* Build configuration list for PBXNativeTarget "ACDGen" */;
@@ -144,10 +219,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0700;
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Alecrim;
 				TargetAttributes = {
+					14CF9E591CA504B000594115 = {
+						CreatedOnToolsVersion = 7.3;
+					};
 					14E7ABC01AA2270100E0AA37 = {
 						CreatedOnToolsVersion = 6.3;
 						DevelopmentTeam = 89GFVQ5PK6;
@@ -168,6 +246,7 @@
 			projectRoot = "";
 			targets = (
 				14E7ABC01AA2270100E0AA37 /* ACDGen */,
+				14CF9E591CA504B000594115 /* acdgenp */,
 			);
 		};
 /* End PBXProject section */
@@ -185,13 +264,32 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		14CF9E561CA504B000594115 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14CF9E701CA5055100594115 /* ACDGen+StringExtensions.swift in Sources */,
+				14CF9E6A1CA5054C00594115 /* CodeGeneratorParameters.swift in Sources */,
+				14CF9E6B1CA5054C00594115 /* CodeGeneratorErrors.swift in Sources */,
+				14CF9E681CA5052400594115 /* StringExtensions.swift in Sources */,
+				14CF9E5D1CA504B000594115 /* main.swift in Sources */,
+				14CF9E691CA5054C00594115 /* CodeGenerator.swift in Sources */,
+				14CF9E671CA5052400594115 /* Option.swift in Sources */,
+				14CF9E6D1CA5054C00594115 /* EntityCodeGenerator.swift in Sources */,
+				14CF9E6C1CA5054C00594115 /* ModelCodeGenerator.swift in Sources */,
+				14CF9E6F1CA5055100594115 /* ACDGen+NSMutableStringExtensions.swift in Sources */,
+				14CF9E661CA5052400594115 /* CommandLine.swift in Sources */,
+				14CF9E6E1CA5054C00594115 /* EntityExtensionsCodeGenerator.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		14E7ABBD1AA2270100E0AA37 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				140828A51B56D76D008FCD94 /* NSMutableStringExtensions.swift in Sources */,
+				140828A51B56D76D008FCD94 /* ACDGen+NSMutableStringExtensions.swift in Sources */,
 				146F30B81B9E050A00778549 /* CodeGeneratorErrors.swift in Sources */,
-				140828A31B56D719008FCD94 /* StringExtensions.swift in Sources */,
+				140828A31B56D719008FCD94 /* ACDGen+StringExtensions.swift in Sources */,
 				14E7ABE41AA230F300E0AA37 /* ModelCodeGenerator.swift in Sources */,
 				146F30B61B9E03A900778549 /* EntityExtensionsCodeGenerator.swift in Sources */,
 				147C8C551B9DF77500C2CEDB /* CodeGenerator.swift in Sources */,
@@ -216,6 +314,24 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		14CF9E5E1CA504B000594115 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		14CF9E5F1CA504B000594115 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		14E7ABDB1AA2270200E0AA37 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -330,6 +446,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		14CF9E601CA504B000594115 /* Build configuration list for PBXNativeTarget "acdgenp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14CF9E5E1CA504B000594115 /* Debug */,
+				14CF9E5F1CA504B000594115 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		14E7ABBC1AA2270100E0AA37 /* Build configuration list for PBXProject "ACDGen" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -1,5 +1,5 @@
 //
-//  StringExtensions.swift
+//  ACDGen+StringExtensions.swift
 //  ACDGen
 //
 //  Created by Vanderlei Martinelli on 2015-07-15.
@@ -329,7 +329,7 @@ extension String {
     func camelCasePluralized() -> String {
         var components = self.componentsSeparatedByCapitalizedLetters()
         let pluralized = NSMutableString()
-        for var i = 0; i < components.endIndex; i++ {
+        for i in 0..<components.endIndex {
             if i == components.endIndex - 1 {
                 let str = components[i].pluralizedLowercaseString() as NSString
                 if i > 0 {
@@ -355,7 +355,7 @@ extension String {
     func camelCaseSingularized() -> String {
         var components = self.componentsSeparatedByCapitalizedLetters()
         let singularized = NSMutableString()
-        for var i = 0; i < components.endIndex; i++ {
+        for i in 0..<components.endIndex {
             if i == components.endIndex - 1 {
                 let str = components[i].singularizedLowercaseString() as NSString
                 if i > 0 {

@@ -1,5 +1,5 @@
 //
-//  NSMutableStringExtensions.swift
+//  ACDGen+NSMutableStringExtensions.swift
 //  ACDGen
 //
 //  Created by Vanderlei Martinelli on 2015-07-15.
@@ -15,7 +15,7 @@ extension NSMutableString {
     }
     
     func appendLine(aString: String, indentLevel: Int = 0) {
-        for var level = 0; level < indentLevel; level++ {
+        for _ in 0..<indentLevel {
             self.appendString("    ")
         }
         
