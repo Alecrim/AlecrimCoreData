@@ -194,19 +194,19 @@ extension FetchRequestController {
 
 extension FetchRequestController {
     
-    public func refresh(predicate predicate: NSPredicate?, keepOriginalPredicate: Bool = false) throws {
+    public func refresh(predicate predicate: NSPredicate?, keepOriginalPredicate: Bool) throws {
         self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
         
         try self.refresh()
     }
 
-    public func refresh(sortDescriptors sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool = false) throws {
+    public func refresh(sortDescriptors sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool) throws {
         self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
         
         try self.refresh()
     }
     
-    public func refresh(predicate predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool = true, keepOriginalSortDescriptors: Bool = true) throws {
+    public func refresh(predicate predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool, keepOriginalSortDescriptors: Bool) throws {
         self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
         self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
         
