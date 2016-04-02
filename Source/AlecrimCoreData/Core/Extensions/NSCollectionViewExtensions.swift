@@ -14,7 +14,7 @@ import AppKit
 extension FetchRequestController {
 
     @available(OSX 10.11, *)
-    public func bindTo<ItemType: NSCollectionViewItem>(collectionView collectionView: NSCollectionView, sectionOffset: Int = 0, configureItem configureItemClosure: ((ItemType, NSIndexPath) -> Void)? = nil) -> Self {
+    public func bind<ItemType: NSCollectionViewItem>(to collectionView: NSCollectionView, sectionOffset: Int = 0, configureItemHandler configureItemClosure: ((ItemType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()

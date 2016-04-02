@@ -27,7 +27,7 @@ extension TableType {
         self.dataContext.deleteObject(entity)
     }
     
-    public func refreshEntity(entity: Self.Item, mergeChanges: Bool = true) {
+    public func refreshEntity(entity: Self.Item, mergingChanges mergeChanges: Bool = true) {
         self.dataContext.refreshObject(entity, mergeChanges: mergeChanges)
     }
 
@@ -35,7 +35,7 @@ extension TableType {
 
 extension TableType {
     
-    public func delete() throws {
+    public func deleteAll() throws {
         let fetchRequest = self.toFetchRequest()
         fetchRequest.resultType = .ManagedObjectIDResultType
         
@@ -55,7 +55,7 @@ extension TableType {
     public func firstOrCreated(@noescape predicateClosure: (Self.Item.Type) -> NSComparisonPredicate) -> Self.Item {
         let predicate = predicateClosure(Self.Item.self)
         
-        if let entity = self.filter(predicate: predicate).first() {
+        if let entity = self.filter(usingPredicate: predicate).first() {
             return entity
         }
         else {

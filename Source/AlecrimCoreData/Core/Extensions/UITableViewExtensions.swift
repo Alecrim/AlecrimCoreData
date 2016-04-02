@@ -13,7 +13,7 @@ import UIKit
     
 extension FetchRequestController {
 
-    public func bindTo<CellType: UITableViewCell>(tableView tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, sectionOffset: Int = 0, configureCell configureCellClosure: ((CellType, NSIndexPath) -> Void)? = nil) -> Self {
+    public func bind<CellType: UITableViewCell>(to tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, sectionOffset: Int = 0, configureCellHandler configureCellClosure: ((CellType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()

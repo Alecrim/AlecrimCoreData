@@ -67,12 +67,6 @@ extension Attribute where T: CollectionType {
         return Attribute<U>("@avg." + innerAttribute.___name, self)
     }
 
-    // same as avg, for convenience
-    public func average<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
-        let innerAttribute = closure(T.Generator.Element.self)
-        return Attribute<U>("@avg." + innerAttribute.___name, self)
-    }
-
     public func sum<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
         let innerAttribute = closure(T.Generator.Element.self)
         return Attribute<U>("@sum." + innerAttribute.___name, self)

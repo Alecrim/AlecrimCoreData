@@ -194,19 +194,19 @@ extension FetchRequestController {
 
 extension FetchRequestController {
     
-    public func refresh(predicate predicate: NSPredicate?, keepOriginalPredicate: Bool) throws {
+    public func refresh(usingPredicate predicate: NSPredicate?, keepOriginalPredicate: Bool) throws {
         self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
         
         try self.refresh()
     }
 
-    public func refresh(sortDescriptors sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool) throws {
+    public func refresh(usingSortDescriptors sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool) throws {
         self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
         
         try self.refresh()
     }
     
-    public func refresh(predicate predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool, keepOriginalSortDescriptors: Bool) throws {
+    public func refresh(usingPredicate predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool, keepOriginalSortDescriptors: Bool) throws {
         self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
         self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
         
@@ -214,15 +214,15 @@ extension FetchRequestController {
     }
     
     public func resetPredicate() throws {
-        try self.refresh(predicate: self.initialPredicate, keepOriginalPredicate: false)
+        try self.refresh(usingPredicate: self.initialPredicate, keepOriginalPredicate: false)
     }
     
     public func resetSortDescriptors() throws {
-        try self.refresh(sortDescriptors: self.initialSortDescriptors, keepOriginalSortDescriptors: false)
+        try self.refresh(usingSortDescriptors: self.initialSortDescriptors, keepOriginalSortDescriptors: false)
     }
     
     public func resetPredicateAndSortDescriptors() throws {
-        try self.refresh(predicate: self.initialPredicate, sortDescriptors: self.initialSortDescriptors, keepOriginalPredicate: false, keepOriginalSortDescriptors: false)
+        try self.refresh(usingPredicate: self.initialPredicate, sortDescriptors: self.initialSortDescriptors, keepOriginalPredicate: false, keepOriginalSortDescriptors: false)
     }
     
 }
@@ -231,7 +231,7 @@ extension FetchRequestController {
     
     public func filter(@noescape predicateClosure: (T.Type) -> NSPredicate) throws {
         let predicate = predicateClosure(T.self)
-        try self.refresh(predicate: predicate, keepOriginalPredicate: true)
+        try self.refresh(usingPredicate: predicate, keepOriginalPredicate: true)
     }
     
     public func resetFilter() throws {
