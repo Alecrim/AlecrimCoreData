@@ -126,7 +126,7 @@ extension FetchRequestController {
     /// - parameter indexPath: An index path in the fetch results.
     ///
     /// - returns: The entity at a given index path in the fetch results.
-    public func entityAt(indexPath indexPath: NSIndexPath) -> T {
+    public func entity(atIndexPath indexPath: NSIndexPath) -> T {
         guard let result = self.underlyingFetchedResultsController.objectAtIndexPath(indexPath) as? T else {
             fatalError("performFetch: hasn't been called.")
         }
@@ -139,7 +139,7 @@ extension FetchRequestController {
     /// - parameter entity: An entity in the receiver’s fetch results.
     ///
     /// - returns: The index path of *entity* in the receiver’s fetch results, or `nil` if *entity* could not be found.
-    public func indexPathForEntity(entity: T) -> NSIndexPath? {
+    public func indexPath(forEntity entity: T) -> NSIndexPath? {
         return self.underlyingFetchedResultsController.indexPathForObject(entity)
     }
 
@@ -164,7 +164,7 @@ extension FetchRequestController {
     /// - parameter sectionIndex: The index of a section.
     ///
     /// - returns: The section number for the given section title and index in the section index.
-    public func sectionForSectionIndexTitle(title: String, atIndex sectionIndex: Int) -> Int {
+    public func sectionForSectionIndex(title title: String, atIndex sectionIndex: Int) -> Int {
         return self.underlyingFetchedResultsController.sectionForSectionIndexTitle(title, atIndex: sectionIndex)
     }
     
@@ -179,7 +179,7 @@ extension FetchRequestController {
     /// - parameter sectionName: The name of a section.
     ///
     /// - returns: The section index entry corresponding to the section with name *sectionName*.
-    public func sectionIndexTitleForSectionName(sectionName: String) -> String? {
+    public func sectionIndexTitle(forSectionName sectionName: String) -> String? {
         return self.underlyingFetchedResultsController.sectionIndexTitleForSectionName(sectionName)
     }
 
