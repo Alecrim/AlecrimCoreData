@@ -102,7 +102,7 @@ extension FetchRequestController {
     /// - parameter name: The name of the cache file to delete.
     ///
     /// If *name* is `nil`, deletes all cache files.
-    public class func deleteCache(name name: String?) {
+    public class func deleteCache(withName name: String?) {
         NSFetchedResultsController.deleteCacheWithName(name)
     }
 
