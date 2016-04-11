@@ -12,7 +12,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			pX9OFxPYXPJcG39Wrz6C6JdqjbY=
+			e3Pmh1BMF5buQz0AbTP9VBLcILc=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -21,7 +21,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			54bFCWuirynG3en7KOFAVV4NuMw=
+			Qo3MOim8HddqD68GiRDH7XZNUs4=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -30,7 +30,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			SIYboR5g7cFQgMuiyz60trQRar4=
+			8WOBw9GAXoACMl+4iqfP41/bsI4=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -39,7 +39,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			v1Nm0UqLRECl/jG7ahVcjUOv4A8=
+			OEuKPP/GuTzcRiRM0R3pFMMrNH8=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -51,7 +51,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			639GGbGFKaBlDcE6CozMLGLtFOI=
+			GS2GNFulLhdI8mLTycJmJ9q7cjM=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftAppKit" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -60,7 +60,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			jtSh/1wN4p0rNkAQ1KcaQZZdfs8=
+			0Yjiv77BqxZY5wpb4wkezLgpU8c=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftCore" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -69,7 +69,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			yhQv9G+JfequP0uFt6bOFowtTH8=
+			LdJtD8LZM7/QEWd0Omofwfejz2I=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftCoreData" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -78,7 +78,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			xpYBbkbTm5HCvZj/H8x9/UZBMR8=
+			0T1EfpLu5ONUmjFrDv7+nzHUTXA=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftCoreGraphics" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -87,7 +87,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			eJ69tUN6pqYlSTzV5emJ6ArojDs=
+			hYtZIfb41Qb6LB099a+e7yF0hRo=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftCoreImage" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -96,7 +96,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			muH0+/el5vfsnaBuu2IfjlXTx3M=
+			CaP3c4qNeJ50HqnKOac4Ij+0H58=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftDarwin" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -105,7 +105,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			o4YAC1eLClufrj+gbWmPewzqeiU=
+			KLDXsqblS/Hv9c/e8sGImHRoaf0=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftDispatch" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -114,7 +114,7 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			10arWKmQNVjmNnUmSlLagvl/hPs=
+			oNUzYGBgzM/o5b4FeBtWRpOV2Oc=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftFoundation" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
@@ -123,20 +123,31 @@
 		<dict>
 			<key>cdhash</key>
 			<data>
-			WrgXcInufRnG9BqFeFRA9hVDsNQ=
+			gjPEgrTLc7sbHYcFcr+jtxOJKDs=
 			</data>
 			<key>requirement</key>
 			<string>anchor apple generic and identifier "com.apple.dt.runtime.swiftObjectiveC" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "89GFVQ5PK6")</string>
 		</dict>
 		<key>Resources/AppIcon.icns</key>
-		<data>
-		4fENz3XO2GJcyBkjfMf2yZh6m48=
-		</data>
+		<dict>
+			<key>hash</key>
+			<data>
+			4fENz3XO2GJcyBkjfMf2yZh6m48=
+			</data>
+			<key>hash2</key>
+			<data>
+			o1UIh+cQbn+Gnr6GrvJIKJLdpxIPOjGjC0PCcg8VF/M=
+			</data>
+		</dict>
 		<key>Resources/Base.lproj/Main.storyboardc/Info.plist</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			pX9OFxPYXPJcG39Wrz6C6JdqjbY=
+			e3Pmh1BMF5buQz0AbTP9VBLcILc=
+			</data>
+			<key>hash2</key>
+			<data>
+			BMVAX90biQabvLBERaNGFYrTVesT4mSLS/Ie1RUbHxE=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -145,7 +156,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			54bFCWuirynG3en7KOFAVV4NuMw=
+			Qo3MOim8HddqD68GiRDH7XZNUs4=
+			</data>
+			<key>hash2</key>
+			<data>
+			74VnO5OR5igMuAX4YLAAJQpkvpR3KZnEObO/61GQ5WE=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -154,7 +169,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			SIYboR5g7cFQgMuiyz60trQRar4=
+			8WOBw9GAXoACMl+4iqfP41/bsI4=
+			</data>
+			<key>hash2</key>
+			<data>
+			ItSZDzlpP2/926ROeFdlD7dssNx+BTuALVmPW2QSy8o=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -163,7 +182,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			v1Nm0UqLRECl/jG7ahVcjUOv4A8=
+			OEuKPP/GuTzcRiRM0R3pFMMrNH8=
+			</data>
+			<key>hash2</key>
+			<data>
+			hLVwDYTuzhMHXAwTzZkSBgLaIl0p8Vro02B8cnnxwt8=
 			</data>
 			<key>optional</key>
 			<true/>

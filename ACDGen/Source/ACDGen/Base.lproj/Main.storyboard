@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="7528.3" systemVersion="14D113c" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7528.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="9532"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -668,11 +668,11 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="ACDGen" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="215"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="235"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="t1W-Gu-dbd">
-                                <rect key="frame" x="62" y="178" width="76" height="17"/>
+                                <rect key="frame" x="62" y="198" width="76" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="DataModel" id="i2f-z5-RIG">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -680,7 +680,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="71x-Zd-fgp">
-                                <rect key="frame" x="142" y="178" width="320" height="17"/>
+                                <rect key="frame" x="142" y="198" width="320" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="rnK-Cv-JMy">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -688,7 +688,7 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x0R-ll-Lc6">
-                                <rect key="frame" x="138" y="169" width="97" height="32"/>
+                                <rect key="frame" x="138" y="189" width="97" height="32"/>
                                 <buttonCell key="cell" type="push" title="Choose..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="acY-Fc-Qqq">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -698,7 +698,7 @@
                                 </connections>
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JGa-wg-pa2">
-                                <rect key="frame" x="18" y="150" width="120" height="17"/>
+                                <rect key="frame" x="18" y="170" width="120" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="DataContext name" id="qKe-Rm-qu7">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -706,7 +706,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="T4h-gh-6PT">
-                                <rect key="frame" x="85" y="125" width="53" height="17"/>
+                                <rect key="frame" x="85" y="145" width="53" height="17"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Options" id="efQ-kC-L0q">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -714,7 +714,7 @@
                                 </textFieldCell>
                             </textField>
                             <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="phf-mL-PX2">
-                                <rect key="frame" x="144" y="148" width="316" height="22"/>
+                                <rect key="frame" x="144" y="168" width="316" height="22"/>
                                 <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" refusesFirstResponder="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="TKs-QO-77a">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -722,8 +722,18 @@
                                 </textFieldCell>
                             </textField>
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QAB-09-vif">
-                                <rect key="frame" x="142" y="123" width="320" height="18"/>
+                                <rect key="frame" x="142" y="143" width="320" height="18"/>
                                 <buttonCell key="cell" type="check" title="Use scalar properties for primitive data types" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="FF0-6d-c9d">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="useScalarPropertiesButtonPressed:" target="XfG-lQ-9wD" id="Gt7-cP-bh8"/>
+                                </connections>
+                            </button>
+                            <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F4X-gO-pYR">
+                                <rect key="frame" x="154" y="123" width="308" height="18"/>
+                                <buttonCell key="cell" type="check" title="Use Swift String for string types" bezelStyle="regularSquare" imagePosition="left" enabled="NO" state="on" inset="2" id="5LD-TE-bPb">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
@@ -768,11 +778,12 @@
                         <outlet property="generateQueryAttributesCheckBox" destination="xGP-Ht-gqy" id="RZ5-Kg-DRe"/>
                         <outlet property="gererateButton" destination="ycT-BL-A2k" id="FpD-rB-Rmk"/>
                         <outlet property="useScalarPropertiesCheckBox" destination="QAB-09-vif" id="0NK-n6-siQ"/>
+                        <outlet property="useSwiftStringCheckBox" destination="F4X-gO-pYR" id="mgb-Ts-rgK"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="627.5"/>
+            <point key="canvasLocation" x="75" y="637.5"/>
         </scene>
     </scenes>
 </document>

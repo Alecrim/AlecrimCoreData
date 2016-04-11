@@ -9,7 +9,8 @@
 import Foundation
 import CoreData
 
-private var cachedEntityDescriptions = [String : NSEntityDescription]()
+private typealias HashableDuplet = Duplet<String, NSManagedObjectContext>
+private var cachedEntityDescriptions = [HashableDuplet : NSEntityDescription ]()
 
 public struct Table<T: NSManagedObject>: TableType {
     
@@ -17,11 +18,11 @@ public struct Table<T: NSManagedObject>: TableType {
     
     public let dataContext: NSManagedObjectContext
     public let entityDescription: NSEntityDescription
-
+    
     public var offset: Int = 0
     public var limit: Int = 0
     public var batchSize: Int = DataContextOptions.defaultBatchSize
-
+    
     public var predicate: NSPredicate? = nil
     public var sortDescriptors: [NSSortDescriptor]? = nil
     
@@ -29,19 +30,19 @@ public struct Table<T: NSManagedObject>: TableType {
         //
         let managedObjectClassName = NSStringFromClass(T.self)
         
+        let cacheKey = Duplet(managedObjectClassName, dataContext)
         let entityDescription: NSEntityDescription
-        if let cachedEntityDescription = cachedEntityDescriptions[managedObjectClassName] {
+        
+        if let cachedEntityDescription = cachedEntityDescriptions[cacheKey] {
             entityDescription = cachedEntityDescription
-        }
-        else {
+        } else {
             let persistentStoreCoordinator = dataContext.persistentStoreCoordinator!
             let managedObjectModel = persistentStoreCoordinator.managedObjectModel
             
             entityDescription = managedObjectModel.entities.filter({ $0.managedObjectClassName == managedObjectClassName }).first!
-            cachedEntityDescriptions[managedObjectClassName] = entityDescription
+            cachedEntityDescriptions[cacheKey] = entityDescription
         }
         
-        //
         self.dataContext = dataContext
         self.entityDescription = entityDescription
     }
