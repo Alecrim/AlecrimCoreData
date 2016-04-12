@@ -145,6 +145,18 @@ extension FetchRequestController {
 
 }
 
+extension FetchRequestController {
+    
+    /// The total number of fetched entities.
+    public var numberOfEntities: Int {
+        var count = 0
+        self.sections.forEach { count += $0.numberOfEntities }
+        
+        return count
+    }
+    
+}
+
 // MARK: - Querying Section Information
 
 extension FetchRequestController {
