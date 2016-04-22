@@ -76,7 +76,7 @@ public final class FetchRequestController<T: NSManagedObject> {
     ///
     /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
     ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
-    private convenience init<T: TableType>(table: T, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
+    private convenience init<T: TableProtocol>(table: T, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
         self.init(fetchRequest: table.toFetchRequest(), managedObjectContext: table.dataContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
     
@@ -340,9 +340,9 @@ public struct FetchRequestControllerSection<T: NSManagedObject> {
     
 }
 
-// MARK: - TableType extensions
+// MARK: - TableProtocol extensions
 
-extension TableType {
+extension TableProtocol {
     
     /// Returns a fetch request controller initialized using the given arguments.
     ///

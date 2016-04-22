@@ -1,5 +1,5 @@
 //
-//  TableType.swift
+//  TableProtocol.swift
 //  AlecrimCoreData
 //
 //  Created by Vanderlei Martinelli on 2015-06-17.
@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public protocol TableType: CoreDataQueryable {
+public protocol TableProtocol: CoreDataQueryable {
     
     associatedtype Item: NSManagedObject
 
@@ -17,7 +17,7 @@ public protocol TableType: CoreDataQueryable {
 
 // MARK: - create, delete and refresh entities
 
-extension TableType {
+extension TableProtocol {
     
     public func createEntity() -> Self.Item {
         return Self.Item(entity: self.entityDescription, insertIntoManagedObjectContext: self.dataContext)
@@ -33,7 +33,7 @@ extension TableType {
 
 }
 
-extension TableType {
+extension TableProtocol {
     
     public func deleteAll() throws {
         let fetchRequest = self.toFetchRequest()
@@ -50,7 +50,7 @@ extension TableType {
 
 }
 
-extension TableType {
+extension TableProtocol {
     
     public func firstOrCreated(@noescape predicateClosure: (Self.Item.Type) -> NSComparisonPredicate) -> Self.Item {
         let predicate = predicateClosure(Self.Item.self)
@@ -75,7 +75,7 @@ extension TableType {
 
 // MARK: - GenericQueryable
 
-extension TableType {
+extension TableProtocol {
     
     public func toArray() -> [Self.Item] {
         do {
@@ -105,7 +105,7 @@ extension TableType {
 
 // MARK: - CoreDataQueryable
 
-extension TableType {
+extension TableProtocol {
     
     public func toFetchRequest() -> NSFetchRequest {
         let fetchRequest = NSFetchRequest()

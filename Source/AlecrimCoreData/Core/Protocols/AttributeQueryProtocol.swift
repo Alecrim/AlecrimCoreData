@@ -1,5 +1,5 @@
 //
-//  AttributeQueryType.swift
+//  AttributeQueryProtocol.swift
 //  AlecrimCoreData
 //
 //  Created by Vanderlei Martinelli on 2015-08-08.
@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public protocol AttributeQueryType: CoreDataQueryable {
+public protocol AttributeQueryProtocol: CoreDataQueryable {
     
     var returnsDistinctResults: Bool { get set }
     var propertiesToFetch: [String] { get set }
@@ -18,7 +18,7 @@ public protocol AttributeQueryType: CoreDataQueryable {
 
 // MARK: -
 
-extension AttributeQueryType {
+extension AttributeQueryProtocol {
     
     public func distinct() -> Self {
         var clone = self
@@ -31,7 +31,7 @@ extension AttributeQueryType {
 
 // MARK: - GenericQueryable
 
-extension AttributeQueryType {
+extension AttributeQueryProtocol {
     
     public func toArray() -> [Self.Item] {
         do {
@@ -57,7 +57,7 @@ extension AttributeQueryType {
     
 }
 
-extension AttributeQueryType where Self.Item: NSDictionary {
+extension AttributeQueryProtocol where Self.Item: NSDictionary {
     
     public func toArray() -> [NSDictionary] {
         do {
@@ -76,7 +76,7 @@ extension AttributeQueryType where Self.Item: NSDictionary {
 
 // MARK: - CoreDataQueryable
 
-extension AttributeQueryType {
+extension AttributeQueryProtocol {
     
     public func toFetchRequest() -> NSFetchRequest {
         let fetchRequest = NSFetchRequest()

@@ -11,7 +11,7 @@ import CoreData
 
 private var cachedEntityDescriptions = [String : NSEntityDescription]()
 
-public struct Table<T: NSManagedObject>: TableType {
+public struct Table<T: NSManagedObject>: TableProtocol {
     
     public typealias Item = T
     

@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public struct AttributeQuery<T>: AttributeQueryType {
+public struct AttributeQuery<T>: AttributeQueryProtocol {
     
     public typealias Item = T
     
@@ -44,7 +44,7 @@ public struct AttributeQuery<T>: AttributeQueryType {
 extension Table {
     
     // one attribute
-    public func select<P, A: AttributeType where A.ValueType == P>(@noescape closure: (Item.Type) -> A) -> AttributeQuery<P> {
+    public func select<P, A: AttributeProtocol where A.ValueType == P>(@noescape closure: (Item.Type) -> A) -> AttributeQuery<P> {
         var attributeQuery = AttributeQuery<P>(
             dataContext: self.dataContext,
             entityDescription: self.entityDescription,

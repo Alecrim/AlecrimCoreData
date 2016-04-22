@@ -20,7 +20,7 @@ public protocol GenericQueryable: Queryable {
 
 extension GenericQueryable {
     
-    public func orderBy<A: AttributeType, V where A.ValueType == V>(ascending ascending: Bool = true, @noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
+    public func orderBy<A: AttributeProtocol, V where A.ValueType == V>(ascending ascending: Bool = true, @noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
         return self.sort(using: orderingClosure(Self.Item.self), ascending: ascending)
     }
     
