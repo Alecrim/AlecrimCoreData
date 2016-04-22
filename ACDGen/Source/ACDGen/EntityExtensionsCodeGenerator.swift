@@ -387,9 +387,9 @@ extension EntityExtensionsCodeGenerator {
     
     private func generateInstanceQueryAttributesHeader() {
         self.string.appendLine()
-        self.string.appendLine("// MARK: - AttributeType extensions")
+        self.string.appendLine("// MARK: - AttributeProtocol extensions")
         self.string.appendLine()
-        self.string.appendLine("extension AlecrimCoreData.AttributeType where Self.ValueType: \(self.className) {")
+        self.string.appendLine("extension AlecrimCoreData.AttributeProtocol where Self.ValueType: \(self.className) {")
         self.string.appendLine()
     }
     
