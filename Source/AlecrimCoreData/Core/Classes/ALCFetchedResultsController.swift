@@ -283,7 +283,7 @@ extension ALCFetchedResultsController {
             self.fetchedObjects = fetchRequestManagedObjects
         }
         else {
-            throw AlecrimCoreDataError.UnexpectedValue(value: fetchRequestObjects)
+            throw AlecrimCoreDataError.unexpectedValue(fetchRequestObjects)
         }
 
         //

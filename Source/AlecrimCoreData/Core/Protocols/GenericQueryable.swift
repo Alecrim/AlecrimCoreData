@@ -21,7 +21,7 @@ public protocol GenericQueryable: Queryable {
 extension GenericQueryable {
     
     public func orderBy<A: AttributeType, V where A.ValueType == V>(ascending ascending: Bool = true, @noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        return self.sort(usingAttribute: orderingClosure(Self.Item.self), ascending: ascending)
+        return self.sort(using: orderingClosure(Self.Item.self), ascending: ascending)
     }
     
 }
@@ -31,7 +31,7 @@ extension GenericQueryable {
 extension GenericQueryable {
     
     public func filter(@noescape predicateClosure: (Self.Item.Type) -> NSPredicate) -> Self {
-        return self.filter(usingPredicate: predicateClosure(Self.Item.self))
+        return self.filter(using: predicateClosure(Self.Item.self))
     }
     
 }
@@ -41,7 +41,7 @@ extension GenericQueryable {
 extension GenericQueryable {
     
     public func count(@noescape predicateClosure: (Self.Item.Type) -> NSPredicate) -> Int {
-        return self.filter(usingPredicate: predicateClosure(Self.Item.self)).count()
+        return self.filter(using: predicateClosure(Self.Item.self)).count()
     }
     
 }
@@ -49,11 +49,11 @@ extension GenericQueryable {
 extension GenericQueryable {
     
     public func any(@noescape predicateClosure: (Self.Item.Type) -> NSPredicate) -> Bool {
-        return self.filter(usingPredicate: predicateClosure(Self.Item.self)).any()
+        return self.filter(using: predicateClosure(Self.Item.self)).any()
     }
     
     public func none(@noescape predicateClosure: (Self.Item.Type) -> NSPredicate) -> Bool {
-        return self.filter(usingPredicate: predicateClosure(Self.Item.self)).none()
+        return self.filter(using: predicateClosure(Self.Item.self)).none()
     }
     
 }
@@ -61,7 +61,7 @@ extension GenericQueryable {
 extension GenericQueryable {
     
     public func first(@noescape predicateClosure: (Self.Item.Type) -> NSPredicate) -> Self.Item? {
-        return self.filter(usingPredicate: predicateClosure(Self.Item.self)).first()
+        return self.filter(using: predicateClosure(Self.Item.self)).first()
     }
     
 }

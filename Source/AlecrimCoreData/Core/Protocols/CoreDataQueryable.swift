@@ -49,31 +49,31 @@ extension CoreDataQueryable {
     
     public func sum<U>(@noescape closure: (Self.Item.Type) -> Attribute<U>) -> U {
         let attribute = closure(Self.Item.self)
-        return self.aggregate(usingFunctionName: "sum", attribute: attribute)
+        return self.aggregate(functionName: "sum", attribute: attribute)
     }
     
     public func min<U>(@noescape closure: (Self.Item.Type) -> Attribute<U>) -> U {
         let attribute = closure(Self.Item.self)
-        return self.aggregate(usingFunctionName: "min", attribute: attribute)
+        return self.aggregate(functionName: "min", attribute: attribute)
     }
     
     public func max<U>(@noescape closure: (Self.Item.Type) -> Attribute<U>) -> U {
         let attribute = closure(Self.Item.self)
-        return self.aggregate(usingFunctionName: "max", attribute: attribute)
+        return self.aggregate(functionName: "max", attribute: attribute)
     }
 
     // same as average, for convenience
     public func avg<U>(@noescape closure: (Self.Item.Type) -> Attribute<U>) -> U {
         let attribute = closure(Self.Item.self)
-        return self.aggregate(usingFunctionName: "average", attribute: attribute)
+        return self.aggregate(functionName: "average", attribute: attribute)
     }
 
     public func average<U>(@noescape closure: (Self.Item.Type) -> Attribute<U>) -> U {
         let attribute = closure(Self.Item.self)
-        return self.aggregate(usingFunctionName: "average", attribute: attribute)
+        return self.aggregate(functionName: "average", attribute: attribute)
     }
     
-    private func aggregate<U>(usingFunctionName functionName: String, attribute: Attribute<U>) -> U {
+    private func aggregate<U>(functionName functionName: String, attribute: Attribute<U>) -> U {
         let attributeDescription = self.entityDescription.attributesByName[attribute.___name]!
         
         let keyPathExpression = NSExpression(forKeyPath: attribute.___name)
@@ -91,9 +91,9 @@ extension CoreDataQueryable {
         do {
             let results = try self.dataContext.executeFetchRequest(fetchRequest)
             
-            guard let firstResult = results.first as? NSDictionary else { throw AlecrimCoreDataError.UnexpectedValue(value: results) }
-            guard let anyObjectValue = firstResult.valueForKey(expressionDescription.name) else { throw AlecrimCoreDataError.UnexpectedValue(value: firstResult) }
-            guard let value = anyObjectValue as? U else { throw AlecrimCoreDataError.UnexpectedValue(value: anyObjectValue) }
+            guard let firstResult = results.first as? NSDictionary else { throw AlecrimCoreDataError.unexpectedValue(results) }
+            guard let anyObjectValue = firstResult.valueForKey(expressionDescription.name) else { throw AlecrimCoreDataError.unexpectedValue(firstResult) }
+            guard let value = anyObjectValue as? U else { throw AlecrimCoreDataError.unexpectedValue(anyObjectValue) }
             
             return value
         }

@@ -38,7 +38,7 @@ public class DataContext: ChildDataContext {
     /// - seealso: `DataContextOptions`
     public convenience init() {
         do {
-            self.init(dataContextOptions: try DataContextOptions())
+            self.init(options: try DataContextOptions())
         }
         catch let error {
             AlecrimCoreDataError.handleError(error)
@@ -52,9 +52,9 @@ public class DataContext: ChildDataContext {
     /// - returns: An initialized main thread context with the given options.
     ///
     /// - seealso: `DataContextOptions`
-    public init(dataContextOptions: DataContextOptions) {
+    public init(options: DataContextOptions) {
         do {
-            let rootSavingDataContext = try RootSavingDataContext(dataContextOptions: dataContextOptions)
+            let rootSavingDataContext = try RootSavingDataContext(options: options)
             super.init(concurrencyType: .MainQueueConcurrencyType, rootSavingDataContext: rootSavingDataContext)
             
             if #available(OSXApplicationExtension 10.10, OSX 10.10, *) {
@@ -71,8 +71,8 @@ public class DataContext: ChildDataContext {
     /// - parameter parentDataContext: The parent or relative context.
     ///
     /// - returns: An initialized background context.
-    public init(parentDataContext: DataContext) {
-        super.init(concurrencyType: .PrivateQueueConcurrencyType, rootSavingDataContext: parentDataContext.rootSavingDataContext)
+    public init(parent: DataContext) {
+        super.init(concurrencyType: .PrivateQueueConcurrencyType, rootSavingDataContext: parent.rootSavingDataContext)
         
         if #available(OSXApplicationExtension 10.10, OSX 10.10, *) {
             self.name = "Background Context"
@@ -93,7 +93,7 @@ public class RootSavingDataContext: ManagedObjectContext {
     // MARK: - public properties
     
     /// The options applied to this data context.
-    public let dataContextOptions: DataContextOptions
+    public let options: DataContextOptions
     
     // MARK: - init and deinit
     
@@ -104,8 +104,8 @@ public class RootSavingDataContext: ManagedObjectContext {
     /// - returns: An initialized root saving data context with the given options.
     ///
     /// - seealso: `DataContextOptions`
-    public init(dataContextOptions: DataContextOptions) throws {
-        self.dataContextOptions = dataContextOptions
+    public init(options: DataContextOptions) throws {
+        self.options = options
         super.init(concurrencyType: .PrivateQueueConcurrencyType)
         
         if #available(OSXApplicationExtension 10.10, OSX 10.10, *) {
@@ -127,30 +127,30 @@ public class RootSavingDataContext: ManagedObjectContext {
     private func assignPersistentStoreCoordinator() throws {
         // managed object model
         guard
-            let managedObjectModelURL = self.dataContextOptions.managedObjectModelURL,
+            let managedObjectModelURL = self.options.managedObjectModelURL,
             let managedObjectModel = NSManagedObjectModel(contentsOfURL: managedObjectModelURL)
         else {
-            throw AlecrimCoreDataError.InvalidManagedObjectModelURL
+            throw AlecrimCoreDataError.invalidManagedObjectModelURL
         }
         
         // persistent store coordinator
         let persistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: managedObjectModel)
         
         // persistent store
-        switch self.dataContextOptions.storeType {
-        case .SQLite:
+        switch self.options.persistentStoreType {
+        case .disk:
             guard
-                let persistentStoreURL = self.dataContextOptions.persistentStoreURL,
+                let persistentStoreURL = self.options.persistentStoreURL,
                 let containerURL = persistentStoreURL.URLByDeletingLastPathComponent
             else {
-                throw AlecrimCoreDataError.InvalidPersistentStoreURL
+                throw AlecrimCoreDataError.invalidPersistentStoreURL
             }
             
             // if the directory does not exist, it will be created
             try NSFileManager.defaultManager().createDirectoryAtURL(containerURL, withIntermediateDirectories: true, attributes: nil)
             
             do {
-                try persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: self.dataContextOptions.configuration, URL: persistentStoreURL, options: self.dataContextOptions.options)
+                try persistentStoreCoordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: self.options.persistentStoreConfiguration, URL: persistentStoreURL, options: self.options.persistentStoreOptions)
             }
             catch let error as NSError {
                 var handled = false
@@ -168,8 +168,8 @@ public class RootSavingDataContext: ManagedObjectContext {
                 }
             }
             
-        case .InMemory:
-            try persistentStoreCoordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: self.dataContextOptions.configuration, URL: nil, options: self.dataContextOptions.options)
+        case .memory:
+            try persistentStoreCoordinator.addPersistentStoreWithType(NSInMemoryStoreType, configuration: self.options.persistentStoreConfiguration, URL: nil, options: self.options.persistentStoreOptions)
         }
         
         //

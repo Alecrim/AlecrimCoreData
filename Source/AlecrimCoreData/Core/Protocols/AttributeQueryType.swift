@@ -38,11 +38,11 @@ extension AttributeQueryType {
             var results: [Self.Item] = []
             
             let fetchRequestResult = try self.dataContext.executeFetchRequest(self.toFetchRequest())
-            guard let dicts = fetchRequestResult as? [NSDictionary] else { throw AlecrimCoreDataError.UnexpectedValue(value: fetchRequestResult) }
+            guard let dicts = fetchRequestResult as? [NSDictionary] else { throw AlecrimCoreDataError.unexpectedValue(fetchRequestResult) }
             
             try dicts.forEach {
                 guard $0.count == 1, let value = $0.allValues.first as? Self.Item else {
-                    throw AlecrimCoreDataError.UnexpectedValue(value: $0)
+                    throw AlecrimCoreDataError.unexpectedValue($0)
                 }
                 
                 results.append(value)
@@ -62,7 +62,7 @@ extension AttributeQueryType where Self.Item: NSDictionary {
     public func toArray() -> [NSDictionary] {
         do {
             let fetchRequestResult = try self.dataContext.executeFetchRequest(self.toFetchRequest())
-            guard let dicts = fetchRequestResult as? [NSDictionary] else { throw AlecrimCoreDataError.UnexpectedValue(value: fetchRequestResult) }
+            guard let dicts = fetchRequestResult as? [NSDictionary] else { throw AlecrimCoreDataError.unexpectedValue(fetchRequestResult) }
             
             return dicts
         }

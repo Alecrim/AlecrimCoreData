@@ -20,11 +20,11 @@ public protocol Queryable: Enumerable {
 
 extension Queryable {
     
-    public func sort<A: AttributeType>(usingAttribute attribute: A, ascending: Bool = true) -> Self {
-        return self.sort(usingAttributeName: attribute.___name, ascending: ascending, options: attribute.___comparisonPredicateOptions)
+    public func sort<A: AttributeType>(using attribute: A, ascending: Bool = true) -> Self {
+        return self.sort(using: attribute.___name, ascending: ascending, options: attribute.___comparisonPredicateOptions)
     }
     
-    public func sort(usingAttributeName attributeName: String, ascending: Bool = true, options: NSComparisonPredicateOptions = NSComparisonPredicateOptions()) -> Self {
+    public func sort(using attributeName: String, ascending: Bool = true, options: NSComparisonPredicateOptions = NSComparisonPredicateOptions()) -> Self {
         let sortDescriptor: NSSortDescriptor
         
         if options.contains(.CaseInsensitivePredicateOption) && options.contains(.DiacriticInsensitivePredicateOption) {
@@ -40,10 +40,10 @@ extension Queryable {
             sortDescriptor = NSSortDescriptor(key: attributeName, ascending: ascending)
         }
         
-        return self.sort(usingSortDescriptor: sortDescriptor)
+        return self.sort(using: sortDescriptor)
     }
     
-    public func sort(usingSortDescriptor sortDescriptor: NSSortDescriptor) -> Self {
+    public func sort(using sortDescriptor: NSSortDescriptor) -> Self {
         var clone = self
         
         if clone.sortDescriptors != nil {
@@ -56,7 +56,7 @@ extension Queryable {
         return clone
     }
     
-    public func sort(usingSortDescriptors sortDescriptors: [NSSortDescriptor]) -> Self {
+    public func sort(using sortDescriptors: [NSSortDescriptor]) -> Self {
         var clone = self
 
         if clone.sortDescriptors != nil {
@@ -75,7 +75,7 @@ extension Queryable {
 
 extension Queryable {
     
-    public func filter(usingPredicate predicate: NSPredicate) -> Self {
+    public func filter(using predicate: NSPredicate) -> Self {
         var clone = self
         
         if let existingPredicate = clone.predicate {

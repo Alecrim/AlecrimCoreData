@@ -48,7 +48,7 @@ extension NSManagedObjectContext {
             
         }
         else {
-            throw AlecrimCoreDataError.UnexpectedValue(value: persistentStoreResult)
+            throw AlecrimCoreDataError.unexpectedValue(persistentStoreResult)
         }
     }
     
@@ -83,11 +83,11 @@ extension NSManagedObjectContext {
                         completionHandler(count, nil)
                     }
                     else {
-                        throw AlecrimCoreDataError.UnexpectedValue(value: batchUpdateResult.result)
+                        throw AlecrimCoreDataError.unexpectedValue(batchUpdateResult.result)
                     }
                 }
                 else {
-                    throw AlecrimCoreDataError.UnexpectedValue(value: persistentStoreResult)
+                    throw AlecrimCoreDataError.unexpectedValue(persistentStoreResult)
                 }
             }
             catch let error {
@@ -121,11 +121,11 @@ extension NSManagedObjectContext {
                         completionHandler(count, nil)
                     }
                     else {
-                        throw AlecrimCoreDataError.UnexpectedValue(value: batchDeleteResult.result)
+                        throw AlecrimCoreDataError.unexpectedValue(batchDeleteResult.result)
                     }
                 }
                 else {
-                    throw AlecrimCoreDataError.UnexpectedValue(value: persistentStoreResult)
+                    throw AlecrimCoreDataError.unexpectedValue(persistentStoreResult)
                 }
             }
             catch let error {

@@ -102,7 +102,7 @@ extension FetchRequestController {
     /// - parameter name: The name of the cache file to delete.
     ///
     /// If *name* is `nil`, deletes all cache files.
-    public class func deleteCache(withName name: String?) {
+    public class func deleteCache(with name: String?) {
         NSFetchedResultsController.deleteCacheWithName(name)
     }
 
@@ -126,7 +126,7 @@ extension FetchRequestController {
     /// - parameter indexPath: An index path in the fetch results.
     ///
     /// - returns: The entity at a given index path in the fetch results.
-    public func entity(atIndexPath indexPath: NSIndexPath) -> T {
+    public func entity(at indexPath: NSIndexPath) -> T {
         guard let result = self.underlyingFetchedResultsController.objectAtIndexPath(indexPath) as? T else {
             fatalError("performFetch: hasn't been called.")
         }
@@ -139,7 +139,7 @@ extension FetchRequestController {
     /// - parameter entity: An entity in the receiver’s fetch results.
     ///
     /// - returns: The index path of *entity* in the receiver’s fetch results, or `nil` if *entity* could not be found.
-    public func indexPath(forEntity entity: T) -> NSIndexPath? {
+    public func indexPath(for entity: T) -> NSIndexPath? {
         return self.underlyingFetchedResultsController.indexPathForObject(entity)
     }
 
@@ -176,7 +176,7 @@ extension FetchRequestController {
     /// - parameter sectionIndex: The index of a section.
     ///
     /// - returns: The section number for the given section title and index in the section index.
-    public func sectionForSectionIndex(title title: String, atIndex sectionIndex: Int) -> Int {
+    public func sectionForSectionIndex(title title: String, at sectionIndex: Int) -> Int {
         return self.underlyingFetchedResultsController.sectionForSectionIndexTitle(title, atIndex: sectionIndex)
     }
     
@@ -191,7 +191,7 @@ extension FetchRequestController {
     /// - parameter sectionName: The name of a section.
     ///
     /// - returns: The section index entry corresponding to the section with name *sectionName*.
-    public func sectionIndexTitle(forSectionName sectionName: String) -> String? {
+    public func sectionIndexTitle(for sectionName: String) -> String? {
         return self.underlyingFetchedResultsController.sectionIndexTitleForSectionName(sectionName)
     }
 
@@ -206,19 +206,19 @@ extension FetchRequestController {
 
 extension FetchRequestController {
     
-    public func refresh(usingPredicate predicate: NSPredicate?, keepOriginalPredicate: Bool) throws {
+    public func refresh(using predicate: NSPredicate?, keepOriginalPredicate: Bool) throws {
         self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
         
         try self.refresh()
     }
 
-    public func refresh(usingSortDescriptors sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool) throws {
+    public func refresh(using sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool) throws {
         self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
         
         try self.refresh()
     }
     
-    public func refresh(usingPredicate predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool, keepOriginalSortDescriptors: Bool) throws {
+    public func refresh(using predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?, keepOriginalPredicate: Bool, keepOriginalSortDescriptors: Bool) throws {
         self.assignPredicate(predicate, keepOriginalPredicate: keepOriginalPredicate)
         self.assignSortDescriptors(sortDescriptors, keepOriginalSortDescriptors: keepOriginalSortDescriptors)
         
@@ -226,15 +226,15 @@ extension FetchRequestController {
     }
     
     public func resetPredicate() throws {
-        try self.refresh(usingPredicate: self.initialPredicate, keepOriginalPredicate: false)
+        try self.refresh(using: self.initialPredicate, keepOriginalPredicate: false)
     }
     
     public func resetSortDescriptors() throws {
-        try self.refresh(usingSortDescriptors: self.initialSortDescriptors, keepOriginalSortDescriptors: false)
+        try self.refresh(using: self.initialSortDescriptors, keepOriginalSortDescriptors: false)
     }
     
     public func resetPredicateAndSortDescriptors() throws {
-        try self.refresh(usingPredicate: self.initialPredicate, sortDescriptors: self.initialSortDescriptors, keepOriginalPredicate: false, keepOriginalSortDescriptors: false)
+        try self.refresh(using: self.initialPredicate, sortDescriptors: self.initialSortDescriptors, keepOriginalPredicate: false, keepOriginalSortDescriptors: false)
     }
     
 }
@@ -243,7 +243,7 @@ extension FetchRequestController {
     
     public func filter(@noescape predicateClosure: (T.Type) -> NSPredicate) throws {
         let predicate = predicateClosure(T.self)
-        try self.refresh(usingPredicate: predicate, keepOriginalPredicate: true)
+        try self.refresh(using: predicate, keepOriginalPredicate: true)
     }
     
     public func resetFilter() throws {

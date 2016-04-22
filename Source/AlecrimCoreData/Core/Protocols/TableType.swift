@@ -23,11 +23,11 @@ extension TableType {
         return Self.Item(entity: self.entityDescription, insertIntoManagedObjectContext: self.dataContext)
     }
 
-    public func deleteEntity(entity: Self.Item) {
+    public func delete(entity entity: Self.Item) {
         self.dataContext.deleteObject(entity)
     }
     
-    public func refreshEntity(entity: Self.Item, mergingChanges mergeChanges: Bool = true) {
+    public func refresh(entity entity: Self.Item, mergingChanges mergeChanges: Bool = true) {
         self.dataContext.refreshObject(entity, mergeChanges: mergeChanges)
     }
 
@@ -40,7 +40,7 @@ extension TableType {
         fetchRequest.resultType = .ManagedObjectIDResultType
         
         let result = try self.dataContext.executeFetchRequest(fetchRequest)
-        guard let objectIDs = result as? [NSManagedObjectID] else { throw AlecrimCoreDataError.UnexpectedValue(value: result) }
+        guard let objectIDs = result as? [NSManagedObjectID] else { throw AlecrimCoreDataError.unexpectedValue(result) }
         
         for objectID in objectIDs {
             let object = try self.dataContext.existingObjectWithID(objectID)
@@ -55,7 +55,7 @@ extension TableType {
     public func firstOrCreated(@noescape predicateClosure: (Self.Item.Type) -> NSComparisonPredicate) -> Self.Item {
         let predicate = predicateClosure(Self.Item.self)
         
-        if let entity = self.filter(usingPredicate: predicate).first() {
+        if let entity = self.filter(using: predicate).first() {
             return entity
         }
         else {
@@ -89,7 +89,7 @@ extension TableType {
             else {
                 // HAX: the previous cast may not work in certain circumstances
                 try objects.forEach {
-                    guard let entity = $0 as? Self.Item else { throw AlecrimCoreDataError.UnexpectedValue(value: $0) }
+                    guard let entity = $0 as? Self.Item else { throw AlecrimCoreDataError.unexpectedValue($0) }
                     results.append(entity)
                 }
             }
