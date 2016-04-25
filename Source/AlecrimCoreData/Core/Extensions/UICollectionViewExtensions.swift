@@ -13,7 +13,7 @@ import UIKit
     
 extension FetchRequestController {
 
-    public func bind<CellType: UICollectionViewCell>(to collectionView: UICollectionView, sectionOffset: Int = 0, configureCellHandler configureCellClosure: ((CellType, NSIndexPath) -> Void)? = nil) -> Self {
+    public func bind<CellType: UICollectionViewCell>(to collectionView: UICollectionView, sectionOffset: Int = 0, cellConfigurationHandler: ((CellType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()
@@ -143,16 +143,16 @@ extension FetchRequestController {
                             collectionView.insertItemsAtIndexPaths(insertedItemIndexPaths)
                         }
                         
-                        if updatedItemIndexPaths.count > 0 && configureCellClosure == nil {
+                        if updatedItemIndexPaths.count > 0 && cellConfigurationHandler == nil {
                             collectionView.reloadItemsAtIndexPaths(updatedItemIndexPaths)
                         }
                         },
                         completion: { finished in
                             if finished {
-                                if let configureCellClosure = configureCellClosure {
+                                if let cellConfigurationHandler = cellConfigurationHandler {
                                     for updatedItemIndexPath in updatedItemIndexPaths {
                                         if let cell = collectionView.cellForItemAtIndexPath(updatedItemIndexPath) as? CellType {
-                                            configureCellClosure(cell, updatedItemIndexPath)
+                                            cellConfigurationHandler(cell, updatedItemIndexPath)
                                         }
                                     }
                                 }

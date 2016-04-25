@@ -14,7 +14,7 @@ import AppKit
 extension FetchRequestController {
 
     @available(OSX 10.11, *)
-    public func bind<ItemType: NSCollectionViewItem>(to collectionView: NSCollectionView, sectionOffset: Int = 0, configureItemHandler configureItemClosure: ((ItemType, NSIndexPath) -> Void)? = nil) -> Self {
+    public func bind<ItemType: NSCollectionViewItem>(to collectionView: NSCollectionView, sectionOffset: Int = 0, cellConfigurationHandler: ((ItemType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()
@@ -144,16 +144,16 @@ extension FetchRequestController {
                             collectionView.insertItemsAtIndexPaths(Set(insertedItemIndexPaths))
                         }
                         
-                        if updatedItemIndexPaths.count > 0 && configureItemClosure == nil {
+                        if updatedItemIndexPaths.count > 0 && cellConfigurationHandler == nil {
                             collectionView.reloadItemsAtIndexPaths(Set(updatedItemIndexPaths))
                         }
                         },
                         completionHandler: { finished in
                             if finished {
-                                if let configureItemClosure = configureItemClosure {
+                                if let cellConfigurationHandler = cellConfigurationHandler {
                                     for updatedItemIndexPath in updatedItemIndexPaths {
                                         if let item = collectionView.itemAtIndexPath(updatedItemIndexPath) as? ItemType {
-                                            configureItemClosure(item, updatedItemIndexPath)
+                                            cellConfigurationHandler(item, updatedItemIndexPath)
                                         }
                                     }
                                 }

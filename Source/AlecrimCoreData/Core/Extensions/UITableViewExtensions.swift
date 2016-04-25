@@ -13,7 +13,7 @@ import UIKit
     
 extension FetchRequestController {
 
-    public func bind<CellType: UITableViewCell>(to tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, sectionOffset: Int = 0, configureCellHandler configureCellClosure: ((CellType, NSIndexPath) -> Void)? = nil) -> Self {
+    public func bind<CellType: UITableViewCell>(to tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, sectionOffset: Int = 0, cellConfigurationHandler: ((CellType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()
@@ -133,16 +133,16 @@ extension FetchRequestController {
                         tableView.insertRowsAtIndexPaths(insertedItemIndexPaths, withRowAnimation: rowAnimation)
                     }
                     
-                    if updatedItemIndexPaths.count > 0 && configureCellClosure == nil {
+                    if updatedItemIndexPaths.count > 0 && cellConfigurationHandler == nil {
                         tableView.reloadRowsAtIndexPaths(updatedItemIndexPaths, withRowAnimation: rowAnimation)
                     }
                     
                     tableView.endUpdates()
                     
-                    if let configureCellClosure = configureCellClosure {
+                    if let cellConfigurationHandler = cellConfigurationHandler {
                         for updatedItemIndexPath in updatedItemIndexPaths {
                             if let cell = tableView.cellForRowAtIndexPath(updatedItemIndexPath) as? CellType {
-                                configureCellClosure(cell, updatedItemIndexPath)
+                                cellConfigurationHandler(cell, updatedItemIndexPath)
                             }
                         }
                     }
