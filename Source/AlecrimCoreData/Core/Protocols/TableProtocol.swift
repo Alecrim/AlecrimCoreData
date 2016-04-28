@@ -23,11 +23,11 @@ extension TableProtocol {
         return Self.Item(entity: self.entityDescription, insertIntoManagedObjectContext: self.dataContext)
     }
 
-    public func delete(entity: Self.Item) {
+    public func deleteEntity(entity: Self.Item) {
         self.dataContext.deleteObject(entity)
     }
     
-    public func refresh(entity: Self.Item, mergingChanges mergeChanges: Bool = true) {
+    public func refreshEntity(entity: Self.Item, mergingChanges mergeChanges: Bool = true) {
         self.dataContext.refreshObject(entity, mergeChanges: mergeChanges)
     }
 
@@ -35,7 +35,7 @@ extension TableProtocol {
 
 extension TableProtocol {
     
-    public func deleteAll() throws {
+    public func deleteAllEntities() throws {
         let fetchRequest = self.toFetchRequest()
         fetchRequest.resultType = .ManagedObjectIDResultType
         
