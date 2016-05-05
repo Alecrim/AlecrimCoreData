@@ -28,7 +28,11 @@ public final class FetchRequestController<T: NSManagedObject> {
     
     //
     internal lazy var delegate = FetchRequestControllerDelegate<T>()
-
+    
+    deinit {
+        self.underlyingFetchedResultsController.delegate = nil
+    }
+    
     /// The underlying NSFetchedResultsController managed by this controller.
     ///
     /// - discussion: DO NOT modify properties of the underlying fetched results controller directly, it is for integration with other libraries which need to fetch data using a FRC.
