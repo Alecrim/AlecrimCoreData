@@ -35,15 +35,14 @@ extension TableProtocol {
 
 extension TableProtocol {
     
-    public func deleteEntities() throws {
+    public func deleteEntities() {
         let fetchRequest = self.toFetchRequest()
         fetchRequest.resultType = .ManagedObjectIDResultType
         
-        let result = try self.dataContext.executeFetchRequest(fetchRequest)
-        guard let objectIDs = result as? [NSManagedObjectID] else { throw AlecrimCoreDataError.unexpectedValue(result) }
+        let objectIDs = try! self.dataContext.executeFetchRequest(fetchRequest) as! [NSManagedObjectID]
         
         for objectID in objectIDs {
-            let object = try self.dataContext.existingObjectWithID(objectID)
+            let object = try! self.dataContext.existingObjectWithID(objectID)
             self.dataContext.deleteObject(object)
         }
     }
