@@ -46,14 +46,11 @@ extension FetchRequestController {
                 }
             }
             .didDeleteSection { sectionInfo, sectionIndex in
-                // TODO: find out more info about the NSCollectionView issue about section deletions
-                reloadData = true
-                
-                //                if !reloadData {
-                //                    deletedSectionIndexes.addIndex(sectionIndex + sectionOffset)
-                //                    deletedItemIndexPaths = deletedItemIndexPaths.filter { $0.section != sectionIndex }
-                //                    updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex }
-                //                }
+                if !reloadData {
+                    deletedSectionIndexes.addIndex(sectionIndex + sectionOffset)
+                    deletedItemIndexPaths = deletedItemIndexPaths.filter { $0.section != sectionIndex }
+                    updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex }
+                }
             }
             .didUpdateSection { sectionInfo, sectionIndex in
                 if !reloadData {
