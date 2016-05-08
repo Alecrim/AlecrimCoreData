@@ -24,7 +24,7 @@ extension Queryable {
         return self.sort(using: attribute.___name, ascending: ascending, options: attribute.___comparisonPredicateOptions)
     }
     
-    public func sort(using attributeName: String, ascending: Bool = true, options: NSComparisonPredicateOptions = NSComparisonPredicateOptions()) -> Self {
+    public func sort(using attributeName: String, ascending: Bool = true, options: NSComparisonPredicateOptions = DataContextOptions.defaultComparisonPredicateOptions) -> Self {
         let sortDescriptor: NSSortDescriptor
         
         if options.contains(.CaseInsensitivePredicateOption) && options.contains(.DiacriticInsensitivePredicateOption) {

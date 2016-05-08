@@ -35,7 +35,7 @@ extension TableProtocol {
 
 extension TableProtocol {
     
-    public func deleteAllEntities() throws {
+    public func deleteEntities() throws {
         let fetchRequest = self.toFetchRequest()
         fetchRequest.resultType = .ManagedObjectIDResultType
         

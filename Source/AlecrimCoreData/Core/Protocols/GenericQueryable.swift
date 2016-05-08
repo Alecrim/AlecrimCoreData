@@ -77,15 +77,15 @@ extension GenericQueryable {
 }
 
 
-//// TODO: this still crashes the compiler - Xcode 7.3 (2016-03-21 release version)
-//// MARK: - SequenceType
-//
+// TODO: this still crashes the compiler - Xcode 7.3.1
+// MARK: - SequenceType
+
 //extension GenericQueryable {
 //    
 //    public typealias Generator = AnyGenerator<Self.Item>
 //    
 //    public func generate() -> AnyGenerator<Self.Item> {
-//        return anyGenerator(self.toArray().generate())
+//        return AnyGenerator(self.toArray().generate())
 //    }
 //    
 //}
