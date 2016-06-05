@@ -151,8 +151,16 @@ extension FetchRequestController {
 
 extension FetchRequestController {
     
+    public func numberOfSections() -> Int {
+        return self.sections.count
+    }
+    
+    public func numberOfEntities(inSection section: Int) -> Int {
+        return self.sections[section].numberOfEntities
+    }
+    
     /// The total number of fetched entities.
-    public var numberOfEntities: Int {
+    public func numberOfFetchedEntities() -> Int {
         var count = 0
         self.sections.forEach { count += $0.numberOfEntities }
         
