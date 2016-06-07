@@ -208,21 +208,23 @@ extension ComposedTableViewDataSource {
         (ds as! UITableViewDelegate).tableView?(tableView, willDisplayFooterView: view, forSection: ds.localSection(forGlobalSection: section))
     }
     
-    public final func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        let ds = self.dataSource(at: indexPath)
-        (ds as! UITableViewDelegate).tableView?(tableView, didEndDisplayingCell: cell, forRowAtIndexPath: ds.localIndexPath(forGlobalIndexPath: indexPath))
-    }
+    // FIXME:
+//    public final func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+//        let ds = self.dataSource(at: indexPath)
+//        (ds as! UITableViewDelegate).tableView?(tableView, didEndDisplayingCell: cell, forRowAtIndexPath: ds.localIndexPath(forGlobalIndexPath: indexPath))
+//    }
     
-    public final func tableView(tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int) {
-        // TODO:
+    // FIXME:
+//    public final func tableView(tableView: UITableView, didEndDisplayingHeaderView view: UIView, forSection section: Int) {
 //        let ds = self.dataSource(atSectionIndex: section)
 //        (ds as! UITableViewDelegate).tableView?(tableView, didEndDisplayingHeaderView: view, forSection: ds.localSection(forGlobalSection: section))
-    }
+//    }
     
-    public final func tableView(tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int) {
-        let ds = self.dataSource(atSectionIndex: section)
-        (ds as! UITableViewDelegate).tableView?(tableView, didEndDisplayingFooterView: view, forSection: ds.localSection(forGlobalSection: section))
-    }
+    // FIXME:
+//    public final func tableView(tableView: UITableView, didEndDisplayingFooterView view: UIView, forSection section: Int) {
+//        let ds = self.dataSource(atSectionIndex: section)
+//        (ds as! UITableViewDelegate).tableView?(tableView, didEndDisplayingFooterView: view, forSection: ds.localSection(forGlobalSection: section))
+//    }
     
     public final override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         let ds = self.dataSource(at: indexPath)

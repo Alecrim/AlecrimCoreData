@@ -221,15 +221,17 @@ extension ComposedTableViewDataSource {
         (ds as! UICollectionViewDelegate).collectionView?(collectionView, willDisplaySupplementaryView: view, forElementKind: elementKind, atIndexPath: ds.localIndexPath(forGlobalIndexPath: indexPath))
     }
     
-    public func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        let ds = self.dataSource(at: indexPath)
-        (ds as! UICollectionViewDelegate).collectionView?(collectionView, didEndDisplayingCell: cell, forItemAtIndexPath: ds.localIndexPath(forGlobalIndexPath: indexPath))
-    }
+    // FIXME:
+//    public func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+//        let ds = self.dataSource(at: indexPath)
+//        (ds as! UICollectionViewDelegate).collectionView?(collectionView, didEndDisplayingCell: cell, forItemAtIndexPath: ds.localIndexPath(forGlobalIndexPath: indexPath))
+//    }
     
-    public func collectionView(collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
-        let ds = self.dataSource(at: indexPath)
-        (ds as! UICollectionViewDelegate).collectionView?(collectionView, didEndDisplayingSupplementaryView: view, forElementOfKind: elementKind, atIndexPath: ds.localIndexPath(forGlobalIndexPath: indexPath))
-    }
+    // FIXME:
+//    public func collectionView(collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, atIndexPath indexPath: NSIndexPath) {
+//        let ds = self.dataSource(at: indexPath)
+//        (ds as! UICollectionViewDelegate).collectionView?(collectionView, didEndDisplayingSupplementaryView: view, forElementOfKind: elementKind, atIndexPath: ds.localIndexPath(forGlobalIndexPath: indexPath))
+//    }
     
     public func collectionView(collectionView: UICollectionView, shouldShowMenuForItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         let ds = self.dataSource(at: indexPath)

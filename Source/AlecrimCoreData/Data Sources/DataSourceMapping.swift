@@ -38,11 +38,21 @@ internal final class DataSourceMapping<T: DataSource> {
 extension DataSourceMapping {
 
     internal func localSection(forGlobalSection globalSection: Int) -> Int {
-        return self.globalToLocalSections[globalSection]!
+        if let localSection = self.globalToLocalSections[globalSection] {
+            return localSection
+        }
+        
+        precondition(self.globalToLocalSections.count == 0)
+        return globalSection
     }
     
     internal func globalSection(forLocalSection localSection: Int) -> Int {
-        return self.localToGlobalSections[localSection]!
+        if let globalSection = self.localToGlobalSections[localSection] {
+            return globalSection
+        }
+
+        precondition(self.localToGlobalSections.count == 0)
+        return localSection
     }
     
     internal func localIndexPath(forGlobalIndexPath globalIndexPath: NSIndexPath) -> NSIndexPath {
