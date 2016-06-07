@@ -8,11 +8,11 @@
 
 import Foundation
 
-internal final class DataSourceMapping<T: Container, C: ContainerCell> {
+internal final class DataSourceMapping<T: DataSource> {
     
     // MARK: -
     
-    internal weak private(set) var dataSource: DataSource<T, C>!
+    internal weak private(set) var dataSource: T!
     internal private(set) var numberOfSections: Int = 0
     
     // MARK: -
@@ -22,11 +22,11 @@ internal final class DataSourceMapping<T: Container, C: ContainerCell> {
     
     // MARK: -
     
-    internal init(dataSource: DataSource<T, C>) {
+    internal init(dataSource: T) {
         self.dataSource = dataSource
     }
     
-    internal convenience init(dataSource: DataSource<T, C>, globalSectionIndex: Int) {
+    internal convenience init(dataSource: T, globalSectionIndex: Int) {
         self.init(dataSource: dataSource)
         self.updateMappingStarting(atGlobalSection: globalSectionIndex)
     }
@@ -65,7 +65,7 @@ extension DataSourceMapping {
         return localIndexPaths.map { self.globalIndexPath(forLocalIndexPath: $0) }
     }
     
-    internal func updateMappingStarting(atGlobalSection globalSection: Int, with closure: ((globalSection: Int) -> Void)? = nil) {
+    internal func updateMappingStarting(atGlobalSection globalSection: Int, with closure: ((Int) -> Void)? = nil) {
         var globalSection = globalSection
         
         self.numberOfSections = self.dataSource.numberOfSections()
@@ -74,7 +74,7 @@ extension DataSourceMapping {
         
         for localSection in 0..<self.numberOfSections {
             self.addMapping(fromGlobalSection: globalSection, toLocalSection: localSection)
-            closure?(globalSection: globalSection)
+            closure?(globalSection)
             globalSection += 1
         }
     }
@@ -86,6 +86,7 @@ extension DataSourceMapping {
 extension DataSourceMapping {
     
     private func addMapping(fromGlobalSection globalSection: Int, toLocalSection localSection: Int) {
+        assert(self.globalToLocalSections[globalSection] == nil, "Collision while trying to add to a mapping.")
         assert(self.localToGlobalSections[localSection] == nil, "Collision while trying to add to a mapping.")
         
         self.globalToLocalSections[globalSection] = localSection

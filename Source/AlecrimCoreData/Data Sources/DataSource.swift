@@ -8,61 +8,63 @@
 
 import Foundation
 
-// MARK: -
-
-public protocol Container: NSObjectProtocol {
-}
-
-public protocol ContainerCell: NSObjectProtocol {
-}
-
-// MARK: -
-
-public /* abstract */ class DataSource<T: Container, C: ContainerCell>: NSObject {
+public /* abstract */ class DataSource: NSObject {
     
-    // MARK: -
-
-    public final let container: T
-
-    internal final weak var parentDataSource: ComposedDataSource<T, C>? = nil
+    public final weak var parentDataSource: DataSource? = nil
     
-    // MARK: -
-    
-    public init(for container: T) {
-        self.container = container
-        super.init()
-    }
-    
-    // MARK: -
-    
-    public /* abstract */ func numberOfSections() -> Int {
-        fatalError()
-    }
-    
-    public /* abstract */ func numberOfItems(inSection section: Int) -> Int {
-        fatalError()
-    }
-    
-    public /* abstract */ func cellForItem(at indexPath: NSIndexPath) -> C {
-        fatalError()
-    }
-    
-    // MARK: -
-    
-    public /* abstract */ func configureCell(cell: C, at indexPath: NSIndexPath) {
-        fatalError()
-    }
-
 }
 
 extension DataSource {
     
-    public final func globalSection(forLocalSection localSection: Int) -> Int {
-        return self.parentDataSource == nil ? localSection : self.parentDataSource!.globalSection(for: self, localSection: localSection)
+    internal /* abstract */ func numberOfSections() -> Int {
+        fatalError()
     }
     
-    public final func globalIndexPath(forLocalIndexPath localIndexPath: NSIndexPath) -> NSIndexPath {
-        return self.parentDataSource == nil ? localIndexPath : self.parentDataSource!.globalIndexPath(for: self, localIndexPath: localIndexPath)
+}
+
+extension DataSource {
+    
+    public final func dataSource(atSectionIndex sectionIndex: Int) -> DataSource {
+        let indexPath = NSIndexPath(forSection: sectionIndex)
+        return self.dataSource(at: indexPath)
+    }
+    
+    public func dataSource(at indexPath: NSIndexPath) -> DataSource {
+        return self
+    }
+    
+}
+
+
+extension DataSource {
+    
+    internal func updateMappings() {
+        // do nothing
+    }
+    
+    public /* abstract */ func globalSection(forLocalSection localSection: Int) -> Int {
+        fatalError()
+    }
+    
+    public /* abstract */ func globalIndexPath(forLocalIndexPath localIndexPath: NSIndexPath) -> NSIndexPath {
+        fatalError()
+    }
+    
+    public /* abstract */ func localSection(forGlobalSection globalSection: Int) -> Int {
+        fatalError()
+    }
+    
+    public /* abstract */ func localIndexPath(forGlobalIndexPath globalIndexPath: NSIndexPath) -> NSIndexPath {
+        fatalError()
+    }
+    
+}
+
+
+extension NSIndexPath {
+    
+    public convenience init(forSection section: Int) {
+        self.init(forItem: 0, inSection: section)
     }
     
 }
