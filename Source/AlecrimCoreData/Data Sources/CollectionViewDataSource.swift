@@ -11,7 +11,7 @@
     import Foundation
     import UIKit
 
-    public /* abstract */ class CollectionViewDataSource: DataSource {
+    public /* abstract */ class CollectionViewDataSource: AbstractDataSource {
         
         // MARK: -
 

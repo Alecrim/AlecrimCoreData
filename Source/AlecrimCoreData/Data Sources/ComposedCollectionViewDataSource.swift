@@ -24,7 +24,7 @@ public /* abstract */ class ComposedCollectionViewDataSource: CollectionViewData
     
     // MARK: -
     
-    public let dataSources: [DataSource]
+    public let dataSources: [AbstractDataSource]
     
     // MARK: -
     
@@ -59,7 +59,7 @@ extension ComposedCollectionViewDataSource {
         dataSource.configureCell(cell, at: localIndexPath)
     }
     
-    public override final func dataSource(at indexPath: NSIndexPath) -> DataSource {
+    public override final func dataSource(at indexPath: NSIndexPath) -> AbstractDataSource {
         let mapping = self.mapping(forGlobalSection: indexPath.section)
         let dataSource = mapping.dataSource
         
@@ -70,19 +70,19 @@ extension ComposedCollectionViewDataSource {
 
 extension ComposedCollectionViewDataSource {
     
-    internal func globalSection(for dataSource: DataSource, localSection: Int) -> Int {
+    internal func globalSection(for dataSource: AbstractDataSource, localSection: Int) -> Int {
         return self.mapping(for: dataSource).globalSection(forLocalSection: localSection)
     }
     
-    internal func globalIndexPath(for dataSource: DataSource, localIndexPath: NSIndexPath) -> NSIndexPath {
+    internal func globalIndexPath(for dataSource: AbstractDataSource, localIndexPath: NSIndexPath) -> NSIndexPath {
         return self.mapping(for: dataSource).globalIndexPath(forLocalIndexPath: localIndexPath)
     }
     
-    internal func localSection(for dataSource: DataSource, globalSection: Int) -> Int {
+    internal func localSection(for dataSource: AbstractDataSource, globalSection: Int) -> Int {
         return self.mapping(for: dataSource).localSection(forGlobalSection: globalSection)
     }
     
-    internal func localIndexPath(for dataSource: DataSource, globalIndexPath: NSIndexPath) -> NSIndexPath {
+    internal func localIndexPath(for dataSource: AbstractDataSource, globalIndexPath: NSIndexPath) -> NSIndexPath {
         return self.mapping(for: dataSource).localIndexPath(forGlobalIndexPath: globalIndexPath)
     }
     
@@ -94,7 +94,7 @@ extension ComposedCollectionViewDataSource {
         return self.globalSectionToMappings[section]!
     }
     
-    private func mapping(for dataSource: DataSource) -> DataSourceMapping<CollectionViewDataSource> {
+    private func mapping(for dataSource: AbstractDataSource) -> DataSourceMapping<CollectionViewDataSource> {
         return self.dataSourceToMappings.objectForKey(dataSource) as! DataSourceMapping<CollectionViewDataSource>
     }
     

@@ -37,7 +37,7 @@
 		14CB03371B77960800EB87B8 /* UITableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501711B6732820057DD8B /* UITableViewExtensions.swift */; };
 		14CB03381B77960800EB87B8 /* UICollectionViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14A501731B6733890057DD8B /* UICollectionViewExtensions.swift */; };
 		14E3FDEE1D05AF02007006BC /* TableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E3FDED1D05AF02007006BC /* TableViewDataSource.swift */; };
-		14E3FDF01D05B685007006BC /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E3FDEF1D05B685007006BC /* DataSource.swift */; };
+		14E3FDF01D05B685007006BC /* AbstractDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E3FDEF1D05B685007006BC /* AbstractDataSource.swift */; };
 		14E3FDF21D05B766007006BC /* ComposedTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E3FDF11D05B766007006BC /* ComposedTableViewDataSource.swift */; };
 		14E3FDF31D05B7EA007006BC /* DataSourceMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144EB5A21D02BB3400D12B07 /* DataSourceMapping.swift */; };
 /* End PBXBuildFile section */
@@ -74,7 +74,7 @@
 		14BE2C0C1D0662E800A4265F /* FetchRequestControllerCollectionViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequestControllerCollectionViewDataSource.swift; sourceTree = "<group>"; };
 		14D565AC1B64B07E00B1EFF1 /* FetchRequestControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequestControllerDelegate.swift; sourceTree = "<group>"; };
 		14E3FDED1D05AF02007006BC /* TableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewDataSource.swift; sourceTree = "<group>"; };
-		14E3FDEF1D05B685007006BC /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSource.swift; sourceTree = "<group>"; };
+		14E3FDEF1D05B685007006BC /* AbstractDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbstractDataSource.swift; sourceTree = "<group>"; };
 		14E3FDF11D05B766007006BC /* ComposedTableViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposedTableViewDataSource.swift; sourceTree = "<group>"; };
 		14FBAD691B76AF2100EB662A /* AttributeQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttributeQuery.swift; sourceTree = "<group>"; };
 		14FBAD6B1B76B23000EB662A /* CoreDataQueryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataQueryable.swift; sourceTree = "<group>"; };
@@ -94,7 +94,7 @@
 		1411A5A11CFFEB4D00945757 /* Data Sources */ = {
 			isa = PBXGroup;
 			children = (
-				14E3FDEF1D05B685007006BC /* DataSource.swift */,
+				14E3FDEF1D05B685007006BC /* AbstractDataSource.swift */,
 				144EB5A21D02BB3400D12B07 /* DataSourceMapping.swift */,
 				14E3FDED1D05AF02007006BC /* TableViewDataSource.swift */,
 				1411A5AA1CFFEBC700945757 /* FetchRequestControllerTableViewDataSource.swift */,
@@ -326,7 +326,7 @@
 				14CB03211B77916700EB87B8 /* TableProtocol.swift in Sources */,
 				14CB032B1B7795E700EB87B8 /* Table.swift in Sources */,
 				14CB03301B7795F600EB87B8 /* ALCFetchedResultsController.swift in Sources */,
-				14E3FDF01D05B685007006BC /* DataSource.swift in Sources */,
+				14E3FDF01D05B685007006BC /* AbstractDataSource.swift in Sources */,
 				14CB03341B77960300EB87B8 /* NSCollectionViewExtensions.swift in Sources */,
 				14CB03381B77960800EB87B8 /* UICollectionViewExtensions.swift in Sources */,
 				14CB03331B77960300EB87B8 /* NSArrayControllerExtensions.swift in Sources */,

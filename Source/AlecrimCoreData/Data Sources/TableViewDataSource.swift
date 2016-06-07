@@ -11,7 +11,7 @@
     import Foundation
     import UIKit
 
-    public /* abstract */ class TableViewDataSource: DataSource {
+    public /* abstract */ class TableViewDataSource: AbstractDataSource {
         
         // MARK: -
 

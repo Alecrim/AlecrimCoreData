@@ -1,5 +1,5 @@
 //
-//  DataSource.swift
+//  AbstractDataSource.swift
 //  AlecrimCoreData
 //
 //  Created by Vanderlei Martinelli on 2016-05-21.
@@ -8,13 +8,13 @@
 
 import Foundation
 
-public /* abstract */ class DataSource: NSObject {
+public /* abstract */ class AbstractDataSource: NSObject {
     
-    public final weak var parentDataSource: DataSource? = nil
+    public final weak var parentDataSource: AbstractDataSource? = nil
     
 }
 
-extension DataSource {
+extension AbstractDataSource {
     
     internal /* abstract */ func numberOfSections() -> Int {
         fatalError()
@@ -22,21 +22,21 @@ extension DataSource {
     
 }
 
-extension DataSource {
+extension AbstractDataSource {
     
-    public final func dataSource(atSectionIndex sectionIndex: Int) -> DataSource {
+    public final func dataSource(atSectionIndex sectionIndex: Int) -> AbstractDataSource {
         let indexPath = NSIndexPath(forSection: sectionIndex)
         return self.dataSource(at: indexPath)
     }
     
-    public func dataSource(at indexPath: NSIndexPath) -> DataSource {
+    public func dataSource(at indexPath: NSIndexPath) -> AbstractDataSource {
         return self
     }
     
 }
 
 
-extension DataSource {
+extension AbstractDataSource {
     
     internal func updateMappings() {
         // do nothing

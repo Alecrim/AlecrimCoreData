@@ -8,7 +8,7 @@
 
 import Foundation
 
-internal final class DataSourceMapping<T: DataSource> {
+internal final class DataSourceMapping<T: AbstractDataSource> {
     
     // MARK: -
     
