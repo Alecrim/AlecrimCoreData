@@ -212,12 +212,12 @@
             self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: animation)
         }
         
-        public final func deleteRows(at indexPaths: [NSIndexPath], withRowAnimation animation: UITableViewRowAnimation) {
+        public final func deleteRows(at indexPaths: [NSIndexPath], with animation: UITableViewRowAnimation) {
             let indexPaths = indexPaths.map { self.globalIndexPath(forLocalIndexPath: $0) }
             self.tableView.deleteRowsAtIndexPaths(indexPaths, withRowAnimation: animation)
         }
         
-        public final func reloadRows(at indexPaths: [NSIndexPath], withRowAnimation animation: UITableViewRowAnimation) {
+        public final func reloadRows(at indexPaths: [NSIndexPath], with animation: UITableViewRowAnimation) {
             let indexPaths = indexPaths.map { self.globalIndexPath(forLocalIndexPath: $0) }
             self.tableView.reloadRowsAtIndexPaths(indexPaths, withRowAnimation: animation)
         }

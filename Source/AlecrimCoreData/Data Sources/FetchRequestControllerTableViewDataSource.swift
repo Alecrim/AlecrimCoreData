@@ -66,10 +66,10 @@ extension FetchRequestControllerTableViewDataSource {
                 self.insertRows(at: [newIndexPath], with: rowAnimation)
             }
             .didDeleteEntity { [unowned self] entity, indexPath in
-                self.deleteRows(at: [indexPath], withRowAnimation: rowAnimation)
+                self.deleteRows(at: [indexPath], with: rowAnimation)
             }
             .didUpdateEntity { [unowned self] entity, indexPath in
-                self.reloadRows(at: [indexPath], withRowAnimation: rowAnimation)
+                self.reloadRows(at: [indexPath], with: rowAnimation)
             }
             .didMoveEntity { [unowned self] entity, indexPath, newIndexPath in
                 self.moveRow(at: indexPath, to: newIndexPath)
@@ -77,6 +77,100 @@ extension FetchRequestControllerTableViewDataSource {
             .didChangeContent { [unowned self] in
                 self.endUpdates()
         }
+        
+        try! self.fetchRequestController.performFetch()
+    }
+    
+    private final func _bind(with rowAnimation: UITableViewRowAnimation = .Fade) {
+        let insertedSectionIndexes = NSMutableIndexSet()
+        let deletedSectionIndexes = NSMutableIndexSet()
+        let updatedSectionIndexes = NSMutableIndexSet()
+        
+        var insertedItemIndexPaths = [NSIndexPath]()
+        var deletedItemIndexPaths = [NSIndexPath]()
+        var updatedItemIndexPaths = [NSIndexPath]()
+        
+        self.fetchRequestController
+            .willChangeContent {
+                insertedSectionIndexes.removeAllIndexes()
+                deletedSectionIndexes.removeAllIndexes()
+                updatedSectionIndexes.removeAllIndexes()
+                
+                insertedItemIndexPaths.removeAll(keepCapacity: false)
+                deletedItemIndexPaths.removeAll(keepCapacity: false)
+                updatedItemIndexPaths.removeAll(keepCapacity: false)
+            }
+            .didInsertSection { sectionInfo, newSectionIndex in
+                insertedSectionIndexes.addIndex(newSectionIndex)
+            }
+            .didDeleteSection { sectionInfo, sectionIndex in
+                deletedSectionIndexes.addIndex(sectionIndex)
+                deletedItemIndexPaths = deletedItemIndexPaths.filter { $0.section != sectionIndex }
+                updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex }
+            }
+            .didUpdateSection { sectionInfo, sectionIndex in
+                updatedSectionIndexes.addIndex(sectionIndex)
+            }
+            .didInsertEntity { entity, newIndexPath in
+                if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                    insertedItemIndexPaths.append(newIndexPath)
+                }
+            }
+            .didDeleteEntity { entity, indexPath in
+                if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                    deletedItemIndexPaths.append(indexPath)
+                }
+            }
+            .didUpdateEntity { entity, indexPath in
+                if !deletedSectionIndexes.containsIndex(indexPath.section) && deletedItemIndexPaths.indexOf(indexPath) == nil && updatedItemIndexPaths.indexOf(indexPath) == nil {
+                    updatedItemIndexPaths.append(indexPath)
+                }
+            }
+            .didMoveEntity { entity, indexPath, newIndexPath in
+                if newIndexPath == indexPath {
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) && deletedItemIndexPaths.indexOf(indexPath) == nil && updatedItemIndexPaths.indexOf(indexPath) == nil {
+                        updatedItemIndexPaths.append(indexPath)
+                    }
+                }
+                else {
+                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                        deletedItemIndexPaths.append(indexPath)
+                    }
+                    
+                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                        insertedItemIndexPaths.append(newIndexPath)
+                    }
+                }
+            }
+            .didChangeContent { [unowned self] in
+                self.beginUpdates()
+                
+                if deletedSectionIndexes.count > 0 {
+                    self.deleteSections(deletedSectionIndexes, with: rowAnimation)
+                }
+                
+                if insertedSectionIndexes.count > 0 {
+                    self.insertSections(insertedSectionIndexes, with: rowAnimation)
+                }
+                
+                if updatedSectionIndexes.count > 0 {
+                    self.reloadSections(updatedSectionIndexes, with: rowAnimation)
+                }
+                
+                if deletedItemIndexPaths.count > 0 {
+                    self.deleteRows(at: deletedItemIndexPaths, with: rowAnimation)
+                }
+                
+                if insertedItemIndexPaths.count > 0 {
+                    self.insertRows(at: insertedItemIndexPaths, with: rowAnimation)
+                }
+                
+                if updatedItemIndexPaths.count > 0 {
+                    self.reloadRows(at: updatedItemIndexPaths, with: rowAnimation)
+                }
+                
+                self.endUpdates()
+            }
         
         try! self.fetchRequestController.performFetch()
     }
