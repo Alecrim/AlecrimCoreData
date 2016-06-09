@@ -9,7 +9,34 @@
 import Foundation
 import CoreData
 
+// MARK: -
+
 private var cachedEntityDescriptions = [String : NSEntityDescription]()
+
+@warn_unused_result
+private func cachedEntityDescription(for dataContext: NSManagedObjectContext, managedObjectType: NSManagedObject.Type) -> NSEntityDescription {
+    let dataContextClassName = String(dataContext.dynamicType)
+    let managedObjectClassName = String(managedObjectType)
+    let cacheKey = "\(dataContextClassName)|\(managedObjectClassName)"
+    
+    let entityDescription: NSEntityDescription
+    
+    if let cachedEntityDescription = cachedEntityDescriptions[cacheKey] {
+        entityDescription = cachedEntityDescription
+    }
+    else {
+        let persistentStoreCoordinator = dataContext.persistentStoreCoordinator!
+        let managedObjectModel = persistentStoreCoordinator.managedObjectModel
+        
+        entityDescription = managedObjectModel.entities.filter({ $0.managedObjectClassName.componentsSeparatedByString(".").last! == managedObjectClassName }).first!
+        cachedEntityDescriptions[cacheKey] = entityDescription
+    }
+    
+    return entityDescription
+}
+
+// MARK: -
+
 
 public struct Table<T: NSManagedObject>: TableProtocol {
     
@@ -26,25 +53,8 @@ public struct Table<T: NSManagedObject>: TableProtocol {
     public var sortDescriptors: [NSSortDescriptor]? = nil
     
     public init(dataContext: NSManagedObjectContext) {
-        let dataContextClassName = String(dataContext.dynamicType)
-        let managedObjectClassName = String(T.self)
-        
-        let cacheKey = "\(dataContextClassName)|\(managedObjectClassName)"
-        let entityDescription: NSEntityDescription
-        
-        if let cachedEntityDescription = cachedEntityDescriptions[cacheKey] {
-            entityDescription = cachedEntityDescription
-        }
-        else {
-            let persistentStoreCoordinator = dataContext.persistentStoreCoordinator!
-            let managedObjectModel = persistentStoreCoordinator.managedObjectModel
-            
-            entityDescription = managedObjectModel.entities.filter({ $0.managedObjectClassName.componentsSeparatedByString(".").last! == managedObjectClassName }).first!
-            cachedEntityDescriptions[cacheKey] = entityDescription
-        }
-        
         self.dataContext = dataContext
-        self.entityDescription = entityDescription
+        self.entityDescription = cachedEntityDescription(for: dataContext, managedObjectType: T.self)
     }
     
 }
