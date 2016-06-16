@@ -38,3 +38,21 @@ extension NSManagedObject {
     }
 
 }
+
+extension NSManagedObject {
+    
+    public class func isIn(values: Set<NSManagedObject>) -> NSComparisonPredicate {
+        let rightExpressionConstantValues = values.map { NSExpression(forConstantValue: $0.objectID) }
+        let rightExpression = NSExpression(forAggregate: rightExpressionConstantValues)
+        let leftExpression = NSExpression(forKeyPath: "objectID")
+        
+        return NSComparisonPredicate(
+            leftExpression: leftExpression,
+            rightExpression: rightExpression,
+            modifier: .DirectPredicateModifier,
+            type: .InPredicateOperatorType,
+            options: NSComparisonPredicateOptions()
+        )
+    }
+    
+}
