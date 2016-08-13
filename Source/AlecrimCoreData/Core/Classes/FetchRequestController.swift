@@ -237,33 +237,57 @@ extension FetchRequestController {
         try self.refresh()
     }
     
-    public func resetPredicate() throws {
-        try self.refresh(using: self.initialPredicate, keepOriginalPredicate: false)
+    /// Resets the predicate of the fetch request to the predicate that the `FetchRequestController` was initialized with.
+    ///
+    /// - warning: The fetch request is NOT executed with the updated filters until a call to `performFetch:` method is made.
+    public func resetPredicate() {
+        self.assignPredicate(self.initialPredicate, keepOriginalPredicate: false)
     }
     
-    public func resetSortDescriptors() throws {
-        try self.refresh(using: self.initialSortDescriptors, keepOriginalSortDescriptors: false)
+    /// Resets the sort descriptors of the fetch request to those that the `FetchRequestController` was initialized with.
+    ///
+    /// - warning: The fetch request is NOT executed with the updated sort descriptors until a call to `performFetch:` method is made.
+    public func resetSortDescriptors() {
+        self.assignSortDescriptors(self.initialSortDescriptors, keepOriginalSortDescriptors: false)
     }
     
-    public func resetPredicateAndSortDescriptors() throws {
-        try self.refresh(using: self.initialPredicate, sortDescriptors: self.initialSortDescriptors, keepOriginalPredicate: false, keepOriginalSortDescriptors: false)
+    /// Resets the predicate and sort descriptors of the fetch request to those that the `FetchRequestController` was initialized with.
+    ///
+    /// - warning:  The fetch request is NOT executed with the updated filters and sort descriptors until a call to
+    ///             `performFetch:` method is made.
+    public func resetPredicateAndSortDescriptors() {
+        resetPredicate()
+        resetSortDescriptors()
     }
     
 }
 
 extension FetchRequestController {
     
-    public func filter(@noescape predicateClosure: (T.Type) -> NSPredicate) throws {
+    /// Adds a filter using the given predicate closure to the fetch request.
+    ///
+    /// - parameter predicateClosure:   The closure returning an `NSPredicate` to be joined the the current predicate as
+    ///                                 an `AND` clause.
+    ///
+    /// - warning: The fetch request is NOT executed with the new filters until a call to `performFetch:` method is made.
+    public func filter(@noescape predicateClosure: (T.Type) -> NSPredicate) {
         let predicate = predicateClosure(T.self)
-        try self.refresh(using: predicate, keepOriginalPredicate: true)
+        self.assignPredicate(predicate, keepOriginalPredicate: true)
     }
     
-    public func resetFilter() throws {
-        try self.resetPredicate()
+    /// Resets the predicate of the fetch request to the predicate that the `FetchRequestController` was initialized with.
+    ///
+    /// - warning: The fetch request is NOT executed with the updated filters until a call to `performFetch:` method is made.
+    public func resetFilter() {
+        self.resetPredicate()
     }
     
-    public func reset() throws {
-        try self.resetPredicateAndSortDescriptors()
+    /// Resets the predicate and sort descriptors of the fetch request to those that the `FetchRequestController` was initialized with.
+    ///
+    /// - warning:  The fetch request is NOT executed with the updated filters and sort descriptors until a call to
+    ///             `performFetch:` method is made.
+    public func reset() {
+        self.resetPredicateAndSortDescriptors()
     }
     
 }
