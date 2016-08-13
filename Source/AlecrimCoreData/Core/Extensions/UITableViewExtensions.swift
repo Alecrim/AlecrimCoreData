@@ -13,7 +13,7 @@ import UIKit
     
 extension FetchRequestController {
 
-    public func bindToTableView(tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, reloadRowAtIndexPath reloadRowAtIndexPathClosure: (NSIndexPath -> Void)? = nil) -> Self {
+    public func bind<CellType: UITableViewCell>(to tableView: UITableView, rowAnimation: UITableViewRowAnimation = .Fade, sectionOffset: Int = 0, cellConfigurationHandler: ((CellType, NSIndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()
@@ -45,23 +45,20 @@ extension FetchRequestController {
             }
             .didInsertSection { sectionInfo, sectionIndex in
                 if !reloadData {
-                    insertedSectionIndexes.addIndex(sectionIndex)
+                    insertedSectionIndexes.addIndex(sectionIndex + sectionOffset)
                 }
             }
             .didDeleteSection { sectionInfo, sectionIndex in
                 if !reloadData {
-                    deletedSectionIndexes.addIndex(sectionIndex)
-                    deletedItemIndexPaths = deletedItemIndexPaths.filter { $0.section != sectionIndex }
-                    updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex }
-                }
-            }
-            .didUpdateSection { sectionInfo, sectionIndex in
-                if !reloadData {
-                    updatedSectionIndexes.addIndex(sectionIndex)
+                    deletedSectionIndexes.addIndex(sectionIndex + sectionOffset)
+                    deletedItemIndexPaths = deletedItemIndexPaths.filter { $0.section != sectionIndex}
+                    updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex}
                 }
             }
             .didInsertEntity { entity, newIndexPath in
                 if !reloadData {
+                    let newIndexPath = sectionOffset > 0 ? NSIndexPath(forRow: newIndexPath.item, inSection: newIndexPath.section + sectionOffset) : newIndexPath
+
                     if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
                         insertedItemIndexPaths.append(newIndexPath)
                     }
@@ -69,6 +66,8 @@ extension FetchRequestController {
             }
             .didDeleteEntity { entity, indexPath in
                 if !reloadData {
+                    let indexPath = sectionOffset > 0 ? NSIndexPath(forRow: indexPath.item, inSection: indexPath.section + sectionOffset) : indexPath
+
                     if !deletedSectionIndexes.containsIndex(indexPath.section) {
                         deletedItemIndexPaths.append(indexPath)
                     }
@@ -76,6 +75,8 @@ extension FetchRequestController {
             }
             .didUpdateEntity { entity, indexPath in
                 if !reloadData {
+                    let indexPath = sectionOffset > 0 ? NSIndexPath(forRow: indexPath.item, inSection: indexPath.section + sectionOffset) : indexPath
+
                     if !deletedSectionIndexes.containsIndex(indexPath.section) && deletedItemIndexPaths.indexOf(indexPath) == nil && updatedItemIndexPaths.indexOf(indexPath) == nil {
                         updatedItemIndexPaths.append(indexPath)
                     }
@@ -83,12 +84,22 @@ extension FetchRequestController {
             }
             .didMoveEntity { entity, indexPath, newIndexPath in
                 if !reloadData {
-                    if !deletedSectionIndexes.containsIndex(indexPath.section) {
-                        deletedItemIndexPaths.append(indexPath)
+                    let newIndexPath = sectionOffset > 0 ? NSIndexPath(forRow: newIndexPath.item, inSection: newIndexPath.section + sectionOffset) : newIndexPath
+                    let indexPath = sectionOffset > 0 ? NSIndexPath(forRow: indexPath.item, inSection: indexPath.section + sectionOffset) : indexPath
+
+                    if newIndexPath == indexPath {
+                        if !deletedSectionIndexes.containsIndex(indexPath.section) && deletedItemIndexPaths.indexOf(indexPath) == nil && updatedItemIndexPaths.indexOf(indexPath) == nil {
+                            updatedItemIndexPaths.append(indexPath)
+                        }
                     }
-                    
-                    if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
-                        insertedItemIndexPaths.append(newIndexPath)
+                    else {
+                        if !deletedSectionIndexes.containsIndex(indexPath.section) {
+                            deletedItemIndexPaths.append(indexPath)
+                        }
+                        
+                        if !insertedSectionIndexes.containsIndex(newIndexPath.section) {
+                            insertedItemIndexPaths.append(newIndexPath)
+                        }
                     }
                 }
             }
@@ -117,15 +128,17 @@ extension FetchRequestController {
                         tableView.insertRowsAtIndexPaths(insertedItemIndexPaths, withRowAnimation: rowAnimation)
                     }
                     
-                    if updatedItemIndexPaths.count > 0 && reloadRowAtIndexPathClosure == nil {
+                    if updatedItemIndexPaths.count > 0 && cellConfigurationHandler == nil {
                         tableView.reloadRowsAtIndexPaths(updatedItemIndexPaths, withRowAnimation: rowAnimation)
                     }
                     
                     tableView.endUpdates()
                     
-                    if let reloadRowAtIndexPathClosure = reloadRowAtIndexPathClosure {
+                    if let cellConfigurationHandler = cellConfigurationHandler {
                         for updatedItemIndexPath in updatedItemIndexPaths {
-                            reloadRowAtIndexPathClosure(updatedItemIndexPath)
+                            if let cell = tableView.cellForRowAtIndexPath(updatedItemIndexPath) as? CellType {
+                                cellConfigurationHandler(cell, updatedItemIndexPath)
+                            }
                         }
                     }
                 }

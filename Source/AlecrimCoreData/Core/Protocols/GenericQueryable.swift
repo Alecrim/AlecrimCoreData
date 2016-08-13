@@ -10,7 +10,7 @@ import Foundation
 
 public protocol GenericQueryable: Queryable {
     
-    typealias Item
+    associatedtype Item
     
     func toArray() -> [Item]
 
@@ -20,32 +20,8 @@ public protocol GenericQueryable: Queryable {
 
 extension GenericQueryable {
     
-    public func orderByAscending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        return self.sortByAttribute(orderingClosure(Self.Item.self), ascending: true)
-    }
-    
-    public func orderByDescending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        return self.sortByAttribute(orderingClosure(Self.Item.self), ascending: false)
-    }
-    
-}
-
-extension GenericQueryable {
-    
-    public func orderBy<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        return self.orderByAscending(orderingClosure)
-    }
-    
-    public func thenBy<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        return self.orderByAscending(orderingClosure)
-    }
-    
-    public func thenByAscending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        return self.orderByAscending(orderingClosure)
-    }
-    
-    public func thenByDescending<A: AttributeType, V where A.ValueType == V>(@noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
-        return self.orderByDescending(orderingClosure)
+    public func orderBy<A: AttributeProtocol, V where A.ValueType == V>(ascending ascending: Bool = true, @noescape orderingClosure: (Self.Item.Type) -> A) -> Self {
+        return self.sort(using: orderingClosure(Self.Item.self), ascending: ascending)
     }
     
 }
@@ -55,7 +31,7 @@ extension GenericQueryable {
 extension GenericQueryable {
     
     public func filter(@noescape predicateClosure: (Self.Item.Type) -> NSPredicate) -> Self {
-        return self.filterUsingPredicate(predicateClosure(Self.Item.self))
+        return self.filter(using: predicateClosure(Self.Item.self))
     }
     
 }
@@ -65,7 +41,7 @@ extension GenericQueryable {
 extension GenericQueryable {
     
     public func count(@noescape predicateClosure: (Self.Item.Type) -> NSPredicate) -> Int {
-        return self.filterUsingPredicate(predicateClosure(Self.Item.self)).count()
+        return self.filter(using: predicateClosure(Self.Item.self)).count()
     }
     
 }
@@ -73,11 +49,11 @@ extension GenericQueryable {
 extension GenericQueryable {
     
     public func any(@noescape predicateClosure: (Self.Item.Type) -> NSPredicate) -> Bool {
-        return self.filterUsingPredicate(predicateClosure(Self.Item.self)).any()
+        return self.filter(using: predicateClosure(Self.Item.self)).any()
     }
     
     public func none(@noescape predicateClosure: (Self.Item.Type) -> NSPredicate) -> Bool {
-        return self.filterUsingPredicate(predicateClosure(Self.Item.self)).none()
+        return self.filter(using: predicateClosure(Self.Item.self)).none()
     }
     
 }
@@ -85,7 +61,7 @@ extension GenericQueryable {
 extension GenericQueryable {
     
     public func first(@noescape predicateClosure: (Self.Item.Type) -> NSPredicate) -> Self.Item? {
-        return self.filterUsingPredicate(predicateClosure(Self.Item.self)).first()
+        return self.filter(using: predicateClosure(Self.Item.self)).first()
     }
     
 }
@@ -100,27 +76,26 @@ extension GenericQueryable {
     
 }
 
-// TODO: this crashes the compiler (Xcode 7.0 beta 6)
-//// MARK: - SequenceType
-//
+
+// TODO: this still crashes the compiler - Xcode 7.3.1
+// MARK: - SequenceType
+
 //extension GenericQueryable {
 //    
 //    public typealias Generator = AnyGenerator<Self.Item>
 //    
 //    public func generate() -> AnyGenerator<Self.Item> {
-//        return anyGenerator(self.toArray().generate())
+//        return AnyGenerator(self.toArray().generate())
 //    }
 //    
 //}
-//
-//
 
 extension Table: SequenceType {
 
     public typealias Generator = AnyGenerator<T>
 
     public func generate() -> Generator {
-        return anyGenerator(self.toArray().generate())
+        return AnyGenerator(self.toArray().generate())
     }
     
     // turns the SequenceType implementation unavailable
@@ -136,7 +111,7 @@ extension AttributeQuery: SequenceType {
     public typealias Generator = AnyGenerator<T>
     
     public func generate() -> Generator {
-        return anyGenerator(self.toArray().generate())
+        return AnyGenerator(self.toArray().generate())
     }
 
     // turns the SequenceType implementation unavailable

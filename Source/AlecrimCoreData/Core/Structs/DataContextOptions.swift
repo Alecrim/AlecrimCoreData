@@ -9,9 +9,9 @@
 import Foundation
 import CoreData
 
-public enum StoreType {
-    case SQLite
-    case InMemory
+public enum PersistentStoreType {
+    case disk
+    case memory
 }
 
 public struct DataContextOptions {
@@ -21,12 +21,6 @@ public struct DataContextOptions {
     public static var defaultBatchSize: Int = 20
     public static var defaultComparisonPredicateOptions: NSComparisonPredicateOptions = [.CaseInsensitivePredicateOption, .DiacriticInsensitivePredicateOption]
 
-    @available(*, unavailable, renamed="defaultBatchSize")
-    public static var batchSize: Int = 20
-    
-    @available(*, unavailable, renamed="defaultComparisonPredicateOptions")
-    public static var stringComparisonPredicateOptions: NSComparisonPredicateOptions = [.CaseInsensitivePredicateOption, .DiacriticInsensitivePredicateOption]
-
     // MARK: -
 
     public let managedObjectModelURL: NSURL?
@@ -34,9 +28,9 @@ public struct DataContextOptions {
     
     // MARK: -
     
-    public var storeType: StoreType = .SQLite
-    public var configuration: String? = nil
-    public var options: [NSObject : AnyObject] = [NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true]
+    public var persistentStoreType: PersistentStoreType = .disk
+    public var persistentStoreConfiguration: String? = nil
+    public var persistentStoreOptions: [NSObject : AnyObject] = [NSMigratePersistentStoresAutomaticallyOption : true, NSInferMappingModelAutomaticallyOption : true]
     
     // MARK: - THE constructor
     
@@ -69,10 +63,10 @@ public struct DataContextOptions {
     }
     
     // MARK: -
-
+    
     public init(managedObjectModelBundle: NSBundle, managedObjectModelName: String, bundleIdentifier: String) throws {
-        self.managedObjectModelURL = try managedObjectModelBundle.managedObjectModelURLForManagedObjectModelName(managedObjectModelName)
-        self.persistentStoreURL = try managedObjectModelBundle.persistentStoreURLForManagedObjectModelName(managedObjectModelName, bundleIdentifier: bundleIdentifier)
+        self.managedObjectModelURL = try managedObjectModelBundle.managedObjectModelURL(for: managedObjectModelName)
+        self.persistentStoreURL = try managedObjectModelBundle.persistentStoreURL(for: managedObjectModelName, bundleIdentifier: bundleIdentifier)
     }
     
     /// Initializes ContextOptions with properties filled for use by main app and its extensions.
@@ -84,8 +78,8 @@ public struct DataContextOptions {
     ///
     /// - returns: An initialized ContextOptions with properties filled for use by main app and its extensions.
     public init(managedObjectModelBundle: NSBundle, managedObjectModelName: String, bundleIdentifier: String, applicationGroupIdentifier: String) throws {
-        self.managedObjectModelURL = try managedObjectModelBundle.managedObjectModelURLForManagedObjectModelName(managedObjectModelName)
-        self.persistentStoreURL = try managedObjectModelBundle.persistentStoreURLForManagedObjectModelName(managedObjectModelName, bundleIdentifier: bundleIdentifier, applicationGroupIdentifier: applicationGroupIdentifier)
+        self.managedObjectModelURL = try managedObjectModelBundle.managedObjectModelURL(for: managedObjectModelName)
+        self.persistentStoreURL = try managedObjectModelBundle.persistentStoreURL(for: managedObjectModelName, bundleIdentifier: bundleIdentifier, applicationGroupIdentifier: applicationGroupIdentifier)
     }
     
 }
@@ -97,18 +91,18 @@ extension DataContextOptions {
     #if os(OSX) || os(iOS)
     
     public var ubiquityEnabled: Bool {
-        return self.storeType == .SQLite && self.options[NSPersistentStoreUbiquitousContainerIdentifierKey] != nil
+        return self.persistentStoreType == .disk && self.persistentStoreOptions[NSPersistentStoreUbiquitousContainerIdentifierKey] != nil
     }
     
-    public mutating func configureUbiquityWithContainerIdentifier(containerIdentifier: String, contentRelativePath: String = "Data/TransactionLogs", contentName: String = "UbiquityStore") {
-        self.options[NSPersistentStoreUbiquitousContainerIdentifierKey] = containerIdentifier
-        self.options[NSPersistentStoreUbiquitousContentURLKey] = contentRelativePath
-        self.options[NSPersistentStoreUbiquitousContentNameKey] = contentName
+    public mutating func configureUbiquity(with containerIdentifier: String, contentRelativePath: String = "Data/TransactionLogs", contentName: String = "UbiquityStore") {
+        self.persistentStoreOptions[NSPersistentStoreUbiquitousContainerIdentifierKey] = containerIdentifier
+        self.persistentStoreOptions[NSPersistentStoreUbiquitousContentURLKey] = contentRelativePath
+        self.persistentStoreOptions[NSPersistentStoreUbiquitousContentNameKey] = contentName
         
-        self.options[NSMigratePersistentStoresAutomaticallyOption] = true
-        self.options[NSInferMappingModelAutomaticallyOption] = true
+        self.persistentStoreOptions[NSMigratePersistentStoresAutomaticallyOption] = true
+        self.persistentStoreOptions[NSInferMappingModelAutomaticallyOption] = true
     }
- 
+    
     #endif
 }
 
@@ -118,9 +112,8 @@ extension DataContextOptions {
 extension NSBundle {
     
     /// This variable is used to guess a managedObjectModelName.
-    /// The provided kCFBundleNameKey we are using to determine the name will include spaces, whereas managed object model name uses underscores in place of spaces by default - hence why we are replacing " " with "_" here
     private var inferredManagedObjectModelName: String? {
-        return (self.infoDictionary?[String(kCFBundleNameKey)] as? String)?.stringByReplacingOccurrencesOfString(" ", withString: "_")
+        return self.bundleIdentifier?.componentsSeparatedByString(".").last
     }
     
 }
@@ -129,35 +122,35 @@ extension NSBundle {
     
     private func defaultManagedObjectModelURL() throws -> NSURL {
         guard let managedObjectModelName = self.inferredManagedObjectModelName else {
-            throw AlecrimCoreDataError.InvalidManagedObjectModelURL
+            throw AlecrimCoreDataError.invalidManagedObjectModelURL
         }
         
-        return try self.managedObjectModelURLForManagedObjectModelName(managedObjectModelName)
+        return try self.managedObjectModelURL(for: managedObjectModelName)
     }
     
     private func defaultPersistentStoreURL() throws -> NSURL {
         guard let managedObjectModelName = self.inferredManagedObjectModelName, let bundleIdentifier = self.bundleIdentifier else {
-            throw AlecrimCoreDataError.InvalidPersistentStoreURL
+            throw AlecrimCoreDataError.invalidPersistentStoreURL
         }
         
-        return try self.persistentStoreURLForManagedObjectModelName(managedObjectModelName, bundleIdentifier: bundleIdentifier)
+        return try self.persistentStoreURL(for: managedObjectModelName, bundleIdentifier: bundleIdentifier)
     }
     
 }
 
 extension NSBundle {
     
-    private func managedObjectModelURLForManagedObjectModelName(managedObjectModelName: String) throws -> NSURL {
+    private func managedObjectModelURL(for managedObjectModelName: String) throws -> NSURL {
         guard let url = self.URLForResource(managedObjectModelName, withExtension: "momd") else {
-            throw AlecrimCoreDataError.InvalidManagedObjectModelURL
+            throw AlecrimCoreDataError.invalidManagedObjectModelURL
         }
         
         return url
     }
     
-    private func persistentStoreURLForManagedObjectModelName(managedObjectModelName: String, bundleIdentifier: String) throws -> NSURL {
+    private func persistentStoreURL(for managedObjectModelName: String, bundleIdentifier: String) throws -> NSURL {
         guard let applicationSupportURL = NSFileManager.defaultManager().URLsForDirectory(.ApplicationSupportDirectory, inDomains: .UserDomainMask).last else {
-            throw AlecrimCoreDataError.InvalidPersistentStoreURL
+            throw AlecrimCoreDataError.invalidPersistentStoreURL
         }
         
         let url = applicationSupportURL
@@ -168,9 +161,9 @@ extension NSBundle {
         return url
     }
     
-    private func persistentStoreURLForManagedObjectModelName(managedObjectModelName: String, bundleIdentifier: String, applicationGroupIdentifier: String) throws -> NSURL {
+    private func persistentStoreURL(for managedObjectModelName: String, bundleIdentifier: String, applicationGroupIdentifier: String) throws -> NSURL {
         guard let containerURL = NSFileManager.defaultManager().containerURLForSecurityApplicationGroupIdentifier(applicationGroupIdentifier) else {
-            throw AlecrimCoreDataError.InvalidPersistentStoreURL
+            throw AlecrimCoreDataError.invalidPersistentStoreURL
         }
         
         let url = containerURL
@@ -182,12 +175,5 @@ extension NSBundle {
         
         return url
     }
-    
-}
-
-// MARK: -
-
-@available(*, unavailable, renamed="DataContextOptions")
-public struct ContextOptions {
     
 }

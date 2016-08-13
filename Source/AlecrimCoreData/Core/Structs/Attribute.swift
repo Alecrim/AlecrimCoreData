@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - non nullable attribute
 
-public struct Attribute<T>: AttributeType {
+public struct Attribute<T>: AttributeProtocol {
     
     public typealias ValueType = T
     
@@ -20,7 +20,7 @@ public struct Attribute<T>: AttributeType {
         self.___name = name
     }
 
-    public init(_ name: String, _ parentAttribute: NamedAttributeType) {
+    public init(_ name: String, _ parentAttribute: NamedAttributeProtocol) {
         self.___name = parentAttribute.___name + "." + name
     }
     
@@ -28,7 +28,7 @@ public struct Attribute<T>: AttributeType {
 
 // MARK: nullable (comparable to nil) attribute
 
-public struct NullableAttribute<T>: NullableAttributeType {
+public struct NullableAttribute<T>: NullableAttributeProtocol {
 
     public typealias ValueType = T
     
@@ -38,7 +38,7 @@ public struct NullableAttribute<T>: NullableAttributeType {
         self.___name = name
     }
     
-    public init(_ name: String, _ parentAttribute: NamedAttributeType) {
+    public init(_ name: String, _ parentAttribute: NamedAttributeProtocol) {
         self.___name = parentAttribute.___name + "." + name
     }
     
@@ -63,12 +63,6 @@ extension Attribute where T: CollectionType {
     }
     
     public func avg<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
-        let innerAttribute = closure(T.Generator.Element.self)
-        return Attribute<U>("@avg." + innerAttribute.___name, self)
-    }
-
-    // same as avg, for convenience
-    public func average<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
         let innerAttribute = closure(T.Generator.Element.self)
         return Attribute<U>("@avg." + innerAttribute.___name, self)
     }

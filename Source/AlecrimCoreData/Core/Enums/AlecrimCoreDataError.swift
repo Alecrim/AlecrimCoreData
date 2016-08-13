@@ -9,16 +9,16 @@
 import Foundation
 
 public enum AlecrimCoreDataError: ErrorType {
-    case General
+    case general
     
-    case NotSupported
-    case NotImplemented
-    case NotHandled
+    case notSupported
+    case notImplemented
+    case notHandled
 
-    case InvalidManagedObjectModelURL
-    case InvalidPersistentStoreURL
+    case invalidManagedObjectModelURL
+    case invalidPersistentStoreURL
 
-    case UnexpectedValue(value: Any)
+    case unexpectedValue(Any)
     
     @noreturn
     public static func handleError(error: ErrorType, message: String = "Unhandled error. See callstack.") {

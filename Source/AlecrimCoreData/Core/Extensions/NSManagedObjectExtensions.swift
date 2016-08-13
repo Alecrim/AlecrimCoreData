@@ -30,11 +30,29 @@ extension NSManagedObject {
 extension NSManagedObject {
     
     public func delete() {
-        self.managedObjectContext?.deleteObject(self)
+        self.managedObjectContext!.deleteObject(self)
     }
     
-    public func refresh(mergeChanges: Bool = true) {
+    public func refresh(mergingChanges mergeChanges: Bool = true) {
         self.managedObjectContext!.refreshObject(self, mergeChanges: mergeChanges)
     }
 
+}
+
+extension NSManagedObject {
+    
+    public class func isIn(values: Set<NSManagedObject>) -> NSComparisonPredicate {
+        let rightExpressionConstantValues = values.map { NSExpression(forConstantValue: $0.objectID) }
+        let rightExpression = NSExpression(forAggregate: rightExpressionConstantValues)
+        let leftExpression = NSExpression(forKeyPath: "objectID")
+        
+        return NSComparisonPredicate(
+            leftExpression: leftExpression,
+            rightExpression: rightExpression,
+            modifier: .DirectPredicateModifier,
+            type: .InPredicateOperatorType,
+            options: NSComparisonPredicateOptions()
+        )
+    }
+    
 }

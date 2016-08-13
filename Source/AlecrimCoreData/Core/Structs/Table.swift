@@ -9,10 +9,36 @@
 import Foundation
 import CoreData
 
-private typealias HashableDuplet = Duplet<String, NSManagedObjectContext>
-private var cachedEntityDescriptions = [HashableDuplet : NSEntityDescription ]()
+// MARK: -
 
-public struct Table<T: NSManagedObject>: TableType {
+private var cachedEntityDescriptions = [String : NSEntityDescription]()
+
+@warn_unused_result
+private func cachedEntityDescription(for dataContext: NSManagedObjectContext, managedObjectType: NSManagedObject.Type) -> NSEntityDescription {
+    let dataContextClassName = String(dataContext.dynamicType)
+    let managedObjectClassName = String(managedObjectType)
+    let cacheKey = "\(dataContextClassName)|\(managedObjectClassName)"
+    
+    let entityDescription: NSEntityDescription
+    
+    if let cachedEntityDescription = cachedEntityDescriptions[cacheKey] {
+        entityDescription = cachedEntityDescription
+    }
+    else {
+        let persistentStoreCoordinator = dataContext.persistentStoreCoordinator!
+        let managedObjectModel = persistentStoreCoordinator.managedObjectModel
+        
+        entityDescription = managedObjectModel.entities.filter({ $0.managedObjectClassName.componentsSeparatedByString(".").last! == managedObjectClassName }).first!
+        cachedEntityDescriptions[cacheKey] = entityDescription
+    }
+    
+    return entityDescription
+}
+
+// MARK: -
+
+
+public struct Table<T: NSManagedObject>: TableProtocol {
     
     public typealias Item = T
     
@@ -27,24 +53,8 @@ public struct Table<T: NSManagedObject>: TableType {
     public var sortDescriptors: [NSSortDescriptor]? = nil
     
     public init(dataContext: NSManagedObjectContext) {
-        //
-        let managedObjectClassName = NSStringFromClass(T.self)
-        
-        let cacheKey = Duplet(managedObjectClassName, dataContext)
-        let entityDescription: NSEntityDescription
-        
-        if let cachedEntityDescription = cachedEntityDescriptions[cacheKey] {
-            entityDescription = cachedEntityDescription
-        } else {
-            let persistentStoreCoordinator = dataContext.persistentStoreCoordinator!
-            let managedObjectModel = persistentStoreCoordinator.managedObjectModel
-            
-            entityDescription = managedObjectModel.entities.filter({ $0.managedObjectClassName == managedObjectClassName }).first!
-            cachedEntityDescriptions[cacheKey] = entityDescription
-        }
-        
         self.dataContext = dataContext
-        self.entityDescription = entityDescription
+        self.entityDescription = cachedEntityDescription(for: dataContext, managedObjectType: T.self)
     }
     
 }

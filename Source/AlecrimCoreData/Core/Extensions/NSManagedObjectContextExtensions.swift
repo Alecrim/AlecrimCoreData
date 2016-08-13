@@ -38,7 +38,7 @@ extension NSManagedObjectContext {
 extension NSManagedObjectContext {
     
     @available(OSX 10.10, iOS 8.0, *)
-    internal func executeAsynchronousFetchRequestWithFetchRequest(fetchRequest: NSFetchRequest, completion completionHandler: ([AnyObject]?, NSError?) -> Void) throws {
+    internal func executeAsynchronousFetchRequest(fetchRequest fetchRequest: NSFetchRequest, completion completionHandler: ([AnyObject]?, NSError?) -> Void) throws {
         let asynchronousFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { asynchronousFetchResult in
             completionHandler(asynchronousFetchResult.finalResult, asynchronousFetchResult.operationError)
         }
@@ -48,7 +48,7 @@ extension NSManagedObjectContext {
             
         }
         else {
-            throw AlecrimCoreDataError.UnexpectedValue(value: persistentStoreResult)
+            throw AlecrimCoreDataError.unexpectedValue(persistentStoreResult)
         }
     }
     
@@ -57,7 +57,7 @@ extension NSManagedObjectContext {
 extension NSManagedObjectContext {
     
     @available(OSX 10.10, iOS 8.0, *)
-    internal func executeBatchUpdateRequestWithEntityDescription(entityDescription: NSEntityDescription, propertiesToUpdate: [NSObject : AnyObject], predicate: NSPredicate, completion completionHandler: (Int, ErrorType?) -> Void) {
+    internal func executeBatchUpdateRequest(entityDescription entityDescription: NSEntityDescription, propertiesToUpdate: [NSObject : AnyObject], predicate: NSPredicate, completion completionHandler: (Int, ErrorType?) -> Void) {
         let batchUpdateRequest = NSBatchUpdateRequest(entity: entityDescription)
         batchUpdateRequest.propertiesToUpdate = propertiesToUpdate
         batchUpdateRequest.predicate = predicate
@@ -83,11 +83,11 @@ extension NSManagedObjectContext {
                         completionHandler(count, nil)
                     }
                     else {
-                        throw AlecrimCoreDataError.UnexpectedValue(value: batchUpdateResult.result)
+                        throw AlecrimCoreDataError.unexpectedValue(batchUpdateResult.result)
                     }
                 }
                 else {
-                    throw AlecrimCoreDataError.UnexpectedValue(value: persistentStoreResult)
+                    throw AlecrimCoreDataError.unexpectedValue(persistentStoreResult)
                 }
             }
             catch let error {
@@ -97,7 +97,7 @@ extension NSManagedObjectContext {
     }
 
     @available(OSX 10.11, iOS 9.0, *)
-    internal func executeBatchDeleteRequestWithEntityDescription(entityDescription: NSEntityDescription, objectIDs: [NSManagedObjectID], completion completionHandler: (Int, ErrorType?) -> Void) {
+    internal func executeBatchDeleteRequest(entityDescription entityDescription: NSEntityDescription, objectIDs: [NSManagedObjectID], completion completionHandler: (Int, ErrorType?) -> Void) {
         let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: objectIDs)
         batchDeleteRequest.resultType = .ResultTypeCount
         
@@ -121,11 +121,11 @@ extension NSManagedObjectContext {
                         completionHandler(count, nil)
                     }
                     else {
-                        throw AlecrimCoreDataError.UnexpectedValue(value: batchDeleteResult.result)
+                        throw AlecrimCoreDataError.unexpectedValue(batchDeleteResult.result)
                     }
                 }
                 else {
-                    throw AlecrimCoreDataError.UnexpectedValue(value: persistentStoreResult)
+                    throw AlecrimCoreDataError.unexpectedValue(persistentStoreResult)
                 }
             }
             catch let error {
