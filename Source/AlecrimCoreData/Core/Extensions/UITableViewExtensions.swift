@@ -55,11 +55,6 @@ extension FetchRequestController {
                     updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex}
                 }
             }
-            .didUpdateSection { sectionInfo, sectionIndex in
-                if !reloadData {
-                    updatedSectionIndexes.addIndex(sectionIndex + sectionOffset)
-                }
-            }
             .didInsertEntity { entity, newIndexPath in
                 if !reloadData {
                     let newIndexPath = sectionOffset > 0 ? NSIndexPath(forRow: newIndexPath.item, inSection: newIndexPath.section + sectionOffset) : newIndexPath
