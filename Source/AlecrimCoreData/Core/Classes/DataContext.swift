@@ -71,8 +71,8 @@ public class DataContext: ChildDataContext {
     /// - parameter parentDataContext: The parent or relative context.
     ///
     /// - returns: An initialized background context.
-    public init(parentDataContext: DataContext) {
-        super.init(concurrencyType: .PrivateQueueConcurrencyType, rootSavingDataContext: parentDataContext.rootSavingDataContext)
+    public init(parentDataContext: DataContext, concurrencyType: NSManagedObjectContextConcurrencyType = .PrivateQueueConcurrencyType) {
+        super.init(concurrencyType: concurrencyType, rootSavingDataContext: parentDataContext.rootSavingDataContext)
         
         if #available(OSXApplicationExtension 10.10, OSX 10.10, *) {
             self.name = "Background Context"
