@@ -18,7 +18,6 @@ internal final class FetchRequestControllerDelegate<T: NSManagedObject>: NSObjec
     
     private lazy var didInsertSectionClosures = Array<(FetchRequestControllerSection<T>, Int) -> Void>()
     private lazy var didDeleteSectionClosures = Array<(FetchRequestControllerSection<T>, Int) -> Void>()
-    private lazy var didUpdateSectionClosures = Array<(FetchRequestControllerSection<T>, Int) -> Void>()
     
     private lazy var didInsertEntityClosures = Array<(T, NSIndexPath) -> Void>()
     private lazy var didDeleteEntityClosures = Array<(T, NSIndexPath) -> Void>()
@@ -62,11 +61,6 @@ internal final class FetchRequestControllerDelegate<T: NSManagedObject>: NSObjec
             
         case .Delete:
             for closure in self.didDeleteSectionClosures {
-                closure(FetchRequestControllerSection(underlyingSectionInfo: sectionInfo), sectionIndex)
-            }
-            
-        case .Update:
-            for closure in self.didUpdateSectionClosures {
                 closure(FetchRequestControllerSection(underlyingSectionInfo: sectionInfo), sectionIndex)
             }
             
@@ -144,11 +138,6 @@ extension FetchRequestController {
     
     public func didDeleteSection(closure: (FetchRequestControllerSection<T>, Int) -> Void) -> Self {
         self.delegate.didDeleteSectionClosures.append(closure)
-        return self
-    }
-    
-    public func didUpdateSection(closure: (FetchRequestControllerSection<T>, Int) -> Void) -> Self {
-        self.delegate.didUpdateSectionClosures.append(closure)
         return self
     }
     
