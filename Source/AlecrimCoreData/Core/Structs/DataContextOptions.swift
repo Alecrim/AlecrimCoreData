@@ -154,11 +154,11 @@ extension NSBundle {
         }
         
         let url = applicationSupportURL
-            .URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
-            .URLByAppendingPathComponent("CoreData", isDirectory: true)
+            .URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)!
+            .URLByAppendingPathComponent("CoreData", isDirectory: true)!
             .URLByAppendingPathComponent((managedObjectModelName as NSString).stringByAppendingPathExtension("sqlite")!, isDirectory: false)
         
-        return url
+        return url!
     }
     
     private func persistentStoreURL(for managedObjectModelName: String, bundleIdentifier: String, applicationGroupIdentifier: String) throws -> NSURL {
@@ -167,13 +167,13 @@ extension NSBundle {
         }
         
         let url = containerURL
-            .URLByAppendingPathComponent("Library", isDirectory: true)
-            .URLByAppendingPathComponent("Application Support", isDirectory: true)
-            .URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)
-            .URLByAppendingPathComponent("CoreData", isDirectory: true)
+            .URLByAppendingPathComponent("Library", isDirectory: true)!
+            .URLByAppendingPathComponent("Application Support", isDirectory: true)!
+            .URLByAppendingPathComponent(bundleIdentifier, isDirectory: true)!
+            .URLByAppendingPathComponent("CoreData", isDirectory: true)!
             .URLByAppendingPathComponent((managedObjectModelName as NSString).stringByAppendingPathExtension("sqlite")!, isDirectory: false)
         
-        return url
+        return url!
     }
     
 }
