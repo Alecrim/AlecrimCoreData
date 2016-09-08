@@ -295,8 +295,8 @@ Since **AlecrimCoreData** version 4 the `DataContext` is an `NSManagedObjectCont
 
 ### Minimum Requirements
 
-- Swift 2
-- Xcode 7.0
+- Swift 2.3
+- Xcode 8
 - OS X 10.9 / iOS 8.0 / watchOS 2.0
 
 ### Installation
