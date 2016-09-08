@@ -125,7 +125,7 @@ extension ViewController {
                 try modelCodeGenerator.generate()
                 
                 alert = NSAlert()
-                alert.alertStyle = NSAlertStyle.InformationalAlertStyle
+                alert.alertStyle = NSAlertStyle.Informational
                 alert.messageText = "Success"
                 alert.informativeText = "The source code files were generated successfully."
             }
@@ -134,7 +134,7 @@ extension ViewController {
             }
             catch {
                 alert = NSAlert()
-                alert.alertStyle = NSAlertStyle.WarningAlertStyle
+                alert.alertStyle = NSAlertStyle.Warning
                 alert.messageText = "Error"
                 alert.informativeText = "An unespecified error occurred."
             }

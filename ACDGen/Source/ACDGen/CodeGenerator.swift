@@ -18,7 +18,7 @@ extension CodeGenerator {
     
     public func saveSourceCodeFileWithName(name: String, contents: String, generated: Bool) throws {
         let generatedString = (generated ? ".generated" : "")
-        let url = self.parameters.targetFolderURL.URLByAppendingPathComponent("\(name)\(generatedString).swift", isDirectory: false)
+        let url = self.parameters.targetFolderURL.URLByAppendingPathComponent("\(name)\(generatedString).swift", isDirectory: false)!
         
         let fileManager = NSFileManager.defaultManager()
         
