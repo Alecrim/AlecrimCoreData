@@ -61,7 +61,7 @@ extension TableProtocol {
             let entity = self.createEntity()
             
             let attributeName = predicate.leftExpression.keyPath
-            let value: AnyObject = predicate.rightExpression.constantValue
+            let value: AnyObject = predicate.rightExpression.constantValue!
             
             (entity as NSManagedObject).setValue(value, forKey: attributeName)
             

@@ -25,18 +25,18 @@ public protocol CoreDataQueryable: GenericQueryable {
 extension CoreDataQueryable {
     
     public func count() -> Int {
-        var error: NSError? = nil
-        let c = self.dataContext.countForFetchRequest(self.toFetchRequest(), error: &error) // where is the `throws`?
-        
-        if let error = error {
+        do {
+            let c = try self.dataContext.countForFetchRequest(self.toFetchRequest())
+            
+            if c != NSNotFound {
+                return c
+            }
+            else {
+                return 0
+            }
+        }
+        catch let error {
             AlecrimCoreDataError.handleError(error)
-        }
-        
-        if c != NSNotFound {
-            return c
-        }
-        else {
-            return 0
         }
     }
     
