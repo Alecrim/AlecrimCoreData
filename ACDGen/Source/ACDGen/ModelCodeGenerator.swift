@@ -55,15 +55,15 @@ public final class ModelCodeGenerator: CodeGenerator {
 extension ModelCodeGenerator {
 
     private func createTemporaryManagedObjectModel() throws -> NSManagedObjectModel {
-        let toolPath = "/Applications/Xcode.app/Contents/Developer/usr/bin/momc"
-        guard NSFileManager.defaultManager().fileExistsAtPath(toolPath) else { throw CodeGeneratorErrors.MOMCToolNotFound }
+        let launchPath = "/Applications/Xcode.app/Contents/Developer/usr/bin/momc"
+        guard NSFileManager.defaultManager().fileExistsAtPath(launchPath) else { throw CodeGeneratorErrors.MOMCToolNotFound }
         
-        var options = ""
+        var arguments = [String]()
         let supportedOptions = ["MOMC_NO_WARNINGS", "MOMC_NO_INVERSE_RELATIONSHIP_WARNINGS", "MOMC_SUPPRESS_INVERSE_TRANSIENT_ERROR"]
         
         for supportedOption in supportedOptions {
             if (NSProcessInfo.processInfo().environment as NSDictionary).objectForKey(supportedOption) != nil {
-                options += " -\(supportedOption)"
+                arguments.append("-\(supportedOption)")
             }
         }
         
@@ -73,8 +73,12 @@ extension ModelCodeGenerator {
         guard let tempFileURL = NSURL(string: tempFilePath) else { throw CodeGeneratorErrors.TemporaryManagedObjectModelCreationFailed }
         self.tempFileURLs.append(tempFileURL)
         
-        let toolCall = "\(toolPath) \(options) \"\(self.parameters.dataModelFileURL.path!)\" \"\(tempFilePath)\""
-        /* let result = */ system(toolCall) // ignore system() result (momc doesn't return any relevent error codes)
+        arguments.append(self.parameters.dataModelFileURL.path!)
+        arguments.append(tempFilePath)
+        
+        let task = NSTask.launchedTaskWithLaunchPath(launchPath, arguments: arguments)
+        task.waitUntilExit()
+        guard task.terminationStatus == 0 else { throw CodeGeneratorErrors.MOMCToolCallFailed }
         
         guard let mom = NSManagedObjectModel(contentsOfURL: tempFileURL) else { throw CodeGeneratorErrors.MOMCToolCallFailed }
         
