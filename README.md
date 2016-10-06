@@ -1,10 +1,11 @@
 ![AlecrimCoreData](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/master/AlecrimCoreData.png)
 
-[![Language: Swift](https://img.shields.io/badge/lang-Swift-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Language: Swift](https://img.shields.io/badge/lang-Swift 2.3-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Platform](https://img.shields.io/cocoapods/p/AlecrimCoreData.svg?style=flat)](http://cocoadocs.org/docsets/AlecrimCoreData)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/develop/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/v/AlecrimCoreData.svg?style=flat)](http://cocoapods.org)
-[![Forks](https://img.shields.io/github/forks/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/network)
-[![Stars](https://img.shields.io/github/stars/Alecrim/AlecrimCoreData.svg?style=flat)](https://github.com/Alecrim/AlecrimCoreData/stargazers)
+[![Apps](https://img.shields.io/cocoapods/at/AlecrimCoreData.svg?style=flat)](http://cocoadocs.org/docsets/AlecrimCoreData)
+[![Twitter](https://img.shields.io/badge/twitter-@vmartinelli-blue.svg?style=flat)](https://twitter.com/vmartinelli)
 
 A powerful and simple Core Data wrapper framework written in Swift.
 
@@ -297,7 +298,7 @@ Since **AlecrimCoreData** version 4 the `DataContext` is an `NSManagedObjectCont
 
 - Swift 2.3
 - Xcode 8
-- OS X 10.9 / iOS 8.0 / watchOS 2.0
+- OS X 10.10 / iOS 8.0 / tvOS 9.0 / watchOS 2.0
 
 ### Installation
 
@@ -314,11 +315,12 @@ $ gem install cocoapods
 To integrate AlecrimCoreData into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
-source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, '8.0'
+platform :ios, '9.0'
 use_frameworks!
 
-pod 'AlecrimCoreData'
+target '<Your Target Name>' do
+    pod 'AlecrimCoreData', '4.2.5'
+end
 ```
 
 Then, run the following command:

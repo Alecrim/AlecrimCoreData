@@ -44,13 +44,7 @@ extension FetchRequestController {
             }
             .willChangeContent {
                 if !reloadData {
-                    insertedSectionIndexes.removeAllIndexes()
-                    deletedSectionIndexes.removeAllIndexes()
-                    updatedSectionIndexes.removeAllIndexes()
-                    
-                    insertedItemIndexPaths.removeAll(keepCapacity: false)
-                    deletedItemIndexPaths.removeAll(keepCapacity: false)
-                    updatedItemIndexPaths.removeAll(keepCapacity: false)
+                    reset()
                 }
             }
             .didInsertSection { sectionInfo, sectionIndex in

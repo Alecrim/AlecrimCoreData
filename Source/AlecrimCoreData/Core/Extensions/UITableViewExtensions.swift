@@ -44,11 +44,7 @@ extension FetchRequestController {
             }
             .willChangeContent {
                 if !reloadData {
-                    //
                     reset()
-                    
-                    //
-                    tableView.beginUpdates()
                 }
             }
             .didInsertSection { sectionInfo, sectionIndex in
@@ -113,17 +109,21 @@ extension FetchRequestController {
             }
             .didChangeContent { [weak tableView] in
                 //
+                defer { reset() }
+
+                
+                //
                 guard let tableView = tableView else {
-                    reset()
                     return
                 }
 
                 //
                 if reloadData {
                     tableView.reloadData()
-                    reset()
                 }
                 else {
+                    tableView.beginUpdates()
+                    
                     if deletedSectionIndexes.count > 0 {
                         tableView.deleteSections(deletedSectionIndexes, withRowAnimation: rowAnimation)
                     }
@@ -157,8 +157,6 @@ extension FetchRequestController {
                             }
                         }
                     }
-                    
-                    reset()
                 }
         }
         
