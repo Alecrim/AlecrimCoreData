@@ -46,9 +46,6 @@ extension FetchRequestController {
                 if !reloadData {
                     //
                     reset()
-                    
-                    //
-                    tableView.beginUpdates()
                 }
             }
             .didInsertSection { sectionInfo, sectionIndex in
@@ -124,6 +121,7 @@ extension FetchRequestController {
                     reset()
                 }
                 else {
+                    tableView.beginUpdates()
                     if deletedSectionIndexes.count > 0 {
                         tableView.deleteSections(deletedSectionIndexes, withRowAnimation: rowAnimation)
                     }
