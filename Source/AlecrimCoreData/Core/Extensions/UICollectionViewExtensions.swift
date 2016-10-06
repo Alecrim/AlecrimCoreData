@@ -24,6 +24,20 @@ extension FetchRequestController {
         
         var reloadData = false
         
+        //
+        func reset() {
+            insertedSectionIndexes.removeAllIndexes()
+            deletedSectionIndexes.removeAllIndexes()
+            updatedSectionIndexes.removeAllIndexes()
+            
+            insertedItemIndexPaths.removeAll(keepCapacity: false)
+            deletedItemIndexPaths.removeAll(keepCapacity: false)
+            updatedItemIndexPaths.removeAll(keepCapacity: false)
+            
+            reloadData = false
+        }
+
+        
         self
             .needsReloadData {
                 reloadData = true
@@ -99,19 +113,17 @@ extension FetchRequestController {
                     }
                 }
             }
-            .didChangeContent { [unowned collectionView] in
+            .didChangeContent { [weak collectionView] in
+                //
+                guard let collectionView = collectionView else {
+                    reset()
+                    return
+                }
+                
+                //
                 if reloadData {
                     collectionView.reloadData()
-                    
-                    insertedSectionIndexes.removeAllIndexes()
-                    deletedSectionIndexes.removeAllIndexes()
-                    updatedSectionIndexes.removeAllIndexes()
-                    
-                    insertedItemIndexPaths.removeAll(keepCapacity: false)
-                    deletedItemIndexPaths.removeAll(keepCapacity: false)
-                    updatedItemIndexPaths.removeAll(keepCapacity: false)
-                    
-                    reloadData = false
+                    reset()
                 }
                 else {
                     collectionView.performBatchUpdates({
@@ -149,15 +161,7 @@ extension FetchRequestController {
                                     }
                                 }
                                 
-                                insertedSectionIndexes.removeAllIndexes()
-                                deletedSectionIndexes.removeAllIndexes()
-                                updatedSectionIndexes.removeAllIndexes()
-                                
-                                insertedItemIndexPaths.removeAll(keepCapacity: false)
-                                deletedItemIndexPaths.removeAll(keepCapacity: false)
-                                updatedItemIndexPaths.removeAll(keepCapacity: false)
-                                
-                                reloadData = false
+                                reset()
                             }
                     })
                 }
