@@ -1,6 +1,6 @@
 ![AlecrimCoreData](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/master/AlecrimCoreData.png)
 
-[![Language: Swift](https://img.shields.io/badge/lang-Swift 2.3-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Language: Swift](https://img.shields.io/badge/lang-Swift 3-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Platform](https://img.shields.io/cocoapods/p/AlecrimCoreData.svg?style=flat)](http://cocoadocs.org/docsets/AlecrimCoreData)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/develop/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/v/AlecrimCoreData.svg?style=flat)](http://cocoapods.org)
@@ -296,9 +296,9 @@ Since **AlecrimCoreData** version 4 the `DataContext` is an `NSManagedObjectCont
 
 ### Minimum Requirements
 
-- Swift 2.3
-- Xcode 8
-- OS X 10.10 / iOS 8.0 / tvOS 9.0 / watchOS 2.0
+- Swift 2
+- Xcode 7.0
+- OS X 10.9 / iOS 8.0 / watchOS 2.0
 
 ### Installation
 
@@ -315,12 +315,11 @@ $ gem install cocoapods
 To integrate AlecrimCoreData into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
 ```ruby
-platform :ios, '9.0'
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.0'
 use_frameworks!
 
-target '<Your Target Name>' do
-    pod 'AlecrimCoreData', '4.2.5'
-end
+pod 'AlecrimCoreData', '~> 4.0'
 ```
 
 Then, run the following command:

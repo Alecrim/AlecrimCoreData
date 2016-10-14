@@ -11,60 +11,62 @@ import CoreData
 
 internal final class FetchRequestControllerDelegate<T: NSManagedObject>: NSObject, NSFetchedResultsControllerDelegate {
     
-    private var needsReloadDataClosure: (() -> Void)?
+    fileprivate var needsReloadDataClosure: (() -> Void)?
     
-    private lazy var willChangeContentClosures = Array<() -> Void>()
-    private lazy var didChangeContentClosures = Array<() -> Void>()
+    fileprivate lazy var willChangeContentClosures = Array<() -> Void>()
+    fileprivate lazy var didChangeContentClosures = Array<() -> Void>()
     
-    private lazy var didInsertSectionClosures = Array<(FetchRequestControllerSection<T>, Int) -> Void>()
-    private lazy var didDeleteSectionClosures = Array<(FetchRequestControllerSection<T>, Int) -> Void>()
+    fileprivate lazy var didInsertSectionClosures = Array<(FetchRequestControllerSection<T>, Int) -> Void>()
+    fileprivate lazy var didDeleteSectionClosures = Array<(FetchRequestControllerSection<T>, Int) -> Void>()
+    fileprivate lazy var didUpdateSectionClosures = Array<(FetchRequestControllerSection<T>, Int) -> Void>()
     
-    private lazy var didInsertEntityClosures = Array<(T, NSIndexPath) -> Void>()
-    private lazy var didDeleteEntityClosures = Array<(T, NSIndexPath) -> Void>()
-    private lazy var didUpdateEntityClosures = Array<(T, NSIndexPath) -> Void>()
-    private lazy var didMoveEntityClosures = Array<(T, NSIndexPath, NSIndexPath) -> Void>()
+    fileprivate lazy var didInsertObjectClosures = Array<(T, IndexPath) -> Void>()
+    fileprivate lazy var didDeleteObjectClosures = Array<(T, IndexPath) -> Void>()
+    fileprivate lazy var didUpdateObjectClosures = Array<(T, IndexPath) -> Void>()
+    fileprivate lazy var didMoveObjectClosures = Array<(T, IndexPath, IndexPath) -> Void>()
     
-    private var sectionIndexTitleClosure: ((String) -> String?)?
+    fileprivate var sectionIndexTitleClosure: ((String) -> String?)?
 
     // MARK: - NSFetchedResultsControllerDelegate methods
     
-    @objc func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    @objc func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
-        case NSFetchedResultsChangeType(rawValue: 0)!:
-            // iOS 8 bug - Do nothing if we get an invalid change type.
-            break
-            
-        case .Insert:
-            for closure in self.didInsertEntityClosures {
+        case .insert:
+            for closure in self.didInsertObjectClosures {
                 closure(anObject as! T, newIndexPath!)
             }
             
-        case .Delete:
-            for closure in self.didDeleteEntityClosures {
+        case .delete:
+            for closure in self.didDeleteObjectClosures {
                 closure(anObject as! T, indexPath!)
             }
             
-        case .Update:
-            for closure in self.didUpdateEntityClosures {
+        case .update:
+            for closure in self.didUpdateObjectClosures {
                 closure(anObject as! T, indexPath!)
             }
             
-        case .Move:
-            for closure in self.didMoveEntityClosures {
+        case .move:
+            for closure in self.didMoveObjectClosures {
                 closure(anObject as! T, indexPath!, newIndexPath!)
             }
         }
     }
     
-    @objc func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    @objc func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
-        case .Insert:
+        case .insert:
             for closure in self.didInsertSectionClosures {
                 closure(FetchRequestControllerSection(underlyingSectionInfo: sectionInfo), sectionIndex)
             }
             
-        case .Delete:
+        case .delete:
             for closure in self.didDeleteSectionClosures {
+                closure(FetchRequestControllerSection(underlyingSectionInfo: sectionInfo), sectionIndex)
+            }
+            
+        case .update:
+            for closure in self.didUpdateSectionClosures {
                 closure(FetchRequestControllerSection(underlyingSectionInfo: sectionInfo), sectionIndex)
             }
             
@@ -73,19 +75,19 @@ internal final class FetchRequestControllerDelegate<T: NSManagedObject>: NSObjec
         }
     }
     
-    @objc func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    @objc func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         for closure in self.willChangeContentClosures {
             closure()
         }
     }
     
-    @objc func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    @objc func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         for closure in self.didChangeContentClosures {
             closure()
         }
     }
     
-    @objc func controller(controller: NSFetchedResultsController, sectionIndexTitleForSectionName sectionName: String) -> String? {
+    @objc func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String) -> String? {
         return self.sectionIndexTitleClosure?(sectionName)
     }
 }
@@ -102,7 +104,7 @@ extension FetchRequestController {
         }
         
         if let cacheName = self.cacheName {
-            FetchRequestController.deleteCache(with: cacheName)
+            FetchRequestController.deleteCache(withName: cacheName)
         }
         
         try self.performFetch()
@@ -116,7 +118,8 @@ extension FetchRequestController {
 
 extension FetchRequestController {
  
-    internal func needsReloadData(closure: () -> Void) -> Self {
+    @discardableResult
+    internal func needsReloadData(closure: @escaping () -> Void) -> Self {
         self.delegate.needsReloadDataClosure = closure
         return self
     }
@@ -125,47 +128,62 @@ extension FetchRequestController {
 
 extension FetchRequestController {
     
-    public func willChangeContent(closure: () -> Void) -> Self {
+    @discardableResult
+    public func willChangeContent(closure: @escaping () -> Void) -> Self {
         self.delegate.willChangeContentClosures.append(closure)
         return self
     }
     
-    public func didChangeContent(closure: () -> Void) -> Self {
+    @discardableResult
+    public func didChangeContent(closure: @escaping () -> Void) -> Self {
         self.delegate.didChangeContentClosures.append(closure)
         return self
     }
     
-    public func didInsertSection(closure: (FetchRequestControllerSection<T>, Int) -> Void) -> Self {
+    @discardableResult
+    public func didInsertSection(closure: @escaping (FetchRequestControllerSection<T>, Int) -> Void) -> Self {
         self.delegate.didInsertSectionClosures.append(closure)
         return self
     }
     
-    public func didDeleteSection(closure: (FetchRequestControllerSection<T>, Int) -> Void) -> Self {
+    @discardableResult
+    public func didDeleteSection(closure: @escaping (FetchRequestControllerSection<T>, Int) -> Void) -> Self {
         self.delegate.didDeleteSectionClosures.append(closure)
         return self
     }
     
-    public func didInsertEntity(closure: (T, NSIndexPath) -> Void) -> Self {
-        self.delegate.didInsertEntityClosures.append(closure)
+    @discardableResult
+    public func didUpdateSection(closure: @escaping (FetchRequestControllerSection<T>, Int) -> Void) -> Self {
+        self.delegate.didUpdateSectionClosures.append(closure)
         return self
     }
     
-    public func didDeleteEntity(closure: (T, NSIndexPath) -> Void) -> Self {
-        self.delegate.didDeleteEntityClosures.append(closure)
+    @discardableResult
+    public func didInsertObject(closure: @escaping (T, IndexPath) -> Void) -> Self {
+        self.delegate.didInsertObjectClosures.append(closure)
         return self
     }
     
-    public func didUpdateEntity(closure: (T, NSIndexPath) -> Void) -> Self {
-        self.delegate.didUpdateEntityClosures.append(closure)
+    @discardableResult
+    public func didDeleteObject(closure: @escaping (T, IndexPath) -> Void) -> Self {
+        self.delegate.didDeleteObjectClosures.append(closure)
         return self
     }
     
-    public func didMoveEntity(closure: (T, NSIndexPath, NSIndexPath) -> Void) -> Self {
-        self.delegate.didMoveEntityClosures.append(closure)
+    @discardableResult
+    public func didUpdateObject(closure: @escaping (T, IndexPath) -> Void) -> Self {
+        self.delegate.didUpdateObjectClosures.append(closure)
         return self
     }
     
-    public func sectionIndexTitle(closure: (String) -> String?) -> Self {
+    @discardableResult
+    public func didMoveObject(closure: @escaping (T, IndexPath, IndexPath) -> Void) -> Self {
+        self.delegate.didMoveObjectClosures.append(closure)
+        return self
+    }
+    
+    @discardableResult
+    public func sectionIndexTitle(closure: @escaping (String) -> String?) -> Self {
         self.delegate.sectionIndexTitleClosure = closure
         return self
     }

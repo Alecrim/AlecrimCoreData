@@ -13,11 +13,11 @@ import Foundation
 extension CoreDataQueryable {
 
     public func toArrayController() -> NSArrayController {
-        let fetchRequest = self.toFetchRequest()
+        let fetchRequest: NSFetchRequest<Element> = self.toFetchRequest()
         
         let arrayController = NSArrayController(content: nil)
         
-        arrayController.managedObjectContext = self.dataContext
+        arrayController.managedObjectContext = self.context
         arrayController.entityName = fetchRequest.entityName
         
         arrayController.fetchPredicate = fetchRequest.predicate

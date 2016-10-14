@@ -13,7 +13,7 @@ import CoreData
 public final class FetchRequestController<T: NSManagedObject> {
     
     /// The fetch request used to do the fetching.
-    public let fetchRequest: NSFetchRequest
+    public let fetchRequest: NSFetchRequest<T>
     
     /// The managed object context used to fetch objects.
     ///
@@ -27,7 +27,7 @@ public final class FetchRequestController<T: NSManagedObject> {
     public let cacheName: String?
     
     //
-    internal lazy var delegate = FetchRequestControllerDelegate<T>()
+    internal private(set) lazy var delegate = FetchRequestControllerDelegate<T>()
     
     deinit {
         self.underlyingFetchedResultsController.delegate = nil
@@ -36,7 +36,7 @@ public final class FetchRequestController<T: NSManagedObject> {
     /// The underlying NSFetchedResultsController managed by this controller.
     ///
     /// - discussion: DO NOT modify properties of the underlying fetched results controller directly, it is for integration with other libraries which need to fetch data using a FRC.
-    public private(set) lazy var underlyingFetchedResultsController: NSFetchedResultsController = {
+    public private(set) lazy var underlyingFetchedResultsController: NSFetchedResultsController<T> = {
         let frc = NSFetchedResultsController(fetchRequest: self.fetchRequest, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: self.sectionNameKeyPath, cacheName: self.cacheName)
         frc.delegate = self.delegate
         
@@ -44,8 +44,8 @@ public final class FetchRequestController<T: NSManagedObject> {
     }()
 
     //
-    private let initialPredicate: NSPredicate?
-    private let initialSortDescriptors: [NSSortDescriptor]?
+    fileprivate let initialPredicate: NSPredicate?
+    fileprivate let initialSortDescriptors: [NSSortDescriptor]?
     
     /// Returns a fetch request controller initialized using the given arguments.
     ///
@@ -58,7 +58,7 @@ public final class FetchRequestController<T: NSManagedObject> {
     ///
     /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
     ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
-    private init(fetchRequest: NSFetchRequest, managedObjectContext: NSManagedObjectContext, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
+    fileprivate init(fetchRequest: NSFetchRequest<T>, managedObjectContext: NSManagedObjectContext, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
         //
         self.fetchRequest = fetchRequest
         self.managedObjectContext = managedObjectContext
@@ -80,8 +80,8 @@ public final class FetchRequestController<T: NSManagedObject> {
     ///
     /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
     ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
-    private convenience init<T: TableProtocol>(table: T, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
-        self.init(fetchRequest: table.toFetchRequest(), managedObjectContext: table.dataContext, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+    fileprivate convenience init<T: TableProtocol>(table: T, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
+        self.init(fetchRequest: table.toFetchRequest(), managedObjectContext: table.context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
     
 }
@@ -106,8 +106,8 @@ extension FetchRequestController {
     /// - parameter name: The name of the cache file to delete.
     ///
     /// If *name* is `nil`, deletes all cache files.
-    public class func deleteCache(with name: String?) {
-        NSFetchedResultsController.deleteCacheWithName(name)
+    public class func deleteCache(withName name: String?) {
+        NSFetchedResultsController<T>.deleteCache(withName: name)
     }
 
 }
@@ -117,34 +117,26 @@ extension FetchRequestController {
 extension FetchRequestController {
 
     /// The results of the fetch.
-    public var fetchedEntities: [T] {
-        guard let result = self.underlyingFetchedResultsController.fetchedObjects as? [T] else {
-            fatalError("performFetch: hasn't been called.")
-        }
-        
-        return result
+    public var fetchedObjects: [T]? {
+        return self.underlyingFetchedResultsController.fetchedObjects
     }
     
-    /// Returns the entity at the given index path in the fetch results.
+    /// Returns the object at the given index path in the fetch results.
     ///
     /// - parameter indexPath: An index path in the fetch results.
     ///
-    /// - returns: The entity at a given index path in the fetch results.
-    public func entity(at indexPath: NSIndexPath) -> T {
-        guard let result = self.underlyingFetchedResultsController.objectAtIndexPath(indexPath) as? T else {
-            fatalError("performFetch: hasn't been called.")
-        }
-        
-        return result
+    /// - returns: The object at a given index path in the fetch results.
+    public func object(at indexPath: IndexPath) -> T {
+        return self.underlyingFetchedResultsController.object(at: indexPath)
     }
 
-    /// Returns the index path of a given entity.
+    /// Returns the index path of a given object.
     ///
-    /// - parameter entity: An entity in the receiver’s fetch results.
+    /// - parameter object: An object in the receiver’s fetch results.
     ///
-    /// - returns: The index path of *entity* in the receiver’s fetch results, or `nil` if *entity* could not be found.
-    public func indexPath(for entity: T) -> NSIndexPath? {
-        return self.underlyingFetchedResultsController.indexPathForObject(entity)
+    /// - returns: The index path of *object* in the receiver’s fetch results, or `nil` if *object* could not be found.
+    public func indexPath(for object: T) -> IndexPath? {
+        return self.underlyingFetchedResultsController.indexPath(forObject: object)
     }
 
 }
@@ -155,16 +147,8 @@ extension FetchRequestController {
         return self.sections.count
     }
     
-    public func numberOfEntities(inSection section: Int) -> Int {
-        return self.sections[section].numberOfEntities
-    }
-    
-    /// The total number of fetched entities.
-    public func numberOfFetchedEntities() -> Int {
-        var count = 0
-        self.sections.forEach { count += $0.numberOfEntities }
-        
-        return count
+    public func numberOfObjects(inSection section: Int) -> Int {
+        return self.sections[section].numberOfObjects
     }
     
 }
@@ -188,8 +172,8 @@ extension FetchRequestController {
     /// - parameter sectionIndex: The index of a section.
     ///
     /// - returns: The section number for the given section title and index in the section index.
-    public func sectionForSectionIndex(title title: String, at sectionIndex: Int) -> Int {
-        return self.underlyingFetchedResultsController.sectionForSectionIndexTitle(title, atIndex: sectionIndex)
+    public func section(forSectionIndexTitle title: String, at sectionIndex: Int) -> Int {
+        return self.underlyingFetchedResultsController.section(forSectionIndexTitle: title, at: sectionIndex)
     }
     
 }
@@ -203,8 +187,8 @@ extension FetchRequestController {
     /// - parameter sectionName: The name of a section.
     ///
     /// - returns: The section index entry corresponding to the section with name *sectionName*.
-    public func sectionIndexTitle(for sectionName: String) -> String? {
-        return self.underlyingFetchedResultsController.sectionIndexTitleForSectionName(sectionName)
+    public func sectionIndexTitle(forSectionName sectionName: String) -> String? {
+        return self.underlyingFetchedResultsController.sectionIndexTitle(forSectionName: sectionName)
     }
 
     /// The array of section index titles.
@@ -237,70 +221,46 @@ extension FetchRequestController {
         try self.refresh()
     }
     
-    /// Resets the predicate of the fetch request to the predicate that the `FetchRequestController` was initialized with.
-    ///
-    /// - warning: The fetch request is NOT executed with the updated filters until a call to `performFetch:` method is made.
-    public func resetPredicate() {
-        self.assignPredicate(self.initialPredicate, keepOriginalPredicate: false)
+    public func resetPredicate() throws {
+        try self.refresh(using: self.initialPredicate, keepOriginalPredicate: false)
     }
     
-    /// Resets the sort descriptors of the fetch request to those that the `FetchRequestController` was initialized with.
-    ///
-    /// - warning: The fetch request is NOT executed with the updated sort descriptors until a call to `performFetch:` method is made.
-    public func resetSortDescriptors() {
-        self.assignSortDescriptors(self.initialSortDescriptors, keepOriginalSortDescriptors: false)
+    public func resetSortDescriptors() throws {
+        try self.refresh(using: self.initialSortDescriptors, keepOriginalSortDescriptors: false)
     }
     
-    /// Resets the predicate and sort descriptors of the fetch request to those that the `FetchRequestController` was initialized with.
-    ///
-    /// - warning:  The fetch request is NOT executed with the updated filters and sort descriptors until a call to
-    ///             `performFetch:` method is made.
-    public func resetPredicateAndSortDescriptors() {
-        resetPredicate()
-        resetSortDescriptors()
+    public func resetPredicateAndSortDescriptors() throws {
+        try self.refresh(using: self.initialPredicate, sortDescriptors: self.initialSortDescriptors, keepOriginalPredicate: false, keepOriginalSortDescriptors: false)
     }
     
 }
 
 extension FetchRequestController {
     
-    /// Adds a filter using the given predicate closure to the fetch request.
-    ///
-    /// - parameter predicateClosure:   The closure returning an `NSPredicate` to be joined the the current predicate as
-    ///                                 an `AND` clause.
-    ///
-    /// - warning: The fetch request is NOT executed with the new filters until a call to `performFetch:` method is made.
-    public func filter(@noescape predicateClosure: (T.Type) -> NSPredicate) {
+    public func filter(_ predicateClosure: (T.Type) -> NSPredicate) throws {
         let predicate = predicateClosure(T.self)
-        self.assignPredicate(predicate, keepOriginalPredicate: true)
+        try self.refresh(using: predicate, keepOriginalPredicate: true)
     }
     
-    /// Resets the predicate of the fetch request to the predicate that the `FetchRequestController` was initialized with.
-    ///
-    /// - warning: The fetch request is NOT executed with the updated filters until a call to `performFetch:` method is made.
-    public func resetFilter() {
-        self.resetPredicate()
+    public func resetFilter() throws {
+        try self.resetPredicate()
     }
     
-    /// Resets the predicate and sort descriptors of the fetch request to those that the `FetchRequestController` was initialized with.
-    ///
-    /// - warning:  The fetch request is NOT executed with the updated filters and sort descriptors until a call to
-    ///             `performFetch:` method is made.
-    public func reset() {
-        self.resetPredicateAndSortDescriptors()
+    public func reset() throws {
+        try self.resetPredicateAndSortDescriptors()
     }
     
 }
 
 extension FetchRequestController {
  
-    private func assignPredicate(predicate: NSPredicate?, keepOriginalPredicate: Bool) {
+    fileprivate func assignPredicate(_ predicate: NSPredicate?, keepOriginalPredicate: Bool) {
         let newPredicate: NSPredicate?
         
         if keepOriginalPredicate {
             if let initialPredicate = self.initialPredicate {
                 if let predicate = predicate {
-                    newPredicate = NSCompoundPredicate(type: .AndPredicateType, subpredicates: [initialPredicate, predicate])
+                    newPredicate = NSCompoundPredicate(type: .and, subpredicates: [initialPredicate, predicate])
                 }
                 else {
                     newPredicate = initialPredicate
@@ -317,7 +277,7 @@ extension FetchRequestController {
         self.fetchRequest.predicate = newPredicate
     }
     
-    private func assignSortDescriptors(sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool) {
+    fileprivate func assignSortDescriptors(_ sortDescriptors: [NSSortDescriptor]?, keepOriginalSortDescriptors: Bool) {
         let newSortDescriptors: [NSSortDescriptor]?
         
         if keepOriginalSortDescriptors {
@@ -359,10 +319,10 @@ public struct FetchRequestControllerSection<T: NSManagedObject> {
     public var indexTitle: String? { return self.underlyingSectionInfo.indexTitle }
     
     /// The number of entities (rows) in the section.
-    public var numberOfEntities: Int { return self.underlyingSectionInfo.numberOfObjects }
+    public var numberOfObjects: Int { return self.underlyingSectionInfo.numberOfObjects }
     
     /// The array of entities in the section.
-    public var entities: [T] {
+    public var objects: [T] {
         guard let result = self.underlyingSectionInfo.objects as? [T] else {
             fatalError("performFetch: hasn't been called.")
         }
@@ -378,7 +338,7 @@ public struct FetchRequestControllerSection<T: NSManagedObject> {
 
 // MARK: - TableProtocol extensions
 
-extension TableProtocol {
+extension TableProtocol where Self.Element: NSManagedObject {
     
     /// Returns a fetch request controller initialized using the given arguments.
     ///
@@ -389,7 +349,7 @@ extension TableProtocol {
     ///
     /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
     ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
-    public func toFetchRequestController(sectionNameKeyPath sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchRequestController<Self.Item> {
+    public func toFetchRequestController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchRequestController<Self.Element> {
         return FetchRequestController(table: self, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
     
@@ -401,8 +361,8 @@ extension TableProtocol {
     ///
     /// - warning: Unlike the previous versions of **AlecrimCoreData** the fetch request is NOT executed until
     ///            a call to `performFetch:` method is made. This is the same behavior found in `NSFetchedResultsController`.
-    public func toFetchRequestController<A>(@noescape sectionAttributeClosure: (Self.Item.Type) -> Attribute<A>) -> FetchRequestController<Self.Item> {
-        return FetchRequestController(table: self, sectionNameKeyPath: sectionAttributeClosure(Self.Item.self).___name)
+    public func toFetchRequestController<A>(_ sectionAttributeClosure: (Self.Element.Type) -> Attribute<A>) -> FetchRequestController<Self.Element> {
+        return FetchRequestController(table: self, sectionNameKeyPath: sectionAttributeClosure(Self.Element.self).___name)
     }
     
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol Enumerable: SequenceType {
+public protocol Enumerable: Sequence {
     
     var offset: Int { get set }
     var limit: Int { get set }
@@ -21,14 +21,14 @@ public protocol Enumerable: SequenceType {
 
 extension Enumerable {
     
-    public func skip(count: Int) -> Self {
+    public final func skip(_ count: Int) -> Self {
         var clone = self
         clone.offset = count
         
         return clone
     }
     
-    public func take(count: Int) -> Self {
+    public final func take(_ count: Int) -> Self {
         var clone = self
         clone.limit = count
         
@@ -39,11 +39,11 @@ extension Enumerable {
 
 extension Enumerable {
     
-    public func any() -> Bool {
+    public final func any() -> Bool {
         return self.take(1).count() == 1
     }
     
-    public func none() -> Bool {
+    public final func none() -> Bool {
         return !self.any()
     }
     

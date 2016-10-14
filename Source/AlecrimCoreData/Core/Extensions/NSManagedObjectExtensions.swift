@@ -11,36 +11,37 @@ import CoreData
 
 extension NSManagedObject {
 
-    public func inContext(otherContext: NSManagedObjectContext) throws -> Self {
+    public final func inContext(_ otherContext: NSManagedObjectContext) throws -> Self {
         if self.managedObjectContext === otherContext {
             return self
         }
         
-        if self.objectID.temporaryID {
-            try otherContext.obtainPermanentIDsForObjects([self])
+        if self.objectID.isTemporaryID {
+            try otherContext.obtainPermanentIDs(for: [self])
         }
         
-        let otherManagedObject = try otherContext.existingObjectWithID(self.objectID)
+        let otherManagedObject = try otherContext.existingObject(with: self.objectID)
         
-        return unsafeBitCast(otherManagedObject, self.dynamicType)
+        return unsafeBitCast(otherManagedObject, to: type(of: self))
     }
     
 }
 
 extension NSManagedObject {
     
-    public func delete() {
-        self.managedObjectContext!.deleteObject(self)
+    public final func delete() {
+        self.managedObjectContext!.delete(self)
     }
     
-    public func refresh(mergingChanges mergeChanges: Bool = true) {
-        self.managedObjectContext!.refreshObject(self, mergeChanges: mergeChanges)
+    public final func refresh(mergeChanges: Bool = true) {
+        self.managedObjectContext!.refresh(self, mergeChanges: mergeChanges)
     }
 
 }
 
 extension NSManagedObject {
     
+    // TODO: move this code to other place
     public class func isIn(values: Set<NSManagedObject>) -> NSComparisonPredicate {
         let rightExpressionConstantValues = values.map { NSExpression(forConstantValue: $0.objectID) }
         let rightExpression = NSExpression(forAggregate: rightExpressionConstantValues)
@@ -49,9 +50,9 @@ extension NSManagedObject {
         return NSComparisonPredicate(
             leftExpression: leftExpression,
             rightExpression: rightExpression,
-            modifier: .DirectPredicateModifier,
-            type: .InPredicateOperatorType,
-            options: NSComparisonPredicateOptions()
+            modifier: .direct,
+            type: .in,
+            options: []
         )
     }
     
