@@ -20,11 +20,11 @@ public protocol Queryable: Enumerable {
 
 extension Queryable {
     
-    public final func sort<A: AttributeProtocol>(using attribute: A, ascending: Bool = true) -> Self {
-        return self.sort(using: attribute.___name, ascending: ascending, options: attribute.___comparisonPredicateOptions)
+    public final func sort<A: AttributeProtocol>(usingAttributeName attribute: A, ascending: Bool = true) -> Self {
+        return self.sort(usingAttributeName: attribute.___name, ascending: ascending, options: attribute.___comparisonPredicateOptions)
     }
     
-    public final func sort(using attributeName: String, ascending: Bool = true, options: NSComparisonPredicate.Options = PersistentContainerOptions.defaultComparisonPredicateOptions) -> Self {
+    public final func sort(usingAttributeName attributeName: String, ascending: Bool = true, options: NSComparisonPredicate.Options = PersistentContainerOptions.defaultComparisonPredicateOptions) -> Self {
         let sortDescriptor: NSSortDescriptor
         
         if options.contains(.caseInsensitive) && options.contains(.diacriticInsensitive) {
