@@ -14,62 +14,89 @@ public protocol CodeGenerator {
     func generate() throws
 }
 
+public enum SourceCodeFileType {
+    case `class`
+    case properties
+    case attributes
+    
+    public func fullName(fromName name: String) -> String {
+        let suffix: String
+        
+        switch self {
+        case .class: suffix = "CoreDataClass"
+        case .properties: suffix = "CoreDataProperties"
+        case .attributes: suffix = "AlecrimCoreDataAttributes"
+        }
+        
+        return "\(name)+\(suffix).swift"
+    }
+    
+    public var canOverwrite: Bool {
+        return self != .class
+    }
+}
+
 extension CodeGenerator {
     
-    public func saveSourceCodeFileWithName(name: String, contents: String, generated: Bool) throws {
-        let generatedString = (generated ? ".generated" : "")
-        let url = self.parameters.targetFolderURL.URLByAppendingPathComponent("\(name)\(generatedString).swift", isDirectory: false)!
+    public func saveSourceCodeFile(withName name: String, contents: String, type: SourceCodeFileType) throws {
+        let url = self.parameters.targetFolderURL.appendingPathComponent(type.fullName(fromName: name), isDirectory: false)
         
-        let fileManager = NSFileManager.defaultManager()
+        let fileManager = FileManager.default
         
-        if !generated && fileManager.fileExistsAtPath(url.path!) {
+        if !type.canOverwrite && fileManager.fileExists(atPath: url.path) {
             return
         }
         
         do {
-            try fileManager.removeItemAtURL(url)
+            try fileManager.removeItem(at: url)
         }
         catch {
         }
         
-        try contents.writeToURL(url, atomically: true, encoding: NSUTF8StringEncoding)
+        try contents.write(to: url, atomically: true, encoding: String.Encoding.utf8)
     }
 
 }
 
 extension CodeGenerator {
     
-    public func valueClassNameForAttributeDescription(attributeDescription: NSAttributeDescription) -> String {
+    public func valueClassName(for attributeDescription: NSAttributeDescription) -> String {
         if self.parameters.useScalarProperties {
             var isUnsigned = false
             for predicate in attributeDescription.validationPredicates as [NSPredicate] {
-                if (predicate.predicateFormat as NSString).containsString(">= 0") {
+                if (predicate.predicateFormat as NSString).contains(">= 0") {
                     isUnsigned = true
                     break
                 }
             }
             
             switch attributeDescription.attributeType {
-            case .Integer16AttributeType:
+            case .integer16AttributeType:
                 return (isUnsigned ? "UInt16" : "Int16")
                 
-            case .Integer32AttributeType:
+            case .integer32AttributeType:
                 return (isUnsigned ? "UInt32" : "Int32")
                 
-            case .Integer64AttributeType:
+            case .integer64AttributeType:
                 return (isUnsigned ? "UInt64" : "Int64")
                 
-            case .DoubleAttributeType:
+            case .doubleAttributeType:
                 return "Double"
                 
-            case .FloatAttributeType:
+            case .floatAttributeType:
                 return "Float"
                 
-            case .BooleanAttributeType:
+            case .booleanAttributeType:
                 return "Bool"
                 
-            case .StringAttributeType:
+            case .stringAttributeType:
                 return "String"
+                
+            case .dateAttributeType:
+                return "Date"
+                
+            case .binaryDataAttributeType:
+                return "Data"
                 
             default:
                 break
@@ -78,7 +105,7 @@ extension CodeGenerator {
         
         if let attributeValueClassName = attributeDescription.attributeValueClassName {
             // If not using scalar but using Swift String
-            if attributeDescription.attributeType == .StringAttributeType && self.parameters.useSwiftString {
+            if attributeDescription.attributeType == .stringAttributeType && self.parameters.useSwiftString {
                 return "String"
             }
             else {
@@ -87,7 +114,7 @@ extension CodeGenerator {
         }
         else {
             // If your attribute is of NSTransformableAttributeType, the attributeValueClassName must be set or attribute value class must implement NSCopying.
-            if attributeDescription.attributeType == .TransformableAttributeType {
+            if attributeDescription.attributeType == .transformableAttributeType {
                 return "AnyObject" // "NSCopying"
             }
             else {
@@ -96,25 +123,25 @@ extension CodeGenerator {
         }
     }
     
-    public func canMarkScalarAsOptionalForAttributeDescription(attributeDescription: NSAttributeDescription) -> Bool {
+    public func canMarkScalarAsOptional(for attributeDescription: NSAttributeDescription) -> Bool {
         if self.parameters.useScalarProperties {
             switch attributeDescription.attributeType {
-            case .Integer16AttributeType:
+            case .integer16AttributeType:
                 return false
                 
-            case .Integer32AttributeType:
+            case .integer32AttributeType:
                 return false
                 
-            case .Integer64AttributeType:
+            case .integer64AttributeType:
                 return false
                 
-            case .DoubleAttributeType:
+            case .doubleAttributeType:
                 return false
                 
-            case .FloatAttributeType:
+            case .floatAttributeType:
                 return false
                 
-            case .BooleanAttributeType:
+            case .booleanAttributeType:
                 return false
                 
             default:
@@ -125,10 +152,10 @@ extension CodeGenerator {
         return true
     }
     
-    public func isInheritedPropertyDescription(property: NSPropertyDescription) -> Bool {
+    public func isInheritedPropertyDescription(_ property: NSPropertyDescription) -> Bool {
         var superentity = property.entity.superentity
         while superentity != nil {
-            if (superentity!.properties as NSArray).containsObject(property) {
+            if (superentity!.properties as NSArray).contains(property) {
                 return true
             }
             

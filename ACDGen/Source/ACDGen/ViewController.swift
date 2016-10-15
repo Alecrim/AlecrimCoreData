@@ -19,23 +19,85 @@ class ViewController: NSViewController {
     @IBOutlet weak var addPublicAccessModifierCheckBox: NSButton!
     @IBOutlet weak var gererateButton: NSButton!
     
-    var dataModelFileURL: NSURL? = nil
+    var dataModelFileURL: URL? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.dataModelLabel.hidden = true
+        self.dataModelLabel.isHidden = true
         self.dataModelLabel.stringValue = ""
-        self.dataContextNameTextField.stringValue = "DataContext"
+        self.dataContextNameTextField.stringValue = "NSManagedObjectContext" // "DataContext"
         self.useScalarPropertiesCheckBox.state = NSOnState
         self.useSwiftStringCheckBox.state = NSOnState
-        self.useSwiftStringCheckBox.enabled = false
+        self.useSwiftStringCheckBox.isEnabled = false
         self.generateQueryAttributesCheckBox.state = NSOnState
         self.addPublicAccessModifierCheckBox.state = NSOffState
-        self.gererateButton.enabled = false
+        self.gererateButton.isEnabled = false
+    }
+    
+    @IBAction func chooseDataModelButtonPressed(_ sender: NSButton) {
+        self.openExistingDocument()
     }
 
+    @IBAction func useScalarPropertiesButtonPressed(_ sender: NSButton) {
+        self.useSwiftStringCheckBox.state = NSOnState
+        self.useSwiftStringCheckBox.isEnabled = self.useScalarPropertiesCheckBox.state == NSOffState
+    }
+    
+    @IBAction func generateButtonPressed(_ sender: NSButton) {
+        let panel = NSOpenPanel()
+        
+        panel.allowsMultipleSelection = false
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.canCreateDirectories = true
+        
+        panel.prompt = "Choose"
+        panel.message = "Choose a target folder to generated code.\r\n(Existing generated files with the same name will be overwritten.)"
+        
+        panel.beginSheetModal(for: self.view.window!) { result in
+            guard result == NSFileHandlingPanelOKButton, let url = panel.url else { return }
+            
+            self.enableControls(false)
+            
+            let alert: NSAlert
+            
+            do {
+                let parameters = CodeGeneratorParameters(
+                    dataModelFileURL: self.dataModelFileURL!,
+                    targetFolderURL: url,
+                    dataContextName: self.dataContextNameTextField.stringValue.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines),
+                    useScalarProperties: self.useScalarPropertiesCheckBox.state == NSOnState,
+                    useSwiftString: self.useSwiftStringCheckBox.state == NSOnState,
+                    generateQueryAttributes: self.generateQueryAttributesCheckBox.state == NSOnState,
+                    addPublicAccessModifier: self.addPublicAccessModifierCheckBox.state == NSOnState
+                )
+                
+                let modelCodeGenerator = ModelCodeGenerator(parameters: parameters)
+                try modelCodeGenerator.generate()
+                
+                alert = NSAlert()
+                alert.alertStyle = .informational
+                alert.messageText = "Success"
+                alert.informativeText = "The source code files were generated successfully."
+            }
+            catch let error as NSError {
+                alert = NSAlert(error: error)
+            }
+            catch {
+                alert = NSAlert()
+                alert.alertStyle = .warning
+                alert.messageText = "Error"
+                alert.informativeText = "An unespecified error occurred."
+            }
+            
+            alert.beginSheetModal(for: self.view.window!, completionHandler: { _ in
+                self.enableControls(true)
+            })
+        }
+    }
+    
 }
 
 extension ViewController {
@@ -54,95 +116,29 @@ extension ViewController {
         panel.prompt = "Choose"
         panel.message = "Choose a data model file."
         
-        panel.beginSheetModalForWindow(self.view.window!) { (result) -> Void in
+        panel.beginSheetModal(for: self.view.window!) { (result) -> Void in
             if result == NSFileHandlingPanelOKButton {
-                if let url = panel.URL {
+                if let url = panel.url {
                     self.dataModelFileURL = url
                     
-                    self.chooseDataModelButton.hidden = true
-                    self.dataModelLabel.stringValue = url.lastPathComponent!
-                    self.dataModelLabel.hidden = false
-                    self.gererateButton.enabled = true
+                    self.chooseDataModelButton.isHidden = true
+                    self.dataModelLabel.stringValue = url.lastPathComponent
+                    self.dataModelLabel.isHidden = false
+                    self.gererateButton.isEnabled = true
                 }
             }
         }
     }
     
-    func enableControls(enable: Bool) {
-        self.chooseDataModelButton.enabled = enable
-        self.dataModelLabel.enabled = enable
-        self.dataContextNameTextField.enabled = enable
-        self.useScalarPropertiesCheckBox.enabled = enable
-        self.useSwiftStringCheckBox.enabled = self.useScalarPropertiesCheckBox.state == NSOffState
-        self.generateQueryAttributesCheckBox.enabled  = enable
-        self.addPublicAccessModifierCheckBox.enabled = enable
-        self.gererateButton.enabled = enable
+    func enableControls(_ enable: Bool) {
+        self.chooseDataModelButton.isEnabled = enable
+        self.dataModelLabel.isEnabled = enable
+        self.dataContextNameTextField.isEnabled = enable
+        self.useScalarPropertiesCheckBox.isEnabled = enable
+        self.useSwiftStringCheckBox.isEnabled = self.useScalarPropertiesCheckBox.state == NSOffState
+        self.generateQueryAttributesCheckBox.isEnabled  = enable
+        self.addPublicAccessModifierCheckBox.isEnabled = enable
+        self.gererateButton.isEnabled = enable
     }
 
-}
-
-extension ViewController {
-    
-    @IBAction func chooseDataModelButtonPressed(sender: NSButton) {
-        self.openExistingDocument()
-    }
-    
-    @IBAction func useScalarPropertiesButtonPressed(sender: NSButton) {
-        self.useSwiftStringCheckBox.state = NSOnState
-        self.useSwiftStringCheckBox.enabled = self.useScalarPropertiesCheckBox.state == NSOffState
-    }
-
-    @IBAction func generateButtonPressed(sender: NSButton) {
-        let panel = NSOpenPanel()
-        
-        panel.allowsMultipleSelection = false
-        panel.canChooseFiles = false
-        panel.canChooseDirectories = true
-        panel.canCreateDirectories = true
-        
-        panel.prompt = "Choose"
-        panel.message = "Choose a target folder to generated code.\r\n(Existing generated files with the same name will be overwritten.)"
-        
-        panel.beginSheetModalForWindow(self.view.window!) { result in
-            guard result == NSFileHandlingPanelOKButton, let url = panel.URL else { return }
-
-            self.enableControls(false)
-
-            let alert: NSAlert
-            
-            do {
-                let parameters = CodeGeneratorParameters(
-                    dataModelFileURL: self.dataModelFileURL!,
-                    targetFolderURL: url,
-                    dataContextName: self.dataContextNameTextField.stringValue.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()),
-                    useScalarProperties: self.useScalarPropertiesCheckBox.state == NSOnState,
-                    useSwiftString: self.useSwiftStringCheckBox.state == NSOnState,
-                    generateQueryAttributes: self.generateQueryAttributesCheckBox.state == NSOnState,
-                    addPublicAccessModifier: self.addPublicAccessModifierCheckBox.state == NSOnState
-                )
-
-                let modelCodeGenerator = ModelCodeGenerator(parameters: parameters)
-                try modelCodeGenerator.generate()
-                
-                alert = NSAlert()
-                alert.alertStyle = NSAlertStyle.Informational
-                alert.messageText = "Success"
-                alert.informativeText = "The source code files were generated successfully."
-            }
-            catch let error as NSError {
-                alert = NSAlert(error: error)
-            }
-            catch {
-                alert = NSAlert()
-                alert.alertStyle = NSAlertStyle.Warning
-                alert.messageText = "Error"
-                alert.informativeText = "An unespecified error occurred."
-            }
-            
-            alert.beginSheetModalForWindow(self.view.window!, completionHandler: { _ in
-                self.enableControls(true)
-            })
-        }
-    }
-    
 }

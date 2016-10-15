@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11191" systemVersion="16A286a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="90a-WL-2zV">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11156"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Alarms-->
+        <scene sceneID="rML-Ur-RyJ">
+            <objects>
+                <tableViewController id="ORh-EZ-DjY" customClass="AlarmTableViewController" customModule="ACD_Alarm" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="fxt-lb-exQ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="AlarmCell" textLabel="07x-mH-5mC" detailTextLabel="aZk-q1-TSb" style="IBUITableViewCellStyleSubtitle" id="fBg-RN-sxe">
+                                <rect key="frame" x="0.0" y="92" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fBg-RN-sxe" id="GEX-48-Stq">
+                                    <frame key="frameInset" width="375" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="07x-mH-5mC">
+                                            <frame key="frameInset" minX="15" minY="4" width="34" height="21"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="aZk-q1-TSb">
+                                            <frame key="frameInset" minX="15" minY="25" width="33" height="15"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="mtB-vt-uYQ" kind="presentation" identifier="EditAlarm" id="Ua7-HH-bJu"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="ORh-EZ-DjY" id="5C0-aw-K87"/>
+                            <outlet property="delegate" destination="ORh-EZ-DjY" id="3Nx-yu-iIT"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Alarms" id="ihW-0X-B0u">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="yHK-VA-b1R">
+                            <connections>
+                                <segue destination="mtB-vt-uYQ" kind="presentation" identifier="AddAlarm" id="nPr-X9-gsL"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wy3-nI-Yp6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="519" y="74"/>
+        </scene>
+        <!--Edit Alarm-->
+        <scene sceneID="rfi-1n-AR6">
+            <objects>
+                <viewController id="Obo-1A-Spb" customClass="AlarmEditViewController" customModule="ACD_Alarm" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="OaA-NQ-cVF"/>
+                        <viewControllerLayoutGuide type="bottom" id="osz-bx-Y4S"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="bY3-7r-9LV">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="o0r-aZ-GaJ">
+                                <subviews>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="CTh-hl-KnM">
+                                        <date key="date" timeIntervalSinceReferenceDate="492666554.22740602">
+                                            <!--2016-08-12 03:49:14 +0000-->
+                                        </date>
+                                    </datePicker>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="o0r-aZ-GaJ" firstAttribute="bottom" secondItem="osz-bx-Y4S" secondAttribute="top" id="UWm-Ph-bJv"/>
+                            <constraint firstItem="o0r-aZ-GaJ" firstAttribute="leading" secondItem="bY3-7r-9LV" secondAttribute="leading" id="Wsc-hS-Dx2"/>
+                            <constraint firstItem="o0r-aZ-GaJ" firstAttribute="top" secondItem="OaA-NQ-cVF" secondAttribute="bottom" id="l11-uD-DC5"/>
+                            <constraint firstItem="o0r-aZ-GaJ" firstAttribute="trailing" secondItem="bY3-7r-9LV" secondAttribute="trailing" id="s3R-au-ciK"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Edit Alarm" id="WqJ-0C-ceP">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="67n-7o-xJw">
+                            <connections>
+                                <segue destination="XXG-SD-Ddz" kind="unwind" identifier="CancelUnwindSegue" unwindAction="prepareForUnwindWithSegue:" id="vLp-I5-OA5"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="22i-sh-b56">
+                            <connections>
+                                <segue destination="XXG-SD-Ddz" kind="unwind" identifier="SaveUnwindSegue" unwindAction="prepareForUnwindWithSegue:" id="tTb-gR-5CI"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="datePicker" destination="CTh-hl-KnM" id="zWm-Bm-To0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VCE-JY-jrn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="XXG-SD-Ddz" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="2548" y="72.413793103448285"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="h79-XG-BSh">
+            <objects>
+                <navigationController id="90a-WL-2zV" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="eNc-nv-UEf">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="ORh-EZ-DjY" kind="relationship" relationship="rootViewController" id="qga-fb-SW5"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Q0w-0Q-Fm1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-433" y="74"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="sHa-aG-8S3">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="mtB-vt-uYQ" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="TjV-vV-BSz">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Obo-1A-Spb" kind="relationship" relationship="rootViewController" id="7ui-I2-Tuf"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QGU-Yy-ksj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1608.8" y="72.413793103448285"/>
+        </scene>
+    </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="Ua7-HH-bJu"/>
+    </inferredMetricsTieBreakers>
+</document>

@@ -33,15 +33,24 @@ extension AttributeQueryProtocol {
 
 extension AttributeQueryProtocol {
     
-    public func toArray() -> [Self.Item] {
+    public func execute() -> [Self.Element] {
         do {
-            var results: [Self.Item] = []
+            let fetchRequest = self.toFetchRequest() as NSFetchRequest<NSDictionary>
+            fetchRequest.resultType = NSFetchRequestResultType.dictionaryResultType
             
-            let fetchRequestResult = try self.dataContext.executeFetchRequest(self.toFetchRequest())
-            guard let dicts = fetchRequestResult as? [NSDictionary] else { throw AlecrimCoreDataError.unexpectedValue(fetchRequestResult) }
+            var results: [Self.Element] = []
+            
+            let dicts: [NSDictionary]
+            
+            if #available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
+                dicts = try fetchRequest.execute()
+            }
+            else {
+                dicts = try self.context.fetch(fetchRequest)
+            }
             
             try dicts.forEach {
-                guard $0.count == 1, let value = $0.allValues.first as? Self.Item else {
+                guard $0.count == 1, let value = $0.allValues.first as? Self.Element else {
                     throw AlecrimCoreDataError.unexpectedValue($0)
                 }
                 
@@ -50,23 +59,20 @@ extension AttributeQueryProtocol {
             
             return results
         }
-        catch let error {
+        catch {
             AlecrimCoreDataError.handleError(error)
         }
     }
     
 }
 
-extension AttributeQueryProtocol where Self.Item: NSDictionary {
+extension AttributeQueryProtocol where Self.Element: NSDictionary {
     
-    public func toArray() -> [NSDictionary] {
+    public func execute() -> [Self.Element] {
         do {
-            let fetchRequestResult = try self.dataContext.executeFetchRequest(self.toFetchRequest())
-            guard let dicts = fetchRequestResult as? [NSDictionary] else { throw AlecrimCoreDataError.unexpectedValue(fetchRequestResult) }
-            
-            return dicts
+            return try self.context.fetch(self.toFetchRequest()) as! [Self.Element]
         }
-        catch let error {
+        catch {
             AlecrimCoreDataError.handleError(error)
         }
     }
@@ -76,10 +82,10 @@ extension AttributeQueryProtocol where Self.Item: NSDictionary {
 
 // MARK: - CoreDataQueryable
 
-extension AttributeQueryProtocol {
+extension AttributeQueryProtocol where Self.Element: NSDictionary {
     
-    public func toFetchRequest() -> NSFetchRequest {
-        let fetchRequest = NSFetchRequest()
+    public final func toFetchRequest<ResultType: NSFetchRequestResult>() -> NSFetchRequest<ResultType> {
+        let fetchRequest = NSFetchRequest<ResultType>()
         
         fetchRequest.entity = self.entityDescription
         
@@ -91,7 +97,7 @@ extension AttributeQueryProtocol {
         fetchRequest.sortDescriptors = self.sortDescriptors
         
         //
-        fetchRequest.resultType = .DictionaryResultType
+        fetchRequest.resultType = .dictionaryResultType
         fetchRequest.returnsDistinctResults = self.returnsDistinctResults
         fetchRequest.propertiesToFetch = self.propertiesToFetch
         

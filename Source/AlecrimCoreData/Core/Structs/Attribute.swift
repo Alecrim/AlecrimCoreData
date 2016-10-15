@@ -46,29 +46,29 @@ public struct NullableAttribute<T>: NullableAttributeProtocol {
 
 // MARK: - Attribute extensions - CollectionType
 
-extension Attribute where T: CollectionType {
+extension Attribute where T: Collection {
     
     public func count() -> Attribute<Int> {
         return Attribute<Int>("@count", self)
     }
     
-    public func max<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
-        let innerAttribute = closure(T.Generator.Element.self)
+    public func max<U>(_ closure: (T.Iterator.Element.Type) -> Attribute<U>) -> Attribute<U> {
+        let innerAttribute = closure(T.Iterator.Element.self)
         return Attribute<U>("@max." + innerAttribute.___name, self)
     }
 
-    public func min<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
-        let innerAttribute = closure(T.Generator.Element.self)
+    public func min<U>(_ closure: (T.Iterator.Element.Type) -> Attribute<U>) -> Attribute<U> {
+        let innerAttribute = closure(T.Iterator.Element.self)
         return Attribute<U>("@min." + innerAttribute.___name, self)
     }
     
-    public func avg<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
-        let innerAttribute = closure(T.Generator.Element.self)
+    public func avg<U>(_ closure: (T.Iterator.Element.Type) -> Attribute<U>) -> Attribute<U> {
+        let innerAttribute = closure(T.Iterator.Element.self)
         return Attribute<U>("@avg." + innerAttribute.___name, self)
     }
 
-    public func sum<U>(@noescape closure: (T.Generator.Element.Type) -> Attribute<U>) -> Attribute<U> {
-        let innerAttribute = closure(T.Generator.Element.self)
+    public func sum<U>(_ closure: (T.Iterator.Element.Type) -> Attribute<U>) -> Attribute<U> {
+        let innerAttribute = closure(T.Iterator.Element.self)
         return Attribute<U>("@sum." + innerAttribute.___name, self)
     }
 

@@ -9,16 +9,16 @@
 import Foundation
 import CoreData
 
-public struct AttributeQuery<T>: AttributeQueryProtocol {
+public struct AttributeQuery<T: NSDictionary>: AttributeQueryProtocol {
     
-    public typealias Item = T
+    public typealias Element = T
     
-    public let dataContext: NSManagedObjectContext
+    public let context: NSManagedObjectContext
     public let entityDescription: NSEntityDescription
     
     public var offset: Int = 0
     public var limit: Int = 0
-    public var batchSize: Int = DataContextOptions.defaultBatchSize
+    public var batchSize: Int = PersistentContainerOptions.defaultBatchSize
     
     public var predicate: NSPredicate? = nil
     public var sortDescriptors: [NSSortDescriptor]? = nil
@@ -26,8 +26,8 @@ public struct AttributeQuery<T>: AttributeQueryProtocol {
     public var returnsDistinctResults = false
     public var propertiesToFetch = [String]()
     
-    private init(dataContext: NSManagedObjectContext, entityDescription: NSEntityDescription, offset: Int, limit: Int, batchSize: Int, predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?) {
-        self.dataContext = dataContext
+    fileprivate init(context: NSManagedObjectContext, entityDescription: NSEntityDescription, offset: Int, limit: Int, batchSize: Int, predicate: NSPredicate?, sortDescriptors: [NSSortDescriptor]?) {
+        self.context = context
         self.entityDescription = entityDescription
         
         self.offset = offset
@@ -44,9 +44,9 @@ public struct AttributeQuery<T>: AttributeQueryProtocol {
 extension Table {
     
     // one attribute
-    public func select<P, A: AttributeProtocol where A.ValueType == P>(@noescape closure: (Item.Type) -> A) -> AttributeQuery<P> {
+    public func select<P, A: AttributeProtocol>(_ closure: (T.Type) -> A) -> AttributeQuery<P> where A.ValueType == P {
         var attributeQuery = AttributeQuery<P>(
-            dataContext: self.dataContext,
+            context: self.context,
             entityDescription: self.entityDescription,
             offset: self.offset,
             limit: self.limit,
@@ -55,15 +55,15 @@ extension Table {
             sortDescriptors: self.sortDescriptors
         )
         
-        attributeQuery.propertiesToFetch.append(closure(Item.self).___name)
+        attributeQuery.propertiesToFetch.append(closure(T.self).___name)
         
         return attributeQuery
     }
 
     // more than one attribute
-    public func select(propertiesToFetch: [String]) -> AttributeQuery<NSDictionary> {
+    public func select(_ propertiesToFetch: [String]) -> AttributeQuery<NSDictionary> {
         var attributeQuery = AttributeQuery<NSDictionary>(
-            dataContext: self.dataContext,
+            context: self.context,
             entityDescription: self.entityDescription,
             offset: self.offset,
             limit: self.limit,

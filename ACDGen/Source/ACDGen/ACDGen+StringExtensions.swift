@@ -258,15 +258,15 @@ extension String {
         ]
     }
     
-    private func pluralizedLowercaseString() -> String {
-        let str = self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    fileprivate func pluralizedLowercaseString() -> String {
+        let str = self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         
         if str == "" {
             return str;
         }
         
         if str != "" {
-            let loweredStr = str.lowercaseString
+            let loweredStr = str.lowercased()
             
             if self.uncountableWords.contains(loweredStr) {
                 return loweredStr
@@ -278,12 +278,12 @@ extension String {
                     }
                 }
                 
-                for (rule, replacement) in Array(self.pluralRules.reverse()) {
-                    let regex = try! NSRegularExpression(pattern: rule, options: NSRegularExpressionOptions())
+                for (rule, replacement) in Array(self.pluralRules.reversed()) {
+                    let regex = try! NSRegularExpression(pattern: rule, options: NSRegularExpression.Options())
                     let range = NSMakeRange(0, (loweredStr as NSString).length)
                     
-                    if regex.firstMatchInString(loweredStr, options: NSMatchingOptions(), range: range) != nil {
-                        return regex.stringByReplacingMatchesInString(loweredStr, options: NSMatchingOptions(), range: range, withTemplate: replacement)
+                    if regex.firstMatch(in: loweredStr, options: NSRegularExpression.MatchingOptions(), range: range) != nil {
+                        return regex.stringByReplacingMatches(in: loweredStr, options: NSRegularExpression.MatchingOptions(), range: range, withTemplate: replacement)
                     }
                 }
             }
@@ -292,11 +292,11 @@ extension String {
         return str;
     }
     
-    private func singularizedLowercaseString() -> String {
-        let str = self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    fileprivate func singularizedLowercaseString() -> String {
+        let str = self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         
         if str != "" {
-            let loweredStr = str.lowercaseString
+            let loweredStr = str.lowercased()
             
             if self.uncountableWords.contains(loweredStr) {
                 return loweredStr
@@ -308,12 +308,12 @@ extension String {
                     }
                 }
                 
-                for (rule, replacement) in Array(self.singularRules.reverse()) {
-                    let regex = try! NSRegularExpression(pattern: rule, options: NSRegularExpressionOptions())
+                for (rule, replacement) in Array(self.singularRules.reversed()) {
+                    let regex = try! NSRegularExpression(pattern: rule, options: NSRegularExpression.Options())
                     let range = NSMakeRange(0, (loweredStr as NSString).length)
                     
-                    if regex.firstMatchInString(loweredStr, options: NSMatchingOptions(), range: range) != nil {
-                        return regex.stringByReplacingMatchesInString(loweredStr, options: NSMatchingOptions(), range: range, withTemplate: replacement)
+                    if regex.firstMatch(in: loweredStr, options: NSRegularExpression.MatchingOptions(), range: range) != nil {
+                        return regex.stringByReplacingMatches(in: loweredStr, options: NSRegularExpression.MatchingOptions(), range: range, withTemplate: replacement)
                     }
                 }
             }
@@ -333,19 +333,19 @@ extension String {
             if i == components.endIndex - 1 {
                 let str = components[i].pluralizedLowercaseString() as NSString
                 if i > 0 {
-                    let firstLetter = str.substringToIndex(1).uppercaseString
-                    let otherLetters = str.substringFromIndex(1)
-                    pluralized.appendString("\(firstLetter)\(otherLetters)")
+                    let firstLetter = str.substring(to: 1).uppercased()
+                    let otherLetters = str.substring(from: 1)
+                    pluralized.append("\(firstLetter)\(otherLetters)")
                 }
                 else {
-                    pluralized.appendString(str as String)
+                    pluralized.append(str as String)
                 }
             }
             else if i == 0 {
-                pluralized.appendString(components[i].lowercaseString)
+                pluralized.append(components[i].lowercased())
             }
             else {
-                pluralized.appendString(components[i])
+                pluralized.append(components[i])
             }
         }
         
@@ -359,19 +359,19 @@ extension String {
             if i == components.endIndex - 1 {
                 let str = components[i].singularizedLowercaseString() as NSString
                 if i > 0 {
-                    let firstLetter = str.substringToIndex(1).uppercaseString
-                    let otherLetters = str.substringFromIndex(1)
-                    singularized.appendString("\(firstLetter)\(otherLetters)")
+                    let firstLetter = str.substring(to: 1).uppercased()
+                    let otherLetters = str.substring(from: 1)
+                    singularized.append("\(firstLetter)\(otherLetters)")
                 }
                 else {
-                    singularized.appendString(str as String)
+                    singularized.append(str as String)
                 }
             }
             else if i == 0 {
-                singularized.appendString(components[i].lowercaseString)
+                singularized.append(components[i].lowercased())
             }
             else {
-                singularized.appendString(components[i])
+                singularized.append(components[i])
             }
         }
         
@@ -379,8 +379,8 @@ extension String {
     }
 
     private func componentsSeparatedByCapitalizedLetters() -> [String] {
-        let newStr = (self as NSString).stringByReplacingOccurrencesOfString("([a-z])([A-Z])", withString: "$1 $2", options: NSStringCompareOptions.RegularExpressionSearch, range: NSMakeRange(0, (self as NSString).length))
-        return newStr.componentsSeparatedByString(" ")
+        let newStr = (self as NSString).replacingOccurrences(of: "([a-z])([A-Z])", with: "$1 $2", options: NSString.CompareOptions.regularExpression, range: NSMakeRange(0, (self as NSString).length))
+        return newStr.components(separatedBy: " ")
     }
     
 }

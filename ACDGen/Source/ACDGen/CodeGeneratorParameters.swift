@@ -13,8 +13,8 @@ public struct CodeGeneratorParameters {
     public static let nonNullableAttributeClassName = "AlecrimCoreData.Attribute"
     public static let nullableAttributeClassName = "AlecrimCoreData.NullableAttribute"
     
-    public let dataModelFileURL: NSURL
-    public let targetFolderURL: NSURL
+    public let dataModelFileURL: URL
+    public let targetFolderURL: URL
     public let dataContextName: String
     public let useScalarProperties: Bool
     public let useSwiftString: Bool
