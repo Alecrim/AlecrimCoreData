@@ -63,7 +63,7 @@ open class GenericPersistentContainer<ContextType: NSManagedObjectContext> {
     // MARK: -
 
     open class func defaultDirectoryURL() -> URL {
-        if #available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
+        if #available(macOSApplicationExtension 10.12, iOS 10.0, iOSApplicationExtension 10.0,tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
             return NativePersistentContainer.defaultDirectoryURL()
         }
         else {
@@ -116,7 +116,7 @@ open class GenericPersistentContainer<ContextType: NSManagedObjectContext> {
     
     
     public init(name: String, managedObjectModel model: NSManagedObjectModel) {
-        if #available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
+        if #available(macOSApplicationExtension 10.12, iOS 10.0, iOSApplicationExtension 10.0,tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
             self.underlyingPersistentContainer = NativePersistentContainer(name: name, managedObjectModel: model, contextType: ContextType.self)
         }
         else {
