@@ -11,7 +11,7 @@ import CoreData
 
 // MARK: -
 
-@available(macOS 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
+@available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *)
 internal class NativePersistentContainer: NSPersistentContainer, UnderlyingPersistentContainer {
     
     private let contextType: NSManagedObjectContext.Type
@@ -70,7 +70,7 @@ internal class NativePersistentContainer: NSPersistentContainer, UnderlyingPersi
 
 // MARK: -
 
-@available(macOS 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
+@available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *)
 extension NSPersistentStoreDescription: PersistentStoreDescription {
     
 }
