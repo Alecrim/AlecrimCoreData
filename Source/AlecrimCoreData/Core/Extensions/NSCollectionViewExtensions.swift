@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Alecrim. All rights reserved.
 //
 
-#if os(OSX)
+#if os(macOS)
     
     import Foundation
     import AppKit

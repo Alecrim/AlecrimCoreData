@@ -55,7 +55,7 @@ private let _defaultDirectoryURL: URL = {
         fatalError("Found no possible URLs for directory.")
     }
     
-    #if os(OSX)
+    #if os(macOS)
         guard let suffix = Bundle.main.infoDictionary?[kCFBundleExecutableKey as String] as? String ?? Bundle.main.executableURL?.lastPathComponent else {
             fatalError("Could not get application name information from bundle \(Bundle.main).")
         }
