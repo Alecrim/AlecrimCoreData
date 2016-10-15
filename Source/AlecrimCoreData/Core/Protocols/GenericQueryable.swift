@@ -24,6 +24,28 @@ extension GenericQueryable {
         return self.sort(using: orderingClosure(Self.Element.self), ascending: ascending)
     }
     
+    // convenience methods
+    
+    public final func orderByAscending<A: AttributeProtocol, V>(_ orderingClosure: (Self.Element.Type) -> A) -> Self where A.ValueType == V {
+        return self.orderBy(ascending: true, orderingClosure)
+    }
+
+    public final func orderByDescending<A: AttributeProtocol, V>(_ orderingClosure: (Self.Element.Type) -> A) -> Self where A.ValueType == V {
+        return self.orderBy(ascending: false, orderingClosure)
+    }
+    
+    public final func thenBy<A: AttributeProtocol, V>(ascending: Bool = true, _ orderingClosure: (Self.Element.Type) -> A) -> Self where A.ValueType == V {
+        return self.orderBy(ascending: ascending, orderingClosure)
+    }
+
+    public final func thenByAscending<A: AttributeProtocol, V>(_ orderingClosure: (Self.Element.Type) -> A) -> Self where A.ValueType == V {
+        return self.orderBy(ascending: true, orderingClosure)
+    }
+    
+    public final func thenByDescending<A: AttributeProtocol, V>(_ orderingClosure: (Self.Element.Type) -> A) -> Self where A.ValueType == V {
+        return self.orderBy(ascending: false, orderingClosure)
+    }
+    
 }
 
 // MARK: - filtering
