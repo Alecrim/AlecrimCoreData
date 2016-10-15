@@ -20,7 +20,7 @@ public protocol Queryable: Enumerable {
 
 extension Queryable {
     
-    public final func sort<A: AttributeProtocol>(usingAttributeName attribute: A, ascending: Bool = true) -> Self {
+    public final func sort<A: AttributeProtocol>(using attribute: A, ascending: Bool = true) -> Self {
         return self.sort(usingAttributeName: attribute.___name, ascending: ascending, options: attribute.___comparisonPredicateOptions)
     }
     
