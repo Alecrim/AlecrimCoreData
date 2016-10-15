@@ -42,7 +42,7 @@ extension AttributeQueryProtocol {
             
             let dicts: [NSDictionary]
             
-            if #available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
+            if #available(macOSApplicationExtension 10.12, iOS 10.0, iOSApplicationExtension 10.0,tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
                 dicts = try fetchRequest.execute()
             }
             else {
