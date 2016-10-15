@@ -313,7 +313,8 @@ platform :ios, '10.0'
 use_frameworks!
 
 target '<Your Target Name>' do
-    pod 'AlecrimCoreData', '~> 5.0'
+    # pod 'AlecrimCoreData', '~> 5.0'
+    pod 'AlecrimCoreData', :git => 'https://github.com/Alecrim/AlecrimCoreData.git', :branch => 'develop'
 end
 ```
 
