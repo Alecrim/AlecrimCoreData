@@ -92,7 +92,7 @@ extension CoreDataQueryable {
         do {
             let results: [NSDictionary]
             
-            if #available(macOS 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *) {
+            if #available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
                 results = try fetchRequest.execute()
             }
             else {
