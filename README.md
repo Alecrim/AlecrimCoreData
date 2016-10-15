@@ -259,7 +259,7 @@ You can order the entities using `NSSortDescriptor` instances:
 
 ```swift
 let sortDescriptor: NSSortDescriptor = ...
-let orderedPeople = context.sort(using: sortDescriptor)
+let orderedPeople = context.people.sort(using: sortDescriptor)
 ```
 
 Or:
@@ -268,13 +268,13 @@ Or:
 let sd1: NSSortDescriptor = ...
 let sd2: NSSortDescriptor = ...
 
-let orderedPeople = context.sort(using: [sd1, sd2])
+let orderedPeople = context.people.sort(using: [sd1, sd2])
 ```
 
 You can also use the `sortUsingAttributeName::` method:
 
 ```swift
-let orderedPeople = context.sort(usingAttributeName: "lastName", ascending: true)
+let orderedPeople = context.people.sort(usingAttributeName: "lastName", ascending: true)
 ```
 
 ##### Filtering
