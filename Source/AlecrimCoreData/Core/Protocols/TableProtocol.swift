@@ -18,7 +18,7 @@ public protocol TableProtocol: CoreDataQueryable {
 extension TableProtocol where Self.Element: NSManagedObject {
     
     public final func create() -> Self.Element {
-        if #available(OSXApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
+        if #available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
             return Self.Element(context: self.context)
         }
         else {
@@ -45,7 +45,7 @@ extension TableProtocol {
             
             let objectIDs: [NSManagedObjectID]
             
-            if #available(OSXApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
+            if #available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
                 objectIDs = try fetchRequest.execute()
             }
             else {
