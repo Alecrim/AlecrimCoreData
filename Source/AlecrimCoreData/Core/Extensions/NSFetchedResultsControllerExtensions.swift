@@ -12,7 +12,7 @@ import CoreData
 extension CoreDataQueryable {
     
     public func toFetchedResultsController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> NSFetchedResultsController<Self.Element> {
-        return NSFetchedResultsController(fetchRequest: self.toFetchRequest(), managedObjectContext: self.context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+        return NSFetchedResultsController(fetchRequest: self.toFetchRequest() as NSFetchRequest<Self.Element>, managedObjectContext: self.context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
     
 }

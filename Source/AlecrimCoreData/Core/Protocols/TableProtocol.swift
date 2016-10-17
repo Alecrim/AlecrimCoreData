@@ -93,7 +93,7 @@ extension TableProtocol {
     
     public final func execute() -> [Self.Element] {
         do {
-            return try self.context.fetch(self.toFetchRequest()) as! [Self.Element]
+            return try self.context.fetch(self.toFetchRequest() as NSFetchRequest<Self.Element>)
         }
         catch {
             AlecrimCoreDataError.handleError(error)
