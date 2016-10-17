@@ -125,10 +125,10 @@ extension EntityExtensionsCodeGenerator {
 extension EntityExtensionsCodeGenerator {
     
     fileprivate func generateDefaultFetchRequest() {
-        self.string.appendLine("@nonobjc " + self.parameters.accessModifier + "class func fetchRequest() -> NSFetchRequest<\(self.className)> {", indentLevel: 1)
-        self.string.appendLine("return NSFetchRequest<\(self.className)>(entityName: \"\(self.className)\")", indentLevel: 2)
-        self.string.appendLine("}", indentLevel: 1)
-        self.string.appendLine()
+        // self.string.appendLine("@nonobjc " + self.parameters.accessModifier + (self.entityDescription.superentity == nil ? "" : "override ") + "class func fetchRequest() -> NSFetchRequest<\(self.className)> {", indentLevel: 1)
+        // self.string.appendLine("return NSFetchRequest<\(self.className)>(entityName: \"\(self.entityDescription.name!)\")", indentLevel: 2)
+        // self.string.appendLine("}", indentLevel: 1)
+        // self.string.appendLine()
     }
     
     fileprivate func generateAttributes() {
