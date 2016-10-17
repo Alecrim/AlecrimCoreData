@@ -28,7 +28,7 @@ extension CoreDataQueryable {
     
     public final func count() -> Int {
         do {
-            let c = try self.context.count(for: self.toFetchRequest())
+            let c = try self.context.count(for: self.toFetchRequest() as NSFetchRequest<Self.Element>)
             
             guard c != NSNotFound else {
                 return 0
