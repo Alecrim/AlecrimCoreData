@@ -11,32 +11,6 @@ import CoreData
 
 // MARK: -
 
-private var cachedObjectDescriptions = [String : NSEntityDescription]()
-
-private func cachedObjectDescription(for context: NSManagedObjectContext, managedObjectType: NSManagedObject.Type) -> NSEntityDescription {
-    let contextClassName = String(describing: type(of: context))
-    let managedObjectClassName = String(describing: managedObjectType)
-    let cacheKey = "\(contextClassName)|\(managedObjectClassName)"
-    
-    let entityDescription: NSEntityDescription
-    
-    if let cachedObjectDescription = cachedObjectDescriptions[cacheKey] {
-        entityDescription = cachedObjectDescription
-    }
-    else {
-        let persistentStoreCoordinator = context.persistentStoreCoordinator!
-        let managedObjectModel = persistentStoreCoordinator.managedObjectModel
-        
-        entityDescription = managedObjectModel.entities.filter({ $0.managedObjectClassName.components(separatedBy: ".").last! == managedObjectClassName }).first!
-        cachedObjectDescriptions[cacheKey] = entityDescription
-    }
-    
-    return entityDescription
-}
-
-// MARK: -
-
-
 public struct Table<T: NSManagedObject>: TableProtocol {
     
     public typealias Element = T
@@ -53,7 +27,48 @@ public struct Table<T: NSManagedObject>: TableProtocol {
     
     public init(context: NSManagedObjectContext) {
         self.context = context
-        self.entityDescription = cachedObjectDescription(for: context, managedObjectType: T.self)
+        self.entityDescription = context.persistentStoreCoordinator!.cachedEntityDescription(for: T.self)
     }
     
+}
+
+// MARK: - Cached Entity Descriptions
+
+extension NSPersistentStoreCoordinator {
+    
+    fileprivate func cachedEntityDescription(for managedObjectType: NSManagedObject.Type) -> NSEntityDescription {
+        let managedObjectClassName = String(describing: managedObjectType)
+        let entityDescription: NSEntityDescription
+        
+        if let cachedEntityDescription = self.cachedEntityDescriptions[managedObjectClassName] as? NSEntityDescription {
+            entityDescription = cachedEntityDescription
+        }
+        else {
+            entityDescription = self.managedObjectModel.entities.filter({ $0.managedObjectClassName == managedObjectClassName }).first!
+            self.cachedEntityDescriptions[managedObjectClassName] = entityDescription
+        }
+        
+        return entityDescription
+    }
+    
+    //
+    
+    private struct AssociatedKeys {
+        static var cachedEntityDescriptions = "com.alecrim.AlecrimCoreData.cachedEntityDescriptions"
+    }
+    
+    private var cachedEntityDescriptions: NSMutableDictionary {
+        get {
+            if let dictionary = objc_getAssociatedObject(self, &AssociatedKeys.cachedEntityDescriptions) as? NSMutableDictionary {
+                return dictionary
+            }
+            else {
+                let dictionary = NSMutableDictionary()
+                objc_setAssociatedObject(self, &AssociatedKeys.cachedEntityDescriptions, dictionary, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                
+                return dictionary
+            }
+        }
+    }
+
 }
