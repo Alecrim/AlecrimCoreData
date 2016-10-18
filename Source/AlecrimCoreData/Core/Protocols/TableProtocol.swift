@@ -49,7 +49,7 @@ extension TableProtocol {
                 objectIDs = try fetchRequest.execute()
             }
             else {
-                objectIDs = try! self.context.fetch(fetchRequest)
+                objectIDs = try self.context.fetch(fetchRequest)
             }
             
             for objectID in objectIDs {
