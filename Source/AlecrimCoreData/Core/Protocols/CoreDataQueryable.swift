@@ -28,7 +28,7 @@ extension CoreDataQueryable {
     
     public final func count() -> Int {
         do {
-            let c = try self.context.count(for: self.toFetchRequest())
+            let c = try self.context.count(for: self.toFetchRequest() as NSFetchRequest<Self.Element>)
             
             guard c != NSNotFound else {
                 return 0
@@ -50,31 +50,31 @@ extension CoreDataQueryable {
     
     public final func sum<U>(_ closure: (Self.Element.Type) -> Attribute<U>) -> U {
         let attribute = closure(Self.Element.self)
-        return self.aggregate(using: "sum", attribute: attribute)
+        return self.aggregate(withFunctionName: "sum", attribute: attribute)
     }
     
     public final func min<U>(_ closure: (Self.Element.Type) -> Attribute<U>) -> U {
         let attribute = closure(Self.Element.self)
-        return self.aggregate(using: "min", attribute: attribute)
+        return self.aggregate(withFunctionName: "min", attribute: attribute)
     }
     
     public final func max<U>(_ closure: (Self.Element.Type) -> Attribute<U>) -> U {
         let attribute = closure(Self.Element.self)
-        return self.aggregate(using: "max", attribute: attribute)
+        return self.aggregate(withFunctionName: "max", attribute: attribute)
     }
 
     // same as average, for convenience
     public final func avg<U>(_ closure: (Self.Element.Type) -> Attribute<U>) -> U {
         let attribute = closure(Self.Element.self)
-        return self.aggregate(using: "average", attribute: attribute)
+        return self.aggregate(withFunctionName: "average", attribute: attribute)
     }
 
     public final func average<U>(_ closure: (Self.Element.Type) -> Attribute<U>) -> U {
         let attribute = closure(Self.Element.self)
-        return self.aggregate(using: "average", attribute: attribute)
+        return self.aggregate(withFunctionName: "average", attribute: attribute)
     }
     
-    private final func aggregate<U>(using functionName: String, attribute: Attribute<U>) -> U {
+    private final func aggregate<U>(withFunctionName functionName: String, attribute: Attribute<U>) -> U {
         let attributeDescription = self.entityDescription.attributesByName[attribute.___name]!
         
         let keyPathExpression = NSExpression(forKeyPath: attribute.___name)
