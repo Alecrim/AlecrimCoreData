@@ -44,7 +44,11 @@ extension NSPersistentStoreCoordinator {
             entityDescription = cachedEntityDescription
         }
         else {
-            entityDescription = self.managedObjectModel.entities.filter({ $0.managedObjectClassName == managedObjectClassName }).first!
+            entityDescription = self.managedObjectModel.entities
+                .filter {
+                    $0.managedObjectClassName.components(separatedBy: ".").last! == managedObjectClassName }
+                .first!
+            
             self.cachedEntityDescriptions[managedObjectClassName] = entityDescription
         }
         
