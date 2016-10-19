@@ -53,6 +53,8 @@ internal protocol UnderlyingPersistentContainer: class {
     func alc_loadPersistentStores(completionHandler block: @escaping (PersistentStoreDescription, Error?) -> Void)
     func newBackgroundContext() -> NSManagedObjectContext
     
+    func configureDefaults(for context: NSManagedObjectContext)
+    
     init(name: String, managedObjectModel model: NSManagedObjectModel, contextType: NSManagedObjectContext.Type)
 }
 
@@ -96,7 +98,7 @@ open class GenericPersistentContainer<ContextType: NSManagedObjectContext> {
     
     // MARK: -
     
-    public convenience init(name: String) {
+    public convenience init(name: String, automaticallyLoadPersistentStores: Bool = true) {
         if let modelURL = Bundle.main.url(forResource: name, withExtension: "momd") ?? Bundle.main.url(forResource: name, withExtension: "mom") {
             if let model = NSManagedObjectModel(contentsOf: modelURL) {
                 self.init(name: name, managedObjectModel: model)
@@ -111,16 +113,43 @@ open class GenericPersistentContainer<ContextType: NSManagedObjectContext> {
             
         }
 
-        self.init(name: name, managedObjectModel: model)
+        self.init(name: name, managedObjectModel: model, automaticallyLoadPersistentStores: automaticallyLoadPersistentStores)
     }
     
     
-    public init(name: String, managedObjectModel model: NSManagedObjectModel) {
+    public init(name: String, managedObjectModel model: NSManagedObjectModel, automaticallyLoadPersistentStores: Bool = true) {
+        //
         if #available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
             self.underlyingPersistentContainer = NativePersistentContainer(name: name, managedObjectModel: model, contextType: ContextType.self)
         }
         else {
             self.underlyingPersistentContainer = CustomPersistentContainer(name: name, managedObjectModel: model, contextType: ContextType.self)
+        }
+        
+        //
+        self.underlyingPersistentContainer.configureDefaults(for: self.viewContext)
+        
+        //
+        if automaticallyLoadPersistentStores {
+            self.loadPersistentStores { storeDescription, error in
+                guard let error = error else { return }
+                
+                /*
+                 Typical reasons for an error here include:
+                 * The parent directory does not exist, cannot be created, or disallows writing.
+                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+                 * The device is out of space.
+                 * The store could not be migrated to the current model version.
+                 Check the error message to determine what the actual problem was.
+                 */
+                
+                if let error = error as? NSError {
+                    AlecrimCoreDataError.fatalError("Unresolved error \(error), \(error.userInfo)")
+                }
+                else {
+                    AlecrimCoreDataError.fatalError("Unresolved error \(error)")
+                }
+            }
         }
     }
     
@@ -131,7 +160,10 @@ open class GenericPersistentContainer<ContextType: NSManagedObjectContext> {
     }
     
     public func newBackgroundContext() -> ContextType {
-        return self.underlyingPersistentContainer.newBackgroundContext() as! ContextType
+        let context = self.underlyingPersistentContainer.newBackgroundContext() as! ContextType
+        self.underlyingPersistentContainer.configureDefaults(for: context)
+        
+        return context
     }
     
     public func performBackgroundTask(_ block: @escaping (ContextType) -> Void) {

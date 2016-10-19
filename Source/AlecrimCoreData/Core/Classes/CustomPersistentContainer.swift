@@ -104,9 +104,6 @@ internal class CustomPersistentContainer: NSObject, UnderlyingPersistentContaine
         
         self.viewContext = self.contextType.init(concurrencyType: .mainQueueConcurrencyType)
         self.viewContext.persistentStoreCoordinator = self.persistentStoreCoordinator
-        self.viewContext.alc_automaticallyMergesChangesFromParent = true
-        self.viewContext.alc_automaticallyObtainPermanentIDsForInsertedObjects = true
-        self.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         
         self.alc_persistentStoreDescriptions = [CustomPersistentStoreDescription(url: type(of: self).defaultDirectoryURL().appendingPathComponent("\(name).sqlite"))]
     }
@@ -123,10 +120,6 @@ internal class CustomPersistentContainer: NSObject, UnderlyingPersistentContaine
             context.persistentStoreCoordinator = self.persistentStoreCoordinator
         }
         
-        context.alc_automaticallyMergesChangesFromParent = true
-        context.alc_automaticallyObtainPermanentIDsForInsertedObjects = true
-        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        
         return context
     }
 
@@ -136,6 +129,12 @@ internal class CustomPersistentContainer: NSObject, UnderlyingPersistentContaine
         self.alc_persistentStoreDescriptions.forEach {
             self.persistentStoreCoordinator.alc_addPersistentStore(with: $0, completionHandler: block)
         }
+    }
+    
+    internal func configureDefaults(for context: NSManagedObjectContext) {
+        context.alc_automaticallyMergesChangesFromParent = true
+        context.alc_automaticallyObtainPermanentIDsForInsertedObjects = true
+        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
     
 }
