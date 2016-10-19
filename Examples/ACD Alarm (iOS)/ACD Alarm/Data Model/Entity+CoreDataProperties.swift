@@ -14,10 +14,6 @@ import CoreData
 
 extension Entity {
 
-    @nonobjc class func fetchRequest() -> NSFetchRequest<Entity> {
-        return NSFetchRequest<Entity>(entityName: "Entity")
-    }
-
     @NSManaged var identifier: String
 
 }

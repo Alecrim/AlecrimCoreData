@@ -14,10 +14,6 @@ import CoreData
 
 extension AlarmType {
 
-    @nonobjc class func fetchRequest() -> NSFetchRequest<AlarmType> {
-        return NSFetchRequest<AlarmType>(entityName: "AlarmType")
-    }
-
     @NSManaged var name: String
 
     @NSManaged var alarms: Set<Alarm>
