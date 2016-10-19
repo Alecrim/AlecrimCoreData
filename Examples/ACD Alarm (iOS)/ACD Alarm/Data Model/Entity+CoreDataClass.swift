@@ -11,7 +11,7 @@ import Foundation
 import CoreData
 
 @objc(Entity)
-class Entity: NSManagedObject {
+/* abstract */ class Entity: NSManagedObject {
 
 }
 
