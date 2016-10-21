@@ -14,10 +14,6 @@ import CoreData
 
 extension Alarm {
 
-    @nonobjc class func fetchRequest() -> NSFetchRequest<Alarm> {
-        return NSFetchRequest<Alarm>(entityName: "Alarm")
-    }
-
     @NSManaged var date: Date
     @NSManaged var isActive: Bool
     @NSManaged var label: String

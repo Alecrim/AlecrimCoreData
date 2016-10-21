@@ -39,15 +39,8 @@ extension AttributeQueryProtocol {
             fetchRequest.resultType = NSFetchRequestResultType.dictionaryResultType
             
             var results: [Self.Element] = []
-            
-            let dicts: [NSDictionary]
-            
-            if #available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
-                dicts = try fetchRequest.execute()
-            }
-            else {
-                dicts = try self.context.fetch(fetchRequest)
-            }
+
+            let dicts: [NSDictionary] = try self.context.fetch(fetchRequest)
             
             try dicts.forEach {
                 guard $0.count == 1, let value = $0.allValues.first as? Self.Element else {

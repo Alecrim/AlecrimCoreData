@@ -90,14 +90,7 @@ extension CoreDataQueryable {
         fetchRequest.resultType = NSFetchRequestResultType.dictionaryResultType
         
         do {
-            let results: [NSDictionary]
-            
-            if #available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
-                results = try fetchRequest.execute()
-            }
-            else {
-                results = try self.context.fetch(fetchRequest)
-            }
+            let results: [NSDictionary] = try self.context.fetch(fetchRequest)
             
             guard let firstResult = results.first else { throw AlecrimCoreDataError.unexpectedValue(results) }
             guard let anyObjectValue = firstResult.value(forKey: expressionDescription.name) else { throw AlecrimCoreDataError.unexpectedValue(firstResult) }
