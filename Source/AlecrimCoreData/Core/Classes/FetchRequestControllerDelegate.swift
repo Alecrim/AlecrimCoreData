@@ -96,6 +96,28 @@ internal final class FetchRequestControllerDelegate<T: NSManagedObject>: NSObjec
 
 extension FetchRequestController {
     
+    public func removeAllBindings() {
+        self.delegate.needsReloadDataClosure = nil
+        
+        self.delegate.willChangeContentClosures.removeAll()
+        self.delegate.didChangeContentClosures.removeAll()
+        
+        self.delegate.didInsertSectionClosures.removeAll()
+        self.delegate.didDeleteSectionClosures.removeAll()
+        self.delegate.didUpdateSectionClosures.removeAll()
+        
+        self.delegate.didInsertObjectClosures.removeAll()
+        self.delegate.didDeleteObjectClosures.removeAll()
+        self.delegate.didUpdateObjectClosures.removeAll()
+        self.delegate.didMoveObjectClosures.removeAll()
+        
+        self.delegate.sectionIndexTitleClosure = nil
+    }
+    
+}
+
+extension FetchRequestController {
+    
     public func refresh() throws {
         self.delegate.needsReloadDataClosure?()
         
