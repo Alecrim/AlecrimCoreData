@@ -67,7 +67,7 @@
                 }
                 .didInsertObject { entity, newIndexPath in
                     if !reloadData {
-                        let newIndexPath = sectionOffset > 0 ? IndexPath(forItem: newIndexPath.item, inSection: newIndexPath.section + sectionOffset) : newIndexPath
+                        let newIndexPath = sectionOffset > 0 ? IndexPath(item: newIndexPath.item, section: newIndexPath.section + sectionOffset) : newIndexPath
                         
                         if !insertedSectionIndexes.contains(newIndexPath.section) {
                             insertedItemIndexPaths.append(newIndexPath)
@@ -76,7 +76,7 @@
                 }
                 .didDeleteObject { entity, indexPath in
                     if !reloadData {
-                        let indexPath = sectionOffset > 0 ? IndexPath(forItem: indexPath.item, inSection: indexPath.section + sectionOffset) : indexPath
+                        let indexPath = sectionOffset > 0 ? IndexPath(item: indexPath.item, section: indexPath.section + sectionOffset) : indexPath
                         
                         if !deletedSectionIndexes.contains(indexPath.section) {
                             deletedItemIndexPaths.append(indexPath)
@@ -85,7 +85,7 @@
                 }
                 .didUpdateObject { entity, indexPath in
                     if !reloadData {
-                        let indexPath = sectionOffset > 0 ? IndexPath(forItem: indexPath.item, inSection: indexPath.section + sectionOffset) : indexPath
+                        let indexPath = sectionOffset > 0 ? IndexPath(item: indexPath.item, section: indexPath.section + sectionOffset) : indexPath
                         
                         if !deletedSectionIndexes.contains(indexPath.section) && deletedItemIndexPaths.index(of: indexPath) == nil && updatedItemIndexPaths.index(of: indexPath) == nil {
                             updatedItemIndexPaths.append(indexPath)
@@ -94,8 +94,8 @@
                 }
                 .didMoveObject { entity, indexPath, newIndexPath in
                     if !reloadData {
-                        let newIndexPath = sectionOffset > 0 ? IndexPath(forItem: newIndexPath.item, inSection: newIndexPath.section + sectionOffset) : newIndexPath
-                        let indexPath = sectionOffset > 0 ? IndexPath(forItem: indexPath.item, inSection: indexPath.section + sectionOffset) : indexPath
+                        let newIndexPath = sectionOffset > 0 ? IndexPath(item: newIndexPath.item, section: newIndexPath.section + sectionOffset) : newIndexPath
+                        let indexPath = sectionOffset > 0 ? IndexPath(item: indexPath.item, section: indexPath.section + sectionOffset) : indexPath
                         
                         if newIndexPath == indexPath {
                             if !deletedSectionIndexes.contains(indexPath.section) && deletedItemIndexPaths.index(of: indexPath) == nil && updatedItemIndexPaths.index(of: indexPath) == nil {
@@ -173,19 +173,6 @@
             //
             return self
         }
-        
-    }
-    
-    // MARK: - IndexPath extensions
-    
-    extension IndexPath {
-        
-        public init(forItem item: Int, inSection section: Int) {
-            self.init(indexes: [section, item])
-        }
-        
-        // public var section: Int { return self[0] }
-        // public var item: Int { return self[1] }
         
     }
     
