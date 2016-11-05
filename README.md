@@ -197,7 +197,7 @@ container.performBackgroundTask { context in
     person.additionalInfo = "The best Doctor ever!"
 
     do {
-        context.save()
+        try context.save()
     }
     catch {
         // do a nice error handling here
