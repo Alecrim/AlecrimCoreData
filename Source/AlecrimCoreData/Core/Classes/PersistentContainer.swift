@@ -143,12 +143,7 @@ open class GenericPersistentContainer<ContextType: NSManagedObjectContext> {
                  Check the error message to determine what the actual problem was.
                  */
                 
-                if let error = error as? NSError {
-                    AlecrimCoreDataError.fatalError("Unresolved error \(error), \(error.userInfo)")
-                }
-                else {
-                    AlecrimCoreDataError.fatalError("Unresolved error \(error)")
-                }
+                AlecrimCoreDataError.fatalError("Unresolved error \(error), \((error as NSError).userInfo)")
             }
         }
     }

@@ -36,7 +36,7 @@ public final class EntityCodeGenerator: CodeGenerator {
         
         // class
         let superClassName = (self.entityDescription.superentity == nil ? "NSManagedObject" : self.entityDescription.superentity!.managedObjectClassName.components(separatedBy: ".").last!)
-        let abstractOrFinal = self.entityDescription.isAbstract ? "/* abstract */ " : "final "
+        let abstractOrFinal = self.entityDescription.isAbstract ? "/* abstract */ " : (self.entityDescription.subentities.count == 0 ? "final " : "")
         
         string.appendLine("@objc(\(className))")
         string.appendLine(self.parameters.accessModifier + "\(abstractOrFinal)class \(className): \(superClassName) {")
