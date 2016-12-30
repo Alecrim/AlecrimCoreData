@@ -11,7 +11,7 @@ import CoreData
 
 // MARK: -
 
-@available(iOS 10.0, *) // to make CocoaPods happy
+@available(iOS 10.0, *) // to make tools happy
 @available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *)
 internal class NativePersistentContainer: NSPersistentContainer, UnderlyingPersistentContainer {
     
@@ -71,7 +71,7 @@ internal class NativePersistentContainer: NSPersistentContainer, UnderlyingPersi
 
 // MARK: -
 
-@available(iOS 10.0, *) // to make CocoaPods happy
+@available(iOS 10.0, *) // to make tools happy
 @available(macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *)
 extension NSPersistentStoreDescription: PersistentStoreDescription {
     
