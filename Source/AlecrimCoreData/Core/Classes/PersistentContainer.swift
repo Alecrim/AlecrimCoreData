@@ -98,10 +98,14 @@ open class GenericPersistentContainer<ContextType: NSManagedObjectContext> {
     
     // MARK: -
     
-    public convenience init(name: String, automaticallyLoadPersistentStores: Bool = true) {
+    public convenience init(name: String) {
+        self.init(name: name, automaticallyLoadPersistentStores: true)
+    }
+    
+    public convenience init(name: String, automaticallyLoadPersistentStores: Bool) {
         if let modelURL = Bundle.main.url(forResource: name, withExtension: "momd") ?? Bundle.main.url(forResource: name, withExtension: "mom") {
             if let model = NSManagedObjectModel(contentsOf: modelURL) {
-                self.init(name: name, managedObjectModel: model)
+                self.init(name: name, managedObjectModel: model, automaticallyLoadPersistentStores: automaticallyLoadPersistentStores)
                 return
             }
             
@@ -117,7 +121,7 @@ open class GenericPersistentContainer<ContextType: NSManagedObjectContext> {
     }
     
     
-    public init(name: String, managedObjectModel model: NSManagedObjectModel, automaticallyLoadPersistentStores: Bool = true) {
+    public init(name: String, managedObjectModel model: NSManagedObjectModel, automaticallyLoadPersistentStores: Bool) {
         //
         if #available(iOS 10.0, macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
             self.underlyingPersistentContainer = NativePersistentContainer(name: name, managedObjectModel: model, contextType: ContextType.self)
