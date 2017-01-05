@@ -113,7 +113,12 @@
                         }
                     }
                 }
-                .didChangeContent { [unowned collectionView] in
+                .didChangeContent { [weak collectionView] in
+                    guard let collectionView = collectionView else {
+                        reset()
+                        return
+                    }
+                    
                     if reloadData {
                         collectionView.reloadData()
                         reset()
