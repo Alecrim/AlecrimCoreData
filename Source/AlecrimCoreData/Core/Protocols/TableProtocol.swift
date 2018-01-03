@@ -17,15 +17,15 @@ public protocol TableProtocol: CoreDataQueryable {
 
 extension TableProtocol where Self.Element: NSManagedObject {
     
-    public final func create() -> Self.Element {
+    public func create() -> Self.Element {
         return Self.Element(entity: self.entityDescription, insertInto: self.context)
     }
 
-    public final func delete(_ entity: Self.Element) {
+    public func delete(_ entity: Self.Element) {
         self.context.delete(entity)
     }
     
-    public final func refresh(_ entity: Self.Element, mergeChanges: Bool = true) {
+    public func refresh(_ entity: Self.Element, mergeChanges: Bool = true) {
         self.context.refresh(entity, mergeChanges: mergeChanges)
     }
 
@@ -33,7 +33,7 @@ extension TableProtocol where Self.Element: NSManagedObject {
 
 extension TableProtocol {
     
-    public final func deleteAll() {
+    public func deleteAll() {
         do {
             let fetchRequest = self.toFetchRequest() as NSFetchRequest<NSManagedObjectID>
             fetchRequest.resultType = .managedObjectIDResultType
@@ -54,7 +54,7 @@ extension TableProtocol {
 
 extension TableProtocol where Self.Element: NSManagedObject {
     
-    public final func firstOrCreated(_ predicateClosure: (Self.Element.Type) -> NSComparisonPredicate) -> Self.Element {
+    public func firstOrCreated(_ predicateClosure: (Self.Element.Type) -> NSComparisonPredicate) -> Self.Element {
         let predicate = predicateClosure(Self.Element.self)
         
         if let entity = self.filter(using: predicate).first() {
@@ -79,7 +79,7 @@ extension TableProtocol where Self.Element: NSManagedObject {
 
 extension TableProtocol {
     
-    public final func execute() -> [Self.Element] {
+    public func execute() -> [Self.Element] {
         do {
             return try self.context.fetch(self.toFetchRequest() as NSFetchRequest<Self.Element>)
         }
@@ -94,7 +94,7 @@ extension TableProtocol {
 
 extension TableProtocol {
     
-    public final func toFetchRequest<ResultType: NSFetchRequestResult>() -> NSFetchRequest<ResultType> {
+    public func toFetchRequest<ResultType: NSFetchRequestResult>() -> NSFetchRequest<ResultType> {
         let fetchRequest = NSFetchRequest<ResultType>()
         
         fetchRequest.entity = self.entityDescription
