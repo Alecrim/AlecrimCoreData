@@ -77,7 +77,7 @@ extension AttributeQueryProtocol where Self.Element: NSDictionary {
 
 extension AttributeQueryProtocol where Self.Element: NSDictionary {
     
-    public final func toFetchRequest<ResultType: NSFetchRequestResult>() -> NSFetchRequest<ResultType> {
+    public func toFetchRequest<ResultType: NSFetchRequestResult>() -> NSFetchRequest<ResultType> {
         let fetchRequest = NSFetchRequest<ResultType>()
         
         fetchRequest.entity = self.entityDescription

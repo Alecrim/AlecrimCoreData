@@ -20,11 +20,11 @@ public protocol Queryable: Enumerable {
 
 extension Queryable {
     
-    public final func sort<A: AttributeProtocol>(using attribute: A, ascending: Bool = true) -> Self {
+    public func sort<A: AttributeProtocol>(using attribute: A, ascending: Bool = true) -> Self {
         return self.sort(usingAttributeName: attribute.___name, ascending: ascending, options: attribute.___comparisonPredicateOptions)
     }
     
-    public final func sort(usingAttributeName attributeName: String, ascending: Bool = true, options: NSComparisonPredicate.Options = PersistentContainerOptions.defaultComparisonPredicateOptions) -> Self {
+    public func sort(usingAttributeName attributeName: String, ascending: Bool = true, options: NSComparisonPredicate.Options = PersistentContainerOptions.defaultComparisonPredicateOptions) -> Self {
         let sortDescriptor: NSSortDescriptor
         
         if options.contains(.caseInsensitive) && options.contains(.diacriticInsensitive) {
@@ -43,7 +43,7 @@ extension Queryable {
         return self.sort(using: sortDescriptor)
     }
     
-    public final func sort(using sortDescriptor: NSSortDescriptor) -> Self {
+    public func sort(using sortDescriptor: NSSortDescriptor) -> Self {
         var clone = self
         
         if clone.sortDescriptors != nil {
@@ -56,7 +56,7 @@ extension Queryable {
         return clone
     }
     
-    public final func sort(using sortDescriptors: [NSSortDescriptor]) -> Self {
+    public func sort(using sortDescriptors: [NSSortDescriptor]) -> Self {
         var clone = self
 
         if clone.sortDescriptors != nil {
@@ -75,7 +75,7 @@ extension Queryable {
 
 extension Queryable {
     
-    public final func filter(using predicate: NSPredicate) -> Self {
+    public func filter(using predicate: NSPredicate) -> Self {
         var clone = self
         
         if let existingPredicate = clone.predicate {

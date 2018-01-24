@@ -55,7 +55,7 @@ internal protocol UnderlyingPersistentContainer: class {
     
     func configureDefaults(for context: NSManagedObjectContext)
     
-    init(name: String, managedObjectModel model: NSManagedObjectModel, contextType: NSManagedObjectContext.Type)
+    init(name: String, managedObjectModel model: NSManagedObjectModel, contextType: NSManagedObjectContext.Type, directoryURL: URL)
 }
 
 // MARK: -
@@ -64,7 +64,7 @@ open class GenericPersistentContainer<ContextType: NSManagedObjectContext> {
 
     // MARK: -
 
-    open class func defaultDirectoryURL() -> URL {
+    open class func directoryURL() -> URL {
         if #available(iOS 10.0, macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
             return NativePersistentContainer.defaultDirectoryURL()
         }
@@ -122,12 +122,20 @@ open class GenericPersistentContainer<ContextType: NSManagedObjectContext> {
     
     
     public init(name: String, managedObjectModel model: NSManagedObjectModel, automaticallyLoadPersistentStores: Bool) {
+        let directoryURL = type(of: self).directoryURL()
+        
+        do {
+            try FileManager.default.createDirectory(atPath: directoryURL.path, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            AlecrimCoreDataError.handleError(error)
+        }
+        
         //
         if #available(iOS 10.0, macOSApplicationExtension 10.12, iOSApplicationExtension 10.0, tvOSApplicationExtension 10.0, watchOSApplicationExtension 3.0, *) {
-            self.underlyingPersistentContainer = NativePersistentContainer(name: name, managedObjectModel: model, contextType: ContextType.self)
+            self.underlyingPersistentContainer = NativePersistentContainer(name: name, managedObjectModel: model, contextType: ContextType.self, directoryURL: directoryURL)
         }
         else {
-            self.underlyingPersistentContainer = CustomPersistentContainer(name: name, managedObjectModel: model, contextType: ContextType.self)
+            self.underlyingPersistentContainer = CustomPersistentContainer(name: name, managedObjectModel: model, contextType: ContextType.self, directoryURL: directoryURL)
         }
         
         //

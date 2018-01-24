@@ -20,12 +20,12 @@ internal class NativePersistentContainer: NSPersistentContainer, UnderlyingPersi
     
     internal override var viewContext: NSManagedObjectContext { return self._viewContext }
     
-    internal required init(name: String, managedObjectModel model: NSManagedObjectModel, contextType: NSManagedObjectContext.Type) {
+    internal required init(name: String, managedObjectModel model: NSManagedObjectModel, contextType: NSManagedObjectContext.Type, directoryURL: URL) {
         self.contextType = contextType
         self._viewContext = self.contextType.init(concurrencyType: .mainQueueConcurrencyType)
         
         super.init(name: name, managedObjectModel: model)
-        
+        self.persistentStoreDescriptions = [NSPersistentStoreDescription(url: directoryURL.appendingPathComponent("\(name).sqlite"))]
         self._viewContext.persistentStoreCoordinator = self.persistentStoreCoordinator
     }
     

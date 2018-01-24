@@ -21,14 +21,14 @@ public protocol Enumerable: Sequence {
 
 extension Enumerable {
     
-    public final func skip(_ count: Int) -> Self {
+    public func skip(_ count: Int) -> Self {
         var clone = self
         clone.offset = count
         
         return clone
     }
     
-    public final func take(_ count: Int) -> Self {
+    public func take(_ count: Int) -> Self {
         var clone = self
         clone.limit = count
         
@@ -39,11 +39,11 @@ extension Enumerable {
 
 extension Enumerable {
     
-    public final func any() -> Bool {
+    public func any() -> Bool {
         return self.take(1).count() == 1
     }
     
-    public final func none() -> Bool {
+    public func none() -> Bool {
         return !self.any()
     }
     
