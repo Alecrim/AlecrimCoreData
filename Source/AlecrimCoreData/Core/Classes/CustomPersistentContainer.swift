@@ -96,7 +96,7 @@ internal class CustomPersistentContainer: NSObject, UnderlyingPersistentContaine
 
     // MARK: -
     
-    internal required init(name: String, managedObjectModel model: NSManagedObjectModel, contextType: NSManagedObjectContext.Type) {
+    internal required init(name: String, managedObjectModel model: NSManagedObjectModel, contextType: NSManagedObjectContext.Type, directoryURL: URL) {
         self.contextType = contextType
         
         self.name = name
@@ -105,7 +105,7 @@ internal class CustomPersistentContainer: NSObject, UnderlyingPersistentContaine
         self.viewContext = self.contextType.init(concurrencyType: .mainQueueConcurrencyType)
         self.viewContext.persistentStoreCoordinator = self.persistentStoreCoordinator
         
-        self.alc_persistentStoreDescriptions = [CustomPersistentStoreDescription(url: type(of: self).defaultDirectoryURL().appendingPathComponent("\(name).sqlite"))]
+        self.alc_persistentStoreDescriptions = [CustomPersistentStoreDescription(url: directoryURL.appendingPathComponent("\(name).sqlite"))]
     }
     
     // MARK: -
