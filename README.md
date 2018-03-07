@@ -1,6 +1,6 @@
 ![AlecrimCoreData](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/master/AlecrimCoreData.png)
 
-[![Language: Swift](https://img.shields.io/badge/Swift-3.2-orange.svg?style=flat)](https://developer.apple.com/swift/)
+[![Language: Swift](https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Platform](https://img.shields.io/cocoapods/p/AlecrimCoreData.svg?style=flat)](http://cocoadocs.org/docsets/AlecrimCoreData)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/develop/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/v/AlecrimCoreData.svg?style=flat)](http://cocoapods.org)
@@ -303,7 +303,7 @@ let filteredPeople = context.people.filter(using: predicate)
 $ gem install cocoapods
 ```
 
-CocoaPods 1.1.0+ is required to build AlecrimCoreData 5.0+.
+CocoaPods 1.1.0+ is required to build AlecrimCoreData 5.2+.
 
 To integrate **AlecrimCoreData** into your Xcode project using CocoaPods, specify it in your `Podfile`:
 
@@ -314,7 +314,7 @@ use_frameworks!
 
 target '<Your Target Name>' do
     # pod 'AlecrimCoreData', :git => 'https://github.com/Alecrim/AlecrimCoreData.git', :branch => 'develop'
-    pod 'AlecrimCoreData', '~> 5.0'
+    pod 'AlecrimCoreData', '~> 5.2'
 end
 ```
 
