@@ -537,7 +537,7 @@ public func << <A: AttributeProtocol, V>(left: A, right: [V]) -> NSComparisonPre
     return left.isIn(right)
 }
 
-public func << <A: AttributeProtocol, V: Comparable>(left: A, right: Range<V>) -> NSComparisonPredicate where A.ValueType == V {
+public func << <A: AttributeProtocol, V>(left: A, right: Range<V>) -> NSComparisonPredicate where A.ValueType == V {
     return left.isBetween(right)
 }
 
