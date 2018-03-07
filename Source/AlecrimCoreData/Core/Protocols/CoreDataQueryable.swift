@@ -9,9 +9,7 @@
 import Foundation
 import CoreData
 
-public protocol CoreDataQueryable: GenericQueryable {
-    
-    associatedtype Element: NSFetchRequestResult
+public protocol CoreDataQueryable: GenericQueryable where Element: NSFetchRequestResult {
     
     var batchSize: Int { get set }
 
