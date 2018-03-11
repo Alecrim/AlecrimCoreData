@@ -65,11 +65,13 @@ open class PersistentContainer: NSPersistentContainer {
         persistentStoreDescription.shouldInferMappingModelAutomatically = true
         persistentStoreDescription.shouldMigrateStoreAutomatically = true
         
+        #if os(macOS) || os(iOS)
         if let ubiquitousContainerIdentifier = ubiquitousContainerIdentifier {
             persistentStoreDescription.setOption((ubiquitousContainerIdentifier) as NSString, forKey: NSPersistentStoreUbiquitousContainerIdentifierKey)
             persistentStoreDescription.setOption((ubiquitousContentRelativePath ?? "Data/TransactionLogs") as NSString, forKey: NSPersistentStoreUbiquitousContentURLKey)
             persistentStoreDescription.setOption((ubiquitousContentName ?? "UbiquityStore") as NSString, forKey: NSPersistentStoreUbiquitousContentNameKey)
         }
+        #endif
         
         //
         self.persistentStoreDescriptions = [persistentStoreDescription]
@@ -83,6 +85,7 @@ open class PersistentContainer: NSPersistentContainer {
             }
             
             //
+            #if os(macOS) || os(iOS)
             if let _ = ubiquitousContainerIdentifier {
                 self.didImportUbiquitousContentObserver = NotificationCenter.default.addObserver(forName: .NSPersistentStoreDidImportUbiquitousContentChanges, object: self.persistentStoreCoordinator, queue: nil) { [weak self] notification in
                     guard let context = self?.viewContext.parent ?? self?.viewContext else {
@@ -94,6 +97,7 @@ open class PersistentContainer: NSPersistentContainer {
                     }
                 }
             }
+            #endif
             
             //
             self.viewContext.automaticallyMergesChangesFromParent = true
