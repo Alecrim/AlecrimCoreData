@@ -27,5 +27,9 @@ public final class FetchRequestController<Entity: ManagedObject> {
         
         try! self.rawValue.performFetch()
     }
-    
+
+    public convenience init(query: Query<Entity>, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
+        self.init(fetchRequest: query.fetchRequest, context: query.context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+    }
+
 }
