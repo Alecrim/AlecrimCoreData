@@ -9,6 +9,15 @@
 import Foundation
 import CoreData
 
+//
+// we cannot inherit from `NSFetchedResultsController` here because the error:
+// "inheritance from a generic Objective-C class 'NSFetchedResultsController' must bind type parameters of
+// 'NSFetchedResultsController' to specific concrete types"
+// and
+// `FetchRequestController<Entity: ManagedObject>: NSFetchedResultsController<NSFetchRequestResult>` will not work for us
+// (curiously the "rawValue" inside our class is accepted to be `NSFetchedResultsController<Entity>`)
+//
+
 public final class FetchRequestController<Entity: ManagedObject> {
     
     public let rawValue: NSFetchedResultsController<Entity>
