@@ -13,7 +13,7 @@ import CoreData
 
 public class Predicate<Entity: ManagedObject> {
     
-    private let rawValue: NSPredicate
+    public let rawValue: NSPredicate
 
     public var predicateFormat: String {
         return self.rawValue.predicateFormat
@@ -32,12 +32,8 @@ public class Predicate<Entity: ManagedObject> {
         self.rawValue = NSPredicate(value: value)
     }
     
-    internal init(rawValue: NSPredicate) {
+    public init(rawValue: NSPredicate) {
         self.rawValue = rawValue
-    }
-    
-    internal func toRaw() -> NSPredicate {
-        return self.rawValue
     }
     
 }
@@ -95,7 +91,7 @@ public final class CompoundPredicate<Entity: ManagedObject>: Predicate<Entity> {
         self.subpredicates = subpredicates
         
         //
-        let predicate = NSCompoundPredicate(type: self.type, subpredicates: self.subpredicates.map { $0.toRaw() })
+        let predicate = NSCompoundPredicate(type: self.type, subpredicates: self.subpredicates.map { $0.rawValue })
         
         super.init(rawValue: predicate)
     }

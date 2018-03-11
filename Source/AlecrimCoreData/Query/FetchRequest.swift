@@ -13,8 +13,6 @@ import CoreData
 
 public struct FetchRequest<Entity: ManagedObject> {
     
-    public let entityDescription: NSEntityDescription
-    
     public fileprivate(set) var offset: Int = 0
     public fileprivate(set) var limit: Int = 0
     public fileprivate(set) var batchSize: Int = Config.defaultBatchSize
@@ -22,21 +20,21 @@ public struct FetchRequest<Entity: ManagedObject> {
     public fileprivate(set) var predicate: Predicate<Entity>? = nil
     public fileprivate(set) var sortDescriptors: [SortDescriptor<Entity>]? = nil
     
-    internal init() {
-        self.entityDescription = Entity.entity()
+    public init() {
     }
     
-    internal func toRaw<ResultType: NSFetchRequestResult>() -> NSFetchRequest<ResultType> {
-        let rawValue = NSFetchRequest<ResultType>()
+    public var rawValue: NSFetchRequest<Entity> {
+        let entityDescription = Entity.entity()
+        let rawValue = NSFetchRequest<Entity>(entityName: entityDescription.name!)
         
-        rawValue.entity = self.entityDescription
+        rawValue.entity = entityDescription
         
         rawValue.fetchOffset = self.offset
         rawValue.fetchLimit = self.limit
         rawValue.fetchBatchSize = (self.limit > 0 && self.batchSize > self.limit ? 0 : self.batchSize)
         
-        rawValue.predicate = self.predicate?.toRaw()
-        rawValue.sortDescriptors = self.sortDescriptors?.map { $0.toRaw() }
+        rawValue.predicate = self.predicate?.rawValue
+        rawValue.sortDescriptors = self.sortDescriptors?.map { $0.rawValue }
         
         return rawValue
     }
@@ -89,6 +87,12 @@ extension FetchRequest {
 
     public func filter(using rawValue: NSPredicate) -> FetchRequest<Entity> {
         return self.filter(using: Predicate<Entity>(rawValue: rawValue))
+    }
+    
+    //
+    
+    public func `where`(_ closure: () -> Predicate<Entity>) -> FetchRequest<Entity> {
+        return self.filter(using: closure())
     }
     
 }
@@ -146,6 +150,23 @@ extension FetchRequest {
     
     public func sort(by rawValues: NSSortDescriptor...) -> FetchRequest<Entity> {
         return self.sort(by: rawValues.map { SortDescriptor<Entity>(rawValue: $0) })
+    }
+
+    //
+
+    public func sort<Value>(by closure: @autoclosure () -> KeyPath<Entity, Value>) -> FetchRequest<Entity> {
+        let sortDescriptor: SortDescriptor<Entity> = .ascending(closure())
+        return self.sort(by: sortDescriptor)
+    }
+    
+    //
+    
+    public func orderBy(_ closure: () -> SortDescriptor<Entity>) -> FetchRequest<Entity> {
+        return self.sort(by: closure())
+    }
+    
+    public func orderBy<Value>(_ closure: () -> KeyPath<Entity, Value>) -> FetchRequest<Entity> {
+        return self.sort(by: closure())
     }
 
 }
