@@ -23,7 +23,7 @@ public final class FetchRequestController<Entity: ManagedObject> {
     public let rawValue: NSFetchedResultsController<Entity>
     
     public init(fetchRequest: FetchRequest<Entity>, context: ManagedObjectContext, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
-        self.rawValue = NSFetchedResultsController(fetchRequest: fetchRequest.rawValue, managedObjectContext: context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+        self.rawValue = NSFetchedResultsController(fetchRequest: fetchRequest.toRaw() as NSFetchRequest<Entity>, managedObjectContext: context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
         
         try! self.rawValue.performFetch()
     }

@@ -11,7 +11,9 @@ import CoreData
 
 // MARK: -
 
-public struct FetchRequest<Entity: ManagedObject> {
+public struct FetchRequest<Entity: ManagedObject>: Queryable {
+    
+    public typealias Element = Entity
     
     public fileprivate(set) var offset: Int = 0
     public fileprivate(set) var limit: Int = 0
@@ -23,9 +25,9 @@ public struct FetchRequest<Entity: ManagedObject> {
     public init() {
     }
     
-    public var rawValue: NSFetchRequest<Entity> {
+    internal func toRaw<Result: NSFetchRequestResult>() -> NSFetchRequest<Result> {
         let entityDescription = Entity.entity()
-        let rawValue = NSFetchRequest<Entity>(entityName: entityDescription.name!)
+        let rawValue = NSFetchRequest<Result>(entityName: entityDescription.name!)
         
         rawValue.entity = entityDescription
         
@@ -85,16 +87,6 @@ extension FetchRequest {
         return clone
     }
 
-    public func filter(using rawValue: NSPredicate) -> FetchRequest<Entity> {
-        return self.filter(using: Predicate<Entity>(rawValue: rawValue))
-    }
-    
-    // aliases
-    
-    public func `where`(_ closure: () -> Predicate<Entity>) -> FetchRequest<Entity> {
-        return self.filter(using: closure())
-    }
-    
 }
 
 // MARK: -
@@ -114,9 +106,6 @@ extension FetchRequest {
         return clone
     }
     
-    public func sort(by rawValue: NSSortDescriptor) -> FetchRequest<Entity> {
-        return self.sort(by: SortDescriptor<Entity>(rawValue: rawValue))
-    }
 
     public func sort(by sortDescriptors: [SortDescriptor<Entity>]) -> FetchRequest<Entity> {
         var clone = self
@@ -131,10 +120,6 @@ extension FetchRequest {
         return clone
     }
 
-    public func sort(by rawValues: [NSSortDescriptor]) -> FetchRequest<Entity> {
-        return self.sort(by: rawValues.map { SortDescriptor<Entity>(rawValue: $0) })
-    }
-    
     public func sort(by sortDescriptors: SortDescriptor<Entity>...) -> FetchRequest<Entity> {
         var clone = self
         
@@ -146,27 +131,6 @@ extension FetchRequest {
         }
         
         return clone
-    }
-    
-    public func sort(by rawValues: NSSortDescriptor...) -> FetchRequest<Entity> {
-        return self.sort(by: rawValues.map { SortDescriptor<Entity>(rawValue: $0) })
-    }
-
-    // so we can write `sort(by: \.name)` instead of `sort(by: \Customer.name)`
-
-    public func sort<Value>(by closure: @autoclosure () -> KeyPath<Entity, Value>) -> FetchRequest<Entity> {
-        let sortDescriptor: SortDescriptor<Entity> = .ascending(closure())
-        return self.sort(by: sortDescriptor)
-    }
-    
-    // aliases
-    
-    public func orderBy(_ closure: () -> SortDescriptor<Entity>) -> FetchRequest<Entity> {
-        return self.sort(by: closure())
-    }
-    
-    public func orderBy<Value>(_ closure: () -> KeyPath<Entity, Value>) -> FetchRequest<Entity> {
-        return self.sort(by: closure())
     }
 
 }

@@ -33,6 +33,8 @@ extension ManagedObject {
     
 }
 
+// MARK:-
+
 extension ManagedObject {
     
     public final func delete() {

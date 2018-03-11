@@ -18,6 +18,8 @@
 		1420DFB620550EE700B34160 /* ManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFB520550EE700B34160 /* ManagedObjectContext.swift */; };
 		1420DFB820550F1300B34160 /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFB720550F1300B34160 /* PersistentContainer.swift */; };
 		1420DFBA20550FF500B34160 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFB920550FF500B34160 /* Expression.swift */; };
+		142371752055D0120086A42D /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 142371742055D0120086A42D /* Queryable.swift */; };
+		14B16B3B2055C1EC00039750 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B16B3A2055C1EC00039750 /* Query.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		1420DFB520550EE700B34160 /* ManagedObjectContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectContext.swift; sourceTree = "<group>"; };
 		1420DFB720550F1300B34160 /* PersistentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
 		1420DFB920550FF500B34160 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
+		142371742055D0120086A42D /* Queryable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queryable.swift; sourceTree = "<group>"; };
+		14B16B3A2055C1EC00039750 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +95,8 @@
 				1420DFAD205504B800B34160 /* FetchRequestController.swift */,
 				1420DFAF2055057700B34160 /* KeyPath.swift */,
 				1420DFA92055047500B34160 /* Predicate.swift */,
+				14B16B3A2055C1EC00039750 /* Query.swift */,
+				142371742055D0120086A42D /* Queryable.swift */,
 				1420DFAB2055049100B34160 /* SortDescriptor.swift */,
 			);
 			path = Query;
@@ -191,9 +197,11 @@
 				1420DFB02055057700B34160 /* KeyPath.swift in Sources */,
 				1420DFAA2055047500B34160 /* Predicate.swift in Sources */,
 				1420DFAE205504B800B34160 /* FetchRequestController.swift in Sources */,
+				14B16B3B2055C1EC00039750 /* Query.swift in Sources */,
 				1420DFAC2055049100B34160 /* SortDescriptor.swift in Sources */,
 				1420DFB620550EE700B34160 /* ManagedObjectContext.swift in Sources */,
 				1420DFB2205505D900B34160 /* Config.swift in Sources */,
+				142371752055D0120086A42D /* Queryable.swift in Sources */,
 				1420DFB820550F1300B34160 /* PersistentContainer.swift in Sources */,
 				1420DFBA20550FF500B34160 /* Expression.swift in Sources */,
 			);
