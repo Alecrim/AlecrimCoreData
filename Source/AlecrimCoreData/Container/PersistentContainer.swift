@@ -11,36 +11,35 @@ import CoreData
 
 // MARK: -
 
-open class PersistentContainer<Context: NSManagedObjectContext> {
+open class PersistentContainer: NSPersistentContainer {
     
     // MARK: -
     
-    fileprivate let rawValue: NSPersistentContainer
     fileprivate let enableUbiquity: Bool
-
+    
     // MARK: -
     
     public init(bundle: Bundle = Bundle.main, storageType: StorageType = .disk, name: String? = nil, managedObjectModel: NSManagedObjectModel? = nil, managedObjectModelURL: URL? = nil, persistentStoreURL: URL? = nil, ubiquitousContainerIdentifier: String? = nil, ubiquitousContentRelativePath: String? = nil, ubiquitousContentName: String? = nil) throws {
         //
         guard let name = name ?? bundle.bundleIdentifier else {
-            throw Error.invalidName
+            throw PersistentContainerError.invalidName
         }
         
         guard let managedObjectModelURL = managedObjectModelURL ?? bundle.managedObjectModelURL(forManagedObjectModelName: name) else {
-            throw Error.invalidManagedObjectModelURL
+            throw PersistentContainerError.invalidManagedObjectModelURL
         }
         
         guard let managedObjectModel = managedObjectModel ?? NSManagedObjectModel(contentsOf: managedObjectModelURL) ?? NSManagedObjectModel.mergedModel(from: [bundle]) else {
-            throw Error.managedObjectModelNotFound
+            throw PersistentContainerError.managedObjectModelNotFound
         }
-
+        
         guard let persistentStoreURL = persistentStoreURL ?? bundle.persistentStoreURL(forManagedObjectModelName: name, applicationName: name) else {
-            throw Error.invalidPersistentStoreURL
+            throw PersistentContainerError.invalidPersistentStoreURL
         }
         
         //
-        self.rawValue = HelperPersistentContainer(name: name, managedObjectModel: managedObjectModel)
         self.enableUbiquity = (ubiquitousContainerIdentifier != nil)
+        super.init(name: name, managedObjectModel: managedObjectModel)
         
         //
         if storageType == .disk {
@@ -50,7 +49,7 @@ open class PersistentContainer<Context: NSManagedObjectContext> {
                 try FileManager.default.createDirectory(atPath: directoryPath, withIntermediateDirectories: true)
             }
         }
-
+        
         //
         let persistentStoreDescription = NSPersistentStoreDescription(url: persistentStoreURL)
         
@@ -66,37 +65,52 @@ open class PersistentContainer<Context: NSManagedObjectContext> {
         }
         
         //
-        self.rawValue.persistentStoreDescriptions = [persistentStoreDescription]
+        self.persistentStoreDescriptions = [persistentStoreDescription]
         
         //
         var outError: Swift.Error?
         
-        self.rawValue.loadPersistentStores { description, error in
+        self.loadPersistentStores { description, error in
             if let error = error {
                 outError = error
                 return
             }
             
             if self.enableUbiquity {
-                NotificationCenter.default.addObserver(self, selector: #selector(type(of: self).persistentStoreDidImportUbiquitousContentChanges(notification:)), name: .NSPersistentStoreDidImportUbiquitousContentChanges, object: self.rawValue.persistentStoreCoordinator)
+                NotificationCenter.default.addObserver(self, selector: #selector(type(of: self).persistentStoreDidImportUbiquitousContentChanges(notification:)), name: .NSPersistentStoreDidImportUbiquitousContentChanges, object: self.persistentStoreCoordinator)
             }
         }
         
         if let outError = outError {
             throw outError
         }
+        
+        //
+        self.viewContext.automaticallyMergesChangesFromParent = true
+        self.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
     
     deinit {
         if self.enableUbiquity {
-            NotificationCenter.default.removeObserver(self, name: .NSPersistentStoreDidImportUbiquitousContentChanges, object: self.rawValue.persistentStoreCoordinator)
+            NotificationCenter.default.removeObserver(self, name: .NSPersistentStoreDidImportUbiquitousContentChanges, object: self.persistentStoreCoordinator)
         }
+    }
+    
+    // MARK: -
+
+    open override func newBackgroundContext() -> NSManagedObjectContext {
+        let context = super.newBackgroundContext()
+
+        context.automaticallyMergesChangesFromParent = true
+        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+
+        return context
     }
     
     // MARK: -
     
     @objc private func persistentStoreDidImportUbiquitousContentChanges(notification: Notification) {
-        let context = self.rawValue.viewContext.parent ?? self.rawValue.viewContext
+        let context = self.viewContext.parent ?? self.viewContext
         
         context.perform {
             context.mergeChanges(fromContextDidSave: notification)
@@ -106,8 +120,51 @@ open class PersistentContainer<Context: NSManagedObjectContext> {
     
 }
 
-extension PersistentContainer {
+// MARK: -
+
+open class GenericPersistentContainer<Context: NSManagedObjectContext> {
     
+    // MARK: -
+    
+    fileprivate final class HelperPersistentContainer<Context: NSManagedObjectContext>: PersistentContainer {
+        
+        fileprivate override lazy var viewContext: NSManagedObjectContext = {
+            let context = Context(concurrencyType: .mainQueueConcurrencyType)
+            
+            context.persistentStoreCoordinator = self.persistentStoreCoordinator
+            
+            context.automaticallyMergesChangesFromParent = true
+            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            
+            return context
+        }()
+        
+        fileprivate override func newBackgroundContext() -> NSManagedObjectContext {
+            let context = Context(concurrencyType: .privateQueueConcurrencyType)
+            
+            context.persistentStoreCoordinator = self.persistentStoreCoordinator
+            
+            context.automaticallyMergesChangesFromParent = true
+            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+            
+            return context
+        }
+        
+    }
+
+    
+    // MARK: -
+    
+    fileprivate let rawValue: NSPersistentContainer
+
+    // MARK: -
+    
+    public init(bundle: Bundle = Bundle.main, storageType: StorageType = .disk, name: String? = nil, managedObjectModel: NSManagedObjectModel? = nil, managedObjectModelURL: URL? = nil, persistentStoreURL: URL? = nil, ubiquitousContainerIdentifier: String? = nil, ubiquitousContentRelativePath: String? = nil, ubiquitousContentName: String? = nil) throws {
+        self.rawValue = try HelperPersistentContainer(bundle: bundle, storageType: storageType, name: name, managedObjectModel: managedObjectModel, managedObjectModelURL: managedObjectModelURL, persistentStoreURL: persistentStoreURL, ubiquitousContainerIdentifier: ubiquitousContainerIdentifier, ubiquitousContentRelativePath: ubiquitousContentRelativePath, ubiquitousContentName: ubiquitousContentName)
+    }
+
+    // MARK: -
+
     public final var viewContext: Context {
         return unsafeDowncast(self.rawValue.viewContext, to: Context.self)
     }
@@ -125,60 +182,23 @@ extension PersistentContainer {
     
 }
 
-// MARK: -
-
-fileprivate final class HelperPersistentContainer<Context: NSManagedObjectContext>: NSPersistentContainer {
-    
-    fileprivate override lazy var viewContext: NSManagedObjectContext = {
-        let context = Context(concurrencyType: .mainQueueConcurrencyType)
-
-        context.persistentStoreCoordinator = self.persistentStoreCoordinator
-        
-        context.automaticallyMergesChangesFromParent = true
-        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        
-        
-
-        return context
-    }()
-    
-    fileprivate override func newBackgroundContext() -> NSManagedObjectContext {
-        let context = Context(concurrencyType: .privateQueueConcurrencyType)
-        
-        context.persistentStoreCoordinator = self.persistentStoreCoordinator
-        
-        context.automaticallyMergesChangesFromParent = true
-        context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        
-        return context
-    }
-    
-}
-
 
 // MARK: -
 
-extension PersistentContainer {
-
-    public enum StorageType {
-        case disk
-        case memory
-    }
-
+public enum StorageType {
+    case disk
+    case memory
 }
 
 // MARK: -
 
-extension PersistentContainer {
-
-    public enum Error: Swift.Error {
-        case invalidName
-        case invalidManagedObjectModelURL
-        case managedObjectModelNotFound
-        case invalidPersistentStoreURL
-    }
-
+public enum PersistentContainerError: Swift.Error {
+    case invalidName
+    case invalidManagedObjectModelURL
+    case managedObjectModelNotFound
+    case invalidPersistentStoreURL
 }
+
 
 // MARK: -
 
