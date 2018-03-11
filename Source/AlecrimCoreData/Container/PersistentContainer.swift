@@ -164,7 +164,7 @@ open class GenericPersistentContainer<Context: NSManagedObjectContext> {
     // MARK: -
     
     public init(bundle: Bundle = Bundle.main, storageType: StorageType = .disk, name: String? = nil, managedObjectModel: NSManagedObjectModel? = nil, managedObjectModelURL: URL? = nil, persistentStoreURL: URL? = nil, ubiquitousContainerIdentifier: String? = nil, ubiquitousContentRelativePath: String? = nil, ubiquitousContentName: String? = nil) throws {
-        self.rawValue = try HelperPersistentContainer(bundle: bundle, storageType: storageType, name: name, managedObjectModel: managedObjectModel, managedObjectModelURL: managedObjectModelURL, persistentStoreURL: persistentStoreURL, ubiquitousContainerIdentifier: ubiquitousContainerIdentifier, ubiquitousContentRelativePath: ubiquitousContentRelativePath, ubiquitousContentName: ubiquitousContentName)
+        self.rawValue = try HelperPersistentContainer<Context>(bundle: bundle, storageType: storageType, name: name, managedObjectModel: managedObjectModel, managedObjectModelURL: managedObjectModelURL, persistentStoreURL: persistentStoreURL, ubiquitousContainerIdentifier: ubiquitousContainerIdentifier, ubiquitousContentRelativePath: ubiquitousContentRelativePath, ubiquitousContentName: ubiquitousContentName)
     }
 
     // MARK: -
