@@ -8,12 +8,32 @@
 
 /* Begin PBXBuildFile section */
 		1420DF9E2054FFBC00B34160 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 1420DF9C2054FFBC00B34160 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1420DFA82055046A00B34160 /* FetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFA72055046A00B34160 /* FetchRequest.swift */; };
+		1420DFAA2055047500B34160 /* Predicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFA92055047500B34160 /* Predicate.swift */; };
+		1420DFAC2055049100B34160 /* SortDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFAB2055049100B34160 /* SortDescriptor.swift */; };
+		1420DFAE205504B800B34160 /* FetchRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFAD205504B800B34160 /* FetchRequestController.swift */; };
+		1420DFB02055057700B34160 /* KeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFAF2055057700B34160 /* KeyPath.swift */; };
+		1420DFB2205505D900B34160 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFB1205505D900B34160 /* Config.swift */; };
+		1420DFB420550E7200B34160 /* ManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFB320550E7200B34160 /* ManagedObject.swift */; };
+		1420DFB620550EE700B34160 /* ManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFB520550EE700B34160 /* ManagedObjectContext.swift */; };
+		1420DFB820550F1300B34160 /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFB720550F1300B34160 /* PersistentContainer.swift */; };
+		1420DFBA20550FF500B34160 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1420DFB920550FF500B34160 /* Expression.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1420DF992054FFBC00B34160 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1420DF9C2054FFBC00B34160 /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
 		1420DF9D2054FFBC00B34160 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1420DFA72055046A00B34160 /* FetchRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRequest.swift; sourceTree = "<group>"; };
+		1420DFA92055047500B34160 /* Predicate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Predicate.swift; sourceTree = "<group>"; };
+		1420DFAB2055049100B34160 /* SortDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortDescriptor.swift; sourceTree = "<group>"; };
+		1420DFAD205504B800B34160 /* FetchRequestController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchRequestController.swift; sourceTree = "<group>"; };
+		1420DFAF2055057700B34160 /* KeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPath.swift; sourceTree = "<group>"; };
+		1420DFB1205505D900B34160 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		1420DFB320550E7200B34160 /* ManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObject.swift; sourceTree = "<group>"; };
+		1420DFB520550EE700B34160 /* ManagedObjectContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectContext.swift; sourceTree = "<group>"; };
+		1420DFB720550F1300B34160 /* PersistentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
+		1420DFB920550FF500B34160 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,6 +66,8 @@
 		1420DF9B2054FFBC00B34160 /* AlecrimCoreData */ = {
 			isa = PBXGroup;
 			children = (
+				1420DFBB20551D1700B34160 /* Container */,
+				1420DFA6205503F200B34160 /* Query */,
 				1420DFA42055009C00B34160 /* Supporting Files */,
 			);
 			path = AlecrimCoreData;
@@ -58,6 +80,30 @@
 				1420DF9D2054FFBC00B34160 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1420DFA6205503F200B34160 /* Query */ = {
+			isa = PBXGroup;
+			children = (
+				1420DFB1205505D900B34160 /* Config.swift */,
+				1420DFB920550FF500B34160 /* Expression.swift */,
+				1420DFA72055046A00B34160 /* FetchRequest.swift */,
+				1420DFAD205504B800B34160 /* FetchRequestController.swift */,
+				1420DFAF2055057700B34160 /* KeyPath.swift */,
+				1420DFA92055047500B34160 /* Predicate.swift */,
+				1420DFAB2055049100B34160 /* SortDescriptor.swift */,
+			);
+			path = Query;
+			sourceTree = "<group>";
+		};
+		1420DFBB20551D1700B34160 /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				1420DFB320550E7200B34160 /* ManagedObject.swift */,
+				1420DFB520550EE700B34160 /* ManagedObjectContext.swift */,
+				1420DFB720550F1300B34160 /* PersistentContainer.swift */,
+			);
+			path = Container;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -103,6 +149,7 @@
 				TargetAttributes = {
 					1420DF982054FFBC00B34160 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Manual;
 					};
 				};
@@ -139,6 +186,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1420DFB420550E7200B34160 /* ManagedObject.swift in Sources */,
+				1420DFA82055046A00B34160 /* FetchRequest.swift in Sources */,
+				1420DFB02055057700B34160 /* KeyPath.swift in Sources */,
+				1420DFAA2055047500B34160 /* Predicate.swift in Sources */,
+				1420DFAE205504B800B34160 /* FetchRequestController.swift in Sources */,
+				1420DFAC2055049100B34160 /* SortDescriptor.swift in Sources */,
+				1420DFB620550EE700B34160 /* ManagedObjectContext.swift in Sources */,
+				1420DFB2205505D900B34160 /* Config.swift in Sources */,
+				1420DFB820550F1300B34160 /* PersistentContainer.swift in Sources */,
+				1420DFBA20550FF500B34160 /* Expression.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,6 +328,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -287,6 +345,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -294,6 +354,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -310,6 +371,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
