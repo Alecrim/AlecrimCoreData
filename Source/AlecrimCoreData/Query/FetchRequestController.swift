@@ -7,3 +7,6 @@
 //
 
 import Foundation
+import CoreData
+
+public typealias FetchRequestController = NSFetchedResultsController

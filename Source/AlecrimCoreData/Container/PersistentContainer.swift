@@ -122,13 +122,6 @@ open class PersistentContainer: NSPersistentContainer {
 
         return context
     }
-    
-    // MARK: -
-    
-    @objc private func persistentStoreDidImportUbiquitousContentChanges(notification: Notification) {
-        
-    }
-    
 }
 
 // MARK: -

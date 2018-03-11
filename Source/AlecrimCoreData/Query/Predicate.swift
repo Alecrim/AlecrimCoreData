@@ -32,7 +32,7 @@ public class Predicate<Entity: ManagedObject> {
         self.rawValue = NSPredicate(value: value)
     }
     
-    fileprivate init(rawValue: NSPredicate) {
+    internal init(rawValue: NSPredicate) {
         self.rawValue = rawValue
     }
     

@@ -87,6 +87,10 @@ extension FetchRequest {
         return clone
     }
 
+    public func filter(using rawValue: NSPredicate) -> FetchRequest<Entity> {
+        return self.filter(using: Predicate<Entity>(rawValue: rawValue))
+    }
+    
 }
 
 // MARK: -
@@ -105,6 +109,10 @@ extension FetchRequest {
 
         return clone
     }
+    
+    public func sort(by rawValue: NSSortDescriptor) -> FetchRequest<Entity> {
+        return self.sort(by: SortDescriptor<Entity>(rawValue: rawValue))
+    }
 
     public func sort(by sortDescriptors: [SortDescriptor<Entity>]) -> FetchRequest<Entity> {
         var clone = self
@@ -119,6 +127,10 @@ extension FetchRequest {
         return clone
     }
 
+    public func sort(by rawValues: [NSSortDescriptor]) -> FetchRequest<Entity> {
+        return self.sort(by: rawValues.map { SortDescriptor<Entity>(rawValue: $0) })
+    }
+    
     public func sort(by sortDescriptors: SortDescriptor<Entity>...) -> FetchRequest<Entity> {
         var clone = self
         
@@ -130,6 +142,10 @@ extension FetchRequest {
         }
         
         return clone
+    }
+    
+    public func sort(by rawValues: NSSortDescriptor...) -> FetchRequest<Entity> {
+        return self.sort(by: rawValues.map { SortDescriptor<Entity>(rawValue: $0) })
     }
 
 }
