@@ -11,6 +11,7 @@ import CoreData
 
 // MARK: -
 
+@objc(ALCPersistentContainer)
 open class PersistentContainer: NSPersistentContainer {
     
     // MARK: -
@@ -25,19 +26,27 @@ open class PersistentContainer: NSPersistentContainer {
             throw PersistentContainerError.invalidName
         }
         
-        guard let managedObjectModelURL = managedObjectModelURL ?? bundle.managedObjectModelURL(forManagedObjectModelName: name) else {
-            throw PersistentContainerError.invalidManagedObjectModelURL
-        }
-        
-        guard let managedObjectModel = managedObjectModel ?? NSManagedObjectModel(contentsOf: managedObjectModelURL) ?? NSManagedObjectModel.mergedModel(from: [bundle]) else {
-            throw PersistentContainerError.managedObjectModelNotFound
-        }
-        
         //
-        super.init(name: name, managedObjectModel: managedObjectModel)
+        if let managedObjectModel = managedObjectModel {
+            super.init(name: name, managedObjectModel: managedObjectModel)
+        }
+        else {
+            guard let managedObjectModelURL = managedObjectModelURL ?? bundle.managedObjectModelURL(forManagedObjectModelName: name) else {
+                throw PersistentContainerError.invalidManagedObjectModelURL
+            }
+            
+            guard let managedObjectModel = managedObjectModel ?? NSManagedObjectModel(contentsOf: managedObjectModelURL) ?? NSManagedObjectModel.mergedModel(from: [bundle]) else {
+                throw PersistentContainerError.managedObjectModelNotFound
+            }
+            
+            //
+            super.init(name: name, managedObjectModel: managedObjectModel)
+        }
 
         //
-        let persistentStoreURL = persistentStoreURL ?? type(of: self).defaultDirectoryURL()
+        guard let persistentStoreURL = persistentStoreURL ?? bundle.persistentStoreURL(forManagedObjectModelName: name, defaultDirectoryURL: type(of: self).defaultDirectoryURL()) else {
+            throw PersistentContainerError.invalidPersistentStoreURL
+        }
 
         //
         if storageType == .disk {
@@ -198,6 +207,7 @@ public enum PersistentContainerError: Swift.Error {
     case invalidName
     case invalidManagedObjectModelURL
     case managedObjectModelNotFound
+    case invalidPersistentStoreURL
 }
 
 
@@ -205,7 +215,7 @@ public enum PersistentContainerError: Swift.Error {
 
 extension Bundle {
     
-    fileprivate func managedObjectModelURL(forManagedObjectModelName managedObjectModelName: String) -> URL? {
+    public func managedObjectModelURL(forManagedObjectModelName managedObjectModelName: String) -> URL? {
         let tempURL = self.url(forResource: managedObjectModelName, withExtension: "momd") ?? self.url(forResource: managedObjectModelName, withExtension: "mom")
         
         guard let url = tempURL else {
@@ -215,7 +225,15 @@ extension Bundle {
         return url
     }
     
-    private func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, applicationName: String) -> URL? {
+    public func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, defaultDirectoryURL: URL) -> URL? {
+        let url = defaultDirectoryURL
+            .appendingPathComponent("CoreData", isDirectory: true)
+            .appendingPathComponent((managedObjectModelName as NSString).appendingPathExtension("sqlite")!, isDirectory: false)
+        
+        return url
+    }
+    
+    public func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, applicationName: String) -> URL? {
         guard let applicationSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last else {
             return nil
         }
@@ -228,7 +246,7 @@ extension Bundle {
         return url
     }
     
-    private func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, bundleIdentifier: String) -> URL? {
+    public func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, bundleIdentifier: String) -> URL? {
         guard let applicationSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last else {
             return nil
         }
@@ -241,7 +259,7 @@ extension Bundle {
         return url
     }
     
-    private func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, bundleIdentifier: String, applicationGroupIdentifier: String) -> URL? {
+    public func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, bundleIdentifier: String, applicationGroupIdentifier: String) -> URL? {
         guard let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: applicationGroupIdentifier) else {
             return nil
         }
