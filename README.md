@@ -7,7 +7,7 @@
 [![Apps](https://img.shields.io/cocoapods/at/AlecrimCoreData.svg?style=flat)](http://cocoadocs.org/docsets/AlecrimCoreData)
 [![Author: vmartinelli](https://img.shields.io/badge/author-vmartinelli-blue.svg?style=flat)](https://www.linkedin.com/in/vmartinelli)
 
-A powerful and elegant CoreData framework for Swift.
+A powerful and elegant Core Data framework for Swift.
 
 ## Usage
 Soon...
