@@ -33,13 +33,12 @@ open class PersistentContainer: NSPersistentContainer {
             throw PersistentContainerError.managedObjectModelNotFound
         }
         
-        guard let persistentStoreURL = persistentStoreURL ?? bundle.persistentStoreURL(forManagedObjectModelName: name, applicationName: name) else {
-            throw PersistentContainerError.invalidPersistentStoreURL
-        }
-        
         //
         super.init(name: name, managedObjectModel: managedObjectModel)
-        
+
+        //
+        let persistentStoreURL = persistentStoreURL ?? type(of: self).defaultDirectoryURL()
+
         //
         if storageType == .disk {
             let directoryPath = persistentStoreURL.deletingLastPathComponent().path
@@ -199,7 +198,6 @@ public enum PersistentContainerError: Swift.Error {
     case invalidName
     case invalidManagedObjectModelURL
     case managedObjectModelNotFound
-    case invalidPersistentStoreURL
 }
 
 
@@ -217,7 +215,7 @@ extension Bundle {
         return url
     }
     
-    fileprivate func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, applicationName: String) -> URL? {
+    private func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, applicationName: String) -> URL? {
         guard let applicationSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last else {
             return nil
         }
