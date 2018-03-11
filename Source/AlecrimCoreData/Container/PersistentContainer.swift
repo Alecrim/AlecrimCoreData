@@ -15,7 +15,7 @@ open class PersistentContainer: NSPersistentContainer {
     
     // MARK: -
     
-    fileprivate let enableUbiquity: Bool
+    private var didImportUbiquitousContentObserver: NSObjectProtocol?
     
     // MARK: -
     
@@ -38,7 +38,6 @@ open class PersistentContainer: NSPersistentContainer {
         }
         
         //
-        self.enableUbiquity = (ubiquitousContainerIdentifier != nil)
         super.init(name: name, managedObjectModel: managedObjectModel)
         
         //
@@ -58,8 +57,8 @@ open class PersistentContainer: NSPersistentContainer {
         persistentStoreDescription.shouldInferMappingModelAutomatically = true
         persistentStoreDescription.shouldMigrateStoreAutomatically = true
         
-        if self.enableUbiquity {
-            persistentStoreDescription.setOption((ubiquitousContainerIdentifier!) as NSString, forKey: NSPersistentStoreUbiquitousContainerIdentifierKey)
+        if let ubiquitousContainerIdentifier = ubiquitousContainerIdentifier {
+            persistentStoreDescription.setOption((ubiquitousContainerIdentifier) as NSString, forKey: NSPersistentStoreUbiquitousContainerIdentifierKey)
             persistentStoreDescription.setOption((ubiquitousContentRelativePath ?? "Data/TransactionLogs") as NSString, forKey: NSPersistentStoreUbiquitousContentURLKey)
             persistentStoreDescription.setOption((ubiquitousContentName ?? "UbiquityStore") as NSString, forKey: NSPersistentStoreUbiquitousContentNameKey)
         }
@@ -67,32 +66,41 @@ open class PersistentContainer: NSPersistentContainer {
         //
         self.persistentStoreDescriptions = [persistentStoreDescription]
         
-        //
+        // this should run synchronously since shouldAddStoreAsynchronously is false
         var outError: Swift.Error?
         
         self.loadPersistentStores { description, error in
             if let error = error {
                 outError = error
-                return
             }
             
-            if self.enableUbiquity {
-                NotificationCenter.default.addObserver(self, selector: #selector(type(of: self).persistentStoreDidImportUbiquitousContentChanges(notification:)), name: .NSPersistentStoreDidImportUbiquitousContentChanges, object: self.persistentStoreCoordinator)
+            //
+            if let _ = ubiquitousContainerIdentifier {
+                self.didImportUbiquitousContentObserver = NotificationCenter.default.addObserver(forName: .NSPersistentStoreDidImportUbiquitousContentChanges, object: self.persistentStoreCoordinator, queue: nil) { [weak self] notification in
+                    guard let context = self?.viewContext.parent ?? self?.viewContext else {
+                        return
+                    }
+                    
+                    context.perform {
+                        context.mergeChanges(fromContextDidSave: notification)
+                    }
+                }
             }
+            
+            //
+            self.viewContext.automaticallyMergesChangesFromParent = true
+            self.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         }
         
         if let outError = outError {
             throw outError
         }
-        
-        //
-        self.viewContext.automaticallyMergesChangesFromParent = true
-        self.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
     }
     
     deinit {
-        if self.enableUbiquity {
-            NotificationCenter.default.removeObserver(self, name: .NSPersistentStoreDidImportUbiquitousContentChanges, object: self.persistentStoreCoordinator)
+        if let didImportUbiquitousContentObserver = self.didImportUbiquitousContentObserver {
+            self.didImportUbiquitousContentObserver = nil
+            NotificationCenter.default.removeObserver(didImportUbiquitousContentObserver)
         }
     }
     
@@ -110,11 +118,6 @@ open class PersistentContainer: NSPersistentContainer {
     // MARK: -
     
     @objc private func persistentStoreDidImportUbiquitousContentChanges(notification: Notification) {
-        let context = self.viewContext.parent ?? self.viewContext
-        
-        context.perform {
-            context.mergeChanges(fromContextDidSave: notification)
-        }
         
     }
     
