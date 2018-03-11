@@ -36,15 +36,12 @@ public final class SortDescriptor<Entity: ManagedObject> {
     public let key: String
     public let ascending: Bool
     
-    public init(key: String, ascending: Bool) {
-        self.key = key
-        self.ascending = ascending
-        
-        self.rawValue = NSSortDescriptor(key: key, ascending: ascending)
+    public convenience init(key: String, ascending: Bool) {
+        self.init(rawValue: NSSortDescriptor(key: key, ascending: ascending))
     }
     
     public convenience init<Value>(keyPath: KeyPath<Entity, Value>, ascending: Bool) {
-        self.init(key: keyPath.pathString, ascending: ascending)
+        self.init(rawValue: NSSortDescriptor(keyPath: keyPath, ascending: ascending))
     }
 
     public init(rawValue: NSSortDescriptor) {

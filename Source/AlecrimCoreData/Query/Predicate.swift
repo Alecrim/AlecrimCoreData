@@ -19,17 +19,17 @@ public class Predicate<Entity: ManagedObject> {
         return self.rawValue.predicateFormat
     }
     
-    public init(format predicateFormat: String, argumentArray arguments: [Any]?) {
-        self.rawValue = NSPredicate(format: predicateFormat, argumentArray: arguments)
+    public convenience init(format predicateFormat: String, argumentArray arguments: [Any]?) {
+        self.init(rawValue: NSPredicate(format: predicateFormat, argumentArray: arguments))
     }
     
     
-    public init(format predicateFormat: String, arguments argList: CVaListPointer) {
-        self.rawValue = NSPredicate(format: predicateFormat, arguments: argList)
+    public convenience init(format predicateFormat: String, arguments argList: CVaListPointer) {
+        self.init(rawValue: NSPredicate(format: predicateFormat, arguments: argList))
     }
     
-    public init(value: Bool) {
-        self.rawValue = NSPredicate(value: value)
+    public convenience init(value: Bool) {
+        self.init(rawValue: NSPredicate(value: value))
     }
     
     public init(rawValue: NSPredicate) {

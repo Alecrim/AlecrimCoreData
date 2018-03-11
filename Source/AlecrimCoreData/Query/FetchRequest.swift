@@ -89,7 +89,7 @@ extension FetchRequest {
         return self.filter(using: Predicate<Entity>(rawValue: rawValue))
     }
     
-    //
+    // aliases
     
     public func `where`(_ closure: () -> Predicate<Entity>) -> FetchRequest<Entity> {
         return self.filter(using: closure())
@@ -152,14 +152,14 @@ extension FetchRequest {
         return self.sort(by: rawValues.map { SortDescriptor<Entity>(rawValue: $0) })
     }
 
-    //
+    // so we can write `sort(by: \.name)` instead of `sort(by: \Customer.name)`
 
     public func sort<Value>(by closure: @autoclosure () -> KeyPath<Entity, Value>) -> FetchRequest<Entity> {
         let sortDescriptor: SortDescriptor<Entity> = .ascending(closure())
         return self.sort(by: sortDescriptor)
     }
     
-    //
+    // aliases
     
     public func orderBy(_ closure: () -> SortDescriptor<Entity>) -> FetchRequest<Entity> {
         return self.sort(by: closure())
