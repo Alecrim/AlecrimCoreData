@@ -10,7 +10,39 @@
 A powerful and elegant Core Data framework for Swift.
 
 ## Usage
-Soon...
+Simple do that:
+
+```swift
+let query = pc.viewContext.people
+    .skip(10)
+    .take(20)
+    .where { \.city == "Piracicaba" }
+    .orderBy { \.name }
+    
+for person in query {
+    print(person.name, person.address)
+}
+```
+
+After that:
+
+```swift
+import AlecrimCoreData
+
+extension ManagedObjectContext {
+    var people: Query<Person> { return Query(context: self, fetchRequest: FetchRequest()) }
+}
+
+let pc = PersistentContainer()
+
+```
+And after your have created your matching managed object model in Xcode, of course. ;-)
+
+
+## Legacy
+In version 6 the framework was rewritten from scratch. **AlecrimCoreData** now uses key paths and it does not rely on generated (or written) custom attributes anymore. Also the **ACDGen** utility is no more. If your code depends on this, please use the previous versions.
+
+Some well known features and functionalities may be reimplemented in a future release. No guarantees, though.
 
 ## Contribute
 If you have any problems or need more information, please open an issue using the provided GitHub link.
