@@ -37,14 +37,13 @@ public final class FetchRequestController<Entity: ManagedObject> {
 
         //
         self.rawValue.delegate = self.rawValueDelegate
-        self.performFetch()
     }
 
     public convenience init(query: Query<Entity>, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
         self.init(fetchRequest: query.fetchRequest, context: query.context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }
     
-    internal func performFetch() {
+    public func performFetch() {
         try! self.rawValue.performFetch()
     }
 

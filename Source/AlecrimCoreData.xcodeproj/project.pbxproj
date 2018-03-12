@@ -21,6 +21,10 @@
 		14226BD92056FECB005C0964 /* FetchedResultsControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14226BD82056FECB005C0964 /* FetchedResultsControllerDelegate.swift */; };
 		14226BDC205709D3005C0964 /* FetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14226BDB205709D3005C0964 /* FetchedResultsSectionInfo.swift */; };
 		142371752055D0120086A42D /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 142371742055D0120086A42D /* Queryable.swift */; };
+		147A80C120571421005BDD92 /* NSArrayController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147A80C020571421005BDD92 /* NSArrayController+Extensions.swift */; };
+		147A80C320571475005BDD92 /* NSCollectionView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147A80C220571475005BDD92 /* NSCollectionView+Extensions.swift */; };
+		147A80C5205715FD005BDD92 /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147A80C4205715FD005BDD92 /* UITableView+Extensions.swift */; };
+		147A80C720571684005BDD92 /* UICollectionView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147A80C620571684005BDD92 /* UICollectionView+Extensions.swift */; };
 		14B16B3B2055C1EC00039750 /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B16B3A2055C1EC00039750 /* Query.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +45,10 @@
 		14226BD82056FECB005C0964 /* FetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
 		14226BDB205709D3005C0964 /* FetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
 		142371742055D0120086A42D /* Queryable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queryable.swift; sourceTree = "<group>"; };
+		147A80C020571421005BDD92 /* NSArrayController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSArrayController+Extensions.swift"; sourceTree = "<group>"; };
+		147A80C220571475005BDD92 /* NSCollectionView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSCollectionView+Extensions.swift"; sourceTree = "<group>"; };
+		147A80C4205715FD005BDD92 /* UITableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
+		147A80C620571684005BDD92 /* UICollectionView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extensions.swift"; sourceTree = "<group>"; };
 		14B16B3A2055C1EC00039750 /* Query.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -74,9 +82,9 @@
 		1420DF9B2054FFBC00B34160 /* AlecrimCoreData */ = {
 			isa = PBXGroup;
 			children = (
-				1420DFBB20551D1700B34160 /* Container */,
+				147A80BD205713AC005BDD92 /* Core */,
+				147A80BE205713C6005BDD92 /* Convenience */,
 				14226BDA205709BE005C0964 /* Fetch Request Controller */,
-				1420DFA6205503F200B34160 /* Query */,
 				1420DFA42055009C00B34160 /* Supporting Files */,
 			);
 			path = AlecrimCoreData;
@@ -124,6 +132,27 @@
 				14226BDB205709D3005C0964 /* FetchedResultsSectionInfo.swift */,
 			);
 			path = "Fetch Request Controller";
+			sourceTree = "<group>";
+		};
+		147A80BD205713AC005BDD92 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				1420DFBB20551D1700B34160 /* Container */,
+				1420DFA6205503F200B34160 /* Query */,
+			);
+			name = Core;
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		147A80BE205713C6005BDD92 /* Convenience */ = {
+			isa = PBXGroup;
+			children = (
+				147A80C020571421005BDD92 /* NSArrayController+Extensions.swift */,
+				147A80C220571475005BDD92 /* NSCollectionView+Extensions.swift */,
+				147A80C4205715FD005BDD92 /* UITableView+Extensions.swift */,
+				147A80C620571684005BDD92 /* UICollectionView+Extensions.swift */,
+			);
+			path = Convenience;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -209,15 +238,19 @@
 				14226BDC205709D3005C0964 /* FetchedResultsSectionInfo.swift in Sources */,
 				1420DFB420550E7200B34160 /* ManagedObject.swift in Sources */,
 				1420DFA82055046A00B34160 /* FetchRequest.swift in Sources */,
+				147A80C120571421005BDD92 /* NSArrayController+Extensions.swift in Sources */,
 				1420DFB02055057700B34160 /* KeyPath.swift in Sources */,
 				1420DFAA2055047500B34160 /* Predicate.swift in Sources */,
 				1420DFAE205504B800B34160 /* FetchRequestController.swift in Sources */,
 				14B16B3B2055C1EC00039750 /* Query.swift in Sources */,
+				147A80C5205715FD005BDD92 /* UITableView+Extensions.swift in Sources */,
 				1420DFAC2055049100B34160 /* SortDescriptor.swift in Sources */,
 				1420DFB620550EE700B34160 /* ManagedObjectContext.swift in Sources */,
 				14226BD92056FECB005C0964 /* FetchedResultsControllerDelegate.swift in Sources */,
 				1420DFB2205505D900B34160 /* Config.swift in Sources */,
 				142371752055D0120086A42D /* Queryable.swift in Sources */,
+				147A80C720571684005BDD92 /* UICollectionView+Extensions.swift in Sources */,
+				147A80C320571475005BDD92 /* NSCollectionView+Extensions.swift in Sources */,
 				1420DFB820550F1300B34160 /* PersistentContainer.swift in Sources */,
 				1420DFBA20550FF500B34160 /* Expression.swift in Sources */,
 			);
