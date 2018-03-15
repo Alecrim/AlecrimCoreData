@@ -48,3 +48,13 @@ extension ManagedObject {
     }
     
 }
+
+// MARK: -
+
+extension ManagedObject {
+    
+    public subscript(key: String) -> Any? {
+        return self.value(forKey: key)
+    }
+
+}

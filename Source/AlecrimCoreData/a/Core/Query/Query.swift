@@ -99,6 +99,14 @@ extension Query {
         return Entity(context: self.context)
     }
     
+    @discardableResult
+    public func insert(with entityPropertiesInitializationClosure: (Entity) -> Void) -> Entity {
+        let entity = self.newEntity()
+        entityPropertiesInitializationClosure(entity)
+        
+        return entity
+    }
+    
     public func delete(_ entity: Entity) {
         self.context.delete(entity)
     }

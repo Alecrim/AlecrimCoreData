@@ -200,7 +200,7 @@ public enum StorageType {
 
 // MARK: -
 
-public enum PersistentContainerError: Swift.Error {
+public enum PersistentContainerError: Error {
     case invalidName
     case invalidManagedObjectModelURL
     case managedObjectModelNotFound
