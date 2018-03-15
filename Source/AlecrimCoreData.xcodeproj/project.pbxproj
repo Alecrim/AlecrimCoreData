@@ -8,48 +8,48 @@
 
 /* Begin PBXBuildFile section */
 		1420DF9E2054FFBC00B34160 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 1420DF9C2054FFBC00B34160 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		14CC334B205B27F500BA682A /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3336205B27F500BA682A /* PersistentContainer.swift */; };
-		14CC334C205B27F500BA682A /* ManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3337205B27F500BA682A /* ManagedObjectContext.swift */; };
-		14CC334D205B27F500BA682A /* ManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3338205B27F500BA682A /* ManagedObject.swift */; };
-		14CC334E205B27F500BA682A /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC333A205B27F500BA682A /* Query.swift */; };
-		14CC334F205B27F500BA682A /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC333B205B27F500BA682A /* Expression.swift */; };
-		14CC3350205B27F500BA682A /* FetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC333C205B27F500BA682A /* FetchRequest.swift */; };
-		14CC3351205B27F500BA682A /* Predicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC333D205B27F500BA682A /* Predicate.swift */; };
-		14CC3352205B27F500BA682A /* SortDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC333E205B27F500BA682A /* SortDescriptor.swift */; };
-		14CC3353205B27F500BA682A /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC333F205B27F500BA682A /* Config.swift */; };
-		14CC3354205B27F500BA682A /* KeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3340205B27F500BA682A /* KeyPath.swift */; };
-		14CC3355205B27F500BA682A /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3341205B27F500BA682A /* Queryable.swift */; };
-		14CC3356205B27F500BA682A /* NSArrayController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3343205B27F500BA682A /* NSArrayController+Extensions.swift */; };
-		14CC3357205B27F500BA682A /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3344205B27F500BA682A /* UITableView+Extensions.swift */; };
-		14CC3358205B27F500BA682A /* UICollectionView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3345205B27F500BA682A /* UICollectionView+Extensions.swift */; };
-		14CC3359205B27F500BA682A /* NSCollectionView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3346205B27F500BA682A /* NSCollectionView+Extensions.swift */; };
-		14CC335A205B27F500BA682A /* FetchRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3348205B27F500BA682A /* FetchRequestController.swift */; };
-		14CC335B205B27F500BA682A /* FetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3349205B27F500BA682A /* FetchedResultsSectionInfo.swift */; };
-		14CC335C205B27F500BA682A /* FetchedResultsControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC334A205B27F500BA682A /* FetchedResultsControllerDelegate.swift */; };
+		14CC3374205B28CA00BA682A /* NSArrayController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC335E205B28CA00BA682A /* NSArrayController+Extensions.swift */; };
+		14CC3375205B28CA00BA682A /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC335F205B28CA00BA682A /* UITableView+Extensions.swift */; };
+		14CC3376205B28CA00BA682A /* UICollectionView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3360205B28CA00BA682A /* UICollectionView+Extensions.swift */; };
+		14CC3377205B28CA00BA682A /* NSCollectionView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3361205B28CA00BA682A /* NSCollectionView+Extensions.swift */; };
+		14CC3378205B28CA00BA682A /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3364205B28CA00BA682A /* PersistentContainer.swift */; };
+		14CC3379205B28CA00BA682A /* ManagedObjectContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3365205B28CA00BA682A /* ManagedObjectContext.swift */; };
+		14CC337A205B28CA00BA682A /* ManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3366205B28CA00BA682A /* ManagedObject.swift */; };
+		14CC337B205B28CA00BA682A /* Query.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3368205B28CA00BA682A /* Query.swift */; };
+		14CC337C205B28CA00BA682A /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3369205B28CA00BA682A /* Expression.swift */; };
+		14CC337D205B28CA00BA682A /* FetchRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC336A205B28CA00BA682A /* FetchRequest.swift */; };
+		14CC337E205B28CA00BA682A /* Predicate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC336B205B28CA00BA682A /* Predicate.swift */; };
+		14CC337F205B28CA00BA682A /* SortDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC336C205B28CA00BA682A /* SortDescriptor.swift */; };
+		14CC3380205B28CA00BA682A /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC336D205B28CA00BA682A /* Config.swift */; };
+		14CC3381205B28CA00BA682A /* KeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC336E205B28CA00BA682A /* KeyPath.swift */; };
+		14CC3382205B28CA00BA682A /* Queryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC336F205B28CA00BA682A /* Queryable.swift */; };
+		14CC3383205B28CA00BA682A /* FetchRequestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3371205B28CA00BA682A /* FetchRequestController.swift */; };
+		14CC3384205B28CA00BA682A /* FetchedResultsSectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3372205B28CA00BA682A /* FetchedResultsSectionInfo.swift */; };
+		14CC3385205B28CA00BA682A /* FetchedResultsControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3373205B28CA00BA682A /* FetchedResultsControllerDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		1420DF992054FFBC00B34160 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1420DF9C2054FFBC00B34160 /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
 		1420DF9D2054FFBC00B34160 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		14CC3336205B27F500BA682A /* PersistentContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
-		14CC3337205B27F500BA682A /* ManagedObjectContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectContext.swift; sourceTree = "<group>"; };
-		14CC3338205B27F500BA682A /* ManagedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObject.swift; sourceTree = "<group>"; };
-		14CC333A205B27F500BA682A /* Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
-		14CC333B205B27F500BA682A /* Expression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
-		14CC333C205B27F500BA682A /* FetchRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequest.swift; sourceTree = "<group>"; };
-		14CC333D205B27F500BA682A /* Predicate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Predicate.swift; sourceTree = "<group>"; };
-		14CC333E205B27F500BA682A /* SortDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortDescriptor.swift; sourceTree = "<group>"; };
-		14CC333F205B27F500BA682A /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
-		14CC3340205B27F500BA682A /* KeyPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyPath.swift; sourceTree = "<group>"; };
-		14CC3341205B27F500BA682A /* Queryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queryable.swift; sourceTree = "<group>"; };
-		14CC3343205B27F500BA682A /* NSArrayController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSArrayController+Extensions.swift"; sourceTree = "<group>"; };
-		14CC3344205B27F500BA682A /* UITableView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
-		14CC3345205B27F500BA682A /* UICollectionView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extensions.swift"; sourceTree = "<group>"; };
-		14CC3346205B27F500BA682A /* NSCollectionView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCollectionView+Extensions.swift"; sourceTree = "<group>"; };
-		14CC3348205B27F500BA682A /* FetchRequestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequestController.swift; sourceTree = "<group>"; };
-		14CC3349205B27F500BA682A /* FetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
-		14CC334A205B27F500BA682A /* FetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
+		14CC335E205B28CA00BA682A /* NSArrayController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSArrayController+Extensions.swift"; sourceTree = "<group>"; };
+		14CC335F205B28CA00BA682A /* UITableView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
+		14CC3360205B28CA00BA682A /* UICollectionView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extensions.swift"; sourceTree = "<group>"; };
+		14CC3361205B28CA00BA682A /* NSCollectionView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSCollectionView+Extensions.swift"; sourceTree = "<group>"; };
+		14CC3364205B28CA00BA682A /* PersistentContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
+		14CC3365205B28CA00BA682A /* ManagedObjectContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectContext.swift; sourceTree = "<group>"; };
+		14CC3366205B28CA00BA682A /* ManagedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObject.swift; sourceTree = "<group>"; };
+		14CC3368205B28CA00BA682A /* Query.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Query.swift; sourceTree = "<group>"; };
+		14CC3369205B28CA00BA682A /* Expression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
+		14CC336A205B28CA00BA682A /* FetchRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequest.swift; sourceTree = "<group>"; };
+		14CC336B205B28CA00BA682A /* Predicate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Predicate.swift; sourceTree = "<group>"; };
+		14CC336C205B28CA00BA682A /* SortDescriptor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortDescriptor.swift; sourceTree = "<group>"; };
+		14CC336D205B28CA00BA682A /* Config.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		14CC336E205B28CA00BA682A /* KeyPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyPath.swift; sourceTree = "<group>"; };
+		14CC336F205B28CA00BA682A /* Queryable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queryable.swift; sourceTree = "<group>"; };
+		14CC3371205B28CA00BA682A /* FetchRequestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchRequestController.swift; sourceTree = "<group>"; };
+		14CC3372205B28CA00BA682A /* FetchedResultsSectionInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsSectionInfo.swift; sourceTree = "<group>"; };
+		14CC3373205B28CA00BA682A /* FetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsControllerDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,7 +82,9 @@
 		1420DF9B2054FFBC00B34160 /* AlecrimCoreData */ = {
 			isa = PBXGroup;
 			children = (
-				14CC3333205B27F500BA682A /* Code */,
+				14CC335D205B28CA00BA682A /* Convenience */,
+				14CC3362205B28CA00BA682A /* Core */,
+				14CC3370205B28CA00BA682A /* Fetch Request Controller */,
 				1420DFA42055009C00B34160 /* Supporting Files */,
 			);
 			path = AlecrimCoreData;
@@ -97,67 +99,57 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		14CC3333205B27F500BA682A /* Code */ = {
+		14CC335D205B28CA00BA682A /* Convenience */ = {
 			isa = PBXGroup;
 			children = (
-				14CC3334205B27F500BA682A /* Core */,
-				14CC3342205B27F500BA682A /* Convenience */,
-				14CC3347205B27F500BA682A /* Fetch Request Controller */,
-			);
-			path = Code;
-			sourceTree = "<group>";
-		};
-		14CC3334205B27F500BA682A /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				14CC3335205B27F500BA682A /* Container */,
-				14CC3339205B27F500BA682A /* Query */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
-		14CC3335205B27F500BA682A /* Container */ = {
-			isa = PBXGroup;
-			children = (
-				14CC3336205B27F500BA682A /* PersistentContainer.swift */,
-				14CC3337205B27F500BA682A /* ManagedObjectContext.swift */,
-				14CC3338205B27F500BA682A /* ManagedObject.swift */,
-			);
-			path = Container;
-			sourceTree = "<group>";
-		};
-		14CC3339205B27F500BA682A /* Query */ = {
-			isa = PBXGroup;
-			children = (
-				14CC333A205B27F500BA682A /* Query.swift */,
-				14CC333B205B27F500BA682A /* Expression.swift */,
-				14CC333C205B27F500BA682A /* FetchRequest.swift */,
-				14CC333D205B27F500BA682A /* Predicate.swift */,
-				14CC333E205B27F500BA682A /* SortDescriptor.swift */,
-				14CC333F205B27F500BA682A /* Config.swift */,
-				14CC3340205B27F500BA682A /* KeyPath.swift */,
-				14CC3341205B27F500BA682A /* Queryable.swift */,
-			);
-			path = Query;
-			sourceTree = "<group>";
-		};
-		14CC3342205B27F500BA682A /* Convenience */ = {
-			isa = PBXGroup;
-			children = (
-				14CC3343205B27F500BA682A /* NSArrayController+Extensions.swift */,
-				14CC3344205B27F500BA682A /* UITableView+Extensions.swift */,
-				14CC3345205B27F500BA682A /* UICollectionView+Extensions.swift */,
-				14CC3346205B27F500BA682A /* NSCollectionView+Extensions.swift */,
+				14CC335E205B28CA00BA682A /* NSArrayController+Extensions.swift */,
+				14CC335F205B28CA00BA682A /* UITableView+Extensions.swift */,
+				14CC3360205B28CA00BA682A /* UICollectionView+Extensions.swift */,
+				14CC3361205B28CA00BA682A /* NSCollectionView+Extensions.swift */,
 			);
 			path = Convenience;
 			sourceTree = "<group>";
 		};
-		14CC3347205B27F500BA682A /* Fetch Request Controller */ = {
+		14CC3362205B28CA00BA682A /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				14CC3348205B27F500BA682A /* FetchRequestController.swift */,
-				14CC3349205B27F500BA682A /* FetchedResultsSectionInfo.swift */,
-				14CC334A205B27F500BA682A /* FetchedResultsControllerDelegate.swift */,
+				14CC3363205B28CA00BA682A /* Container */,
+				14CC3367205B28CA00BA682A /* Query */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		14CC3363205B28CA00BA682A /* Container */ = {
+			isa = PBXGroup;
+			children = (
+				14CC3364205B28CA00BA682A /* PersistentContainer.swift */,
+				14CC3365205B28CA00BA682A /* ManagedObjectContext.swift */,
+				14CC3366205B28CA00BA682A /* ManagedObject.swift */,
+			);
+			path = Container;
+			sourceTree = "<group>";
+		};
+		14CC3367205B28CA00BA682A /* Query */ = {
+			isa = PBXGroup;
+			children = (
+				14CC3368205B28CA00BA682A /* Query.swift */,
+				14CC3369205B28CA00BA682A /* Expression.swift */,
+				14CC336A205B28CA00BA682A /* FetchRequest.swift */,
+				14CC336B205B28CA00BA682A /* Predicate.swift */,
+				14CC336C205B28CA00BA682A /* SortDescriptor.swift */,
+				14CC336D205B28CA00BA682A /* Config.swift */,
+				14CC336E205B28CA00BA682A /* KeyPath.swift */,
+				14CC336F205B28CA00BA682A /* Queryable.swift */,
+			);
+			path = Query;
+			sourceTree = "<group>";
+		};
+		14CC3370205B28CA00BA682A /* Fetch Request Controller */ = {
+			isa = PBXGroup;
+			children = (
+				14CC3371205B28CA00BA682A /* FetchRequestController.swift */,
+				14CC3372205B28CA00BA682A /* FetchedResultsSectionInfo.swift */,
+				14CC3373205B28CA00BA682A /* FetchedResultsControllerDelegate.swift */,
 			);
 			path = "Fetch Request Controller";
 			sourceTree = "<group>";
@@ -242,24 +234,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14CC3352205B27F500BA682A /* SortDescriptor.swift in Sources */,
-				14CC3350205B27F500BA682A /* FetchRequest.swift in Sources */,
-				14CC3354205B27F500BA682A /* KeyPath.swift in Sources */,
-				14CC3353205B27F500BA682A /* Config.swift in Sources */,
-				14CC334B205B27F500BA682A /* PersistentContainer.swift in Sources */,
-				14CC3357205B27F500BA682A /* UITableView+Extensions.swift in Sources */,
-				14CC334F205B27F500BA682A /* Expression.swift in Sources */,
-				14CC3356205B27F500BA682A /* NSArrayController+Extensions.swift in Sources */,
-				14CC3358205B27F500BA682A /* UICollectionView+Extensions.swift in Sources */,
-				14CC334D205B27F500BA682A /* ManagedObject.swift in Sources */,
-				14CC335A205B27F500BA682A /* FetchRequestController.swift in Sources */,
-				14CC335C205B27F500BA682A /* FetchedResultsControllerDelegate.swift in Sources */,
-				14CC334E205B27F500BA682A /* Query.swift in Sources */,
-				14CC335B205B27F500BA682A /* FetchedResultsSectionInfo.swift in Sources */,
-				14CC3351205B27F500BA682A /* Predicate.swift in Sources */,
-				14CC334C205B27F500BA682A /* ManagedObjectContext.swift in Sources */,
-				14CC3359205B27F500BA682A /* NSCollectionView+Extensions.swift in Sources */,
-				14CC3355205B27F500BA682A /* Queryable.swift in Sources */,
+				14CC337E205B28CA00BA682A /* Predicate.swift in Sources */,
+				14CC337D205B28CA00BA682A /* FetchRequest.swift in Sources */,
+				14CC3381205B28CA00BA682A /* KeyPath.swift in Sources */,
+				14CC337F205B28CA00BA682A /* SortDescriptor.swift in Sources */,
+				14CC337A205B28CA00BA682A /* ManagedObject.swift in Sources */,
+				14CC3382205B28CA00BA682A /* Queryable.swift in Sources */,
+				14CC3374205B28CA00BA682A /* NSArrayController+Extensions.swift in Sources */,
+				14CC3385205B28CA00BA682A /* FetchedResultsControllerDelegate.swift in Sources */,
+				14CC337C205B28CA00BA682A /* Expression.swift in Sources */,
+				14CC3380205B28CA00BA682A /* Config.swift in Sources */,
+				14CC3377205B28CA00BA682A /* NSCollectionView+Extensions.swift in Sources */,
+				14CC3378205B28CA00BA682A /* PersistentContainer.swift in Sources */,
+				14CC337B205B28CA00BA682A /* Query.swift in Sources */,
+				14CC3384205B28CA00BA682A /* FetchedResultsSectionInfo.swift in Sources */,
+				14CC3375205B28CA00BA682A /* UITableView+Extensions.swift in Sources */,
+				14CC3379205B28CA00BA682A /* ManagedObjectContext.swift in Sources */,
+				14CC3383205B28CA00BA682A /* FetchRequestController.swift in Sources */,
+				14CC3376205B28CA00BA682A /* UICollectionView+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
