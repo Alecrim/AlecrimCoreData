@@ -48,9 +48,9 @@ open class PersistentContainer: NSPersistentContainer {
         
         #if os(macOS) || os(iOS)
         if let ubiquitousConfiguration = ubiquitousConfiguration {
-            persistentStoreDescription.setOption(ubiquitousConfiguration.containerIdentifier, forKey: NSPersistentStoreUbiquitousContainerIdentifierKey)
-            persistentStoreDescription.setOption(ubiquitousConfiguration.contentRelativePath, forKey: NSPersistentStoreUbiquitousContentURLKey)
-            persistentStoreDescription.setOption(ubiquitousConfiguration.contentName, forKey: NSPersistentStoreUbiquitousContentNameKey)
+            persistentStoreDescription.setOption(ubiquitousConfiguration.containerIdentifier as NSString, forKey: NSPersistentStoreUbiquitousContainerIdentifierKey)
+            persistentStoreDescription.setOption(ubiquitousConfiguration.contentRelativePath as NSString, forKey: NSPersistentStoreUbiquitousContentURLKey)
+            persistentStoreDescription.setOption(ubiquitousConfiguration.contentName as NSString, forKey: NSPersistentStoreUbiquitousContentNameKey)
         }
         #endif
         
@@ -185,14 +185,14 @@ public enum PersistentContainerStorageType {
 
 
 public struct PersistentContainerUbiquitousConfiguration {
-    public let containerIdentifier: NSString
-    public let contentRelativePath: NSString
-    public let contentName: NSString
+    public let containerIdentifier: String
+    public let contentRelativePath: String
+    public let contentName: String
     
     public init(containerIdentifier: String, contentRelativePath: String = "Data/TransactionLogs", contentName: String = "UbiquityStore") {
-        self.containerIdentifier = containerIdentifier as NSString
-        self.contentRelativePath = contentRelativePath as NSString
-        self.contentName = contentName as NSString
+        self.containerIdentifier = containerIdentifier
+        self.contentRelativePath = contentRelativePath
+        self.contentName = contentName
     }
     
 }
