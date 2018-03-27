@@ -269,14 +269,14 @@ extension PersistentContainerType {
     }
     
     public static func persistentStoreURL(withName name: String? = nil, forSecurityApplicationGroupIdentifier applicationGroupIdentifier: String, in bundle: Bundle? = nil) throws -> URL {
+        guard let bundleIdentifier = (bundle ?? Bundle.main).bundleIdentifier else {
+            throw PersistentContainerError.invalidBundleIdentifier
+        }
+
         guard let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: applicationGroupIdentifier) else {
             throw PersistentContainerError.invalidGroupContainerURL
         }
 
-        guard let bundleIdentifier = (bundle ?? Bundle.main).bundleIdentifier else {
-            throw PersistentContainerError.invalidBundleIdentifier
-        }
-        
         let name = name ?? bundleIdentifier
 
         let persistentStoreURL = containerURL
