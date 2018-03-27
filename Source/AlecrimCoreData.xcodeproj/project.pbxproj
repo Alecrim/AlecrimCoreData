@@ -82,9 +82,9 @@
 		1420DF9B2054FFBC00B34160 /* AlecrimCoreData */ = {
 			isa = PBXGroup;
 			children = (
-				14CC335D205B28CA00BA682A /* Convenience */,
 				14CC3362205B28CA00BA682A /* Core */,
 				14CC3370205B28CA00BA682A /* Fetch Request Controller */,
+				14CC335D205B28CA00BA682A /* Convenience */,
 				1420DFA42055009C00B34160 /* Supporting Files */,
 			);
 			path = AlecrimCoreData;

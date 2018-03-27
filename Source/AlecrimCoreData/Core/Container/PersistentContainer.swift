@@ -20,33 +20,14 @@ open class PersistentContainer: NSPersistentContainer {
     
     // MARK: -
     
-    public init(bundle: Bundle = Bundle.main, storageType: StorageType = .disk, name: String? = nil, managedObjectModel: NSManagedObjectModel? = nil, managedObjectModelURL: URL? = nil, persistentStoreURL: URL? = nil, ubiquitousContainerIdentifier: String? = nil, ubiquitousContentRelativePath: String? = nil, ubiquitousContentName: String? = nil) throws {
+    public convenience init() {
+        try! self.init(storageType: .disk, managedObjectModel: type(of: self).managedObjectModel(), persistentStoreURL: type(of: self).persistentStoreURL(), ubiquitousConfiguration: nil)
+    }
+    
+    public init(storageType: PersistentContainerStorageType, managedObjectModel: NSManagedObjectModel, persistentStoreURL: URL, ubiquitousConfiguration: PersistentContainerUbiquitousConfiguration? = nil) throws {
         //
-        guard let name = name ?? bundle.bundleIdentifier else {
-            throw PersistentContainerError.invalidName
-        }
-        
-        //
-        if let managedObjectModel = managedObjectModel {
-            super.init(name: name, managedObjectModel: managedObjectModel)
-        }
-        else {
-            guard let managedObjectModelURL = managedObjectModelURL ?? bundle.managedObjectModelURL(forManagedObjectModelName: name) else {
-                throw PersistentContainerError.invalidManagedObjectModelURL
-            }
-            
-            guard let managedObjectModel = managedObjectModel ?? NSManagedObjectModel(contentsOf: managedObjectModelURL) ?? NSManagedObjectModel.mergedModel(from: [bundle]) else {
-                throw PersistentContainerError.managedObjectModelNotFound
-            }
-            
-            //
-            super.init(name: name, managedObjectModel: managedObjectModel)
-        }
-
-        //
-        guard let persistentStoreURL = persistentStoreURL ?? bundle.persistentStoreURL(forManagedObjectModelName: name, defaultDirectoryURL: type(of: self).defaultDirectoryURL()) else {
-            throw PersistentContainerError.invalidPersistentStoreURL
-        }
+        let name = persistentStoreURL.deletingPathExtension().lastPathComponent
+        super.init(name: name, managedObjectModel: managedObjectModel)
 
         //
         if storageType == .disk {
@@ -66,10 +47,10 @@ open class PersistentContainer: NSPersistentContainer {
         persistentStoreDescription.shouldMigrateStoreAutomatically = true
         
         #if os(macOS) || os(iOS)
-        if let ubiquitousContainerIdentifier = ubiquitousContainerIdentifier {
-            persistentStoreDescription.setOption((ubiquitousContainerIdentifier) as NSString, forKey: NSPersistentStoreUbiquitousContainerIdentifierKey)
-            persistentStoreDescription.setOption((ubiquitousContentRelativePath ?? "Data/TransactionLogs") as NSString, forKey: NSPersistentStoreUbiquitousContentURLKey)
-            persistentStoreDescription.setOption((ubiquitousContentName ?? "UbiquityStore") as NSString, forKey: NSPersistentStoreUbiquitousContentNameKey)
+        if let ubiquitousConfiguration = ubiquitousConfiguration {
+            persistentStoreDescription.setOption(ubiquitousConfiguration.containerIdentifier, forKey: NSPersistentStoreUbiquitousContainerIdentifierKey)
+            persistentStoreDescription.setOption(ubiquitousConfiguration.contentRelativePath, forKey: NSPersistentStoreUbiquitousContentURLKey)
+            persistentStoreDescription.setOption(ubiquitousConfiguration.contentName, forKey: NSPersistentStoreUbiquitousContentNameKey)
         }
         #endif
         
@@ -86,7 +67,7 @@ open class PersistentContainer: NSPersistentContainer {
             
             //
             #if os(macOS) || os(iOS)
-            if let _ = ubiquitousContainerIdentifier {
+            if let _ = ubiquitousConfiguration {
                 self.didImportUbiquitousContentObserver = NotificationCenter.default.addObserver(forName: .NSPersistentStoreDidImportUbiquitousContentChanges, object: self.persistentStoreCoordinator, queue: nil) { [weak self] notification in
                     guard let context = self?.viewContext.parent ?? self?.viewContext else {
                         return
@@ -166,9 +147,13 @@ open class GenericPersistentContainer<Context: NSManagedObjectContext> {
     fileprivate let rawValue: NSPersistentContainer
 
     // MARK: -
-    
-    public init(bundle: Bundle = Bundle.main, storageType: StorageType = .disk, name: String? = nil, managedObjectModel: NSManagedObjectModel? = nil, managedObjectModelURL: URL? = nil, persistentStoreURL: URL? = nil, ubiquitousContainerIdentifier: String? = nil, ubiquitousContentRelativePath: String? = nil, ubiquitousContentName: String? = nil) throws {
-        self.rawValue = try HelperPersistentContainer<Context>(bundle: bundle, storageType: storageType, name: name, managedObjectModel: managedObjectModel, managedObjectModelURL: managedObjectModelURL, persistentStoreURL: persistentStoreURL, ubiquitousContainerIdentifier: ubiquitousContainerIdentifier, ubiquitousContentRelativePath: ubiquitousContentRelativePath, ubiquitousContentName: ubiquitousContentName)
+
+    public convenience init() {
+        try! self.init(storageType: .disk, managedObjectModel: type(of: self).managedObjectModel(), persistentStoreURL: type(of: self).persistentStoreURL(), ubiquitousConfiguration: nil)
+    }
+
+    public init(storageType: PersistentContainerStorageType = .disk, managedObjectModel: NSManagedObjectModel, persistentStoreURL: URL, ubiquitousConfiguration: PersistentContainerUbiquitousConfiguration? = nil) throws {
+        self.rawValue = try HelperPersistentContainer<Context>(storageType: storageType, managedObjectModel: managedObjectModel, persistentStoreURL: persistentStoreURL, ubiquitousConfiguration: ubiquitousConfiguration)
     }
 
     // MARK: -
@@ -193,83 +178,116 @@ open class GenericPersistentContainer<Context: NSManagedObjectContext> {
 
 // MARK: -
 
-public enum StorageType {
+public enum PersistentContainerStorageType {
     case disk
     case memory
 }
 
-// MARK: -
+
+public struct PersistentContainerUbiquitousConfiguration {
+    public let containerIdentifier: NSString
+    public let contentRelativePath: NSString
+    public let contentName: NSString
+    
+    public init(containerIdentifier: String, contentRelativePath: String = "Data/TransactionLogs", contentName: String = "UbiquityStore") {
+        self.containerIdentifier = containerIdentifier as NSString
+        self.contentRelativePath = contentRelativePath as NSString
+        self.contentName = contentName as NSString
+    }
+    
+}
 
 public enum PersistentContainerError: Error {
-    case invalidName
+    case invalidBundleIdentifier
     case invalidManagedObjectModelURL
-    case managedObjectModelNotFound
     case invalidPersistentStoreURL
+    case invalidGroupContainerURL
+    case applicationSupportDirectoryNotFound
+    case managedObjectModelNotFound
 }
 
 
 // MARK: -
 
-extension Bundle {
+public protocol PersistentContainerType: class {}
+
+extension PersistentContainer: PersistentContainerType {}
+extension GenericPersistentContainer: PersistentContainerType {}
+
+extension PersistentContainerType {
     
-    public func managedObjectModelURL(forManagedObjectModelName managedObjectModelName: String) -> URL? {
-        let tempURL = self.url(forResource: managedObjectModelName, withExtension: "momd") ?? self.url(forResource: managedObjectModelName, withExtension: "mom")
+    public static func managedObjectModel(withName name: String? = nil, in bundle: Bundle? = nil) throws -> NSManagedObjectModel {
+        let bundle = bundle ?? Bundle(for: Self.self)
         
-        guard let url = tempURL else {
-            return nil
+        guard let bundleIdentifier = bundle.bundleIdentifier else {
+            throw PersistentContainerError.invalidBundleIdentifier
         }
         
-        return url
-    }
-    
-    public func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, defaultDirectoryURL: URL) -> URL? {
-        let url = defaultDirectoryURL
-            .appendingPathComponent("CoreData", isDirectory: true)
-            .appendingPathComponent((managedObjectModelName as NSString).appendingPathExtension("sqlite")!, isDirectory: false)
+        let name = name ?? bundleIdentifier
         
-        return url
+        let managedObjectModelURL = try self.managedObjectModelURL(withName: name, in: bundle)
+        
+        guard let managedObjectModel = NSManagedObjectModel(contentsOf: managedObjectModelURL) else {
+            throw PersistentContainerError.managedObjectModelNotFound
+        }
+
+        return managedObjectModel
     }
     
-    public func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, applicationName: String) -> URL? {
+    private static func managedObjectModelURL(withName name: String, in bundle: Bundle) throws -> URL {
+        let resourceURL = bundle.url(forResource: name, withExtension: "momd") ?? bundle.url(forResource: name, withExtension: "mom")
+        
+        guard let managedObjectModelURL = resourceURL else {
+            throw PersistentContainerError.invalidManagedObjectModelURL
+        }
+        
+        return managedObjectModelURL
+    }
+
+}
+
+extension PersistentContainerType {
+    
+    public static func persistentStoreURL(withName name: String? = nil, in bundle: Bundle? = nil) throws -> URL {
+        guard let bundleIdentifier = (bundle ?? Bundle.main).bundleIdentifier else {
+            throw PersistentContainerError.invalidBundleIdentifier
+        }
+        
         guard let applicationSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last else {
-            return nil
+            throw PersistentContainerError.applicationSupportDirectoryNotFound
         }
         
-        let url = applicationSupportURL
-            .appendingPathComponent(applicationName, isDirectory: true)
-            .appendingPathComponent("CoreData", isDirectory: true)
-            .appendingPathComponent((managedObjectModelName as NSString).appendingPathExtension("sqlite")!, isDirectory: false)
+        let name = name ?? bundleIdentifier
         
-        return url
-    }
-    
-    public func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, bundleIdentifier: String) -> URL? {
-        guard let applicationSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last else {
-            return nil
-        }
-        
-        let url = applicationSupportURL
+        let persistentStoreURL = applicationSupportURL
             .appendingPathComponent(bundleIdentifier, isDirectory: true)
             .appendingPathComponent("CoreData", isDirectory: true)
-            .appendingPathComponent((managedObjectModelName as NSString).appendingPathExtension("sqlite")!, isDirectory: false)
+            .appendingPathComponent(name, isDirectory: false)
+            .appendingPathExtension("sqlite")
         
-        return url
+        return persistentStoreURL
     }
     
-    public func persistentStoreURL(forManagedObjectModelName managedObjectModelName: String, bundleIdentifier: String, applicationGroupIdentifier: String) -> URL? {
+    public static func persistentStoreURL(withName name: String? = nil, forSecurityApplicationGroupIdentifier applicationGroupIdentifier: String, in bundle: Bundle? = nil) throws -> URL {
         guard let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: applicationGroupIdentifier) else {
-            return nil
+            throw PersistentContainerError.invalidGroupContainerURL
+        }
+
+        guard let bundleIdentifier = (bundle ?? Bundle.main).bundleIdentifier else {
+            throw PersistentContainerError.invalidBundleIdentifier
         }
         
-        let url = containerURL
+        let name = name ?? bundleIdentifier
+
+        let persistentStoreURL = containerURL
             .appendingPathComponent("Library", isDirectory: true)
             .appendingPathComponent("Application Support", isDirectory: true)
             .appendingPathComponent(bundleIdentifier, isDirectory: true)
             .appendingPathComponent("CoreData", isDirectory: true)
-            .appendingPathComponent((managedObjectModelName as NSString).appendingPathExtension("sqlite")!, isDirectory: false)
-        
-        return url
+            .appendingPathComponent(name, isDirectory: false)
+            .appendingPathExtension("sqlite")
+
+        return persistentStoreURL
     }
     
 }
-
