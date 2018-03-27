@@ -16,7 +16,7 @@ open class PersistentContainer: NSPersistentContainer {
     
     // MARK: -
     
-    private var didImportUbiquitousContentObserver: NSObjectProtocol?
+    private var didImportUbiquitousContentNotificationObserver: NSObjectProtocol?
     
     // MARK: -
     
@@ -68,7 +68,7 @@ open class PersistentContainer: NSPersistentContainer {
             //
             #if os(macOS) || os(iOS)
             if let _ = ubiquitousConfiguration {
-                self.didImportUbiquitousContentObserver = NotificationCenter.default.addObserver(forName: .NSPersistentStoreDidImportUbiquitousContentChanges, object: self.persistentStoreCoordinator, queue: nil) { [weak self] notification in
+                self.didImportUbiquitousContentNotificationObserver = NotificationCenter.default.addObserver(forName: .NSPersistentStoreDidImportUbiquitousContentChanges, object: self.persistentStoreCoordinator, queue: nil) { [weak self] notification in
                     guard let context = self?.viewContext.parent ?? self?.viewContext else {
                         return
                     }
@@ -91,9 +91,9 @@ open class PersistentContainer: NSPersistentContainer {
     }
     
     deinit {
-        if let didImportUbiquitousContentObserver = self.didImportUbiquitousContentObserver {
-            self.didImportUbiquitousContentObserver = nil
-            NotificationCenter.default.removeObserver(didImportUbiquitousContentObserver)
+        if let didImportUbiquitousContentNotificationObserver = self.didImportUbiquitousContentNotificationObserver {
+            self.didImportUbiquitousContentNotificationObserver = nil
+            NotificationCenter.default.removeObserver(didImportUbiquitousContentNotificationObserver)
         }
     }
     
