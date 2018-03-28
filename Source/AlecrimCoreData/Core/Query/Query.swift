@@ -16,7 +16,7 @@ public struct Query<Entity: ManagedObject> {
     internal let context: ManagedObjectContext
     internal fileprivate(set) var fetchRequest: FetchRequest<Entity>
     
-    public init(context: ManagedObjectContext, fetchRequest: FetchRequest<Entity>) {
+    public init(in context: ManagedObjectContext, fetchRequest: FetchRequest<Entity> = FetchRequest()) {
         self.context = context
         self.fetchRequest = fetchRequest
     }

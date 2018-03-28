@@ -14,8 +14,8 @@ Simple do that:
 
 ```swift
 let query = pc.viewContext.people
-    .skip(10)
-    .take(20)
+    .skip(20)
+    .take(10)
     .where { \.city == "Piracicaba" }
     .orderBy { \.name }
     
@@ -30,7 +30,7 @@ After that:
 import AlecrimCoreData
 
 extension ManagedObjectContext {
-    var people: Query<Person> { return Query(context: self, fetchRequest: FetchRequest()) }
+    var people: Query<Person> { return Query(in: self) }
 }
 
 let pc = PersistentContainer()
