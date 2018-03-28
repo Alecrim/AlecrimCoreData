@@ -198,7 +198,6 @@ public struct PersistentContainerUbiquitousConfiguration {
 }
 
 public enum PersistentContainerError: Error {
-    case invalidBundleIdentifier
     case invalidManagedObjectModelURL
     case invalidPersistentStoreURL
     case invalidGroupContainerURL
@@ -218,13 +217,8 @@ extension PersistentContainerType {
     
     public static func managedObjectModel(withName name: String? = nil, in bundle: Bundle? = nil) throws -> NSManagedObjectModel {
         let bundle = bundle ?? Bundle(for: Self.self)
-        
-        guard let bundleIdentifier = bundle.bundleIdentifier else {
-            throw PersistentContainerError.invalidBundleIdentifier
-        }
-        
-        let name = name ?? bundleIdentifier
-        
+        let name = name ?? bundle.bundleURL.deletingPathExtension().lastPathComponent
+
         let managedObjectModelURL = try self.managedObjectModelURL(withName: name, in: bundle)
         
         guard let managedObjectModel = NSManagedObjectModel(contentsOf: managedObjectModelURL) else {
@@ -249,18 +243,16 @@ extension PersistentContainerType {
 extension PersistentContainerType {
     
     public static func persistentStoreURL(withName name: String? = nil, in bundle: Bundle? = nil) throws -> URL {
-        guard let bundleIdentifier = (bundle ?? Bundle.main).bundleIdentifier else {
-            throw PersistentContainerError.invalidBundleIdentifier
-        }
-        
         guard let applicationSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last else {
             throw PersistentContainerError.applicationSupportDirectoryNotFound
         }
         
-        let name = name ?? bundleIdentifier
+        let bundle = bundle ?? Bundle.main
+        let bundleLastPathComponent = bundle.bundleURL.deletingPathExtension().lastPathComponent
+        let name = name ?? bundleLastPathComponent
         
         let persistentStoreURL = applicationSupportURL
-            .appendingPathComponent(bundleIdentifier, isDirectory: true)
+            .appendingPathComponent(bundleLastPathComponent, isDirectory: true)
             .appendingPathComponent("CoreData", isDirectory: true)
             .appendingPathComponent(name, isDirectory: false)
             .appendingPathExtension("sqlite")
@@ -269,20 +261,18 @@ extension PersistentContainerType {
     }
     
     public static func persistentStoreURL(withName name: String? = nil, forSecurityApplicationGroupIdentifier applicationGroupIdentifier: String, in bundle: Bundle? = nil) throws -> URL {
-        guard let bundleIdentifier = (bundle ?? Bundle.main).bundleIdentifier else {
-            throw PersistentContainerError.invalidBundleIdentifier
-        }
-
         guard let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: applicationGroupIdentifier) else {
             throw PersistentContainerError.invalidGroupContainerURL
         }
 
-        let name = name ?? bundleIdentifier
+        let bundle = bundle ?? Bundle.main
+        let bundleLastPathComponent = bundle.bundleURL.deletingPathExtension().lastPathComponent
+        let name = name ?? bundleLastPathComponent
 
         let persistentStoreURL = containerURL
             .appendingPathComponent("Library", isDirectory: true)
             .appendingPathComponent("Application Support", isDirectory: true)
-            .appendingPathComponent(bundleIdentifier, isDirectory: true)
+            .appendingPathComponent(bundleLastPathComponent, isDirectory: true)
             .appendingPathComponent("CoreData", isDirectory: true)
             .appendingPathComponent(name, isDirectory: false)
             .appendingPathExtension("sqlite")
