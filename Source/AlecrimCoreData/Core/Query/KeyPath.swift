@@ -18,7 +18,7 @@ public func ==<Entity: ManagedObject, Value: Equatable>(left: KeyPath<Entity, Va
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .equalTo,
-        options: right.comparisonPredicateOptions
+        options: right.comparisonOptions
     )
 }
 
@@ -28,7 +28,7 @@ public func ==<Entity: ManagedObject, Value: Equatable>(left: KeyPath<Entity, Op
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .equalTo,
-        options: right?.comparisonPredicateOptions ?? []
+        options: right?.comparisonOptions ?? []
     )
 }
 
@@ -40,7 +40,7 @@ public func !=<Entity: ManagedObject, Value: Equatable>(left: KeyPath<Entity, Va
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .notEqualTo,
-        options: right.comparisonPredicateOptions
+        options: right.comparisonOptions
     )
 }
 
@@ -50,7 +50,7 @@ public func !=<Entity: ManagedObject, Value: Equatable>(left: KeyPath<Entity, Op
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .notEqualTo,
-        options: right?.comparisonPredicateOptions ?? []
+        options: right?.comparisonOptions ?? []
     )
 }
 
@@ -62,7 +62,7 @@ public func <<Entity: ManagedObject, Value: Comparable>(left: KeyPath<Entity, Va
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .lessThan,
-        options: right.comparisonPredicateOptions
+        options: right.comparisonOptions
     )
 }
 
@@ -72,7 +72,7 @@ public func <<Entity: ManagedObject, Value: Comparable>(left: KeyPath<Entity, Op
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .lessThan,
-        options: right?.comparisonPredicateOptions ?? []
+        options: right?.comparisonOptions ?? []
     )
 }
 
@@ -84,7 +84,7 @@ public func <=<Entity: ManagedObject, Value: Comparable>(left: KeyPath<Entity, V
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .lessThanOrEqualTo,
-        options: right.comparisonPredicateOptions
+        options: right.comparisonOptions
     )
 }
 
@@ -94,7 +94,7 @@ public func <=<Entity: ManagedObject, Value: Comparable>(left: KeyPath<Entity, O
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .lessThanOrEqualTo,
-        options: right?.comparisonPredicateOptions ?? []
+        options: right?.comparisonOptions ?? []
     )
 }
 
@@ -106,7 +106,7 @@ public func ><Entity: ManagedObject, Value: Comparable>(left: KeyPath<Entity, Va
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .greaterThan,
-        options: right.comparisonPredicateOptions
+        options: right.comparisonOptions
     )
 }
 
@@ -116,7 +116,7 @@ public func ><Entity: ManagedObject, Value: Comparable>(left: KeyPath<Entity, Op
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .greaterThan,
-        options: right?.comparisonPredicateOptions ?? []
+        options: right?.comparisonOptions ?? []
     )
 }
 
@@ -128,7 +128,7 @@ public func >=<Entity: ManagedObject, Value: Comparable>(left: KeyPath<Entity, V
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .greaterThanOrEqualTo,
-        options: right.comparisonPredicateOptions
+        options: right.comparisonOptions
     )
 }
 
@@ -138,7 +138,7 @@ public func >=<Entity: ManagedObject, Value: Comparable>(left: KeyPath<Entity, O
         rightExpression: Expression(forConstantValue: right),
         modifier: .direct,
         type: .greaterThanOrEqualTo,
-        options: right?.comparisonPredicateOptions ?? []
+        options: right?.comparisonOptions ?? []
     )
 }
 
@@ -170,9 +170,9 @@ public func >=<Entity: ManagedObject, Value: Comparable>(left: KeyPath<Entity, O
 
 extension Equatable {
     
-    fileprivate var comparisonPredicateOptions: ComparisonPredicate<ManagedObject>.Options {
+    fileprivate var comparisonOptions: ComparisonPredicate<ManagedObject>.Options {
         if self is String || self is NSString {
-            return Config.defaultComparisonPredicateOptions
+            return Config.defaultComparisonOptions
         }
         
         return []

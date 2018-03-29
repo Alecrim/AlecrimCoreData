@@ -35,6 +35,7 @@ public final class SortDescriptor<Entity: ManagedObject> {
     
     public let key: String
     public let ascending: Bool
+    public let comparisonOptions: NSComparisonPredicate.Options
     
     public convenience init(key: String, ascending: Bool) {
         self.init(rawValue: NSSortDescriptor(key: key, ascending: ascending))
@@ -45,9 +46,29 @@ public final class SortDescriptor<Entity: ManagedObject> {
     }
 
     public init(rawValue: NSSortDescriptor) {
-        self.rawValue = rawValue
-        self.key = rawValue.key!
-        self.ascending = rawValue.ascending
+        let comparisonOptions = Config.defaultComparisonOptions
+
+        let selector: Selector?
+        
+        if comparisonOptions.contains(.caseInsensitive) && comparisonOptions.contains(.diacriticInsensitive) {
+            selector = #selector(NSString.localizedCaseInsensitiveCompare(_:))
+        }
+        else if comparisonOptions.contains(.caseInsensitive) {
+            selector = #selector(NSString.caseInsensitiveCompare(_:))
+        }
+        else if comparisonOptions.contains(.diacriticInsensitive) {
+            selector = #selector(NSString.localizedCompare(_:))
+        }
+        else {
+            selector = nil
+        }
+
+        // recreate sort descriptor using config options
+        self.rawValue = NSSortDescriptor(key: rawValue.key, ascending: rawValue.ascending, selector: selector)
+        
+        self.key = self.rawValue.key!
+        self.ascending = self.rawValue.ascending
+        self.comparisonOptions = comparisonOptions
     }
 
 }
