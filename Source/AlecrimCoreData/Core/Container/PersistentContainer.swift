@@ -116,8 +116,8 @@ open class GenericPersistentContainer<Context: NSManagedObjectContext> {
     // MARK: -
     
     fileprivate final class HelperPersistentContainer<Context: NSManagedObjectContext>: PersistentContainer {
-        
-        fileprivate override lazy var viewContext: NSManagedObjectContext = {
+
+        private lazy var _viewContext: NSManagedObjectContext = {
             let context = Context(concurrencyType: .mainQueueConcurrencyType)
             
             context.persistentStoreCoordinator = self.persistentStoreCoordinator
@@ -127,6 +127,8 @@ open class GenericPersistentContainer<Context: NSManagedObjectContext> {
             
             return context
         }()
+
+        fileprivate override var viewContext: NSManagedObjectContext { return self._viewContext }
         
         fileprivate override func newBackgroundContext() -> NSManagedObjectContext {
             let context = Context(concurrencyType: .privateQueueConcurrencyType)
