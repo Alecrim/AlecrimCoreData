@@ -60,6 +60,51 @@ extension Query {
     
 }
 
+extension Query {
+    
+    func filter(using predicate: Predicate<Entity>) -> Entity? {
+        return self.filter(using: predicate).first()
+    }
+
+    public func first(using rawValue: NSPredicate) -> Entity? {
+        return self.filter(using: Predicate<Entity>(rawValue: rawValue)).first()
+    }
+    
+    public func first(_ closure: () -> Predicate<Entity>) -> Entity? {
+        return self.filter(using: closure()).first()
+    }
+    
+}
+
+extension Query {
+
+    public func firstOrNewEntity(using predicate: Predicate<Entity>) -> Entity {
+        guard let existingEntity = self.filter(using: predicate).first() else {
+            return self.newEntity()
+        }
+        
+        return existingEntity
+    }
+
+    public func firstOrNewEntity(using rawValue: NSPredicate) -> Entity {
+        guard let existingEntity = self.filter(using: Predicate<Entity>(rawValue: rawValue)).first() else {
+            return self.newEntity()
+        }
+        
+        return existingEntity
+    }
+    
+    public func firstOrNewEntity(_ closure: () -> Predicate<Entity>) -> Entity {
+        guard let existingEntity = self.filter(using: closure()).first() else {
+            return self.newEntity()
+        }
+        
+        return existingEntity
+    }
+    
+}
+
+
 // MARK: -
 
 extension Query: Sequence {
