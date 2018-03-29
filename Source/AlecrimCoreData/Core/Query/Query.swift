@@ -178,6 +178,16 @@ extension Query {
 
 }
 
+// MARK: -
+
+extension Query {
+    
+    public func toFetchRequestController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchRequestController<Entity> {
+        return FetchRequestController(query: self, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+    }
+    
+}
+
 // MARK: - Queryable
 
 extension Query: Queryable {
