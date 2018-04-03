@@ -27,12 +27,12 @@ Or that:
 ```swift
 persistentContainer.performBackgroundTask { context in
     let query = context.people
-        .filtered(using: \.city == "Piracicaba" && \.isSwiftProgrammer == true)
+        .filtered(using: \.country == "Brazil" && \.isContributor == true)
+        .sorted(by: .descending(\.contributionCount))
         .sorted(by: \.name)
-        .sorted(by: .descending(\.distance))
         
     if let person = query.first() {
-        print(person.name, person.address)
+        print(person.name, person.email)
     }
 }
 ```
