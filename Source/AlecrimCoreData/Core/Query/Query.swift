@@ -62,40 +62,40 @@ extension Query {
 
 extension Query {
     
-    func filter(using predicate: Predicate<Entity>) -> Entity? {
-        return self.filter(using: predicate).first()
+    func filtered(using predicate: Predicate<Entity>) -> Entity? {
+        return self.filtered(using: predicate).first()
     }
 
-    public func first(using rawValue: NSPredicate) -> Entity? {
-        return self.filter(using: Predicate<Entity>(rawValue: rawValue)).first()
+    public func first(where rawValue: NSPredicate) -> Entity? {
+        return self.filtered(using: Predicate<Entity>(rawValue: rawValue)).first()
     }
     
-    public func first(_ closure: () -> Predicate<Entity>) -> Entity? {
-        return self.filter(using: closure()).first()
+    public func first(where closure: () -> Predicate<Entity>) -> Entity? {
+        return self.filtered(using: closure()).first()
     }
     
 }
 
 extension Query {
 
-    public func firstOrNewEntity(using predicate: Predicate<Entity>) -> Entity {
-        guard let existingEntity = self.filter(using: predicate).first() else {
+    public func firstOrNewEntity(where predicate: Predicate<Entity>) -> Entity {
+        guard let existingEntity = self.filtered(using: predicate).first() else {
             return self.newEntity()
         }
         
         return existingEntity
     }
 
-    public func firstOrNewEntity(using rawValue: NSPredicate) -> Entity {
-        guard let existingEntity = self.filter(using: Predicate<Entity>(rawValue: rawValue)).first() else {
+    public func firstOrNewEntity(where rawValue: NSPredicate) -> Entity {
+        guard let existingEntity = self.filtered(using: Predicate<Entity>(rawValue: rawValue)).first() else {
             return self.newEntity()
         }
         
         return existingEntity
     }
     
-    public func firstOrNewEntity(_ closure: () -> Predicate<Entity>) -> Entity {
-        guard let existingEntity = self.filter(using: closure()).first() else {
+    public func firstOrNewEntity(where closure: () -> Predicate<Entity>) -> Entity {
+        guard let existingEntity = self.filtered(using: closure()).first() else {
             return self.newEntity()
         }
         
@@ -218,31 +218,31 @@ extension Query: Queryable {
         return clone
     }
     
-    public func filter(using predicate: Predicate<Entity>) -> Query<Entity> {
+    public func filtered(using predicate: Predicate<Entity>) -> Query<Entity> {
         var clone = self
-        clone.fetchRequest = clone.fetchRequest.filter(using: predicate)
+        clone.fetchRequest = clone.fetchRequest.filtered(using: predicate)
         
         return clone
     }
 
 
-    public func sort(by sortDescriptor: SortDescriptor<Entity>) -> Query<Entity> {
+    public func sorted(by sortDescriptor: SortDescriptor<Entity>) -> Query<Entity> {
         var clone = self
-        clone.fetchRequest = clone.fetchRequest.sort(by: sortDescriptor)
+        clone.fetchRequest = clone.fetchRequest.sorted(by: sortDescriptor)
 
         return clone
     }
 
-    public func sort(by sortDescriptors: [SortDescriptor<Entity>]) -> Query<Entity> {
+    public func sorted(by sortDescriptors: [SortDescriptor<Entity>]) -> Query<Entity> {
         var clone = self
-        clone.fetchRequest = clone.fetchRequest.sort(by: sortDescriptors)
+        clone.fetchRequest = clone.fetchRequest.sorted(by: sortDescriptors)
         
         return clone
     }
 
-    public func sort(by sortDescriptors: SortDescriptor<Entity>...) -> Query<Entity> {
+    public func sorted(by sortDescriptors: SortDescriptor<Entity>...) -> Query<Entity> {
         var clone = self
-        clone.fetchRequest = clone.fetchRequest.sort(by: sortDescriptors)
+        clone.fetchRequest = clone.fetchRequest.sorted(by: sortDescriptors)
         
         return clone
     }

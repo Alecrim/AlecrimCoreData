@@ -13,14 +13,27 @@ A powerful and elegant Core Data framework for Swift.
 Simple do that:
 
 ```swift
-let query = pc.viewContext.people
-    .skip(20)
-    .take(10)
+let query = persistentContainer.viewContext.people
     .where { \.city == "Piracicaba" }
     .orderBy { \.name }
     
-for person in query {
+for person in query.skip(20).take(10) {
     print(person.name, person.address)
+}
+```
+
+Or that:
+
+```swift
+persistentContainer.performBackgroundTask { context in
+    let query = context.people
+        .filtered(using: \.city == "Piracicaba" && \.isSwiftProgrammer == true)
+        .sorted(by: \.name)
+        .sorted(by: .descending(\.distance))
+        
+    if let person = query.first() {
+        print(person.name, person.address)
+    }
 }
 ```
 
@@ -33,7 +46,7 @@ extension ManagedObjectContext {
     var people: Query<Person> { return Query(in: self) }
 }
 
-let pc = PersistentContainer()
+let persistentContainer = PersistentContainer()
 
 ```
 And after your have created your matching managed object model in Xcode, of course. ;-)

@@ -19,11 +19,11 @@ public protocol Queryable {
     func take(_ limit: Int) -> Self
     func setBatchSize(_ batchSize: Int) -> Self
     
-    func filter(using predicate: Predicate<Element>) -> Self
+    func filtered(using predicate: Predicate<Element>) -> Self
     
-    func sort(by sortDescriptor: SortDescriptor<Element>) -> Self
-    func sort(by sortDescriptors: [SortDescriptor<Element>]) -> Self
-    func sort(by sortDescriptors: SortDescriptor<Element>...) -> Self
+    func sorted(by sortDescriptor: SortDescriptor<Element>) -> Self
+    func sorted(by sortDescriptors: [SortDescriptor<Element>]) -> Self
+    func sorted(by sortDescriptors: SortDescriptor<Element>...) -> Self
     
 }
 
@@ -31,28 +31,28 @@ public protocol Queryable {
 
 extension Queryable {
 
-    public func filter(using rawValue: NSPredicate) -> Self {
-        return self.filter(using: Predicate<Element>(rawValue: rawValue))
+    public func filtered(using rawValue: NSPredicate) -> Self {
+        return self.filtered(using: Predicate<Element>(rawValue: rawValue))
     }
     
     public func `where`(_ closure: () -> Predicate<Element>) -> Self {
-        return self.filter(using: closure())
+        return self.filtered(using: closure())
     }
 
 }
 
 extension Queryable {
     
-    public func sort(by rawValue: NSSortDescriptor) -> Self {
-        return self.sort(by: SortDescriptor<Element>(rawValue: rawValue))
+    public func sorted(by rawValue: NSSortDescriptor) -> Self {
+        return self.sorted(by: SortDescriptor<Element>(rawValue: rawValue))
     }
 
-    public func sort(by rawValues: [NSSortDescriptor]) -> Self {
-        return self.sort(by: rawValues.map { SortDescriptor<Element>(rawValue: $0) })
+    public func sorted(by rawValues: [NSSortDescriptor]) -> Self {
+        return self.sorted(by: rawValues.map { SortDescriptor<Element>(rawValue: $0) })
     }
 
-    public func sort(by rawValues: NSSortDescriptor...) -> Self {
-        return self.sort(by: rawValues.map { SortDescriptor<Element>(rawValue: $0) })
+    public func sorted(by rawValues: NSSortDescriptor...) -> Self {
+        return self.sorted(by: rawValues.map { SortDescriptor<Element>(rawValue: $0) })
     }
 
 }
@@ -61,19 +61,19 @@ extension Queryable {
     
     // so we can write `sort(by: \.name)` instead of `sort(by: \Customer.name)`
     
-    public func sort<Value>(by closure: @autoclosure () -> KeyPath<Element, Value>) -> Self {
+    public func sorted<Value>(by closure: @autoclosure () -> KeyPath<Element, Value>) -> Self {
         let sortDescriptor: SortDescriptor<Element> = .ascending(closure())
-        return self.sort(by: sortDescriptor)
+        return self.sorted(by: sortDescriptor)
     }
     
     // aliases
     
     public func orderBy(_ closure: () -> SortDescriptor<Element>) -> Self {
-        return self.sort(by: closure())
+        return self.sorted(by: closure())
     }
     
     public func orderBy<Value>(_ closure: () -> KeyPath<Element, Value>) -> Self {
-        return self.sort(by: closure())
+        return self.sorted(by: closure())
     }
 
 }
