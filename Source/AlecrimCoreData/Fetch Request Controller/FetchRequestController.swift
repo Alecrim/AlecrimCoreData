@@ -28,6 +28,8 @@ public final class FetchRequestController<Entity: ManagedObject> {
     fileprivate let initialPredicate: Predicate<Entity>?
     fileprivate let initialSortDescriptors: [SortDescriptor<Entity>]?
 
+    private var didPerformFetch = false
+
     public init(fetchRequest: FetchRequest<Entity>, context: ManagedObjectContext, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
         self.rawValue = NSFetchedResultsController(fetchRequest: fetchRequest.toRaw() as NSFetchRequest<Entity>, managedObjectContext: context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
         self.rawValueDelegate = FetchedResultsControllerDelegate<Entity>()
@@ -45,6 +47,14 @@ public final class FetchRequestController<Entity: ManagedObject> {
     
     public func performFetch() {
         try! self.rawValue.performFetch()
+        self.didPerformFetch = true
+    }
+
+    public func performFetchIfNeeded() {
+        if !self.didPerformFetch {
+            try! self.rawValue.performFetch()
+            self.didPerformFetch = true
+        }
     }
 
 }
@@ -54,14 +64,17 @@ public final class FetchRequestController<Entity: ManagedObject> {
 extension FetchRequestController {
     
     public var fetchedObjects: [Entity]? {
+        self.performFetchIfNeeded()
         return self.rawValue.fetchedObjects
     }
     
     public func object(at indexPath: IndexPath) -> Entity {
+        self.performFetchIfNeeded()
         return self.rawValue.object(at: indexPath)
     }
     
     public func indexPath(for object: Entity) -> IndexPath? {
+        self.performFetchIfNeeded()
         return self.rawValue.indexPath(forObject: object)
     }
     
@@ -70,10 +83,12 @@ extension FetchRequestController {
 extension FetchRequestController {
     
     public func numberOfSections() -> Int {
+        self.performFetchIfNeeded()
         return self.sections.count
     }
     
     public func numberOfObjects(inSection section: Int) -> Int {
+        self.performFetchIfNeeded()
         return self.sections[section].numberOfObjects
     }
     
@@ -82,6 +97,8 @@ extension FetchRequestController {
 extension FetchRequestController {
     
     public var sections: [FetchedResultsSectionInfo<Entity>] {
+        self.performFetchIfNeeded()
+
         guard let result = self.rawValue.sections?.map({ FetchedResultsSectionInfo<Entity>(rawValue: $0) }) else {
             fatalError("performFetch: hasn't been called.")
         }
@@ -90,6 +107,8 @@ extension FetchRequestController {
     }
     
     public func section(forSectionIndexTitle title: String, at sectionIndex: Int) -> Int {
+        self.performFetchIfNeeded()
+
         return self.rawValue.section(forSectionIndexTitle: title, at: sectionIndex)
     }
     
@@ -98,10 +117,12 @@ extension FetchRequestController {
 extension FetchRequestController {
     
     public func sectionIndexTitle(forSectionName sectionName: String) -> String? {
+        self.performFetchIfNeeded()
         return self.rawValue.sectionIndexTitle(forSectionName: sectionName)
     }
     
     public var sectionIndexTitles: [String] {
+        self.performFetchIfNeeded()
         return self.rawValue.sectionIndexTitles
     }
     

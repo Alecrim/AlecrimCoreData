@@ -162,7 +162,6 @@
             }
             
             //
-            self.performFetch()
             collectionView.reloadData()
             
             //
