@@ -13,14 +13,27 @@ A powerful and elegant Core Data framework for Swift.
 Simple do that:
 
 ```swift
-let query = pc.viewContext.people
-    .skip(10)
-    .take(20)
+let query = persistentContainer.viewContext.people
     .where { \.city == "Piracicaba" }
     .orderBy { \.name }
     
-for person in query {
+for person in query.skip(20).take(10) {
     print(person.name, person.address)
+}
+```
+
+Or that:
+
+```swift
+persistentContainer.performBackgroundTask { context in
+    let query = context.people
+        .filtered(using: \.country == "Brazil" && \.isContributor == true)
+        .sorted(by: .descending(\.contributionCount))
+        .sorted(by: \.name)
+        
+    if let person = query.first() {
+        print(person.name, person.email)
+    }
 }
 ```
 
@@ -30,10 +43,10 @@ After that:
 import AlecrimCoreData
 
 extension ManagedObjectContext {
-    var people: Query<Person> { return Query(context: self, fetchRequest: FetchRequest()) }
+    var people: Query<Person> { return Query(in: self) }
 }
 
-let pc = PersistentContainer()
+let persistentContainer = PersistentContainer()
 
 ```
 And after your have created your matching managed object model in Xcode, of course. ;-)

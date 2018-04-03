@@ -10,5 +10,5 @@ import Foundation
 
 public struct Config {
     public static var defaultBatchSize: Int = 20
-    public static var defaultComparisonPredicateOptions: ComparisonPredicate.Options = [.caseInsensitive, .diacriticInsensitive]
+    public static var defaultComparisonOptions: NSComparisonPredicate.Options = [.caseInsensitive, .diacriticInsensitive]
 }

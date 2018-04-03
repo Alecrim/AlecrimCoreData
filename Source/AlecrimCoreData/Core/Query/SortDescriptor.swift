@@ -45,9 +45,33 @@ public final class SortDescriptor<Entity: ManagedObject> {
     }
 
     public init(rawValue: NSSortDescriptor) {
-        self.rawValue = rawValue
-        self.key = rawValue.key!
-        self.ascending = rawValue.ascending
+        if let key = rawValue.key, let attribute = Entity.entity().attributesByName.first(where: { $0.key == key }), attribute.value.attributeType == .stringAttributeType {
+            let comparisonOptions = Config.defaultComparisonOptions
+            let selector: Selector?
+
+            // recreate sort descriptor using comparison options
+            if comparisonOptions.contains(.caseInsensitive) && comparisonOptions.contains(.diacriticInsensitive) {
+                selector = #selector(NSString.localizedCaseInsensitiveCompare(_:))
+            }
+            else if comparisonOptions.contains(.caseInsensitive) {
+                selector = #selector(NSString.caseInsensitiveCompare(_:))
+            }
+            else if comparisonOptions.contains(.diacriticInsensitive) {
+                selector = #selector(NSString.localizedCompare(_:))
+            }
+            else {
+                selector = nil
+            }
+            
+            self.rawValue = NSSortDescriptor(key: rawValue.key, ascending: rawValue.ascending, selector: selector)
+        }
+        else {
+            self.rawValue = rawValue
+        }
+
+        //
+        self.key = self.rawValue.key!
+        self.ascending = self.rawValue.ascending
     }
 
 }

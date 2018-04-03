@@ -74,7 +74,7 @@ extension FetchRequest {
 
 extension FetchRequest {
 
-    public func filter(using predicate: Predicate<Entity>) -> FetchRequest<Entity> {
+    public func filtered(using predicate: Predicate<Entity>) -> FetchRequest<Entity> {
         var clone = self
         
         if let existingPredicate = clone.predicate {
@@ -93,7 +93,7 @@ extension FetchRequest {
 
 extension FetchRequest {
 
-    public func sort(by sortDescriptor: SortDescriptor<Entity>) -> FetchRequest<Entity> {
+    public func sorted(by sortDescriptor: SortDescriptor<Entity>) -> FetchRequest<Entity> {
         var clone = self
         
         if clone.sortDescriptors != nil {
@@ -107,7 +107,7 @@ extension FetchRequest {
     }
     
 
-    public func sort(by sortDescriptors: [SortDescriptor<Entity>]) -> FetchRequest<Entity> {
+    public func sorted(by sortDescriptors: [SortDescriptor<Entity>]) -> FetchRequest<Entity> {
         var clone = self
         
         if clone.sortDescriptors != nil {
@@ -120,7 +120,7 @@ extension FetchRequest {
         return clone
     }
 
-    public func sort(by sortDescriptors: SortDescriptor<Entity>...) -> FetchRequest<Entity> {
+    public func sorted(by sortDescriptors: SortDescriptor<Entity>...) -> FetchRequest<Entity> {
         var clone = self
         
         if clone.sortDescriptors != nil {

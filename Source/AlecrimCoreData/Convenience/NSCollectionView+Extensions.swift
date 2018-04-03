@@ -1,20 +1,20 @@
 //
-//  UICollectionViewExtensions.swift
+//  NSCollectionView+Extensions.swift
 //  AlecrimCoreData
 //
 //  Created by Vanderlei Martinelli on 2015-07-28.
 //  Copyright (c) 2015 Alecrim. All rights reserved.
 //
 
-#if os(iOS) || os(tvOS)
+#if os(macOS)
     
     import Foundation
-    import UIKit
+    import AppKit
     
     extension FetchRequestController {
         
         @discardableResult
-        public func bind<CellType: UICollectionViewCell>(to collectionView: UICollectionView, sectionOffset: Int = 0, cellConfigurationHandler: ((CellType, IndexPath) -> Void)? = nil) -> Self {
+        public func bind<ItemType: NSCollectionViewItem>(to collectionView: NSCollectionView, sectionOffset: Int = 0, cellConfigurationHandler: ((ItemType, IndexPath) -> Void)? = nil) -> Self {
             let insertedSectionIndexes = NSMutableIndexSet()
             let deletedSectionIndexes = NSMutableIndexSet()
             let updatedSectionIndexes = NSMutableIndexSet()
@@ -109,11 +109,13 @@
                     }
                 }
                 .didChangeContent { [weak collectionView] in
+                    //
                     guard let collectionView = collectionView else {
                         reset()
                         return
                     }
                     
+                    //
                     if reloadData {
                         collectionView.reloadData()
                         reset()
@@ -133,22 +135,22 @@
                             }
                             
                             if deletedItemIndexPaths.count > 0 {
-                                collectionView.deleteItems(at: deletedItemIndexPaths)
+                                collectionView.deleteItems(at: Set(deletedItemIndexPaths))
                             }
                             
                             if insertedItemIndexPaths.count > 0 {
-                                collectionView.insertItems(at: insertedItemIndexPaths)
+                                collectionView.insertItems(at: Set(insertedItemIndexPaths))
                             }
                             
                             if updatedItemIndexPaths.count > 0 && cellConfigurationHandler == nil {
-                                collectionView.reloadItems(at: updatedItemIndexPaths)
+                                collectionView.reloadItems(at: Set(updatedItemIndexPaths))
                             }
-                        }, completion: { finished in
+                        }, completionHandler: { finished in
                             if finished {
                                 if let cellConfigurationHandler = cellConfigurationHandler {
                                     for updatedItemIndexPath in updatedItemIndexPaths {
-                                        if let cell = collectionView.cellForItem(at: updatedItemIndexPath) as? CellType {
-                                            cellConfigurationHandler(cell, updatedItemIndexPath)
+                                        if let item = collectionView.item(at: updatedItemIndexPath) as? ItemType {
+                                            cellConfigurationHandler(item, updatedItemIndexPath)
                                         }
                                     }
                                 }
@@ -160,7 +162,6 @@
             }
             
             //
-            self.performFetch()
             collectionView.reloadData()
             
             //
