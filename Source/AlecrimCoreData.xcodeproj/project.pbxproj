@@ -132,14 +132,14 @@
 		14CC3367205B28CA00BA682A /* Query */ = {
 			isa = PBXGroup;
 			children = (
+				14CC336F205B28CA00BA682A /* Queryable.swift */,
 				14CC3368205B28CA00BA682A /* Query.swift */,
-				14CC3369205B28CA00BA682A /* Expression.swift */,
 				14CC336A205B28CA00BA682A /* FetchRequest.swift */,
+				14CC3369205B28CA00BA682A /* Expression.swift */,
 				14CC336B205B28CA00BA682A /* Predicate.swift */,
 				14CC336C205B28CA00BA682A /* SortDescriptor.swift */,
 				14CC336D205B28CA00BA682A /* Config.swift */,
 				14CC336E205B28CA00BA682A /* KeyPath.swift */,
-				14CC336F205B28CA00BA682A /* Queryable.swift */,
 			);
 			path = Query;
 			sourceTree = "<group>";

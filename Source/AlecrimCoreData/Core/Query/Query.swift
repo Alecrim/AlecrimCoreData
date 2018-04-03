@@ -181,7 +181,12 @@ extension Query {
 // MARK: -
 
 extension Query {
-    
+
+    public func toFetchRequestController<Value>(sectionName sectionNameKeyPathClosure: @autoclosure () -> KeyPath<Entity, Value>, cacheName: String? = nil) -> FetchRequestController<Entity> {
+        let sectionNameKeyPath = sectionNameKeyPathClosure().pathString
+        return FetchRequestController(query: self, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+    }
+
     public func toFetchRequestController(sectionNameKeyPath: String? = nil, cacheName: String? = nil) -> FetchRequestController<Entity> {
         return FetchRequestController(query: self, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
     }

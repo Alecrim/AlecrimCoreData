@@ -30,6 +30,22 @@ public final class FetchRequestController<Entity: ManagedObject> {
 
     private var didPerformFetch = false
 
+    // MARK: -
+
+    public convenience init<Value>(query: Query<Entity>, sectionName sectionNameKeyPathClosure: @autoclosure () -> KeyPath<Entity, Value>, cacheName: String? = nil) {
+        let sectionNameKeyPath = sectionNameKeyPathClosure().pathString
+        self.init(fetchRequest: query.fetchRequest, context: query.context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+    }
+
+    public convenience init(query: Query<Entity>, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
+        self.init(fetchRequest: query.fetchRequest, context: query.context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+    }
+
+    public convenience init<Value>(fetchRequest: FetchRequest<Entity>, context: ManagedObjectContext, sectionName sectionNameKeyPathClosure: @autoclosure () -> KeyPath<Entity, Value>, cacheName: String? = nil) {
+        let sectionNameKeyPath = sectionNameKeyPathClosure().pathString
+        self.init(fetchRequest: fetchRequest, context: context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+    }
+
     public init(fetchRequest: FetchRequest<Entity>, context: ManagedObjectContext, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
         self.rawValue = NSFetchedResultsController(fetchRequest: fetchRequest.toRaw() as NSFetchRequest<Entity>, managedObjectContext: context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
         self.rawValueDelegate = FetchedResultsControllerDelegate<Entity>()
@@ -41,10 +57,8 @@ public final class FetchRequestController<Entity: ManagedObject> {
         self.rawValue.delegate = self.rawValueDelegate
     }
 
-    public convenience init(query: Query<Entity>, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
-        self.init(fetchRequest: query.fetchRequest, context: query.context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
-    }
-    
+    // MARK: -
+
     public func performFetch() {
         try! self.rawValue.performFetch()
         self.didPerformFetch = true

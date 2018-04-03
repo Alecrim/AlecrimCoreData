@@ -158,13 +158,13 @@ public func >=<Entity: ManagedObject, Value: Comparable>(left: KeyPath<Entity, O
 
 // MARK: -
 
-//extension KeyPath {
-//
-//    internal var pathString: String {
-//        return self._kvcKeyPathString!
-//    }
-//
-//}
+extension KeyPath {
+
+    internal var pathString: String {
+        return self._kvcKeyPathString!
+    }
+
+}
 
 // MARK: -
 
