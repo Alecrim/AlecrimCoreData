@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1420DF9E2054FFBC00B34160 /* AlecrimCoreData.h in Headers */ = {isa = PBXBuildFile; fileRef = 1420DF9C2054FFBC00B34160 /* AlecrimCoreData.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		14B9460020759D0D00A7CFFD /* NSTableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B945FF20759D0D00A7CFFD /* NSTableView+Extensions.swift */; };
 		14CC3374205B28CA00BA682A /* NSArrayController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC335E205B28CA00BA682A /* NSArrayController+Extensions.swift */; };
 		14CC3375205B28CA00BA682A /* UITableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC335F205B28CA00BA682A /* UITableView+Extensions.swift */; };
 		14CC3376205B28CA00BA682A /* UICollectionView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CC3360205B28CA00BA682A /* UICollectionView+Extensions.swift */; };
@@ -32,6 +33,7 @@
 		1420DF992054FFBC00B34160 /* AlecrimCoreData.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AlecrimCoreData.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1420DF9C2054FFBC00B34160 /* AlecrimCoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlecrimCoreData.h; sourceTree = "<group>"; };
 		1420DF9D2054FFBC00B34160 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		14B945FF20759D0D00A7CFFD /* NSTableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTableView+Extensions.swift"; sourceTree = "<group>"; };
 		14CC335E205B28CA00BA682A /* NSArrayController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSArrayController+Extensions.swift"; sourceTree = "<group>"; };
 		14CC335F205B28CA00BA682A /* UITableView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableView+Extensions.swift"; sourceTree = "<group>"; };
 		14CC3360205B28CA00BA682A /* UICollectionView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extensions.swift"; sourceTree = "<group>"; };
@@ -102,10 +104,11 @@
 		14CC335D205B28CA00BA682A /* Convenience */ = {
 			isa = PBXGroup;
 			children = (
-				14CC335E205B28CA00BA682A /* NSArrayController+Extensions.swift */,
 				14CC335F205B28CA00BA682A /* UITableView+Extensions.swift */,
 				14CC3360205B28CA00BA682A /* UICollectionView+Extensions.swift */,
+				14CC335E205B28CA00BA682A /* NSArrayController+Extensions.swift */,
 				14CC3361205B28CA00BA682A /* NSCollectionView+Extensions.swift */,
+				14B945FF20759D0D00A7CFFD /* NSTableView+Extensions.swift */,
 			);
 			path = Convenience;
 			sourceTree = "<group>";
@@ -237,6 +240,7 @@
 				14CC337E205B28CA00BA682A /* Predicate.swift in Sources */,
 				14CC337D205B28CA00BA682A /* FetchRequest.swift in Sources */,
 				14CC3381205B28CA00BA682A /* KeyPath.swift in Sources */,
+				14B9460020759D0D00A7CFFD /* NSTableView+Extensions.swift in Sources */,
 				14CC337F205B28CA00BA682A /* SortDescriptor.swift in Sources */,
 				14CC337A205B28CA00BA682A /* ManagedObject.swift in Sources */,
 				14CC3382205B28CA00BA682A /* Queryable.swift in Sources */,
