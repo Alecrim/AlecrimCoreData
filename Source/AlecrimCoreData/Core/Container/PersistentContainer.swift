@@ -160,16 +160,15 @@ open class GenericPersistentContainer<Context: NSManagedObjectContext> {
 
     // MARK: -
 
-    public final var viewContext: Context {
+    open var viewContext: Context {
         return unsafeDowncast(self.rawValue.viewContext, to: Context.self)
     }
     
-    public final func newBackgroundContext() -> Context {
+    open func newBackgroundContext() -> Context {
         return unsafeDowncast(self.rawValue.newBackgroundContext(), to: Context.self)
-
     }
     
-    public final func performBackgroundTask(_ block: @escaping (Context) -> Void) {
+    open func performBackgroundTask(_ block: @escaping (Context) -> Void) {
         self.rawValue.performBackgroundTask { managedObjectContext in
             block(unsafeDowncast(managedObjectContext, to: Context.self))
         }
