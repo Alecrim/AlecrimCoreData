@@ -107,6 +107,17 @@ open class PersistentContainer: NSPersistentContainer {
 
         return context
     }
+
+    open override func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void) {
+        super.performBackgroundTask { context in
+            //
+            context.automaticallyMergesChangesFromParent = true
+            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+
+            //
+            block(context)
+        }
+    }
 }
 
 // MARK: -
@@ -139,6 +150,20 @@ open class GenericPersistentContainer<Context: NSManagedObjectContext> {
             context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
             
             return context
+        }
+
+        fileprivate override func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void) {
+            super.performBackgroundTask { context in
+                //
+                context.persistentStoreCoordinator = self.persistentStoreCoordinator
+
+                //
+                context.automaticallyMergesChangesFromParent = true
+                context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+
+                //
+                block(context)
+            }
         }
         
     }
