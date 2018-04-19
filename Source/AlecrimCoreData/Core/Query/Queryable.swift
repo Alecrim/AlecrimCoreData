@@ -15,8 +15,8 @@ public protocol Queryable {
     
     associatedtype Element: ManagedObject
     
-    func skip(_ offset: Int) -> Self
-    func take(_ limit: Int) -> Self
+    func dropFirst(_ n: Int) -> Self
+    func prefix(_ maxLength: Int) -> Self
     func setBatchSize(_ batchSize: Int) -> Self
     
     func filtered(using predicate: Predicate<Element>) -> Self

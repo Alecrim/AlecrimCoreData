@@ -17,7 +17,7 @@ let query = persistentContainer.viewContext.people
     .where { \.city == "Piracicaba" }
     .orderBy { \.name }
     
-for person in query.skip(20).take(10) {
+for person in query.dropFirst(20).prefix(10) {
     print(person.name, person.address)
 }
 ```

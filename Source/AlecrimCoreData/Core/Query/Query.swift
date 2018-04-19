@@ -55,7 +55,7 @@ extension Query {
 extension Query {
     
     public func first() -> Entity? {
-        return self.execute(fetchRequest: self.fetchRequest.take(1)).first
+        return self.execute(fetchRequest: self.fetchRequest.prefix(1)).first
     }
     
 }
@@ -108,13 +108,14 @@ extension Query {
 // MARK: -
 
 extension Query: Sequence {
-    
+
+    // MARK: -
+
     public func makeIterator() -> QueryIterator<Entity> {
         return QueryIterator(self.execute())
     }
     
     public struct QueryIterator<Entity>: IteratorProtocol {
-        
         private let entities: [Entity]
         private var index: Int
         
@@ -133,7 +134,29 @@ extension Query: Sequence {
             return self.entities[index]
         }
     }
-    
+
+    // MARK: -
+
+    public func dropLast(_ n: Int) -> Query<Entity> {
+        fatalError("Not applicable or not available.")
+    }
+
+    public func drop(while predicate: (Entity) throws -> Bool) rethrows -> Query<Entity> {
+        fatalError("Not applicable or not available.")
+    }
+
+    public func prefix(while predicate: (Entity) throws -> Bool) rethrows -> Query<Entity> {
+        fatalError("Not applicable or not available.")
+    }
+
+    public func suffix(_ maxLength: Int) -> Query<Entity> {
+        fatalError("Not applicable or not available.")
+    }
+
+    public func split(maxSplits: Int, omittingEmptySubsequences: Bool, whereSeparator isSeparator: (Entity) throws -> Bool) rethrows -> [Query<Entity>] {
+        fatalError("Not applicable or not available.")
+    }
+
 }
 
 // MARK: -
@@ -197,16 +220,16 @@ extension Query {
 
 extension Query: Queryable {
     
-    public func skip(_ offset: Int) -> Query<Entity> {
+    public func dropFirst(_ n: Int) -> Query<Entity> {
         var clone = self
-        clone.fetchRequest = clone.fetchRequest.skip(offset)
+        clone.fetchRequest = clone.fetchRequest.dropFirst(n)
         
         return clone
     }
     
-    public func take(_ limit: Int) -> Query<Entity> {
+    public func prefix(_ maxLength: Int) -> Query<Entity> {
         var clone = self
-        clone.fetchRequest = clone.fetchRequest.take(limit)
+        clone.fetchRequest = clone.fetchRequest.prefix(maxLength)
 
         return clone
     }
