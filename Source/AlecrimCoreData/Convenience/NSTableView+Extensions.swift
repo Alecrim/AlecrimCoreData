@@ -16,27 +16,16 @@ extension FetchRequestController {
     /// WARNING: To avoid memory leaks do not pass a func as the configuration handler, pass a closure with *weak* self.
     @discardableResult
     public func bind(to tableView: NSTableView, animationOptions: NSTableView.AnimationOptions = .effectFade, sectionOffset: Int = 0, cellViewConfigurationHandler: ((NSTableCellView, IndexPath) -> Void)? = nil) -> Self {
-        let insertedSectionIndexes = NSMutableIndexSet()
-        let deletedSectionIndexes = NSMutableIndexSet()
-        let updatedSectionIndexes = NSMutableIndexSet()
-
-        var insertedItemIndexPaths = [IndexPath]()
-        var deletedItemIndexPaths = [IndexPath]()
-        var updatedItemIndexPaths = [IndexPath]()
-
+        //
         var reloadData = false
+        var sectionChanges = Array<Change<Int>>()
+        var itemChanges = Array<Change<IndexPath>>()
 
         //
         func reset() {
-            insertedSectionIndexes.removeAllIndexes()
-            deletedSectionIndexes.removeAllIndexes()
-            updatedSectionIndexes.removeAllIndexes()
-
-            insertedItemIndexPaths.removeAll(keepingCapacity: false)
-            deletedItemIndexPaths.removeAll(keepingCapacity: false)
-            updatedItemIndexPaths.removeAll(keepingCapacity: false)
-
             reloadData = false
+            sectionChanges.removeAll()
+            itemChanges.removeAll()
         }
 
         //
@@ -45,70 +34,44 @@ extension FetchRequestController {
                 reloadData = true
             }
             .willChangeContent {
-                if !reloadData {
-                    //
-                    reset()
+                if tableView.numberOfRows == 0 {
+                    reloadData = true
                 }
-            }
-            .didInsertSection { sectionInfo, sectionIndex in
-                if !reloadData {
-                    insertedSectionIndexes.add(sectionIndex + sectionOffset)
-                }
-            }
-            .didDeleteSection { sectionInfo, sectionIndex in
-                if !reloadData {
-                    deletedSectionIndexes.add(sectionIndex + sectionOffset)
-                    deletedItemIndexPaths = deletedItemIndexPaths.filter { $0.section != sectionIndex}
-                    updatedItemIndexPaths = updatedItemIndexPaths.filter { $0.section != sectionIndex}
-                }
-            }
-            .didInsertObject { entity, newIndexPath in
-                if !reloadData {
-                    let newIndexPath = sectionOffset > 0 ? IndexPath(item: newIndexPath.item, section: newIndexPath.section + sectionOffset) : newIndexPath
 
-                    if !insertedSectionIndexes.contains(newIndexPath.section) {
-                        insertedItemIndexPaths.append(newIndexPath)
-                    }
-                }
+                guard !reloadData else { return }
+                reset()
             }
-            .didDeleteObject { entity, indexPath in
-                if !reloadData {
-                    let indexPath = sectionOffset > 0 ? IndexPath(item: indexPath.item, section: indexPath.section + sectionOffset) : indexPath
-
-                    if !deletedSectionIndexes.contains(indexPath.section) {
-                        deletedItemIndexPaths.append(indexPath)
-                    }
-                }
+            .didInsertSection { _, sectionIndex in
+                reloadData = true
             }
-            .didUpdateObject { entity, indexPath in
-                if !reloadData {
-                    let indexPath = sectionOffset > 0 ? IndexPath(item: indexPath.item, section: indexPath.section + sectionOffset) : indexPath
+            .didDeleteSection { _, sectionIndex in
+                reloadData = true
+            }
+            .didInsertObject { _, newIndexPath in
+                guard !reloadData else { return }
 
-                    if !deletedSectionIndexes.contains(indexPath.section) && deletedItemIndexPaths.index(of: indexPath) == nil && updatedItemIndexPaths.index(of: indexPath) == nil {
-                        updatedItemIndexPaths.append(indexPath)
-                    }
-                }
+                let newIndexPath = sectionOffset > 0 ? IndexPath(item: newIndexPath.item, section: newIndexPath.section + sectionOffset) : newIndexPath
+                itemChanges.append(.insert(newIndexPath))
+            }
+            .didDeleteObject { _, indexPath in
+                guard !reloadData else { return }
+
+                let indexPath = sectionOffset > 0 ? IndexPath(item: indexPath.item, section: indexPath.section + sectionOffset) : indexPath
+                itemChanges.append(.delete(indexPath))
+            }
+            .didUpdateObject { _, indexPath in
+                guard !reloadData else { return }
+
+                let indexPath = sectionOffset > 0 ? IndexPath(item: indexPath.item, section: indexPath.section + sectionOffset) : indexPath
+                itemChanges.append(.update(indexPath))
             }
             .didMoveObject { entity, indexPath, newIndexPath in
-                if !reloadData {
-                    let newIndexPath = sectionOffset > 0 ? IndexPath(item: newIndexPath.item, section: newIndexPath.section + sectionOffset) : newIndexPath
-                    let indexPath = sectionOffset > 0 ? IndexPath(item: indexPath.item, section: indexPath.section + sectionOffset) : indexPath
+                guard !reloadData else { return }
 
-                    if newIndexPath == indexPath {
-                        if !deletedSectionIndexes.contains(indexPath.section) && deletedItemIndexPaths.index(of: indexPath) == nil && updatedItemIndexPaths.index(of: indexPath) == nil {
-                            updatedItemIndexPaths.append(indexPath)
-                        }
-                    }
-                    else {
-                        if !deletedSectionIndexes.contains(indexPath.section) {
-                            deletedItemIndexPaths.append(indexPath)
-                        }
+                let indexPath = sectionOffset > 0 ? IndexPath(item: indexPath.item, section: indexPath.section + sectionOffset) : indexPath
+                let newIndexPath = sectionOffset > 0 ? IndexPath(item: newIndexPath.item, section: newIndexPath.section + sectionOffset) : newIndexPath
 
-                        if !insertedSectionIndexes.contains(newIndexPath.section) {
-                            insertedItemIndexPaths.append(newIndexPath)
-                        }
-                    }
-                }
+                itemChanges.append(.move(indexPath, newIndexPath))
             }
             .didChangeContent { [weak tableView] in
                 //
@@ -120,47 +83,47 @@ extension FetchRequestController {
                 }
 
                 //
-                if reloadData {
+                guard !reloadData else {
                     tableView.reloadData()
+                    return
                 }
-                else {
-                    tableView.beginUpdates()
 
-                    //                    if deletedSectionIndexes.count > 0 {
-                    //                        tableView.deleteSections(deletedSectionIndexes as IndexSet, with: animationOptions)
-                    //                    }
+                //
+                tableView.beginUpdates()
 
-                    //                    if insertedSectionIndexes.count > 0 {
-                    //                        tableView.insertSections(insertedSectionIndexes as IndexSet, with: animationOptions)
-                    //                    }
+                //
+                var updatedIndexPaths = [IndexPath]()
 
-                    //                    if updatedSectionIndexes.count > 0 {
-                    //                        tableView.reloadSections(updatedSectionIndexes as IndexSet, with: animationOptions)
-                    //                    }
-
-                    if deletedItemIndexPaths.count > 0 {
-                        let deletedRowsIndexSet = IndexSet(deletedItemIndexPaths.map { $0.item })
-                        tableView.removeRows(at: deletedRowsIndexSet, withAnimation: animationOptions)
-                    }
-
-                    if insertedItemIndexPaths.count > 0 {
-                        let insertedRowsIndexSet = IndexSet(insertedItemIndexPaths.map { $0.item })
-                        tableView.insertRows(at: insertedRowsIndexSet, withAnimation: animationOptions)
-                    }
-
-                    tableView.endUpdates()
-
-                    if updatedItemIndexPaths.count > 0 && cellViewConfigurationHandler == nil {
-                        let updatedItemIndexSet = IndexSet(updatedItemIndexPaths.map { $0.item })
-                        tableView.reloadData(forRowIndexes: updatedItemIndexSet, columnIndexes: IndexSet())
-                    }
-
-                    if let cellViewConfigurationHandler = cellViewConfigurationHandler {
-                        for updatedItemIndexPath in updatedItemIndexPaths {
-                            if let cell = tableView.view(atColumn: 0, row: updatedItemIndexPath.item, makeIfNecessary: false) as? NSTableCellView {
-                                cellViewConfigurationHandler(cell, updatedItemIndexPath)
-                            }
+                itemChanges.forEach {
+                    switch $0 {
+                    case .update(let indexPath):
+                        if cellViewConfigurationHandler == nil {
+                            tableView.reloadData(forRowIndexes: IndexSet(integer: indexPath.item), columnIndexes: IndexSet())
                         }
+                        else {
+                            updatedIndexPaths.append(indexPath)
+                        }
+
+                    case .delete(let indexPath):
+                        tableView.removeRows(at: IndexSet(integer: indexPath.item), withAnimation: animationOptions)
+
+                    case .insert(let indexPath):
+                        tableView.insertRows(at: IndexSet(integer: indexPath.item), withAnimation: animationOptions)
+
+                    case .move(let oldIndexPath, let newIndexPath):
+                        //tableView.moveRow(at: oldIndexPath.item, to: newIndexPath.item)
+                        tableView.removeRows(at: IndexSet(integer: oldIndexPath.item), withAnimation: animationOptions)
+                        tableView.insertRows(at: IndexSet(integer: newIndexPath.item), withAnimation: animationOptions)
+                    }
+                }
+
+                //
+                tableView.endUpdates()
+
+                //
+                updatedIndexPaths.forEach {
+                    if let item = tableView.view(atColumn: 0, row: $0.item, makeIfNecessary: false) as? NSTableCellView {
+                        cellViewConfigurationHandler?(item, $0)
                     }
                 }
         }
