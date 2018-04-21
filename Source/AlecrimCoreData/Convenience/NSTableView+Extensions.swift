@@ -13,8 +13,9 @@ import Cocoa
 
 extension FetchRequestController {
 
+    /// WARNING: To avoid memory leaks do not pass a func as the configuration handler, pass a closure with *weak* self.
     @discardableResult
-    public func bind<CellType: NSTableCellView>(to tableView: NSTableView, animationOptions: NSTableView.AnimationOptions = .effectFade, sectionOffset: Int = 0, cellConfigurationHandler: ((CellType, IndexPath) -> Void)? = nil) -> Self {
+    public func bind(to tableView: NSTableView, animationOptions: NSTableView.AnimationOptions = .effectFade, sectionOffset: Int = 0, cellViewConfigurationHandler: ((NSTableCellView, IndexPath) -> Void)? = nil) -> Self {
         let insertedSectionIndexes = NSMutableIndexSet()
         let deletedSectionIndexes = NSMutableIndexSet()
         let updatedSectionIndexes = NSMutableIndexSet()
@@ -125,17 +126,17 @@ extension FetchRequestController {
                 else {
                     tableView.beginUpdates()
 
-//                    if deletedSectionIndexes.count > 0 {
-//                        tableView.deleteSections(deletedSectionIndexes as IndexSet, with: animationOptions)
-//                    }
+                    //                    if deletedSectionIndexes.count > 0 {
+                    //                        tableView.deleteSections(deletedSectionIndexes as IndexSet, with: animationOptions)
+                    //                    }
 
-//                    if insertedSectionIndexes.count > 0 {
-//                        tableView.insertSections(insertedSectionIndexes as IndexSet, with: animationOptions)
-//                    }
+                    //                    if insertedSectionIndexes.count > 0 {
+                    //                        tableView.insertSections(insertedSectionIndexes as IndexSet, with: animationOptions)
+                    //                    }
 
-//                    if updatedSectionIndexes.count > 0 {
-//                        tableView.reloadSections(updatedSectionIndexes as IndexSet, with: animationOptions)
-//                    }
+                    //                    if updatedSectionIndexes.count > 0 {
+                    //                        tableView.reloadSections(updatedSectionIndexes as IndexSet, with: animationOptions)
+                    //                    }
 
                     if deletedItemIndexPaths.count > 0 {
                         let deletedRowsIndexSet = IndexSet(deletedItemIndexPaths.map { $0.item })
@@ -149,15 +150,15 @@ extension FetchRequestController {
 
                     tableView.endUpdates()
 
-                    if updatedItemIndexPaths.count > 0 && cellConfigurationHandler == nil {
+                    if updatedItemIndexPaths.count > 0 && cellViewConfigurationHandler == nil {
                         let updatedItemIndexSet = IndexSet(updatedItemIndexPaths.map { $0.item })
                         tableView.reloadData(forRowIndexes: updatedItemIndexSet, columnIndexes: IndexSet())
                     }
 
-                    if let cellConfigurationHandler = cellConfigurationHandler {
+                    if let cellViewConfigurationHandler = cellViewConfigurationHandler {
                         for updatedItemIndexPath in updatedItemIndexPaths {
-                            if let cell = tableView.view(atColumn: 0, row: updatedItemIndexPath.item, makeIfNecessary: false) as? CellType {
-                                cellConfigurationHandler(cell, updatedItemIndexPath)
+                            if let cell = tableView.view(atColumn: 0, row: updatedItemIndexPath.item, makeIfNecessary: false) as? NSTableCellView {
+                                cellViewConfigurationHandler(cell, updatedItemIndexPath)
                             }
                         }
                     }
@@ -174,4 +175,5 @@ extension FetchRequestController {
 }
 
 #endif
+
 
