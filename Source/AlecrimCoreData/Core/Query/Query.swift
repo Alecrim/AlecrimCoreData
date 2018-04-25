@@ -78,7 +78,7 @@ extension Query {
 
 extension Query {
 
-    public func firstOrNewEntity(where predicate: Predicate<Entity>) -> Entity {
+    public func firstOrEmptyNew(where predicate: Predicate<Entity>) -> Entity {
         guard let existingEntity = self.filtered(using: predicate).first() else {
             return self.newEntity()
         }
@@ -86,7 +86,7 @@ extension Query {
         return existingEntity
     }
 
-    public func firstOrNewEntity(where rawValue: NSPredicate) -> Entity {
+    public func firstOrEmptyNew(where rawValue: NSPredicate) -> Entity {
         guard let existingEntity = self.filtered(using: Predicate<Entity>(rawValue: rawValue)).first() else {
             return self.newEntity()
         }
@@ -94,7 +94,7 @@ extension Query {
         return existingEntity
     }
     
-    public func firstOrNewEntity(where closure: () -> Predicate<Entity>) -> Entity {
+    public func firstOrEmptyNew(where closure: () -> Predicate<Entity>) -> Entity {
         guard let existingEntity = self.filtered(using: closure()).first() else {
             return self.newEntity()
         }
