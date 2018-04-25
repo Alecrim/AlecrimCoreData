@@ -80,7 +80,7 @@ extension Query {
 
     public func firstOrEmptyNew(where predicate: Predicate<Entity>) -> Entity {
         guard let existingEntity = self.filtered(using: predicate).first() else {
-            return self.newEntity()
+            return self.new()
         }
         
         return existingEntity
@@ -88,7 +88,7 @@ extension Query {
 
     public func firstOrEmptyNew(where rawValue: NSPredicate) -> Entity {
         guard let existingEntity = self.filtered(using: Predicate<Entity>(rawValue: rawValue)).first() else {
-            return self.newEntity()
+            return self.new()
         }
         
         return existingEntity
@@ -96,7 +96,7 @@ extension Query {
     
     public func firstOrEmptyNew(where closure: () -> Predicate<Entity>) -> Entity {
         guard let existingEntity = self.filtered(using: closure()).first() else {
-            return self.newEntity()
+            return self.new()
         }
         
         return existingEntity
@@ -163,13 +163,13 @@ extension Query: Sequence {
 
 extension Query {
     
-    public func newEntity() -> Entity {
+    public func new() -> Entity {
         return Entity(context: self.context)
     }
     
     @discardableResult
     public func insert(with entityPropertiesInitializationClosure: (Entity) -> Void) -> Entity {
-        let entity = self.newEntity()
+        let entity = self.new()
         entityPropertiesInitializationClosure(entity)
         
         return entity
