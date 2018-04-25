@@ -15,7 +15,7 @@ extension FetchRequestController {
 
     /// WARNING: To avoid memory leaks do not pass a func as the configuration handler, pass a closure with *weak* self.
     @discardableResult
-    public func bind(to tableView: NSTableView, animationOptions: NSTableView.AnimationOptions = .effectFade, sectionOffset: Int = 0, cellViewConfigurationHandler: ((NSTableCellView, IndexPath) -> Void)? = nil) -> Self {
+    public func bind(to tableView: NSTableView, animationOptions: NSTableView.AnimationOptions = .effectFade, sectionOffset: Int = 0, animated: Bool = false, cellViewConfigurationHandler: ((NSTableCellView, IndexPath) -> Void)? = nil) -> Self {
         //
         var reloadData = false
         var sectionChanges = Array<Change<Int>>()
@@ -89,7 +89,10 @@ extension FetchRequestController {
                 }
 
                 //
-                tableView.beginUpdates()
+                let performer = animated ? tableView.animator() : tableView
+
+                //
+                performer.beginUpdates()
 
                 //
                 var updatedIndexPaths = [IndexPath]()
@@ -98,27 +101,27 @@ extension FetchRequestController {
                     switch $0 {
                     case .update(let indexPath):
                         if cellViewConfigurationHandler == nil {
-                            tableView.reloadData(forRowIndexes: IndexSet(integer: indexPath.item), columnIndexes: IndexSet())
+                            performer.reloadData(forRowIndexes: IndexSet(integer: indexPath.item), columnIndexes: IndexSet())
                         }
                         else {
                             updatedIndexPaths.append(indexPath)
                         }
 
                     case .delete(let indexPath):
-                        tableView.removeRows(at: IndexSet(integer: indexPath.item), withAnimation: animationOptions)
+                        performer.removeRows(at: IndexSet(integer: indexPath.item), withAnimation: animationOptions)
 
                     case .insert(let indexPath):
-                        tableView.insertRows(at: IndexSet(integer: indexPath.item), withAnimation: animationOptions)
+                        performer.insertRows(at: IndexSet(integer: indexPath.item), withAnimation: animationOptions)
 
                     case .move(let oldIndexPath, let newIndexPath):
-                        //tableView.moveRow(at: oldIndexPath.item, to: newIndexPath.item)
-                        tableView.removeRows(at: IndexSet(integer: oldIndexPath.item), withAnimation: animationOptions)
-                        tableView.insertRows(at: IndexSet(integer: newIndexPath.item), withAnimation: animationOptions)
+                        //performer.moveRow(at: oldIndexPath.item, to: newIndexPath.item)
+                        performer.removeRows(at: IndexSet(integer: oldIndexPath.item), withAnimation: animationOptions)
+                        performer.insertRows(at: IndexSet(integer: newIndexPath.item), withAnimation: animationOptions)
                     }
                 }
 
                 //
-                tableView.endUpdates()
+                performer.endUpdates()
 
                 //
                 updatedIndexPaths.forEach {

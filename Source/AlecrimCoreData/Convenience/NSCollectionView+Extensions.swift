@@ -15,7 +15,7 @@ extension FetchRequestController {
 
     /// WARNING: To avoid memory leaks do not pass a func as the configuration handler, pass a closure with *weak* self.
     @discardableResult
-    public func bind(to collectionView: NSCollectionView, sectionOffset: Int = 0, itemConfigurationHandler: ((NSCollectionViewItem, IndexPath) -> Void)? = nil) -> Self {
+    public func bind(to collectionView: NSCollectionView, sectionOffset: Int = 0, animated: Bool = false, itemConfigurationHandler: ((NSCollectionViewItem, IndexPath) -> Void)? = nil) -> Self {
         //
         var reloadData = false
         var sectionChanges = Array<Change<Int>>()
@@ -92,7 +92,8 @@ extension FetchRequestController {
                 //
                 var updatedIndexPaths = [IndexPath]()
 
-                collectionView.performBatchUpdates({
+                let performer = (animated ? collectionView.animator() : collectionView)
+                performer.performBatchUpdates({
                     sectionChanges.forEach {
                         switch $0 {
                         case .insert(let sectionIndex):
