@@ -92,7 +92,8 @@ extension FetchRequestController {
                 //
                 var updatedIndexPaths = [IndexPath]()
 
-                let performer = (animated ? collectionView.animator() : collectionView)
+                let performer = animated ? collectionView.animator() : collectionView
+                
                 performer.performBatchUpdates({
                     sectionChanges.forEach {
                         switch $0 {
