@@ -48,6 +48,16 @@ extension Query {
         return try! self.context.count(for: fetchRequest.toRaw())
     }
 
+    //
+
+    public func any() -> Bool {
+        return self.prefix(1).count() > 0
+    }
+
+    public func none() -> Bool {
+        return !self.any()
+    }
+
 }
 
 // MARK: -
