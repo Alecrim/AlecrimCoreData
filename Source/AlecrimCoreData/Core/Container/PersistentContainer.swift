@@ -234,7 +234,7 @@ public enum PersistentContainerError: Error {
 
 // MARK: -
 
-public protocol PersistentContainerType: class {}
+public protocol PersistentContainerType: AnyObject {}
 
 extension PersistentContainer: PersistentContainerType {}
 extension GenericPersistentContainer: PersistentContainerType {}
