@@ -1,21 +1,21 @@
 //
-//  UITableView+Extensions.swift
+//  NSTableView+Extensions.swift
 //  AlecrimCoreData
 //
-//  Created by Vanderlei Martinelli on 2015-07-28.
-//  Copyright (c) 2015 Alecrim. All rights reserved.
+//  Created by Vanderlei Martinelli on 04/04/18.
+//  Copyright © 2018 Alecrim. All rights reserved.
 //
 
-#if os(iOS) || os(tvOS)
+#if os(macOS)
 
 import Foundation
-import UIKit
+import Cocoa
 
 extension FetchRequestController {
 
     /// WARNING: To avoid memory leaks do not pass a func as the configuration handler, pass a closure with *weak* self.
     @discardableResult
-    public func bind(to tableView: UITableView, rowAnimation: UITableViewRowAnimation = .fade, sectionOffset: Int = 0, cellConfigurationHandler: ((UITableViewCell, IndexPath) -> Void)? = nil) -> Self {
+    public func bind(to tableView: NSTableView, animationOptions: NSTableView.AnimationOptions = .effectFade, sectionOffset: Int = 0, animated: Bool = false, cellViewConfigurationHandler: ((NSTableCellView, IndexPath) -> Void)? = nil) -> Self {
         //
         var reloadData = false
         var sectionChanges = Array<Change<Int>>()
@@ -34,7 +34,7 @@ extension FetchRequestController {
                 reloadData = true
             }
             .willChangeContent {
-                if tableView.numberOfSections == 0 {
+                if tableView.numberOfRows == 0 {
                     reloadData = true
                 }
 
@@ -42,12 +42,10 @@ extension FetchRequestController {
                 reset()
             }
             .didInsertSection { _, sectionIndex in
-                guard !reloadData else { return }
-                sectionChanges.append(.insert(sectionIndex))
+                reloadData = true
             }
             .didDeleteSection { _, sectionIndex in
-                guard !reloadData else { return }
-                sectionChanges.append(.delete(sectionIndex))
+                reloadData = true
             }
             .didInsertObject { _, newIndexPath in
                 guard !reloadData else { return }
@@ -91,21 +89,10 @@ extension FetchRequestController {
                 }
 
                 //
-                tableView.beginUpdates()
+                let performer = animated ? tableView.animator() : tableView
 
                 //
-                sectionChanges.forEach {
-                    switch $0 {
-                    case .delete(let sectionIndex):
-                        tableView.deleteSections(IndexSet(integer: sectionIndex), with: rowAnimation)
-
-                    case .insert(let sectionIndex):
-                        tableView.insertSections(IndexSet(integer: sectionIndex), with: rowAnimation)
-
-                    default:
-                        break
-                    }
-                }
+                performer.beginUpdates()
 
                 //
                 var updatedIndexPaths = [IndexPath]()
@@ -113,33 +100,33 @@ extension FetchRequestController {
                 itemChanges.forEach {
                     switch $0 {
                     case .update(let indexPath):
-                        if cellConfigurationHandler == nil {
-                            tableView.reloadRows(at: [indexPath], with: rowAnimation)
+                        if cellViewConfigurationHandler == nil {
+                            performer.reloadData(forRowIndexes: IndexSet(integer: indexPath.item), columnIndexes: IndexSet())
                         }
                         else {
                             updatedIndexPaths.append(indexPath)
                         }
 
                     case .delete(let indexPath):
-                        tableView.deleteRows(at: [indexPath], with: rowAnimation)
+                        performer.removeRows(at: IndexSet(integer: indexPath.item), withAnimation: animationOptions)
 
                     case .insert(let indexPath):
-                        tableView.insertRows(at: [indexPath], with: rowAnimation)
+                        performer.insertRows(at: IndexSet(integer: indexPath.item), withAnimation: animationOptions)
 
                     case .move(let oldIndexPath, let newIndexPath):
-                        //tableView.moveRow(at: oldIndexPath, to: newIndexPath)
-                        tableView.deleteRows(at: [oldIndexPath], with: rowAnimation)
-                        tableView.insertRows(at: [newIndexPath], with: rowAnimation)
+                        //performer.moveRow(at: oldIndexPath.item, to: newIndexPath.item)
+                        performer.removeRows(at: IndexSet(integer: oldIndexPath.item), withAnimation: animationOptions)
+                        performer.insertRows(at: IndexSet(integer: newIndexPath.item), withAnimation: animationOptions)
                     }
                 }
 
                 //
-                tableView.endUpdates()
+                performer.endUpdates()
 
                 //
                 updatedIndexPaths.forEach {
-                    if let item = tableView.cellForRow(at: $0) {
-                        cellConfigurationHandler?(item, $0)
+                    if let item = tableView.view(atColumn: 0, row: $0.item, makeIfNecessary: false) as? NSTableCellView {
+                        cellViewConfigurationHandler?(item, $0)
                     }
                 }
         }
@@ -154,4 +141,5 @@ extension FetchRequestController {
 }
 
 #endif
+
 

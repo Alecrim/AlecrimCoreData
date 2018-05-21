@@ -48,6 +48,16 @@ extension Query {
         return try! self.context.count(for: fetchRequest.toRaw())
     }
 
+    //
+
+    public func any() -> Bool {
+        return self.prefix(1).count() > 0
+    }
+
+    public func none() -> Bool {
+        return !self.any()
+    }
+
 }
 
 // MARK: -
@@ -55,7 +65,7 @@ extension Query {
 extension Query {
     
     public func first() -> Entity? {
-        return self.execute(fetchRequest: self.fetchRequest.take(1)).first
+        return self.execute(fetchRequest: self.fetchRequest.prefix(1)).first
     }
     
 }
@@ -78,25 +88,25 @@ extension Query {
 
 extension Query {
 
-    public func firstOrNewEntity(where predicate: Predicate<Entity>) -> Entity {
+    public func firstOrEmptyNew(where predicate: Predicate<Entity>) -> Entity {
         guard let existingEntity = self.filtered(using: predicate).first() else {
-            return self.newEntity()
+            return self.new()
         }
         
         return existingEntity
     }
 
-    public func firstOrNewEntity(where rawValue: NSPredicate) -> Entity {
+    public func firstOrEmptyNew(where rawValue: NSPredicate) -> Entity {
         guard let existingEntity = self.filtered(using: Predicate<Entity>(rawValue: rawValue)).first() else {
-            return self.newEntity()
+            return self.new()
         }
         
         return existingEntity
     }
     
-    public func firstOrNewEntity(where closure: () -> Predicate<Entity>) -> Entity {
+    public func firstOrEmptyNew(where closure: () -> Predicate<Entity>) -> Entity {
         guard let existingEntity = self.filtered(using: closure()).first() else {
-            return self.newEntity()
+            return self.new()
         }
         
         return existingEntity
@@ -108,13 +118,14 @@ extension Query {
 // MARK: -
 
 extension Query: Sequence {
-    
+
+    // MARK: -
+
     public func makeIterator() -> QueryIterator<Entity> {
         return QueryIterator(self.execute())
     }
     
     public struct QueryIterator<Entity>: IteratorProtocol {
-        
         private let entities: [Entity]
         private var index: Int
         
@@ -133,20 +144,42 @@ extension Query: Sequence {
             return self.entities[index]
         }
     }
-    
+
+    // MARK: -
+
+    public func dropLast(_ n: Int) -> Query<Entity> {
+        fatalError("Not applicable or not available.")
+    }
+
+    public func drop(while predicate: (Entity) throws -> Bool) rethrows -> Query<Entity> {
+        fatalError("Not applicable or not available.")
+    }
+
+    public func prefix(while predicate: (Entity) throws -> Bool) rethrows -> Query<Entity> {
+        fatalError("Not applicable or not available.")
+    }
+
+    public func suffix(_ maxLength: Int) -> Query<Entity> {
+        fatalError("Not applicable or not available.")
+    }
+
+    public func split(maxSplits: Int, omittingEmptySubsequences: Bool, whereSeparator isSeparator: (Entity) throws -> Bool) rethrows -> [Query<Entity>] {
+        fatalError("Not applicable or not available.")
+    }
+
 }
 
 // MARK: -
 
 extension Query {
     
-    public func newEntity() -> Entity {
+    public func new() -> Entity {
         return Entity(context: self.context)
     }
     
     @discardableResult
     public func insert(with entityPropertiesInitializationClosure: (Entity) -> Void) -> Entity {
-        let entity = self.newEntity()
+        let entity = self.new()
         entityPropertiesInitializationClosure(entity)
         
         return entity
@@ -197,16 +230,16 @@ extension Query {
 
 extension Query: Queryable {
     
-    public func skip(_ offset: Int) -> Query<Entity> {
+    public func dropFirst(_ n: Int) -> Query<Entity> {
         var clone = self
-        clone.fetchRequest = clone.fetchRequest.skip(offset)
+        clone.fetchRequest = clone.fetchRequest.dropFirst(n)
         
         return clone
     }
     
-    public func take(_ limit: Int) -> Query<Entity> {
+    public func prefix(_ maxLength: Int) -> Query<Entity> {
         var clone = self
-        clone.fetchRequest = clone.fetchRequest.take(limit)
+        clone.fetchRequest = clone.fetchRequest.prefix(maxLength)
 
         return clone
     }

@@ -47,14 +47,14 @@ public struct FetchRequest<Entity: ManagedObject>: Queryable {
 
 extension FetchRequest {
     
-    public func skip(_ offset: Int) -> FetchRequest<Entity> {
+    public func dropFirst(_ n: Int) -> FetchRequest<Entity> {
         var clone = self
         clone.offset = offset
         
         return clone
     }
     
-    public func take(_ limit: Int) -> FetchRequest<Entity> {
+    public func prefix(_ maxLength: Int) -> FetchRequest<Entity> {
         var clone = self
         clone.limit = limit
         

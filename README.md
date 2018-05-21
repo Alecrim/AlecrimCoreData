@@ -16,8 +16,8 @@ Simple do that:
 let query = persistentContainer.viewContext.people
     .where { \.city == "Piracicaba" }
     .orderBy { \.name }
-    
-for person in query.skip(20).take(10) {
+
+for person in query.dropFirst(20).prefix(10) {
     print(person.name, person.address)
 }
 ```
@@ -30,7 +30,7 @@ persistentContainer.performBackgroundTask { context in
         .filtered(using: \.country == "Brazil" && \.isContributor == true)
         .sorted(by: .descending(\.contributionCount))
         .sorted(by: \.name)
-        
+
     if let person = query.first() {
         print(person.name, person.email)
     }
@@ -60,7 +60,7 @@ Some well known features and functionalities may be reimplemented in a future re
 ## Contribute
 If you have any problems or need more information, please open an issue using the provided GitHub link.
 
-You can also contribute by fixing errors or creating new features. When doing this, please submit your pull requests to this repository as I do not have much time to "hunt" forks for not submited patches.
+You can also contribute by fixing errors or creating new features. When doing this, please submit your pull requests to this repository as I do not have much time to "hunt" forks for not submitted patches.
 
 - master - The production branch. Clone or fork this repository for the latest copy.
 - develop - The active development branch. [Pull requests](https://help.github.com/articles/creating-a-pull-request) should be directed to this branch.
