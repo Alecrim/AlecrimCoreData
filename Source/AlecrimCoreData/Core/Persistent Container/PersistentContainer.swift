@@ -71,7 +71,7 @@ open class PersistentContainer: NSPersistentContainer {
                         return
                     }
                     
-                    context.perform {
+                    context.performAndWait {
                         context.mergeChanges(fromContextDidSave: notification)
                     }
                 }
