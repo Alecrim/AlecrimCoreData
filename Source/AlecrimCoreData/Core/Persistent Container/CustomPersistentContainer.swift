@@ -66,8 +66,8 @@ open class CustomPersistentContainer<Context: NSManagedObjectContext> {
         try! self.init(storageType: .disk, managedObjectModel: type(of: self).managedObjectModel(), persistentStoreURL: type(of: self).persistentStoreURL(), ubiquitousConfiguration: nil)
     }
 
-    public init(storageType: PersistentContainerStorageType = .disk, managedObjectModel: NSManagedObjectModel, persistentStoreURL: URL, ubiquitousConfiguration: PersistentContainerUbiquitousConfiguration? = nil) throws {
-        self.rawValue = try HelperPersistentContainer<Context>(storageType: storageType, managedObjectModel: managedObjectModel, persistentStoreURL: persistentStoreURL, ubiquitousConfiguration: ubiquitousConfiguration)
+    public init(storageType: PersistentContainerStorageType = .disk, managedObjectModel: NSManagedObjectModel, persistentStoreURL: URL, persistentStoreDescriptionOptions: [String : NSObject]? = nil, ubiquitousConfiguration: PersistentContainerUbiquitousConfiguration? = nil) throws {
+        self.rawValue = try HelperPersistentContainer<Context>(storageType: storageType, managedObjectModel: managedObjectModel, persistentStoreURL: persistentStoreURL, persistentStoreDescriptionOptions: persistentStoreDescriptionOptions, ubiquitousConfiguration: ubiquitousConfiguration)
     }
 
     // MARK: -

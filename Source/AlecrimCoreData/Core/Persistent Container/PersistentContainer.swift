@@ -22,7 +22,7 @@ open class PersistentContainer: NSPersistentContainer {
         try! self.init(storageType: .disk, managedObjectModel: type(of: self).managedObjectModel(), persistentStoreURL: type(of: self).persistentStoreURL(), ubiquitousConfiguration: nil)
     }
     
-    public init(storageType: PersistentContainerStorageType, managedObjectModel: NSManagedObjectModel, persistentStoreURL: URL, ubiquitousConfiguration: PersistentContainerUbiquitousConfiguration? = nil) throws {
+    public init(storageType: PersistentContainerStorageType, managedObjectModel: NSManagedObjectModel, persistentStoreURL: URL, persistentStoreDescriptionOptions: [String : NSObject]? = nil, ubiquitousConfiguration: PersistentContainerUbiquitousConfiguration? = nil) throws {
         //
         let name = persistentStoreURL.deletingPathExtension().lastPathComponent
         super.init(name: name, managedObjectModel: managedObjectModel)
@@ -38,12 +38,19 @@ open class PersistentContainer: NSPersistentContainer {
         
         //
         let persistentStoreDescription = NSPersistentStoreDescription(url: persistentStoreURL)
-        
+
+        //
         persistentStoreDescription.type = (storageType == .disk ? NSSQLiteStoreType : NSInMemoryStoreType)
         persistentStoreDescription.shouldAddStoreAsynchronously = false
         persistentStoreDescription.shouldInferMappingModelAutomatically = true
         persistentStoreDescription.shouldMigrateStoreAutomatically = true
+
+        // a change for configuring options (such `NSPersistentHistoryTrackingKey`, for example)
+        persistentStoreDescriptionOptions?.forEach {
+            persistentStoreDescription.setOption($0.value, forKey: $0.key)
+        }
         
+        // deprecated ubiquitous support
         #if os(macOS) || os(iOS)
         if let ubiquitousConfiguration = ubiquitousConfiguration {
             persistentStoreDescription.setOption(ubiquitousConfiguration.containerIdentifier as NSString, forKey: NSPersistentStoreUbiquitousContainerIdentifierKey)
