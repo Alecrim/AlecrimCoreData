@@ -19,7 +19,7 @@ open class PersistentContainer: NSPersistentContainer {
     // MARK: -
     
     public convenience init() {
-        try! self.init(storageType: .disk, managedObjectModel: type(of: self).managedObjectModel(), persistentStoreURL: type(of: self).persistentStoreURL(), ubiquitousConfiguration: nil)
+        try! self.init(storageType: .disk, managedObjectModel: type(of: self).managedObjectModel(), persistentStoreURL: type(of: self).persistentStoreURL(), persistentStoreDescriptionOptions: nil, ubiquitousConfiguration: nil)
     }
     
     public init(storageType: PersistentContainerStorageType, managedObjectModel: NSManagedObjectModel, persistentStoreURL: URL, persistentStoreDescriptionOptions: [String : NSObject]? = nil, ubiquitousConfiguration: PersistentContainerUbiquitousConfiguration? = nil) throws {
@@ -45,7 +45,7 @@ open class PersistentContainer: NSPersistentContainer {
         persistentStoreDescription.shouldInferMappingModelAutomatically = true
         persistentStoreDescription.shouldMigrateStoreAutomatically = true
 
-        // a change for configuring options (such `NSPersistentHistoryTrackingKey`, for example)
+        // a chance for configuring options (such `NSPersistentHistoryTrackingKey`, for example)
         persistentStoreDescriptionOptions?.forEach {
             persistentStoreDescription.setOption($0.value, forKey: $0.key)
         }
