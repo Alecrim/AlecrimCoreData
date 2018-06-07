@@ -12,49 +12,8 @@ import CoreData
 open class CustomPersistentContainer<Context: NSManagedObjectContext> {
 
     // MARK: -
-
-    fileprivate final class HelperPersistentContainer<Context: NSManagedObjectContext>: PersistentContainer {
-
-        private lazy var _viewContext: NSManagedObjectContext = {
-            let context = Context(concurrencyType: .mainQueueConcurrencyType)
-
-            context.persistentStoreCoordinator = self.persistentStoreCoordinator
-
-            context.automaticallyMergesChangesFromParent = true
-            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-
-            return context
-        }()
-
-        fileprivate override var viewContext: NSManagedObjectContext { return self._viewContext }
-
-        fileprivate override func newBackgroundContext() -> NSManagedObjectContext {
-            let context = Context(concurrencyType: .privateQueueConcurrencyType)
-
-            context.persistentStoreCoordinator = self.persistentStoreCoordinator
-
-            context.automaticallyMergesChangesFromParent = true
-            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-
-            return context
-        }
-
-        fileprivate override func performBackgroundTask(_ block: @escaping (NSManagedObjectContext) -> Void) {
-            super.performBackgroundTask { context in
-                //
-                context.persistentStoreCoordinator = self.persistentStoreCoordinator
-
-                //
-                context.automaticallyMergesChangesFromParent = true
-                context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-
-                //
-                block(context)
-            }
-        }
-
-    }
-
+    
+    public private(set) lazy var backgroundContext: Context = self.newBackgroundContext()
 
     // MARK: -
 
@@ -62,12 +21,17 @@ open class CustomPersistentContainer<Context: NSManagedObjectContext> {
 
     // MARK: -
 
-    public convenience init() {
-        try! self.init(storageType: .disk, managedObjectModel: type(of: self).managedObjectModel(), persistentStoreURL: type(of: self).persistentStoreURL(), ubiquitousConfiguration: nil)
+    /// Use caution when using this initializer.
+    public init(name: String? = nil) {
+        self.rawValue = HelperPersistentContainer<Context>(name: name)
     }
-
-    public init(storageType: PersistentContainerStorageType = .disk, managedObjectModel: NSManagedObjectModel, persistentStoreURL: URL, persistentStoreDescriptionOptions: [String : NSObject]? = nil, ubiquitousConfiguration: PersistentContainerUbiquitousConfiguration? = nil) throws {
-        self.rawValue = try HelperPersistentContainer<Context>(storageType: storageType, managedObjectModel: managedObjectModel, persistentStoreURL: persistentStoreURL, persistentStoreDescriptionOptions: persistentStoreDescriptionOptions, ubiquitousConfiguration: ubiquitousConfiguration)
+    
+    public init(name: String? = nil, managedObjectModel: NSManagedObjectModel, storageType: PersistentContainerStorageType, persistentStoreURL: URL, persistentStoreDescriptionOptions: [String : NSObject]? = nil, ubiquitousConfiguration: PersistentContainerUbiquitousConfiguration? = nil) throws {
+        self.rawValue = try HelperPersistentContainer<Context>(name: name, managedObjectModel: managedObjectModel, storageType: storageType, persistentStoreURL: persistentStoreURL, persistentStoreDescriptionOptions: persistentStoreDescriptionOptions, ubiquitousConfiguration: ubiquitousConfiguration)
+    }
+    
+    public init(name: String, managedObjectModel: NSManagedObjectModel, persistentStoreDescription: NSPersistentStoreDescription, completionHandler: @escaping (NSPersistentContainer, NSPersistentStoreDescription, Error?) -> Void) throws {
+        self.rawValue = try HelperPersistentContainer<Context>(name: name, managedObjectModel: managedObjectModel, persistentStoreDescription: persistentStoreDescription, completionHandler: completionHandler)
     }
 
     // MARK: -
@@ -86,4 +50,35 @@ open class CustomPersistentContainer<Context: NSManagedObjectContext> {
         }
     }
 
+}
+
+// MARK: -
+
+extension CustomPersistentContainer {
+    
+    fileprivate final class HelperPersistentContainer<Context: NSManagedObjectContext>: PersistentContainer {
+        
+        private lazy var _viewContext: NSManagedObjectContext = {
+            let context = Context(concurrencyType: .mainQueueConcurrencyType)
+            self.configureManagedObjectContext(context)
+            
+            return context
+        }()
+        
+        fileprivate override var viewContext: NSManagedObjectContext { return self._viewContext }
+        
+        fileprivate override func newBackgroundContext() -> NSManagedObjectContext {
+            let context = Context(concurrencyType: .privateQueueConcurrencyType)
+            self.configureManagedObjectContext(context)
+            
+            return context
+        }
+        
+        fileprivate override func configureManagedObjectContext(_ context: NSManagedObjectContext) {
+            context.persistentStoreCoordinator = self.persistentStoreCoordinator
+            super.configureManagedObjectContext(context)
+        }
+        
+    }
+    
 }
