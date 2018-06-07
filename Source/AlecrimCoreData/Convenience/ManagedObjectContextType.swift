@@ -19,6 +19,8 @@ public protocol ManagedObjectContextType {
     func performAndWait(_ block: () -> Void)
 }
 
+// MARK: -
+
 extension ManagedObjectContextType {
     
     public func async<Value>(execute closure: @escaping (Self) throws -> Value, completion: @escaping ((Value?, Error?) -> Void)) {
@@ -81,3 +83,104 @@ extension ManagedObjectContextType {
     }
     
 }
+
+// MARK: -
+
+extension PersistentContainer {
+    
+    public func async<Value>(execute closure: @escaping (ManagedObjectContext) throws -> Value, completion: @escaping ((Value?, Error?) -> Void)) {
+        return self.backgroundContext.async(execute: closure, completion: completion)
+    }
+    
+    public func async<Value>(execute closure: @escaping (ManagedObjectContext) -> Value, completion: ((Value) -> Void)? = nil) {
+        return self.backgroundContext.async(execute: closure, completion: completion)
+    }
+    
+    @discardableResult
+    public func sync<Value>(execute closure: (ManagedObjectContext) throws -> Value) throws -> Value {
+        return try self.backgroundContext.sync(execute: closure)
+    }
+    
+    @discardableResult
+    public func sync<Value>(execute closure: (ManagedObjectContext) -> Value) -> Value {
+        return self.backgroundContext.sync(execute: closure)
+    }
+    
+}
+
+// MARK: -
+
+extension CustomPersistentContainer {
+    
+    public func async<Value>(execute closure: @escaping (Context) throws -> Value, completion: @escaping ((Value?, Error?) -> Void)) {
+        return self.backgroundContext.async(execute: closure, completion: completion)
+    }
+    
+    public func async<Value>(execute closure: @escaping (Context) -> Value, completion: ((Value) -> Void)? = nil) {
+        return self.backgroundContext.async(execute: closure, completion: completion)
+    }
+    
+    @discardableResult
+    public func sync<Value>(execute closure: (Context) throws -> Value) throws -> Value {
+        return try self.backgroundContext.sync(execute: closure)
+    }
+    
+    @discardableResult
+    public func sync<Value>(execute closure: (Context) -> Value) -> Value {
+        return self.backgroundContext.sync(execute: closure)
+    }
+    
+}
+
+// MARK: - AlecrimAsyncKit (https://github.com/Alecrim/AlecrimAsyncKit) support
+
+#if canImport(AlecrimAsyncKit)
+
+import AlecrimAsyncKit
+
+extension ManagedObjectContextType {
+    
+    public func async<Value>(execute closure: @escaping (Self) throws -> Value) -> Task<Value> {
+        return AlecrimAsyncKit.async { task in
+            self.async(execute: closure, completion: { value, error in
+                task.finish(with: value, or: error)
+            })
+        }
+    }
+    
+    public func async<Value>(execute closure: @escaping (Self) -> Value) -> NonFailableTask<Value> {
+        return AlecrimAsyncKit.async { task in
+            self.async(execute: closure, completion: { value in
+                task.finish(with: value)
+            })
+        }
+    }
+    
+}
+
+extension PersistentContainer {
+    
+    public func async<Value>(execute closure: @escaping (ManagedObjectContext) throws -> Value) -> Task<Value> {
+        return self.backgroundContext.async(execute: closure)
+    }
+    
+    public func async<Value>(execute closure: @escaping (ManagedObjectContext) -> Value) -> NonFailableTask<Value> {
+        return self.backgroundContext.async(execute: closure)
+    }
+
+}
+
+extension CustomPersistentContainer {
+ 
+    public func async<Value>(execute closure: @escaping (Context) throws -> Value) -> Task<Value> {
+        return self.backgroundContext.async(execute: closure)
+    }
+    
+    public func async<Value>(execute closure: @escaping (Context) -> Value) -> NonFailableTask<Value> {
+        return self.backgroundContext.async(execute: closure)
+    }
+
+}
+
+#endif
+
