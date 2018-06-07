@@ -9,10 +9,19 @@
 import Foundation
 import CoreData
 
-public protocol PersistentContainerType: AnyObject {}
+// MARK: -
+
+public protocol PersistentContainerType: AnyObject {
+    associatedtype ManagedObjectContextType: ManagedObjectContext
+    
+    var viewContext: ManagedObjectContextType { get }
+    var backgroundContext: ManagedObjectContextType { get }
+}
 
 extension PersistentContainer: PersistentContainerType {}
 extension CustomPersistentContainer: PersistentContainerType {}
+
+// MARK: - helper static methods
 
 extension PersistentContainerType {
 

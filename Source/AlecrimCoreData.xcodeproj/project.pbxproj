@@ -11,6 +11,7 @@
 		1454786620B247F300831016 /* PersistentContainerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1454786520B247F300831016 /* PersistentContainerType.swift */; };
 		1454786820B2484900831016 /* PersistentContainerAuxiliarTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1454786720B2484800831016 /* PersistentContainerAuxiliarTypes.swift */; };
 		1454786A20B2487300831016 /* CustomPersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1454786920B2487300831016 /* CustomPersistentContainer.swift */; };
+		1462C65F20C8E63A00A7A4E6 /* EntityObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1462C65E20C8E63A00A7A4E6 /* EntityObserver.swift */; };
 		146B042F208AEAE3002091BF /* FetchRequestController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146B042E208AEAE3002091BF /* FetchRequestController+Extensions.swift */; };
 		14B9460020759D0D00A7CFFD /* NSTableView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14B945FF20759D0D00A7CFFD /* NSTableView+Extensions.swift */; };
 		14C2028F20C8DBAB00821A79 /* ManagedObjectContextType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C2028E20C8DBAB00821A79 /* ManagedObjectContextType.swift */; };
@@ -41,6 +42,7 @@
 		1454786520B247F300831016 /* PersistentContainerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentContainerType.swift; sourceTree = "<group>"; };
 		1454786720B2484800831016 /* PersistentContainerAuxiliarTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentContainerAuxiliarTypes.swift; sourceTree = "<group>"; };
 		1454786920B2487300831016 /* CustomPersistentContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPersistentContainer.swift; sourceTree = "<group>"; };
+		1462C65E20C8E63A00A7A4E6 /* EntityObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityObserver.swift; sourceTree = "<group>"; };
 		146B042E208AEAE3002091BF /* FetchRequestController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FetchRequestController+Extensions.swift"; sourceTree = "<group>"; };
 		14B945FF20759D0D00A7CFFD /* NSTableView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSTableView+Extensions.swift"; sourceTree = "<group>"; };
 		14C2028E20C8DBAB00821A79 /* ManagedObjectContextType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectContextType.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 		14CC335D205B28CA00BA682A /* Convenience */ = {
 			isa = PBXGroup;
 			children = (
+				1462C65E20C8E63A00A7A4E6 /* EntityObserver.swift */,
 				146B042E208AEAE3002091BF /* FetchRequestController+Extensions.swift */,
 				14C2028E20C8DBAB00821A79 /* ManagedObjectContextType.swift */,
 				14CC335E205B28CA00BA682A /* NSArrayController+Extensions.swift */,
@@ -272,6 +275,7 @@
 				1454786620B247F300831016 /* PersistentContainerType.swift in Sources */,
 				14CC337B205B28CA00BA682A /* Query.swift in Sources */,
 				14CC3384205B28CA00BA682A /* FetchedResultsSectionInfo.swift in Sources */,
+				1462C65F20C8E63A00A7A4E6 /* EntityObserver.swift in Sources */,
 				14CC3375205B28CA00BA682A /* UITableView+Extensions.swift in Sources */,
 				14CC3379205B28CA00BA682A /* ManagedObjectContext.swift in Sources */,
 				14CC3383205B28CA00BA682A /* FetchRequestController.swift in Sources */,
