@@ -23,7 +23,7 @@ public protocol ManagedObjectContextType {
 
 extension ManagedObjectContextType {
     
-    fileprivate func async<Value>(execute closure: @escaping (Self) throws -> Value, completion: @escaping ((Value?, Error?) -> Void)) {
+    public func async<Value>(execute closure: @escaping (Self) throws -> Value, completion: @escaping ((Value?, Error?) -> Void)) {
         let context = self
         
         context.perform {
