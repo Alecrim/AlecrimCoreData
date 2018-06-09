@@ -25,7 +25,7 @@ public struct FetchRequest<Entity: ManagedObject>: Queryable {
     public init() {
     }
     
-    internal func toRaw<Result: NSFetchRequestResult>() -> NSFetchRequest<Result> {
+    public func toRaw<Result: NSFetchRequestResult>() -> NSFetchRequest<Result> {
         let entityDescription = Entity.entity()
         let rawValue = NSFetchRequest<Result>(entityName: entityDescription.name!)
         

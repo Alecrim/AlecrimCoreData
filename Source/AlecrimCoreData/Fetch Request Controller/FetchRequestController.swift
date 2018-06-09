@@ -22,7 +22,11 @@ import CoreData
 
 public final class FetchRequestController<Entity: ManagedObject> {
 
+    // MARK: -
+
+    public let fetchRequest: FetchRequest<Entity>
     public let rawValue: NSFetchedResultsController<Entity>
+    
     internal let rawValueDelegate: FetchedResultsControllerDelegate<Entity>
     
     fileprivate let initialPredicate: Predicate<Entity>?
@@ -47,7 +51,9 @@ public final class FetchRequestController<Entity: ManagedObject> {
     }
 
     public init(fetchRequest: FetchRequest<Entity>, context: ManagedObjectContext, sectionNameKeyPath: String? = nil, cacheName: String? = nil) {
+        self.fetchRequest = fetchRequest
         self.rawValue = NSFetchedResultsController(fetchRequest: fetchRequest.toRaw() as NSFetchRequest<Entity>, managedObjectContext: context, sectionNameKeyPath: sectionNameKeyPath, cacheName: cacheName)
+        
         self.rawValueDelegate = FetchedResultsControllerDelegate<Entity>()
 
         self.initialPredicate = fetchRequest.predicate
