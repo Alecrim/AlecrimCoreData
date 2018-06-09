@@ -17,6 +17,7 @@ public final class EntityObserver<EntityType: ManagedObject> {
     
     fileprivate init(entity: EntityType, propertyName: String, updateHandler didChangeContentClosure: @escaping () -> Void, context: ManagedObjectContext) {
         self.frc = Query<EntityType>(in: context)
+            .setBatchSize(0)
             .filtered(using: NSPredicate(format: "SELF == %@", argumentArray: [entity]))
             .sorted(by: SortDescriptor(key: propertyName, ascending: true))
             .toFetchRequestController()
