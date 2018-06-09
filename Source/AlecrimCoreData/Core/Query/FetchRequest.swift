@@ -61,7 +61,7 @@ extension FetchRequest {
         return clone
     }
 
-    public func setBatchSize(_ batchSize: Int) -> FetchRequest<Entity> {
+    public func batchSize(_ batchSize: Int) -> FetchRequest<Entity> {
         var clone = self
         clone.batchSize = batchSize
         

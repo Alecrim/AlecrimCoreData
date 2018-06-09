@@ -244,9 +244,9 @@ extension Query: Queryable {
         return clone
     }
     
-    public func setBatchSize(_ batchSize: Int) -> Query<Entity> {
+    public func batchSize(_ batchSize: Int) -> Query<Entity> {
         var clone = self
-        clone.fetchRequest = clone.fetchRequest.setBatchSize(batchSize)
+        clone.fetchRequest = clone.fetchRequest.batchSize(batchSize)
         
         return clone
     }
