@@ -126,6 +126,12 @@ extension FetchRequestController {
 
                         case .move(let oldIndexPath, let newIndexPath):
                             collectionView.moveItem(at: oldIndexPath, to: newIndexPath)
+
+                            // workaround to be sure that cells will be refreshed
+                            // note: this only works when using a cell configuration handler
+                            if itemConfigurationHandler != nil {
+                                updatedIndexPaths.append(newIndexPath)
+                            }
                         }
                     }
                 }, completionHandler: { _ in
