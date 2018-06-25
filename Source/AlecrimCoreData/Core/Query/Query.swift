@@ -34,9 +34,8 @@ extension Query {
     }
 
     fileprivate func execute(fetchRequest: FetchRequest<Entity>) -> [Entity] {
-        return try! self.context.fetch(self.fetchRequest.toRaw())
+        return try! self.context.fetch(fetchRequest.toRaw())
     }
-
 
     //
     
@@ -66,6 +65,14 @@ extension Query {
     
     public func first() -> Entity? {
         return self.execute(fetchRequest: self.fetchRequest.prefix(1)).first
+    }
+
+    public func last() -> Entity? {
+        guard let sortDescriptors = self.fetchRequest.sortDescriptors, !sortDescriptors.isEmpty else {
+            return self.execute().last // not memory efficient, but will do the job
+        }
+
+        return self.execute(fetchRequest: self.fetchRequest.reversed().prefix(1)).first
     }
     
 }
