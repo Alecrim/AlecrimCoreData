@@ -41,6 +41,17 @@ public struct FetchRequest<Entity: ManagedObject>: Queryable {
         return rawValue
     }
 
+    internal func reversed() -> FetchRequest<Entity> {
+        guard let existingSortDescriptors = self.sortDescriptors, !existingSortDescriptors.isEmpty else {
+            return self
+        }
+
+        var clone = self
+        clone.sortDescriptors = existingSortDescriptors.map { SortDescriptor(key: $0.key, ascending: !$0.ascending) }
+
+        return clone
+    }
+
 }
 
 // MARK: -
