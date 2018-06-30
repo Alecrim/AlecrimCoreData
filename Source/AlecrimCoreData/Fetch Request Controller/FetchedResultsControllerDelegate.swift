@@ -107,15 +107,11 @@ public func +=<Closure>(left: ClosuresContainer<Closure>, right: Closure) {
 }
 
 
-// MARK: -
-
 // MARK: - FetchRequestController extensions
 
 extension FetchRequestController {
     
     public func removeAllBindings() {
-        self.performFetchIfNeeded()
-
         self.rawValueDelegate.needsReloadDataClosure = nil
         
         self.rawValueDelegate.willChangeContentClosuresContainer.removeAll()
@@ -137,18 +133,16 @@ extension FetchRequestController {
 extension FetchRequestController {
     
     public func refresh() {
-        self.performFetchIfNeeded()
-
-
         self.rawValueDelegate.needsReloadDataClosure?()
+
         self.rawValueDelegate.willChangeContentClosuresContainer.closures.forEach { $0() }
 
         if let cacheName = self.rawValue.cacheName {
             NSFetchedResultsController<NSFetchRequestResult>.deleteCache(withName: cacheName)
         }
-        
+
         self.performFetch()
-        
+
         self.rawValueDelegate.didChangeContentClosuresContainer.closures.forEach { $0() }
     }
     
@@ -158,85 +152,64 @@ extension FetchRequestController {
     
     @discardableResult
     internal func needsReloadData(closure: @escaping FetchedResultsControllerDelegate<Entity>.NeedsReloadDataClosure) -> Self {
-        self.performFetchIfNeeded()
-
         self.rawValueDelegate.needsReloadDataClosure = closure
         return self
     }
     
 }
 
-
 extension FetchRequestController {
 
     @discardableResult
     public func willChangeContent(closure: @escaping FetchedResultsControllerDelegate<Entity>.ChangeContentClosure) -> Self {
-        self.performFetchIfNeeded()
-
         self.rawValueDelegate.willChangeContentClosuresContainer += closure
         return self
     }
     
     @discardableResult
     public func didChangeContent(closure: @escaping FetchedResultsControllerDelegate<Entity>.ChangeContentClosure) -> Self {
-        self.performFetchIfNeeded()
-
         self.rawValueDelegate.didChangeContentClosuresContainer += closure
         return self
     }
 
     @discardableResult
     public func didInsertSection(closure: @escaping FetchedResultsControllerDelegate<Entity>.ChangeSectionClosure) -> Self {
-        self.performFetchIfNeeded()
-
         self.rawValueDelegate.didInsertSectionClosuresContainer += closure
         return self
     }
     
     @discardableResult
     public func didDeleteSection(closure: @escaping FetchedResultsControllerDelegate<Entity>.ChangeSectionClosure) -> Self {
-        self.performFetchIfNeeded()
-
         self.rawValueDelegate.didDeleteSectionClosuresContainer += closure
         return self
     }
     
     @discardableResult
     public func didInsertObject(closure: @escaping FetchedResultsControllerDelegate<Entity>.ChangeItemClosure) -> Self {
-        self.performFetchIfNeeded()
-
         self.rawValueDelegate.didInsertObjectClosuresContainer += closure
         return self
     }
     
     @discardableResult
     public func didDeleteObject(closure: @escaping FetchedResultsControllerDelegate<Entity>.ChangeItemClosure) -> Self {
-        self.performFetchIfNeeded()
-
         self.rawValueDelegate.didDeleteObjectClosuresContainer += closure
         return self
     }
     
     @discardableResult
     public func didUpdateObject(closure: @escaping FetchedResultsControllerDelegate<Entity>.ChangeItemClosure) -> Self {
-        self.performFetchIfNeeded()
-
         self.rawValueDelegate.didUpdateObjectClosuresContainer += closure
         return self
     }
     
     @discardableResult
     public func didMoveObject(closure: @escaping FetchedResultsControllerDelegate<Entity>.MoveItemClosure) -> Self {
-        self.performFetchIfNeeded()
-
         self.rawValueDelegate.didMoveObjectClosuresContainer += closure
         return self
     }
     
     @discardableResult
     public func sectionIndexTitle(closure: @escaping FetchedResultsControllerDelegate<Entity>.SectionIndexTitleClosure) -> Self {
-        self.performFetchIfNeeded()
-
         self.rawValueDelegate.sectionIndexTitleClosure = closure
         return self
     }

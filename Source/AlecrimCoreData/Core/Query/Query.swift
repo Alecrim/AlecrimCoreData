@@ -13,8 +13,8 @@ import CoreData
 
 public struct Query<Entity: ManagedObject> {
     
-    internal let context: ManagedObjectContext
-    internal fileprivate(set) var fetchRequest: FetchRequest<Entity>
+    public let context: ManagedObjectContext
+    public fileprivate(set) var fetchRequest: FetchRequest<Entity>
     
     public init(in context: ManagedObjectContext, fetchRequest: FetchRequest<Entity> = FetchRequest()) {
         self.context = context
@@ -34,9 +34,8 @@ extension Query {
     }
 
     fileprivate func execute(fetchRequest: FetchRequest<Entity>) -> [Entity] {
-        return try! self.context.fetch(self.fetchRequest.toRaw())
+        return try! self.context.fetch(fetchRequest.toRaw())
     }
-
 
     //
     
@@ -66,6 +65,14 @@ extension Query {
     
     public func first() -> Entity? {
         return self.execute(fetchRequest: self.fetchRequest.prefix(1)).first
+    }
+
+    public func last() -> Entity? {
+        guard let sortDescriptors = self.fetchRequest.sortDescriptors, !sortDescriptors.isEmpty else {
+            return self.execute().last // not memory efficient, but will do the job
+        }
+
+        return self.execute(fetchRequest: self.fetchRequest.reversed().prefix(1)).first
     }
     
 }
@@ -244,9 +251,9 @@ extension Query: Queryable {
         return clone
     }
     
-    public func setBatchSize(_ batchSize: Int) -> Query<Entity> {
+    public func batchSize(_ batchSize: Int) -> Query<Entity> {
         var clone = self
-        clone.fetchRequest = clone.fetchRequest.setBatchSize(batchSize)
+        clone.fetchRequest = clone.fetchRequest.batchSize(batchSize)
         
         return clone
     }

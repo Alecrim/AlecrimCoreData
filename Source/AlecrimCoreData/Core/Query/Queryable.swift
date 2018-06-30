@@ -17,7 +17,7 @@ public protocol Queryable {
     
     func dropFirst(_ n: Int) -> Self
     func prefix(_ maxLength: Int) -> Self
-    func setBatchSize(_ batchSize: Int) -> Self
+    func batchSize(_ batchSize: Int) -> Self
     
     func filtered(using predicate: Predicate<Element>) -> Self
     

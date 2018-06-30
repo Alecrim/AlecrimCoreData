@@ -25,7 +25,7 @@ public struct FetchRequest<Entity: ManagedObject>: Queryable {
     public init() {
     }
     
-    internal func toRaw<Result: NSFetchRequestResult>() -> NSFetchRequest<Result> {
+    public func toRaw<Result: NSFetchRequestResult>() -> NSFetchRequest<Result> {
         let entityDescription = Entity.entity()
         let rawValue = NSFetchRequest<Result>(entityName: entityDescription.name!)
         
@@ -39,6 +39,17 @@ public struct FetchRequest<Entity: ManagedObject>: Queryable {
         rawValue.sortDescriptors = self.sortDescriptors?.map { $0.rawValue }
         
         return rawValue
+    }
+
+    internal func reversed() -> FetchRequest<Entity> {
+        guard let existingSortDescriptors = self.sortDescriptors, !existingSortDescriptors.isEmpty else {
+            return self
+        }
+
+        var clone = self
+        clone.sortDescriptors = existingSortDescriptors.map { SortDescriptor(key: $0.key, ascending: !$0.ascending) }
+
+        return clone
     }
 
 }
@@ -61,7 +72,7 @@ extension FetchRequest {
         return clone
     }
 
-    public func setBatchSize(_ batchSize: Int) -> FetchRequest<Entity> {
+    public func batchSize(_ batchSize: Int) -> FetchRequest<Entity> {
         var clone = self
         clone.batchSize = batchSize
         
