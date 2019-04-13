@@ -1,6 +1,6 @@
 # AlecrimCoreData
 
-## 6.1-beta.1
+## 7.0-beta.1
 2019-04-13
 
 - New project structure;
