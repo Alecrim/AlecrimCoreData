@@ -157,17 +157,17 @@
 ## 2.0
 2015-02-16
 
-- First public stable version written in Swift .
+- First public stable version written in Swift.
 
 ## 2.0-beta.1
 2014-08-03
 
-- First public beta version written in Swift .
+- First public beta version written in Swift.
 
 ## 2.0-alpha.1
 2014-06-24
 
-- First internal version written in Swift .
+- First internal version written in Swift.
 
 ## 1.x
 2013-10-15
