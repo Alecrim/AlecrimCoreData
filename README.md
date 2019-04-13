@@ -1,15 +1,17 @@
 ![AlecrimCoreData](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/master/AlecrimCoreData.png)
 
-[![Language: Swift](https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat)](https://developer.apple.com/swift/)
-[![Platform](https://img.shields.io/cocoapods/p/AlecrimCoreData.svg?style=flat)](http://cocoadocs.org/docsets/AlecrimCoreData)
+[![Version](https://img.shields.io/badge/v7.0%20beta%201-blue.svg?label=version&style=flat)](https://github.com/Alecrim/AlecrimCoreData)
+[![Language: swift](https://img.shields.io/badge/swift-v5.0-blue.svg?style=flat)](https://developer.apple.com/swift/)
+[![Platforms](https://img.shields.io/badge/platforms-macOS%2C%20iOS%2C%20watchOS%2C%20tvOS-blue.svg?style=flat)](http://cocoadocs.org/docsets/AlecrimCoreData)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://raw.githubusercontent.com/Alecrim/AlecrimCoreData/develop/LICENSE)
-[![CocoaPods](https://img.shields.io/cocoapods/v/AlecrimCoreData.svg?style=flat)](http://cocoapods.org)
-[![Apps](https://img.shields.io/cocoapods/at/AlecrimCoreData.svg?style=flat)](http://cocoadocs.org/docsets/AlecrimCoreData)
-[![Author: vmartinelli](https://img.shields.io/badge/author-vmartinelli-blue.svg?style=flat)](https://www.linkedin.com/in/vmartinelli)
+[![Author: Vanderlei Martinelli](https://img.shields.io/badge/author-Vanderlei%20Martinelli-blue.svg?style=flat)](https://www.linkedin.com/in/vmartinelli)
 
 A powerful and elegant Core Data framework for Swift.
 
 ## Usage
+
+### Beta version. New docs soon...
+
 Simple do that:
 
 ```swift
@@ -51,11 +53,6 @@ let persistentContainer = PersistentContainer()
 ```
 And after your have created your matching managed object model in Xcode, of course. ;-)
 
-
-## Legacy
-In version 6 the framework was rewritten from scratch. **AlecrimCoreData** now uses key paths and it does not rely on generated (or written) custom attributes anymore. Also the **ACDGen** utility is no more. If your code depends on this, please use the previous versions.
-
-Some well known features and functionalities may be reimplemented in a future release. No guarantees, though.
 
 ## Contribute
 If you have any problems or need more information, please open an issue using the provided GitHub link.
